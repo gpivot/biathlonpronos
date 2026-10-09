@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
+import { ArrowLeftIcon } from "@/components/icons";
+import { PronosAccordion, type PronosRace, type PronosStage } from "./PronosAccordion";
 
 export const dynamic = "force-dynamic";
 
@@ -9,8 +11,8 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   const supabase = createClient();
   const t = await getTranslations("Pronos");
-  const tFormat = await getTranslations("RaceFormat");
-  const tSex = await getTranslations("Sex");
+  const tNav = await getTranslations("Nav");
+  const title = tNav("predictions");
 
   const {
     data: { user },
@@ -18,7 +20,7 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
 
   if (!user) {
     return (
-      <Shell activeNav="/pronos">
+      <Shell activeNav="/pronos" title={title}>
         <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
           {t("loginRequired")}
         </div>
@@ -28,7 +30,7 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
 
   const { data: predictions } = await supabase
     .from("predictions")
-    .select("*, races(*, stages(location))")
+    .select("*, races(*, stages(id, location, country_code, starts_on, ends_on, coefficient))")
     .eq("user_id", user.id)
     .order("submitted_at", { ascending: false });
 
@@ -36,7 +38,7 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
 
   const { data: upcomingRaces } = await supabase
     .from("races")
-    .select("*, stages(location)")
+    .select("*, stages(id, location, country_code, starts_on, ends_on, coefficient)")
     .eq("status", "upcoming")
     .gt("locks_at", new Date().toISOString())
     .order("locks_at", { ascending: true });
@@ -64,8 +66,52 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
       : { data: [] as { race_id: string | null; points: number }[] };
   const pointsByRaceId = new Map((ledger ?? []).map((l) => [l.race_id, l.points]));
 
+  const stagesById = new Map<string, PronosStage>();
+  const addRace = (stage: any, race: PronosRace) => {
+    if (!stagesById.has(stage.id)) {
+      stagesById.set(stage.id, {
+        id: stage.id,
+        location: stage.location,
+        country_code: stage.country_code,
+        starts_on: stage.starts_on,
+        ends_on: stage.ends_on,
+        coefficient: stage.coefficient,
+        races: [],
+      });
+    }
+    stagesById.get(stage.id)!.races.push(race);
+  };
+
+  for (const race of openRaces as any[]) {
+    addRace(race.stages, { id: race.id, format: race.format, sex: race.sex, locks_at: race.locks_at, kind: "open" });
+  }
+  for (const prediction of (predictions ?? []) as any[]) {
+    const race = prediction.races;
+    const names = prediction.nation_code
+      ? nationNameByCode.get(prediction.nation_code) ?? prediction.nation_code
+      : (prediction.athlete_ids ?? []).map((id: string) => athleteNameById.get(id) ?? "?").join(", ");
+    addRace(race.stages, {
+      id: race.id,
+      format: race.format,
+      sex: race.sex,
+      locks_at: race.locks_at,
+      kind: "predicted",
+      names,
+      points: pointsByRaceId.get(prediction.race_id) ?? null,
+    });
+  }
+
+  const stages = Array.from(stagesById.values())
+    .map((stage) => ({
+      ...stage,
+      races: stage.races.sort((a, b) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
+    }))
+    .sort((a, b) => a.starts_on.localeCompare(b.starts_on));
+
+  const defaultOpenStageId = stages.find((s) => s.races.some((r) => r.kind === "open"))?.id ?? stages[0]?.id ?? null;
+
   return (
-    <Shell activeNav="/pronos">
+    <Shell activeNav="/pronos" title={title}>
       <Link
         href="/globes"
         className="rounded-2xl border border-border bg-card px-4 py-3.5 text-center font-display text-sm font-bold text-ice"
@@ -73,87 +119,40 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
         {t("seasonPredictionsLink")}
       </Link>
 
-      <div className="flex flex-col gap-3">
-        <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-          {t("upcomingTitle")}
+      {stages.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
+          {t("emptyAll")}
         </div>
-        {openRaces.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
-            {t("emptyUpcoming")}
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2.5">
-            {openRaces.map((race: any) => (
-              <Link
-                key={race.id}
-                href={`/courses/${race.id}`}
-                className="flex items-center gap-3.5 rounded-2xl border border-ice/40 bg-ice-soft px-4 py-3.5"
-              >
-                <div className="flex flex-1 flex-col gap-0.5">
-                  <div className="text-sm font-semibold">
-                    {tFormat(race.format)}
-                    {race.sex ? ` ${tSex(race.sex)}` : ""}
-                  </div>
-                  <div className="text-xs text-text-dim">{race.stages?.location}</div>
-                </div>
-                <div className="whitespace-nowrap text-xs text-ice">
-                  {new Date(race.locks_at).toLocaleDateString(locale, { day: "numeric", month: "short" })}
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-          {t("myPredictionsTitle")}
-        </div>
-        {!predictions || predictions.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
-            {t("emptyPredictions")}
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2.5">
-            {predictions.map((prediction: any) => {
-              const race = prediction.races;
-              const points = pointsByRaceId.get(prediction.race_id);
-              const names = prediction.nation_code
-                ? nationNameByCode.get(prediction.nation_code) ?? prediction.nation_code
-                : (prediction.athlete_ids ?? []).map((id: string) => athleteNameById.get(id) ?? "?").join(", ");
-
-              return (
-                <div key={prediction.id} className="flex flex-col gap-1.5 rounded-2xl border border-border bg-card px-4 py-3.5">
-                  <div className="flex items-center justify-between">
-                    <div className="text-sm font-semibold">
-                      {tFormat(race.format)}
-                      {race.sex ? ` ${tSex(race.sex)}` : ""} — {race.stages?.location}
-                    </div>
-                    {points != null ? (
-                      <div className="whitespace-nowrap font-display text-sm font-bold text-ice">
-                        {points} pts
-                      </div>
-                    ) : (
-                      <div className="whitespace-nowrap rounded-full bg-gold-soft px-2.5 py-1 font-display text-[10px] font-bold uppercase text-gold">
-                        {t("pendingLabel")}
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-xs text-text-dim">{names}</div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      ) : (
+        <PronosAccordion stages={stages} defaultOpenStageId={defaultOpenStageId} locale={locale} />
+      )}
     </Shell>
   );
 }
 
-function Shell({ children, activeNav }: { children: React.ReactNode; activeNav: "/pronos" }) {
+function Shell({
+  children,
+  activeNav,
+  title,
+}: {
+  children: React.ReactNode;
+  activeNav: "/pronos";
+  title: string;
+}) {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
-      <div className="flex flex-1 flex-col gap-6 overflow-auto px-5 pb-3 pt-6">{children}</div>
+      <div className="flex flex-1 flex-col gap-5 overflow-auto px-5 pb-3 pt-6">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-text-dim"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+          </Link>
+          <div className="font-display text-lg font-bold">{title}</div>
+        </div>
+        {children}
+      </div>
       <BottomNav active={activeNav} />
     </div>
   );

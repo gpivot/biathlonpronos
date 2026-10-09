@@ -285,6 +285,15 @@ en}.json` ne correspondait à rien (les codes sexe en base sont `"H"`/`"F"`), do
 échouait silencieusement (fallback next-intl) sur toute course/athlète homme — invisible jusqu'ici
 car les données de test n'affichaient que des courses femmes. Corrigé (`"M"` → `"H"`).
 
+**Ma saison (`/pronos`) — flèche de retour + courses classées par étape en accordéon.** Les deux
+listes plates (« à pronostiquer » / « mes pronostics ») sont fusionnées en un seul accordéon par
+étape (`pronos/PronosAccordion.tsx`, étapes triées par date) : chaque course y apparaît soit comme
+« À pronostiquer » (ouverte, rien de validé), soit comme pronostic déposé (biathlètes/nation
+choisis + points, ou « En attente »). Seules les étapes contenant au moins une de ces courses sont
+listées ; l'étape ouverte par défaut est la première qui a une course à pronostiquer. Le contenu
+définitif de « Ma saison » reste à préciser avec Guillaume. Flèche de retour aussi ajoutée dans le
+back-office (`AdminNav`).
+
 **Bouton retour et import CSV du calendrier (demandes complémentaires de Guillaume).**
 - Flèche de retour vers l'accueil en haut à gauche de `/courses`, cohérente avec le pattern déjà
   utilisé sur les sous-écrans (`/globes`, `/regles`) — pas encore répliquée sur les autres onglets

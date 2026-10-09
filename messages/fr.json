@@ -105,11 +105,10 @@
   "Pronos": {
     "seasonPredictionsLink": "Mes pronostics de saison (globes)",
     "loginRequired": "Connecte-toi pour voir et gérer tes pronostics.",
-    "upcomingTitle": "À pronostiquer",
-    "emptyUpcoming": "Aucune course ouverte au pronostic pour le moment.",
-    "myPredictionsTitle": "Mes pronostics",
-    "emptyPredictions": "Tu n'as encore validé aucun pronostic.",
-    "pendingLabel": "En attente"
+    "pendingLabel": "En attente",
+    "toPredictLabel": "À pronostiquer",
+    "toPredictCount": "{count} à pronostiquer",
+    "emptyAll": "Aucune course ouverte au pronostic et aucun pronostic validé pour le moment."
   },
   "Ligues": {
     "title": "Tes ligues",

@@ -105,11 +105,10 @@
   "Pronos": {
     "seasonPredictionsLink": "My season predictions (globes)",
     "loginRequired": "Log in to view and manage your predictions.",
-    "upcomingTitle": "To predict",
-    "emptyUpcoming": "No race currently open for predictions.",
-    "myPredictionsTitle": "My predictions",
-    "emptyPredictions": "You haven't submitted any prediction yet.",
-    "pendingLabel": "Pending"
+    "pendingLabel": "Pending",
+    "toPredictLabel": "To predict",
+    "toPredictCount": "{count} to predict",
+    "emptyAll": "No race open for predictions and no prediction submitted yet."
   },
   "Ligues": {
     "title": "Your leagues",
