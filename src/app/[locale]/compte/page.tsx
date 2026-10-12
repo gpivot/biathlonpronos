@@ -2,9 +2,10 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
-import { ArrowLeftIcon, ChevronRightIcon, HelpIcon, MessageIcon, MoonIcon } from "@/components/icons";
+import { ArrowLeftIcon, ChevronRightIcon, HelpIcon, MessageIcon } from "@/components/icons";
 import { LanguagePills } from "./LanguagePills";
 import { PseudoEditor } from "./PseudoEditor";
+import { ThemeToggle } from "./ThemeToggle";
 import { FavoriteTeamForm } from "./FavoriteTeamForm";
 import { SignOutButton } from "./SignOutButton";
 import { ClaimCardPicker } from "./ClaimCardPicker";
@@ -74,8 +75,8 @@ export default async function ComptePage() {
   const pseudo = profile?.pseudo ?? "";
   const supportEmail = tSupport("email");
 
-  // Page Profil calquée sur VéloPronos. Les notifications par email et le thème clair n'existent
-  // pas encore : leurs interrupteurs sont affichés désactivés avec la mention « Bientôt ».
+  // Page Profil calquée sur VéloPronos. Les notifications par email n'existent pas encore : leurs
+  // interrupteurs sont affichés désactivés avec la mention « Bientôt ».
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-4 overflow-auto px-5 pb-6 pt-6">
@@ -97,12 +98,7 @@ export default async function ComptePage() {
         </Card>
 
         <Card>
-          <div className="flex items-center gap-3.5">
-            <IconBox>
-              <MoonIcon className="h-5 w-5" />
-            </IconBox>
-            <ToggleRow title={t("appearanceTitle")} subtitle={t("darkTheme")} soon={t("soon")} />
-          </div>
+          <ThemeToggle />
         </Card>
 
         {season && (nations ?? []).length > 0 && (
@@ -204,7 +200,7 @@ function ToggleRow({ title, subtitle, soon }: { title: string; subtitle: string;
         <div className="text-[12px] text-text-dim">{subtitle}</div>
       </div>
       <span className="rounded-full bg-card2 px-2 py-0.5 text-[10px] font-semibold uppercase text-text-dim">{soon}</span>
-      <div aria-disabled className="relative h-6 w-11 flex-shrink-0 rounded-full bg-[oklch(0.80_0.12_200/0.4)] opacity-60">
+      <div aria-disabled className="relative h-6 w-11 flex-shrink-0 rounded-full bg-ice/40 opacity-60">
         <div className="absolute right-0.5 top-0.5 h-5 w-5 rounded-full bg-bg" />
       </div>
     </div>

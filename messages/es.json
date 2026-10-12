@@ -136,7 +136,8 @@
     "deleteAccount": "Eliminar mi cuenta",
     "editPseudo": "Editar el apodo",
     "cancel": "Cancelar",
-    "pseudoLengthError": "El apodo debe tener entre {min} y {max} caracteres."
+    "pseudoLengthError": "El apodo debe tener entre {min} y {max} caracteres.",
+    "lightTheme": "Tema claro"
   },
   "Globes": {
     "back": "← Volver",

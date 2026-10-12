@@ -7,3 +7,39 @@ body {
   padding: 0;
   margin: 0;
 }
+
+/* Palette : thème sombre par défaut (planche d'identité), thème clair via la classe `light` sur
+   <html>, choisie dans Profil > Apparence et mémorisée dans le navigateur (localStorage "theme"). */
+:root {
+  --c-bg: 10 15 28;
+  --c-bg2: 13 21 38;
+  --c-card: 18 29 51;
+  --c-card2: 22 35 61;
+  --c-border: 34 50 82;
+  --c-text: 244 248 255;
+  --c-text-dim: 144 163 196;
+  --c-frost: 234 246 255;
+  --c-ice: 0.8 0.12 200;
+  --c-ice-soft: 0.3 0.06 200;
+  --c-gold: 0.84 0.15 90;
+  --c-gold-soft: 0.3 0.07 90;
+  --c-red: 0.62 0.2 25;
+  color-scheme: dark;
+}
+
+html.light {
+  --c-bg: 244 247 251;
+  --c-bg2: 234 240 247;
+  --c-card: 255 255 255;
+  --c-card2: 238 243 249;
+  --c-border: 213 222 234;
+  --c-text: 11 19 36;
+  --c-text-dim: 90 107 133;
+  --c-frost: 11 19 36;
+  --c-ice: 0.58 0.12 215;
+  --c-ice-soft: 0.93 0.04 200;
+  --c-gold: 0.62 0.14 75;
+  --c-gold-soft: 0.94 0.06 90;
+  --c-red: 0.55 0.2 25;
+  color-scheme: light;
+}

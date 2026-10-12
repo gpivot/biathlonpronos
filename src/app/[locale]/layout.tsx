@@ -42,7 +42,15 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={poppins.variable}>
+    <html lang={locale} className={poppins.variable} suppressHydrationWarning>
+      <head>
+        {/* Thème clair choisi dans le Profil : appliqué avant l'affichage pour éviter un flash sombre. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("theme")==="light")document.documentElement.classList.add("light")}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="bg-bg text-text font-body">
         <NextIntlClientProvider messages={messages}>
           {children}

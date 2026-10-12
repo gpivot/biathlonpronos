@@ -136,7 +136,8 @@
     "deleteAccount": "Elimina il mio account",
     "editPseudo": "Modifica il nickname",
     "cancel": "Annulla",
-    "pseudoLengthError": "Il nickname deve contenere tra {min} e {max} caratteri."
+    "pseudoLengthError": "Il nickname deve contenere tra {min} e {max} caratteri.",
+    "lightTheme": "Tema chiaro"
   },
   "Globes": {
     "back": "← Indietro",

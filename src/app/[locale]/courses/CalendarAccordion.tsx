@@ -57,7 +57,7 @@ export function CalendarAccordion({
             key={stage.id}
             className={`overflow-hidden rounded-2xl border ${
               isChampionship
-                ? "border-[oklch(0.84_0.15_90/0.6)] bg-gradient-to-br from-[oklch(0.40_0.09_90)] to-card shadow-[0_0_24px_-8px_oklch(0.84_0.15_90/0.5)]"
+                ? "border-gold/60 bg-gradient-to-br from-gold/25 to-card shadow-[0_0_24px_-8px_oklch(0.84_0.15_90/0.5)]"
                 : "border-border bg-card"
             }`}
           >
@@ -67,7 +67,7 @@ export function CalendarAccordion({
             >
               <div
                 className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-lg ${
-                  isChampionship ? "bg-[oklch(0.84_0.15_90/0.2)]" : "bg-ice-soft"
+                  isChampionship ? "bg-gold/20" : "bg-ice-soft"
                 }`}
               >
                 {nationFlagEmoji(stage.country_code)}
@@ -96,7 +96,7 @@ export function CalendarAccordion({
             </button>
 
             {isOpen && (
-              <div className={`flex flex-col gap-2 border-t px-3 py-3 ${isChampionship ? "border-[oklch(0.84_0.15_90/0.3)]" : "border-border"}`}>
+              <div className={`flex flex-col gap-2 border-t px-3 py-3 ${isChampionship ? "border-gold/30" : "border-border"}`}>
                 {stage.races.length === 0 ? (
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (

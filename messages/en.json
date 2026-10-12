@@ -136,7 +136,8 @@
     "deleteAccount": "Delete my account",
     "editPseudo": "Edit username",
     "cancel": "Cancel",
-    "pseudoLengthError": "Your username must be between {min} and {max} characters."
+    "pseudoLengthError": "Your username must be between {min} and {max} characters.",
+    "lightTheme": "Light theme"
   },
   "Globes": {
     "back": "← Back",

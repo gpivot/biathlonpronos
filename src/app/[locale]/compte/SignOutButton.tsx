@@ -18,7 +18,7 @@ export function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="flex w-full items-center justify-center gap-2 rounded-2xl border border-[oklch(0.62_0.20_25/0.6)] py-3.5 font-display text-sm font-semibold text-red hover:bg-[oklch(0.62_0.20_25/0.1)]"
+      className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red/60 py-3.5 font-display text-sm font-semibold text-red hover:bg-red/10"
     >
       <LogoutIcon className="h-5 w-5" />
       {t("signOut")}

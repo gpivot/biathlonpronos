@@ -136,7 +136,8 @@
     "deleteAccount": "Mein Konto löschen",
     "editPseudo": "Benutzernamen ändern",
     "cancel": "Abbrechen",
-    "pseudoLengthError": "Der Benutzername muss zwischen {min} und {max} Zeichen lang sein."
+    "pseudoLengthError": "Der Benutzername muss zwischen {min} und {max} Zeichen lang sein.",
+    "lightTheme": "Helles Design"
   },
   "Globes": {
     "back": "← Zurück",

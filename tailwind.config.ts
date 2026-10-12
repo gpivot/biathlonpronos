@@ -5,22 +5,24 @@ const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      // Couleurs définies par des variables CSS (src/app/globals.css) pour permettre le thème clair
+      // (classe `light` sur <html>) ; `<alpha-value>` garde les modificateurs d'opacité (bg-card/70).
       colors: {
-        bg: "#0a0f1c",
-        bg2: "#0d1526",
-        card: "#121d33",
-        card2: "#16233d",
-        border: "#223252",
-        text: "#f4f8ff",
-        "text-dim": "#90a3c4",
-        ice: "oklch(0.80 0.12 200)",
-        "ice-soft": "oklch(0.30 0.06 200)",
-        gold: "oklch(0.84 0.15 90)",
-        "gold-soft": "oklch(0.30 0.07 90)",
-        red: "oklch(0.62 0.20 25)",
-        frost: "#eaf6ff",
+        bg: "rgb(var(--c-bg) / <alpha-value>)",
+        bg2: "rgb(var(--c-bg2) / <alpha-value>)",
+        card: "rgb(var(--c-card) / <alpha-value>)",
+        card2: "rgb(var(--c-card2) / <alpha-value>)",
+        border: "rgb(var(--c-border) / <alpha-value>)",
+        text: "rgb(var(--c-text) / <alpha-value>)",
+        "text-dim": "rgb(var(--c-text-dim) / <alpha-value>)",
+        ice: "oklch(var(--c-ice) / <alpha-value>)",
+        "ice-soft": "oklch(var(--c-ice-soft) / <alpha-value>)",
+        gold: "oklch(var(--c-gold) / <alpha-value>)",
+        "gold-soft": "oklch(var(--c-gold-soft) / <alpha-value>)",
+        red: "oklch(var(--c-red) / <alpha-value>)",
+        frost: "rgb(var(--c-frost) / <alpha-value>)",
         // Bleu vif des accents VéloPronos (dégradé du bouton d'appel à l'action, avec ice).
-        blue: "oklch(0.62 0.19 255)",
+        blue: "oklch(0.62 0.19 255 / <alpha-value>)",
       },
       fontFamily: {
         display: ["var(--font-poppins)", "system-ui", "sans-serif"],

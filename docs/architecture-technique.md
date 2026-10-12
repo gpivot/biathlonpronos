@@ -391,3 +391,8 @@ velopronos.fr), avec la même typographie.
   côté interface uniquement). **Migration 0016 à coller dans Supabase** : la policy « profiles:
   update own » laissait un joueur modifier n'importe quelle colonne de son profil, y compris
   `is_admin` ; la migration limite la mise à jour côté client à la colonne `pseudo`.
+- **Thème clair / sombre fonctionnel** (Profil > Apparence). Les couleurs de `tailwind.config.ts`
+  pointent vers des variables CSS (`src/app/globals.css`) : palette sombre par défaut, palette
+  claire sous `html.light`. Le choix est mémorisé dans le navigateur (localStorage `theme`) et
+  réappliqué avant l'affichage par un petit script dans `src/app/[locale]/layout.tsx`. Le choix
+  n'est pas lié au compte (à changer sur chaque appareil). Le back-office `/admin` reste sombre.

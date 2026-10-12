@@ -136,7 +136,8 @@
     "deleteAccount": "Supprimer mon compte",
     "editPseudo": "Modifier le pseudo",
     "cancel": "Annuler",
-    "pseudoLengthError": "Le pseudo doit faire entre {min} et {max} caractères."
+    "pseudoLengthError": "Le pseudo doit faire entre {min} et {max} caractères.",
+    "lightTheme": "Thème clair"
   },
   "Globes": {
     "back": "← Retour",
