@@ -26,7 +26,7 @@ export async function BottomNav({ active }: { active?: (typeof items)[number]["h
   const [t, isAdmin] = await Promise.all([getTranslations("Nav"), isCurrentUserAdmin()]);
 
   return (
-    <nav className="flex items-center justify-around border-t border-border bg-bg/90 px-1 py-3.5 pb-5">
+    <nav className="flex items-center justify-around border-t border-border bg-nav/95 px-1 py-3.5 pb-5">
       {items.map(({ href, labelKey, icon: Icon }) => {
         const isActive = href === active;
         return (

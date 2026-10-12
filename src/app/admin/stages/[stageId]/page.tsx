@@ -71,7 +71,7 @@ export default async function AdminStageDetailPage({ params }: { params: Promise
               </option>
             ))}
           </select>
-          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-[#062024]">
+          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Créer
           </button>
         </div>

@@ -103,7 +103,7 @@ export default function SignInPage() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-[#062024] disabled:opacity-60"
+          className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice disabled:opacity-60"
         >
           {loading
             ? t("connecting")

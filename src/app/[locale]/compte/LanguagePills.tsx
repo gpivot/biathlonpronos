@@ -22,7 +22,7 @@ export function LanguagePills() {
             type="button"
             onClick={() => !isCurrent && router.replace(pathname, { locale: l })}
             className={`flex items-center gap-1.5 rounded-xl px-3 py-2 font-display text-[13px] font-bold ${
-              isCurrent ? "bg-ice text-[#062024]" : "bg-card2 text-frost hover:bg-border"
+              isCurrent ? "bg-ice text-on-ice" : "bg-card2 text-frost hover:bg-border"
             }`}
           >
             <Flag className="h-3 w-[18px] rounded-[2px]" />

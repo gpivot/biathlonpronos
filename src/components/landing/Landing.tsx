@@ -51,14 +51,14 @@ export async function Landing() {
 
         <h1 className="relative mt-10 max-w-5xl font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl">
           <span className="block text-text">{t("heroTitle")}</span>
-          <span className="block bg-gradient-to-r from-blue to-ice bg-clip-text text-transparent">{t("heroAccent")}</span>
+          <span className="block bg-gradient-to-r from-blue to-teal bg-clip-text text-transparent">{t("heroAccent")}</span>
         </h1>
 
         <p className="relative mt-5 max-w-md text-base leading-relaxed text-text-dim sm:text-lg">{t("heroSubtitle")}</p>
 
         <Link
           href="/sign-in"
-          className="relative mt-8 rounded-2xl bg-gradient-to-r from-blue to-ice px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
+          className="relative mt-8 rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
         >
           {t("heroCta")} →
         </Link>

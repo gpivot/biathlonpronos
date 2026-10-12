@@ -63,7 +63,7 @@ export default async function AdminAthletesPage() {
             <option value="F">Femme</option>
             <option value="H">Homme</option>
           </select>
-          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-[#062024]">
+          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Ajouter
           </button>
         </form>

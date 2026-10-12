@@ -21,6 +21,12 @@ const config: Config = {
         "gold-soft": "oklch(var(--c-gold-soft) / <alpha-value>)",
         red: "oklch(var(--c-red) / <alpha-value>)",
         frost: "rgb(var(--c-frost) / <alpha-value>)",
+        // Texte posé sur un fond `ice` (sombre en thème sombre, blanc sur l'ocre du thème clair).
+        "on-ice": "rgb(var(--c-on-ice) / <alpha-value>)",
+        // Fond de la barre de navigation basse (blanche en thème clair, comme VéloPronos).
+        nav: "rgb(var(--c-nav) / <alpha-value>)",
+        // Turquoise fixe des dégradés de marque (avatar, en-têtes) : ne change pas avec le thème.
+        teal: "oklch(0.8 0.12 200 / <alpha-value>)",
         // Bleu vif des accents VéloPronos (dégradé du bouton d'appel à l'action, avec ice).
         blue: "oklch(0.62 0.19 255 / <alpha-value>)",
       },

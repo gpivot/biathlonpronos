@@ -190,7 +190,7 @@ export function PredictionForm({
                   isSelected ? "border-ice bg-ice" : "border-border"
                 }`}
               >
-                {isSelected && <CheckIcon className="h-3 w-3 text-[#062024]" />}
+                {isSelected && <CheckIcon className="h-3 w-3 text-on-ice" />}
               </div>
             </button>
           );
@@ -234,7 +234,7 @@ export function PredictionForm({
       <button
         onClick={submit}
         disabled={selected.length !== requiredCount || saving}
-        className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-[#062024] disabled:opacity-40"
+        className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-on-ice disabled:opacity-40"
       >
         {saving ? t("saving") : t("submit")}
       </button>
@@ -248,7 +248,7 @@ function CardOption({ label, active, onClick }: { label: string; active: boolean
       type="button"
       onClick={onClick}
       className={`rounded-full px-3 py-1.5 font-display text-[12px] font-bold ${
-        active ? "bg-ice text-[#062024]" : "border border-border text-text-dim"
+        active ? "bg-ice text-on-ice" : "border border-border text-text-dim"
       }`}
     >
       {label}

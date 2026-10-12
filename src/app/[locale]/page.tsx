@@ -143,7 +143,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="flex gap-2.5 pt-1">
               <Link
                 href="/classement"
-                className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-[#062024]"
+                className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-on-ice"
               >
                 {t("standingsButton")}
               </Link>
@@ -159,7 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="flex gap-2.5">
             <Link
               href="/regles"
-              className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-[#062024]"
+              className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-on-ice"
             >
               {t("rulesButton")}
             </Link>

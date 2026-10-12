@@ -13,7 +13,7 @@ export function PageHeader({
   subtitle?: string;
 }) {
   return (
-    <header className="relative bg-gradient-to-r from-blue to-ice px-5 pb-8 pt-10 text-center text-white">
+    <header className="relative bg-gradient-to-r from-blue to-teal px-5 pb-8 pt-10 text-center text-white">
       <Link href="/" className="absolute left-4 top-3 font-display text-xs font-bold hover:opacity-80">
         ‹ {backLabel}
       </Link>

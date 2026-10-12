@@ -24,22 +24,28 @@ body {
   --c-gold: 0.84 0.15 90;
   --c-gold-soft: 0.3 0.07 90;
   --c-red: 0.62 0.2 25;
+  --c-on-ice: 6 32 36;
+  --c-nav: 10 15 28;
   color-scheme: dark;
 }
 
 html.light {
-  --c-bg: 244 247 251;
-  --c-bg2: 234 240 247;
+  /* Palette chaude calquée sur le thème clair de VéloPronos : fond beige, cartes blanches,
+     barre de navigation blanche, accents ocre (l'accent `ice` devient ocre en mode clair). */
+  --c-bg: 241 236 228;
+  --c-bg2: 234 227 216;
   --c-card: 255 255 255;
-  --c-card2: 238 243 249;
-  --c-border: 213 222 234;
-  --c-text: 11 19 36;
-  --c-text-dim: 90 107 133;
-  --c-frost: 11 19 36;
-  --c-ice: 0.58 0.12 215;
-  --c-ice-soft: 0.93 0.04 200;
+  --c-card2: 238 231 220;
+  --c-border: 230 222 210;
+  --c-text: 38 28 18;
+  --c-text-dim: 128 110 90;
+  --c-frost: 38 28 18;
+  --c-ice: 0.58 0.13 65;
+  --c-ice-soft: 0.95 0.025 75;
   --c-gold: 0.62 0.14 75;
   --c-gold-soft: 0.94 0.06 90;
-  --c-red: 0.55 0.2 25;
+  --c-red: 0.58 0.2 25;
+  --c-on-ice: 255 255 255;
+  --c-nav: 255 255 255;
   color-scheme: light;
 }

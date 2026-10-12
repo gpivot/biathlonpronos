@@ -90,7 +90,7 @@ export function GlobesForm({ seasonId, categories }: { seasonId: string; categor
       <button
         onClick={submit}
         disabled={saving}
-        className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-[#062024] disabled:opacity-40"
+        className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-on-ice disabled:opacity-40"
       >
         {saving ? t("saving") : t("submit")}
       </button>

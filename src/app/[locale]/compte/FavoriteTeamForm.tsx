@@ -82,7 +82,7 @@ export function FavoriteTeamForm({
       <button
         type="submit"
         disabled={saving}
-        className="self-start rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-[#062024] disabled:opacity-60"
+        className="self-start rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-on-ice disabled:opacity-60"
       >
         {saving ? t("saving") : t("save")}
       </button>

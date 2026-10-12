@@ -396,3 +396,12 @@ velopronos.fr), avec la même typographie.
   claire sous `html.light`. Le choix est mémorisé dans le navigateur (localStorage `theme`) et
   réappliqué avant l'affichage par un petit script dans `src/app/[locale]/layout.tsx`. Le choix
   n'est pas lié au compte (à changer sur chaque appareil). Le back-office `/admin` reste sombre.
+
+### Thème clair aux couleurs de VéloPronos (octobre 2026)
+
+Le thème clair reprend la palette chaude de VéloPronos : fond beige (#f1ece4), cartes blanches,
+barre de navigation basse blanche (token `nav`), texte brun foncé, et l'accent `ice` devient ocre
+(interrupteurs, pastille de langue, onglet actif, boutons). Le texte posé sur cet accent passe par le
+token `on-ice` (foncé en thème sombre, blanc en thème clair). Les dégradés de marque (avatar,
+en-têtes, bouton « Commencer gratuitement ») gardent le bleu → turquoise fixe (`teal`) dans les deux
+thèmes, comme VéloPronos. Le back-office `/admin` reste sombre.

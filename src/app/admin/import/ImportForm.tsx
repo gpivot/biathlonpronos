@@ -46,7 +46,7 @@ function UploadSection({
         <button
           onClick={handleImport}
           disabled={loading}
-          className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-[#062024] disabled:opacity-60"
+          className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice disabled:opacity-60"
         >
           {loading ? "Import en cours..." : "Importer"}
         </button>

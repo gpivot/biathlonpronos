@@ -73,7 +73,7 @@ export function PseudoEditor({ userId, initialPseudo }: { userId: string; initia
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-ice px-4 py-1.5 font-display text-[13px] font-bold text-[#062024] disabled:opacity-60"
+          className="rounded-xl bg-ice px-4 py-1.5 font-display text-[13px] font-bold text-on-ice disabled:opacity-60"
         >
           {saving ? t("saving") : t("save")}
         </button>

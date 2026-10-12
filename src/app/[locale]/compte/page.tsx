@@ -83,7 +83,7 @@ export default async function ComptePage() {
         <TitleBar />
 
         <div className="flex flex-col items-center gap-2 py-4 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue to-ice font-display text-3xl font-extrabold text-white">
+          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue to-teal font-display text-3xl font-extrabold text-white">
             {pseudo.charAt(0).toUpperCase() || "?"}
           </div>
           <PseudoEditor userId={user.id} initialPseudo={pseudo} />

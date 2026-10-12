@@ -18,7 +18,7 @@ export default async function SupportPage() {
           <p>{t("contactBody")}</p>
           <a
             href={`mailto:${email}`}
-            className="mt-3 inline-block rounded-xl bg-gradient-to-r from-blue to-ice px-4 py-2 font-display text-[13px] font-bold text-[#062024] hover:brightness-110"
+            className="mt-3 inline-block rounded-xl bg-gradient-to-r from-blue to-teal px-4 py-2 font-display text-[13px] font-bold text-on-ice hover:brightness-110"
           >
             {email}
           </a>

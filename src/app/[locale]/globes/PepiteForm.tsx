@@ -90,7 +90,7 @@ export function PepiteForm({
             <button
               onClick={submit}
               disabled={!pick || saving}
-              className="self-start rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-[#062024] disabled:opacity-40"
+              className="self-start rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-on-ice disabled:opacity-40"
             >
               {saving ? t("saving") : t("pepiteSubmit")}
             </button>
