@@ -361,3 +361,8 @@ velopronos.fr), avec la même typographie.
   Facebook), lien vers le règlement, mention des changements de calendrier/résultats officiels
   dans la limitation de responsabilité. **À confirmer** : âge minimum 13 ans et droit français
   repris tels quels de VéloPronos.
+- **Page de connexion** : « Connectez-vous pour continuer » sous le logo ; boutons Google, Apple
+  et **Facebook** (ajouté à la demande de Guillaume), chacun avec son logo. Facebook réintégré
+  dans la Politique de confidentialité et les CGU. **Prérequis** : le fournisseur Facebook doit
+  être activé dans Supabase (Authentication > Providers > Facebook, avec l'App ID et le secret
+  d'une app Meta for Developers), comme Google et Apple ; sans ça le bouton renvoie une erreur.

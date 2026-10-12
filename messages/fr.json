@@ -230,6 +230,7 @@
     "prompt": "Connectez-vous pour continuer",
     "continueGoogle": "Continuer avec Google",
     "continueApple": "Continuer avec Apple",
+    "continueFacebook": "Continuer avec Facebook",
     "or": "OU",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Mot de passe",
@@ -302,7 +303,7 @@
           "Informations de profil (pseudo, nation favorite)",
           "Pronostics, cartes bonus et historique de jeu",
           "Classements, ligues et statistiques",
-          "Données de connexion (e-mail et mot de passe, ou fournisseur OAuth : Google, Apple)"
+          "Données de connexion (e-mail et mot de passe, ou fournisseur OAuth : Google, Apple, Facebook)"
         ],
         "note": "Nous ne collectons aucune donnée bancaire ni de paiement : le jeu est entièrement gratuit."
       },
@@ -329,7 +330,7 @@
       {
         "title": "5. Connexion via des tiers (OAuth)",
         "paragraphs": [
-          "L'application propose la connexion via Google et Apple. Ces connexions sont soumises aux politiques de confidentialité de ces fournisseurs, et nous ne recevons pas votre mot de passe. Si vous vous connectez par e-mail, votre mot de passe est stocké sous forme chiffrée par notre prestataire d'authentification : nous n'y avons jamais accès en clair."
+          "L'application propose la connexion via Google, Apple et Facebook. Ces connexions sont soumises aux politiques de confidentialité de ces fournisseurs, et nous ne recevons pas votre mot de passe. Si vous vous connectez par e-mail, votre mot de passe est stocké sous forme chiffrée par notre prestataire d'authentification : nous n'y avons jamais accès en clair."
         ]
       },
       {
@@ -400,7 +401,8 @@
         "bullets": [
           "E-mail et mot de passe",
           "Google",
-          "Apple"
+          "Apple",
+          "Facebook"
         ],
         "after": [
           "Vous devez être âgé de 13 ans minimum pour utiliser l'Application."

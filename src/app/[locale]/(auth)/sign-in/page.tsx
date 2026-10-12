@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { LogoMark } from "@/components/icons";
+import { AppleIcon, FacebookIcon, GoogleIcon, LogoMark } from "@/components/icons";
 
 export default function SignInPage() {
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
@@ -17,7 +17,7 @@ export default function SignInPage() {
   const router = useRouter();
   const t = useTranslations("SignIn");
 
-  async function handleOAuth(provider: "google" | "apple") {
+  async function handleOAuth(provider: "google" | "apple" | "facebook") {
     await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
@@ -58,18 +58,22 @@ export default function SignInPage() {
       </div>
 
       <div className="flex w-full flex-col gap-3">
-        <button
-          onClick={() => handleOAuth("google")}
-          className="rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
-        >
-          {t("continueGoogle")}
-        </button>
-        <button
-          onClick={() => handleOAuth("apple")}
-          className="rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
-        >
-          {t("continueApple")}
-        </button>
+        {(
+          [
+            { provider: "google", label: t("continueGoogle"), icon: <GoogleIcon className="h-5 w-5" /> },
+            { provider: "apple", label: t("continueApple"), icon: <AppleIcon className="h-5 w-5" /> },
+            { provider: "facebook", label: t("continueFacebook"), icon: <FacebookIcon className="h-5 w-5" /> },
+          ] as const
+        ).map(({ provider, label, icon }) => (
+          <button
+            key={provider}
+            onClick={() => handleOAuth(provider)}
+            className="flex items-center justify-center gap-3 rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
+          >
+            {icon}
+            {label}
+          </button>
+        ))}
       </div>
 
       <div className="flex w-full items-center gap-3 text-xs text-text-dim">
