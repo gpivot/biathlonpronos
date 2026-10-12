@@ -120,7 +120,20 @@
     "cardLabel_balle_de_pioche": "Wildcard",
     "cardLabel_ca_farte": "Boost",
     "cardLabel_fondue": "Meltdown",
-    "cardLabel_chat_noir": "Black Cat"
+    "cardLabel_chat_noir": "Black Cat",
+    "title": "Profile",
+    "emailNotificationsTitle": "Email notifications",
+    "reminderTitle": "Prediction reminder",
+    "reminderHint": "2 hours before each race",
+    "resultsTitle": "Results available",
+    "resultsHint": "With your points and cards",
+    "appearanceTitle": "Appearance",
+    "darkTheme": "Dark theme",
+    "soon": "Soon",
+    "languageTitle": "Language",
+    "languagesAvailable": "{count} languages available",
+    "helpAndRules": "Help & Rules",
+    "deleteAccount": "Delete my account"
   },
   "Globes": {
     "back": "← Back",

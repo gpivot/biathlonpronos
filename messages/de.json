@@ -120,7 +120,20 @@
     "cardLabel_balle_de_pioche": "Joker",
     "cardLabel_ca_farte": "Turbowachs",
     "cardLabel_fondue": "Fondue",
-    "cardLabel_chat_noir": "Schwarze Katze"
+    "cardLabel_chat_noir": "Schwarze Katze",
+    "title": "Profil",
+    "emailNotificationsTitle": "E-Mail-Benachrichtigungen",
+    "reminderTitle": "Tipp-Erinnerung",
+    "reminderHint": "2 Stunden vor jedem Rennen",
+    "resultsTitle": "Ergebnisse verfügbar",
+    "resultsHint": "Mit deinen Punkten und Karten",
+    "appearanceTitle": "Darstellung",
+    "darkTheme": "Dunkles Design",
+    "soon": "Bald",
+    "languageTitle": "Sprache",
+    "languagesAvailable": "{count} Sprachen verfügbar",
+    "helpAndRules": "Hilfe & Regeln",
+    "deleteAccount": "Mein Konto löschen"
   },
   "Globes": {
     "back": "← Zurück",

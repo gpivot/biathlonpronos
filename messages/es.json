@@ -120,7 +120,20 @@
     "cardLabel_balle_de_pioche": "Comodín",
     "cardLabel_ca_farte": "Turbo",
     "cardLabel_fondue": "Deshielo",
-    "cardLabel_chat_noir": "Gato negro"
+    "cardLabel_chat_noir": "Gato negro",
+    "title": "Perfil",
+    "emailNotificationsTitle": "Notificaciones por email",
+    "reminderTitle": "Recordatorio de pronóstico",
+    "reminderHint": "2 horas antes de cada carrera",
+    "resultsTitle": "Resultados disponibles",
+    "resultsHint": "Con tus puntos y tus cartas",
+    "appearanceTitle": "Apariencia",
+    "darkTheme": "Tema oscuro",
+    "soon": "Pronto",
+    "languageTitle": "Idioma",
+    "languagesAvailable": "{count} idiomas disponibles",
+    "helpAndRules": "Ayuda y Reglamento",
+    "deleteAccount": "Eliminar mi cuenta"
   },
   "Globes": {
     "back": "← Volver",

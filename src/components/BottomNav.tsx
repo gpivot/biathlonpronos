@@ -22,7 +22,7 @@ async function isCurrentUserAdmin(): Promise<boolean> {
   return profile?.is_admin ?? false;
 }
 
-export async function BottomNav({ active }: { active: (typeof items)[number]["href"] }) {
+export async function BottomNav({ active }: { active?: (typeof items)[number]["href"] }) {
   const [t, isAdmin] = await Promise.all([getTranslations("Nav"), isCurrentUserAdmin()]);
 
   return (

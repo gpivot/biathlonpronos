@@ -120,7 +120,20 @@
     "cardLabel_balle_de_pioche": "Jolly",
     "cardLabel_ca_farte": "Sciolina magica",
     "cardLabel_fondue": "Fonduta",
-    "cardLabel_chat_noir": "Gatto nero"
+    "cardLabel_chat_noir": "Gatto nero",
+    "title": "Profilo",
+    "emailNotificationsTitle": "Notifiche via email",
+    "reminderTitle": "Promemoria pronostico",
+    "reminderHint": "2 ore prima di ogni gara",
+    "resultsTitle": "Risultati disponibili",
+    "resultsHint": "Con i tuoi punti e le tue carte",
+    "appearanceTitle": "Aspetto",
+    "darkTheme": "Tema scuro",
+    "soon": "Presto",
+    "languageTitle": "Lingua",
+    "languagesAvailable": "{count} lingue disponibili",
+    "helpAndRules": "Aiuto e Regolamento",
+    "deleteAccount": "Elimina il mio account"
   },
   "Globes": {
     "back": "← Indietro",
