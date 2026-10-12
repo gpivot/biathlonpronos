@@ -405,3 +405,10 @@ barre de navigation basse blanche (token `nav`), texte brun foncé, et l'accent 
 token `on-ice` (foncé en thème sombre, blanc en thème clair). Les dégradés de marque (avatar,
 en-têtes, bouton « Commencer gratuitement ») gardent le bleu → turquoise fixe (`teal`) dans les deux
 thèmes, comme VéloPronos. Le back-office `/admin` reste sombre.
+
+### Ma saison : étapes repliées et Championnats du monde dorés (octobre 2026)
+
+Dans l'onglet Ma saison, toutes les étapes sont repliées à l'arrivée (avant, la première étape à
+pronostiquer s'ouvrait). L'étape de coefficient 2 (Otepää) reprend l'encart doré du Calendrier avec
+la mention « Championnats du monde · Coeff. ×2 » ; la pastille « Coeff. ×2 » séparée est retirée
+pour ne pas déborder sur mobile.

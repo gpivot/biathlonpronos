@@ -109,7 +109,6 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
     }))
     .sort((a, b) => a.starts_on.localeCompare(b.starts_on));
 
-  const defaultOpenStageId = stages.find((s) => s.races.some((r) => r.kind === "open"))?.id ?? stages[0]?.id ?? null;
 
   return (
     <Shell activeNav="/pronos" title={title}>
@@ -125,7 +124,7 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
           {t("emptyAll")}
         </div>
       ) : (
-        <PronosAccordion stages={stages} defaultOpenStageId={defaultOpenStageId} locale={locale} />
+        <PronosAccordion stages={stages} locale={locale} />
       )}
     </Shell>
   );
