@@ -31,13 +31,48 @@ function FlagGB({ className }: { className?: string }) {
   );
 }
 
+// Drapeaux tricolores (bandes verticales ou horizontales).
+function Tricolor({ colors, horizontal, className }: { colors: [string, string, string]; horizontal?: boolean; className?: string }) {
+  return (
+    <svg viewBox="0 0 3 2" className={className} preserveAspectRatio="none">
+      {colors.map((color, i) =>
+        horizontal ? (
+          <rect key={i} y={(i * 2) / 3} width="3" height={2 / 3} fill={color} />
+        ) : (
+          <rect key={i} x={i} width="1" height="2" fill={color} />
+        ),
+      )}
+    </svg>
+  );
+}
+
+function FlagDE({ className }: { className?: string }) {
+  return <Tricolor horizontal colors={["#000", "#DD0000", "#FFCE00"]} className={className} />;
+}
+
+function FlagIT({ className }: { className?: string }) {
+  return <Tricolor colors={["#009246", "#fff", "#CE2B37"]} className={className} />;
+}
+
+function FlagES({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 3 2" className={className} preserveAspectRatio="none">
+      <rect width="3" height="2" fill="#AA151B" />
+      <rect y="0.5" width="3" height="1" fill="#F1BF00" />
+    </svg>
+  );
+}
+
 const FLAGS: Record<string, { Flag: (props: { className?: string }) => JSX.Element; label: string }> = {
   fr: { Flag: FlagFR, label: "Français" },
   en: { Flag: FlagGB, label: "English" },
+  de: { Flag: FlagDE, label: "Deutsch" },
+  it: { Flag: FlagIT, label: "Italiano" },
+  es: { Flag: FlagES, label: "Español" },
 };
 
 // Choix de la langue façon VéloPronos : bouton rond avec le drapeau de la langue courante, qui
-// ouvre la liste des autres drapeaux.
+// ouvre un menu déroulant « drapeau + nom de la langue ».
 export function LocaleSwitcher() {
   const locale = useLocale();
   const router = useRouter();
@@ -68,27 +103,28 @@ export function LocaleSwitcher() {
         <Current className="h-4 w-6 rounded-[3px]" />
       </button>
       {open && (
-        <div className="absolute right-0 top-11 z-50 flex flex-col gap-1 rounded-2xl border border-border bg-card p-1.5 shadow-lg">
-          {routing.locales
-            .filter((l) => l !== locale)
-            .map((l) => {
-              const { Flag, label } = FLAGS[l] ?? { Flag: FlagFR, label: l };
-              return (
-                <button
-                  key={l}
-                  type="button"
-                  aria-label={label}
-                  title={label}
-                  onClick={() => {
-                    setOpen(false);
-                    router.replace(pathname, { locale: l });
-                  }}
-                  className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-card2"
-                >
-                  <Flag className="h-4 w-6 rounded-[3px]" />
-                </button>
-              );
-            })}
+        <div className="absolute right-0 top-11 z-50 flex min-w-[160px] flex-col gap-0.5 rounded-2xl border border-border bg-card p-1.5 shadow-lg">
+          {routing.locales.map((l) => {
+            const { Flag, label } = FLAGS[l] ?? { Flag: FlagFR, label: l };
+            const isCurrent = l === locale;
+            return (
+              <button
+                key={l}
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  if (!isCurrent) router.replace(pathname, { locale: l });
+                }}
+                className={`flex items-center gap-3 rounded-xl px-3 py-2 text-left text-sm ${
+                  isCurrent ? "bg-card2 font-semibold text-frost" : "text-text-dim hover:bg-card2 hover:text-frost"
+                }`}
+              >
+                <Flag className="h-4 w-6 flex-shrink-0 rounded-[3px]" />
+                <span className="flex-1">{label}</span>
+                {isCurrent && <span className="text-ice">✓</span>}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

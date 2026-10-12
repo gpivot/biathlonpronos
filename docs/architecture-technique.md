@@ -375,3 +375,9 @@ velopronos.fr), avec la même typographie.
   en SVG car Windows n'affiche pas les emojis drapeaux). Affiché dans l'en-tête du dashboard (à
   côté du profil) et en haut à droite de la vitrine. **Le sélecteur FR/EN flottant présent sur
   toutes les pages a été retiré** : la langue se choisit depuis l'Accueil, puis reste dans l'URL.
+- **5 langues : FR, EN, DE, IT, ES.** Menu déroulant de langue « drapeau + nom » (Français,
+  English, Deutsch, Italiano, Español), langue courante cochée. `messages/de.json`, `it.json`,
+  `es.json` ont été traduits par Claude depuis l'anglais/le français : **à faire relire**, en
+  particulier les noms du jeu (cartes, dossards, Pépite, grillage, courses spéciales) et les
+  textes légaux. Le bonus « Aspiration » / « Draft » porte un seul nom par langue
+  (Windschatten-Bonus, bonus Scia, etc.).

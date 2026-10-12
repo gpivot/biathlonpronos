@@ -7,7 +7,7 @@ import { defineRouting } from "next-intl/routing";
  * messages/. Aucun autre changement de code n'est nécessaire pour en
  * activer une : next-intl route et négocie automatiquement sur cette liste.
  */
-export const locales = ["fr", "en"] as const;
+export const locales = ["fr", "en", "de", "it", "es"] as const;
 
 export type Locale = (typeof locales)[number];
 
