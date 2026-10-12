@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
+import { Landing } from "@/components/landing/Landing";
 import { LogoMark, UserIcon } from "@/components/icons";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -85,6 +86,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     getTranslations("Sex"),
     getHomeData(),
   ]);
+
+  // Visiteur non connecté : page d'accueil vitrine façon VéloPronos.
+  if (!userId) return <Landing />;
 
   const rankIndex = userId ? leaderboard.findIndex((row) => row.userId === userId) : -1;
   const rank = rankIndex >= 0 ? rankIndex + 1 : null;

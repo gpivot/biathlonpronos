@@ -19,10 +19,12 @@ const config: Config = {
         "gold-soft": "oklch(0.30 0.07 90)",
         red: "oklch(0.62 0.20 25)",
         frost: "#eaf6ff",
+        // Bleu vif des accents VéloPronos (dégradé du bouton d'appel à l'action, avec ice).
+        blue: "oklch(0.62 0.19 255)",
       },
       fontFamily: {
-        display: ["var(--font-sora)", "system-ui", "sans-serif"],
-        body: ["var(--font-work-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-poppins)", "system-ui", "sans-serif"],
+        body: ["var(--font-poppins)", "system-ui", "sans-serif"],
       },
     },
   },

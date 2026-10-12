@@ -320,3 +320,26 @@ back-office (`AdminNav`).
   création d'étape + 3 courses au bon format, ré-exécution sans duplication (0 créée / tout mis à
   jour au 2e passage). Le vrai fichier calendrier 2026-27 n'a volontairement pas été importé par
   Claude — Guillaume a indiqué vouloir le tester lui-même via l'écran.
+
+## Page d'accueil visiteur (vitrine façon VéloPronos)
+
+**Demande de Guillaume** : page d'accueil sur le modèle de celle de VéloPronos (captures d'écran de
+velopronos.fr), avec la même typographie.
+
+- **Typographie : Poppins partout** (titres et texte), comme VéloPronos, à la place de Sora +
+  Work Sans. Chargée dans `src/app/[locale]/layout.tsx` via `next/font/google`, exposée dans
+  `--font-poppins` ; les classes `font-display` / `font-body` pointent toutes deux dessus, donc
+  aucun composant n'a eu à changer.
+- Nouveau token `blue` dans `tailwind.config.ts` (bleu vif des accents VéloPronos), utilisé avec
+  `ice` pour le dégradé de l'accroche et du bouton « Commencer gratuitement ».
+- `src/components/landing/Landing.tsx` (+ `AppCarousel.tsx`, composant client) : accroche,
+  « Comment ça marche ? » en 3 étapes, « Pourquoi jouer ? » (6 avantages), carrousel « Découvre
+  Biathlonpronos », pied de page. Affichée par `src/app/[locale]/page.tsx` **uniquement aux
+  visiteurs non connectés** ; un joueur connecté voit toujours le dashboard. Pas de navigation
+  basse sur la vitrine (comme VéloPronos).
+- Choix à confirmer : les badges App Store / Google Play sont affichés « Bientôt disponible » et
+  non cliquables (pas d'app mobile) ; l'avantage « Mode cyclo gratuit » devient « 100 % gratuit »
+  (pas de freemium) et « Mode Expert » devient « Globes de saison » ; le pied de page ne montre
+  que le lien Règlement (pas encore de pages Support / Confidentialité / CGU) ; le carrousel montre
+  des emojis, pas encore de vraies captures de l'app. Les deux boutons (« Commencer » et « Se
+  connecter ») mènent à `/sign-in`, qui propose connexion et inscription.
