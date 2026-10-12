@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { HeaderActions } from "@/components/HeaderActions";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { CreateOrJoinLeague } from "./CreateOrJoinLeague";
@@ -28,7 +29,10 @@ export default async function LiguesPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-4 overflow-auto px-5 pb-3 pt-6">
-        <div className="font-display text-lg font-bold">{t("title")}</div>
+        <div className="flex items-center gap-3">
+          <div className="font-display text-lg font-bold">{t("title")}</div>
+          <HeaderActions />
+        </div>
 
         {!user ? (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">

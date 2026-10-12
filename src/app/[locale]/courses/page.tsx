@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { HeaderActions } from "@/components/HeaderActions";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
@@ -79,6 +80,7 @@ export default async function CoursesPage({ params }: { params: Promise<{ locale
             <ArrowLeftIcon className="h-4 w-4" />
           </Link>
           <div className="font-display text-lg font-bold">{t("title")}</div>
+          <HeaderActions />
         </div>
 
         {isAdmin && seasonId && <CalendarImportButton seasonId={seasonId} />}

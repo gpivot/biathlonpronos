@@ -370,7 +370,7 @@ velopronos.fr), avec la même typographie.
   `coefficient = 2` (déjà la convention « Mondiaux / JO » de la table `stages`) a un encart doré,
   le libellé « Championnats du monde » et son lieu en or. Pas de nouvelle colonne : il suffit que
   l'étape soit saisie avec le coefficient 2 (cas d'Otepää 2027).
-- **Choix de la langue par drapeaux, en haut de l'Accueil** (comme VéloPronos) : bouton rond avec
+- **Choix de la langue par drapeaux, en haut de chaque onglet** (comme VéloPronos) : bouton rond avec
   le drapeau de la langue courante, qui déroule les autres drapeaux (`LocaleSwitcher`, drapeaux
   en SVG car Windows n'affiche pas les emojis drapeaux). Affiché dans l'en-tête du dashboard (à
   côté du profil) et en haut à droite de la vitrine. **Le sélecteur FR/EN flottant présent sur
@@ -381,3 +381,5 @@ velopronos.fr), avec la même typographie.
   particulier les noms du jeu (cartes, dossards, Pépite, grillage, courses spéciales) et les
   textes légaux. Le bonus « Aspiration » / « Draft » porte un seul nom par langue
   (Windschatten-Bonus, bonus Scia, etc.).
+- `src/components/HeaderActions.tsx` (langue + profil) est placé à droite du titre de chaque
+  onglet de la navigation basse : Accueil, Calendrier, Classement, Ma saison, Ligues.

@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { HeaderActions } from "@/components/HeaderActions";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
@@ -150,6 +151,7 @@ function Shell({
             <ArrowLeftIcon className="h-4 w-4" />
           </Link>
           <div className="font-display text-lg font-bold">{title}</div>
+          <HeaderActions />
         </div>
         {children}
       </div>
