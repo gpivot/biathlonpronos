@@ -295,10 +295,8 @@ définitif de « Ma saison » reste à préciser avec Guillaume. Flèche de reto
 back-office (`AdminNav`).
 
 **Bouton retour et import CSV du calendrier (demandes complémentaires de Guillaume).**
-- Flèche de retour vers l'accueil en haut à gauche de `/courses`, cohérente avec le pattern déjà
-  utilisé sur les sous-écrans (`/globes`, `/regles`) — pas encore répliquée sur les autres onglets
-  de la navigation basse (Classement, Ma saison, Ligues) puisque ce sont des onglets racine, pas
-  demandé au-delà de cette page pour l'instant.
+- Flèche de retour vers l'accueil en haut à gauche de chaque onglet de la navigation basse
+  (Calendrier, Classement, Ma saison, Ligues), à la demande de Guillaume.
 - Bouton "Importer le calendrier (CSV)" en haut de `/courses`, visible uniquement si
   `profiles.is_admin` (même mécanisme que le lien Admin de la navigation basse). Fichier
   d'exemple fourni par Guillaume : calendrier IBU complet 2026-27 (12 étapes Coupe du Monde +
@@ -320,3 +318,97 @@ back-office (`AdminNav`).
   création d'étape + 3 courses au bon format, ré-exécution sans duplication (0 créée / tout mis à
   jour au 2e passage). Le vrai fichier calendrier 2026-27 n'a volontairement pas été importé par
   Claude — Guillaume a indiqué vouloir le tester lui-même via l'écran.
+
+## Page d'accueil visiteur (vitrine façon VéloPronos)
+
+**Demande de Guillaume** : page d'accueil sur le modèle de celle de VéloPronos (captures d'écran de
+velopronos.fr), avec la même typographie.
+
+- **Typographie : Poppins partout** (titres et texte), comme VéloPronos, à la place de Sora +
+  Work Sans. Chargée dans `src/app/[locale]/layout.tsx` via `next/font/google`, exposée dans
+  `--font-poppins` ; les classes `font-display` / `font-body` pointent toutes deux dessus, donc
+  aucun composant n'a eu à changer.
+- Nouveau token `blue` dans `tailwind.config.ts` (bleu vif des accents VéloPronos), utilisé avec
+  `ice` pour le dégradé de l'accroche et du bouton « Commencer gratuitement ».
+- `src/components/landing/Landing.tsx` (+ `AppCarousel.tsx`, composant client) : accroche,
+  « Comment ça marche ? » en 3 étapes, « Pourquoi jouer ? » (6 avantages), carrousel « Découvre
+  Biathlonpronos », pied de page. Affichée par `src/app/[locale]/page.tsx` **uniquement aux
+  visiteurs non connectés** ; un joueur connecté voit toujours le dashboard. Pas de navigation
+  basse sur la vitrine (comme VéloPronos).
+- Choix à confirmer : les badges App Store / Google Play sont affichés « Bientôt disponible » et
+  non cliquables (pas d'app mobile) ; l'avantage « Mode cyclo gratuit » devient « 100 % gratuit »
+  (pas de freemium) et « Mode Expert » devient « Globes de saison »  ; le carrousel montre
+  des emojis, pas encore de vraies captures de l'app. Les deux boutons (« Commencer » et « Se
+  connecter ») mènent à `/sign-in`, qui propose connexion et inscription.
+- **Pied de page : Support, Politique de confidentialité, CGU** (liens obligatoires, comme sur
+  VéloPronos), vers `/support`, `/confidentialite`, `/cgu`. La page Support reprend la
+  page Support de VéloPronos (bandeau en dégradé, cartes contact / délai de réponse / types de
+  demandes / aide) ; Confidentialité et CGU partagent `src/components/InfoPage.tsx`, et les trois
+  utilisent le bandeau `src/components/PageHeader.tsx` ; leur texte est dans les namespaces `Support` / `Privacy` /
+  `Terms` des fichiers `messages/*.json`. **À confirmer** : l'adresse de contact
+  `contact@biathlonpronos.fr` (clé `Support.email`) est provisoire, et les textes de
+  confidentialité et de CGU sont des brouillons à faire relire avant l'ouverture au public.
+- **Politique de confidentialité reprise de celle de VéloPronos** (9 sections, capture fournie par
+  Guillaume), adaptée : pas d'« équipe de cœur », connexion Google/Apple + e-mail/mot de passe
+  (pas de Facebook), mention du jeu gratuit. Rendue par `InfoPage` (sections avec paragraphes,
+  puces, encadré et lien de contact). **À confirmer** : connexion Google/Apple citée alors que
+  l'OAuth n'est pas encore finalisé, notifications « si activées » (pas encore implémentées),
+  suppression des données sous 30 jours.
+- **CGU reprises de celles de VéloPronos** (12 sections, capture fournie par Guillaume), adaptées :
+  application web (pas encore mobile), saison 2026-27, inscription e-mail/Google/Apple (pas de
+  Facebook), lien vers le règlement, mention des changements de calendrier/résultats officiels
+  dans la limitation de responsabilité. **À confirmer** : âge minimum 13 ans et droit français
+  repris tels quels de VéloPronos.
+- **Page de connexion** : « Connectez-vous pour continuer » sous le logo ; boutons Google, Apple
+  et **Facebook** (ajouté à la demande de Guillaume), chacun avec son logo. Facebook réintégré
+  dans la Politique de confidentialité et les CGU. **Prérequis** : le fournisseur Facebook doit
+  être activé dans Supabase (Authentication > Providers > Facebook, avec l'App ID et le secret
+  d'une app Meta for Developers), comme Google et Apple ; sans ça le bouton renvoie une erreur.
+- **Calendrier : étape des Mondiaux en doré.** Dans `CalendarAccordion`, une étape à
+  `coefficient = 2` (déjà la convention « Mondiaux / JO » de la table `stages`) a un encart doré,
+  le libellé « Championnats du monde » et son lieu en or. Pas de nouvelle colonne : il suffit que
+  l'étape soit saisie avec le coefficient 2 (cas d'Otepää 2027).
+- **Choix de la langue par drapeaux, en haut de chaque onglet** (comme VéloPronos) : bouton rond avec
+  le drapeau de la langue courante, qui déroule les autres drapeaux (`LocaleSwitcher`, drapeaux
+  en SVG car Windows n'affiche pas les emojis drapeaux). Affiché dans l'en-tête du dashboard (à
+  côté du profil) et en haut à droite de la vitrine. **Le sélecteur FR/EN flottant présent sur
+  toutes les pages a été retiré** : la langue se choisit depuis l'Accueil, puis reste dans l'URL.
+- **5 langues : FR, EN, DE, IT, ES.** Menu déroulant de langue « drapeau + nom » (Français,
+  English, Deutsch, Italiano, Español), langue courante cochée. `messages/de.json`, `it.json`,
+  `es.json` ont été traduits par Claude depuis l'anglais/le français : **à faire relire**, en
+  particulier les noms du jeu (cartes, dossards, Pépite, grillage, courses spéciales) et les
+  textes légaux. Le bonus « Aspiration » / « Draft » porte un seul nom par langue
+  (Windschatten-Bonus, bonus Scia, etc.).
+- `src/components/HeaderActions.tsx` (langue + profil) est placé à droite du titre de chaque
+  onglet de la navigation basse : Accueil, Calendrier, Classement, Ma saison, Ligues.
+- **Page Profil (`/compte`) refaite sur le modèle de VéloPronos** : avatar (initiale du pseudo),
+  pseudo et email ; notifications par email et apparence (interrupteurs **non fonctionnels**,
+  marqués « Bientôt ») ; équipe favorite et cartes bonus (inchangés) ; langue (pastilles drapeau
+  + nom, fonctionnelles) ; liens Aide & Règlement et Support ; déconnexion ; « Supprimer mon
+  compte » ouvre un email au support (pas de suppression automatique). Pas de section « Mode de
+  jeu » (pas de freemium sur Biathlonpronos) ni « Mes messages » (remplacé par Support).
+- **Pseudo modifiable** via le crayon (`compte/PseudoEditor.tsx`, 2 à 20 caractères, contrôle
+  côté interface uniquement). **Migration 0016 à coller dans Supabase** : la policy « profiles:
+  update own » laissait un joueur modifier n'importe quelle colonne de son profil, y compris
+  `is_admin` ; la migration limite la mise à jour côté client à la colonne `pseudo`.
+- **Thème clair / sombre fonctionnel** (Profil > Apparence). Les couleurs de `tailwind.config.ts`
+  pointent vers des variables CSS (`src/app/globals.css`) : palette sombre par défaut, palette
+  claire sous `html.light`. Le choix est mémorisé dans le navigateur (localStorage `theme`) et
+  réappliqué avant l'affichage par un petit script dans `src/app/[locale]/layout.tsx`. Le choix
+  n'est pas lié au compte (à changer sur chaque appareil). Le back-office `/admin` reste sombre.
+
+### Thème clair aux couleurs de VéloPronos (octobre 2026)
+
+Le thème clair reprend la palette chaude de VéloPronos : fond beige (#f1ece4), cartes blanches,
+barre de navigation basse blanche (token `nav`), texte brun foncé, et l'accent `ice` devient ocre
+(interrupteurs, pastille de langue, onglet actif, boutons). Le texte posé sur cet accent passe par le
+token `on-ice` (foncé en thème sombre, blanc en thème clair). Les dégradés de marque (avatar,
+en-têtes, bouton « Commencer gratuitement ») gardent le bleu → turquoise fixe (`teal`) dans les deux
+thèmes, comme VéloPronos. Le back-office `/admin` reste sombre.
+
+### Ma saison : étapes repliées et Championnats du monde dorés (octobre 2026)
+
+Dans l'onglet Ma saison, toutes les étapes sont repliées à l'arrivée (avant, la première étape à
+pronostiquer s'ouvrait). L'étape de coefficient 2 (Otepää) reprend l'encart doré du Calendrier avec
+la mention « Championnats du monde · Coeff. ×2 » ; la pastille « Coeff. ×2 » séparée est retirée
+pour ne pas déborder sur mobile.

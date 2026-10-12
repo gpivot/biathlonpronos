@@ -107,7 +107,7 @@ export function CreateOrJoinLeague({ seasonId }: { seasonId: string }) {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-[#062024] disabled:opacity-60"
+            className="rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-on-ice disabled:opacity-60"
           >
             {t("createButton")}
           </button>

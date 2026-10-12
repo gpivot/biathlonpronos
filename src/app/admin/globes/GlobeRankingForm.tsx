@@ -46,7 +46,7 @@ export function GlobeRankingForm({
           </select>
         ))}
       </div>
-      <button type="submit" disabled={saving} className="self-start rounded bg-ice px-4 py-1.5 text-sm font-bold text-[#062024]">
+      <button type="submit" disabled={saving} className="self-start rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
         {saving ? "Calcul en cours..." : "Enregistrer le classement et calculer les scores"}
       </button>
       {message && <div className="text-xs text-ice">{message}</div>}

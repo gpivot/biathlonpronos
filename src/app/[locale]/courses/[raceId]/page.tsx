@@ -268,7 +268,7 @@ export default async function RacePage({
             {isAdmin && (
               <a
                 href={`/admin/races/${race.id}`}
-                className="rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-[#062024]"
+                className="rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-on-ice"
               >
                 {t("adminEnterResultsButton")}
               </a>

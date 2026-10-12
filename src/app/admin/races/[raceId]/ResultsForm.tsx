@@ -175,7 +175,7 @@ export function ResultsForm({
       <button
         type="submit"
         disabled={submitting}
-        className="self-start rounded-xl bg-ice px-5 py-2.5 text-sm font-bold text-[#062024] disabled:opacity-60"
+        className="self-start rounded-xl bg-ice px-5 py-2.5 text-sm font-bold text-on-ice disabled:opacity-60"
       >
         {submitting ? "Calcul en cours..." : "Enregistrer et calculer les scores"}
       </button>

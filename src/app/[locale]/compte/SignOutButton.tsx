@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { LogoutIcon } from "@/components/icons";
 
 export function SignOutButton() {
   const supabase = createClient();
@@ -17,8 +18,9 @@ export function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold text-red"
+      className="flex w-full items-center justify-center gap-2 rounded-2xl border border-red/60 py-3.5 font-display text-sm font-semibold text-red hover:bg-red/10"
     >
+      <LogoutIcon className="h-5 w-5" />
       {t("signOut")}
     </button>
   );

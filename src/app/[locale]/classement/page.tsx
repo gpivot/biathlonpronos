@@ -1,6 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
+import { Link } from "@/i18n/navigation";
+import { HeaderActions } from "@/components/HeaderActions";
+import { ArrowLeftIcon } from "@/components/icons";
 import { getLeaderboard as getLeaderboardRows } from "@/lib/leaderboard";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +49,16 @@ export default async function ClassementPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-4 overflow-auto px-5 pb-3 pt-6">
-        <div className="font-display text-lg font-bold">{t("title")}</div>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-text-dim"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+          </Link>
+          <div className="font-display text-lg font-bold">{t("title")}</div>
+          <HeaderActions />
+        </div>
 
         {leaderboard.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">

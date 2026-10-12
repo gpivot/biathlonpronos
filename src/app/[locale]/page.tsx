@@ -2,7 +2,9 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
-import { LogoMark, UserIcon } from "@/components/icons";
+import { Landing } from "@/components/landing/Landing";
+import { HeaderActions } from "@/components/HeaderActions";
+import { LogoMark } from "@/components/icons";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 
@@ -86,6 +88,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     getHomeData(),
   ]);
 
+  // Visiteur non connecté : page d'accueil vitrine façon VéloPronos.
+  if (!userId) return <Landing />;
+
   const rankIndex = userId ? leaderboard.findIndex((row) => row.userId === userId) : -1;
   const rank = rankIndex >= 0 ? rankIndex + 1 : null;
   const points = rankIndex >= 0 ? leaderboard[rankIndex].points : 0;
@@ -105,12 +110,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <span className="text-ice">Pronos</span>
             </div>
           </div>
-          <Link
-            href="/compte"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-text-dim"
-          >
-            <UserIcon className="h-4.5 w-4.5" />
-          </Link>
+          <HeaderActions />
         </div>
 
         {loggedInWithSeason ? (
@@ -143,7 +143,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="flex gap-2.5 pt-1">
               <Link
                 href="/classement"
-                className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-[#062024]"
+                className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-on-ice"
               >
                 {t("standingsButton")}
               </Link>
@@ -159,7 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="flex gap-2.5">
             <Link
               href="/regles"
-              className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-[#062024]"
+              className="flex-1 rounded-full bg-ice py-2.5 text-center font-display text-[13px] font-bold text-on-ice"
             >
               {t("rulesButton")}
             </Link>

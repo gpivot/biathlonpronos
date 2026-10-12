@@ -32,7 +32,7 @@ export default async function AdminSeasonsPage() {
             required
             className="rounded border border-border bg-bg px-2 py-1.5 text-sm"
           />
-          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-[#062024]">
+          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Créer
           </button>
         </div>

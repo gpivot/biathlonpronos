@@ -1,0 +1,504 @@
+{
+  "Metadata": {
+    "title": "Biathlonpronos",
+    "description": "Tippe auf Biathlonrennen. Fordere deine Freunde heraus."
+  },
+  "Nav": {
+    "home": "Start",
+    "stages": "Kalender",
+    "standings": "Wertung",
+    "leagues": "Ligen",
+    "predictions": "Meine Saison",
+    "admin": "Admin"
+  },
+  "Home": {
+    "rulesButton": "Regeln entdecken",
+    "challengeButton": "Fordere deine Freunde heraus",
+    "seasonBadge": "Saison {label}",
+    "favoriteNationLabel": "Meine Lieblingsnation",
+    "rankLabel": "Gesamtrang",
+    "pointsLabel": "Punkte",
+    "standingsButton": "Wertung",
+    "mySeasonButton": "Meine Saison",
+    "nowTitle": "Gerade jetzt",
+    "nowBadge": "Gerade jetzt",
+    "nextRaceTitle": "Demnächst",
+    "seeFullCalendar": "Ganzen Kalender anzeigen",
+    "standingsPreviewTitle": "Saisonwertung",
+    "seeFullStandings": "Ganze Wertung anzeigen",
+    "emptyState": "Noch keine Station geplant. Lege in Supabase eine Saison, Stationen und Rennen an (siehe supabase/seed.sql), um diese Ansicht zu füllen.",
+    "coefficientBadge": "Koeff. ×2"
+  },
+  "Landing": {
+    "heroTitle": "Tippe auf die Biathlonrennen.",
+    "heroAccent": "Fordere deine Freunde heraus.",
+    "heroSubtitle": "30 Sekunden pro Rennen zum Tippen. Den ganzen Tag, um das Schießen zu verfolgen.",
+    "heroCta": "Kostenlos starten",
+    "heroSignIn": "Schon registriert? Anmelden",
+    "appStoresTitle": "Oder lade die App herunter",
+    "appStoreSoon": "Bald verfügbar im",
+    "howEyebrow": "Schnell & einfach",
+    "howTitle": "Wie funktioniert's?",
+    "stepLabel": "Schritt {n}",
+    "step1Title": "Wähle vor dem Start deine 3 Biathleten.",
+    "step1Body": "In nur 30 Sekunden wählst du deine Favoriten für das Rennen.",
+    "step2Title": "Verfolge das Rennen und sammle Punkte.",
+    "step2Body": "Deine Biathleten schießen fehlerfrei? Du punktest. Einfach und mit Suchtpotenzial.",
+    "step3Title": "Klettere in der Wertung nach oben und schlag deine Freunde.",
+    "step3Body": "Tritt privaten Ligen bei und miss dich mit deiner Community.",
+    "whyEyebrow": "Die Vorteile",
+    "whyTitle": "Warum Biathlonpronos spielen?",
+    "whyFree": "100 % kostenlos",
+    "whyFast": "Schnell gespielt",
+    "whyBeginners": "Einsteigerfreundlich",
+    "whyLeagues": "Private Ligen",
+    "whyCards": "Bonuskarten",
+    "whyGlobes": "Saisonkugeln",
+    "appEyebrow": "Die App",
+    "appTitle": "Entdecke Biathlonpronos",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "slideHomeTitle": "Start",
+    "slideHomeBody": "Verfolge die Saison in Echtzeit",
+    "slideCalendarTitle": "Kalender",
+    "slideCalendarBody": "Alle Stationen und Rennen zum Tippen",
+    "slideStandingsTitle": "Wertung",
+    "slideStandingsBody": "Die Gesamtwertung und die Saisonkugeln",
+    "slideLeaguesTitle": "Ligen",
+    "slideLeaguesBody": "Miss dich mit deinen Freunden in privaten Ligen",
+    "footerDisclaimer": "Biathlonpronos ist ein unabhängiges Biathlon-Tippspiel. Kein Echtgeldeinsatz. Keine Geldgewinne.",
+    "footerSupport": "Support",
+    "footerPrivacy": "Datenschutzerklärung",
+    "footerTerms": "Nutzungsbedingungen"
+  },
+  "Regles": {
+    "title": "Die Regeln",
+    "intro": "Tippe, welche Biathleten glänzen werden, spiel mit ihren Quoten und versuche, dir das Gelbe Trikot des besten Tippers der Saison zu holen.",
+    "baremeTitle": "Grundpunkteskala",
+    "baremeHint": "Quote × Multiplikator je nach Platzierung. Nichts ab dem 11. Platz.",
+    "s_principe_title": "1. Das Prinzip",
+    "s_principe_body": "Wähle für jedes Einzelrennen 3 Biathleten. Je riskanter dein Tipp (höhere Quote), desto mehr kann er einbringen – er muss aber in die Top 10 kommen. Kombinationsboni: Podium (+100), Top 5 (+50), Top 10 (+20) und ein Volltreffer, wenn du die 3 punktbesten Biathleten findest (+200).",
+    "s_grillage_title": "2. Gesperrte Biathleten",
+    "s_grillage_body": "Ein Biathlet, den du gewählt hast, ist für das nächste Rennen derselben Station gesperrt. Bei der nächsten Station ist er wieder verfügbar (außer du setzt die Fondue-Karte ein).",
+    "s_cotes_title": "3. Die Quoten",
+    "s_cotes_body": "Jeder Biathlet hat eine Quote pro Format (Sprint/Verfolgung/Einzel/Massenstart), die an wichtigen Punkten der Saison neu bewertet wird. Die Verfolgungsquoten werden nach dem Sprint automatisch neu berechnet: +5 pro 20 s Rückstand (erstes Intervall neutral), maximal 40.",
+    "s_relais_title": "4. Staffeln",
+    "s_relais_body": "Du tippst eine Nation statt 3 Biathleten. Nur die 5 besten Nationen punkten, mit einer geringeren Punkteskala als bei Einzelrennen.",
+    "s_globes_title": "5. Saisontipps (Kugeln)",
+    "s_globes_body": "Vor Saisonbeginn: Gesamtsieger, beste/r Nachwuchsathlet/in und beste Nation, jeweils für Männer und Frauen. Die große Kugel belohnt vor allem die Genauigkeit bei den finalen Top 5.",
+    "s_bonusx2_title": "6. Der Saison-×2-Bonus",
+    "s_bonusx2_body": "3 Einsätze pro Saison, bei einem Weltcup-Einzelrennen oder einer Weltcup-Staffel (nicht bei Weltmeisterschaften/Olympischen Spielen oder Spezialrennen). Verdoppelt alle Punkte dieses Tipps.",
+    "s_mondiaux_title": "7. Weltmeisterschaften und Olympische Spiele",
+    "s_mondiaux_body": "Alle Rennen dieser Events zählen automatisch doppelt, nicht kombinierbar mit dem persönlichen ×2-Bonus.",
+    "s_special_title": "8. Spezialrennen",
+    "s_special_body": "Strafrunde: -20 Pkt. pro Strafrunde deiner Biathleten. Nebel: außerhalb der Top 10 ein Malus in Höhe der Platzierung. Erwischt: ein Malus, wenn einer oder mehrere deiner 3 Tipps außerhalb der Top 10 landen (bis zu -300), und -200, wenn du gar nicht tippst.",
+    "s_teamnation_title": "9. Team-Nation- & Windschatten-Bonus",
+    "s_teamnation_body": "Wähle für die Saison ein Lieblingsteam (Nation + Geschlecht). Bei der Station in dessen Land werden die Punkte des Athleten aus diesem Team, den du getippt hast, verdoppelt (Team-Nation-Bonus). Unabhängig von deinem Tipp gilt: Je mehr Athleten dieses Teams in einem Rennen in die Top 10 kommen, desto mehr Punkte bekommst du (Windschatten-Bonus).",
+    "s_streak_title": "10. Die 10/10-Serie und Bonuskarten",
+    "s_streak_body": "10 Rennen in Folge mit Punkten bringen dir eine Bonuskarte: Joker (4 Tipps, die besten 3 zählen), Turbowachs (×3 auf einen Athleten), Fondue (ausnahmsweise Sperre aufheben), Schwarze Katze (einen Kugel-Tipp vor Ende der 3. Station korrigieren).",
+    "s_pepite_title": "11. Der Rohdiamant",
+    "s_pepite_body": "Eine Wette zu Saisonbeginn auf einen Außenseiter pro Geschlecht (Quote ≥ 30). Ein verdeckter Tipp: Bei seiner ersten Top-10-Platzierung der Saison wird seine Rennpunktzahl als Bonus gutgeschrieben, danach ist er wieder ein normaler Athlet.",
+    "s_fuseegachette_title": "12. Rakete & Abzug",
+    "s_fuseegachette_body": "Rakete: +50 Pkt., wenn einer deiner Tipps die beste Laufzeit des Rennens hatte (einmalig). Abzug: +20 Pkt. pro Tipp mit fehlerfreiem Schießen (kumulierbar).",
+    "s_classement_title": "13. Gesamtwertung",
+    "s_classement_body": "Zählt alle in der Saison erzielten Punkte zusammen. Der Führende trägt das Gelbe Trikot. Es gibt außerdem Nebenwertungen (Rotes Trikot) und private Ligen unter Freunden."
+  },
+  "Compte": {
+    "back": "← Zurück",
+    "loginRequired": "Melde dich an, um auf dein Konto zuzugreifen.",
+    "favoriteTeamTitle": "Lieblingsteam",
+    "favoriteTeamHint": "Eine Nation + ein Geschlecht (z. B. Frankreich Frauen). Löst den Team-Nation-Bonus bei der Station in diesem Land aus sowie den Windschatten-Bonus je nach seiner Teamleistung.",
+    "women": "Frauen",
+    "men": "Männer",
+    "save": "Speichern",
+    "saving": "Wird gespeichert...",
+    "saved": "Gespeichert.",
+    "signOut": "Abmelden",
+    "claimCardTitle": "Du kannst {count, plural, one {eine Karte} other {{count} Karten}} auswählen!",
+    "bonusCardsTitle": "Meine Bonuskarten",
+    "bonusCardsEmpty": "Noch keine Karte verfügbar. Hole in 10 Rennen in Folge Punkte, um eine zu verdienen.",
+    "cardLabel_balle_de_pioche": "Joker",
+    "cardLabel_ca_farte": "Turbowachs",
+    "cardLabel_fondue": "Fondue",
+    "cardLabel_chat_noir": "Schwarze Katze",
+    "title": "Profil",
+    "emailNotificationsTitle": "E-Mail-Benachrichtigungen",
+    "reminderTitle": "Tipp-Erinnerung",
+    "reminderHint": "2 Stunden vor jedem Rennen",
+    "resultsTitle": "Ergebnisse verfügbar",
+    "resultsHint": "Mit deinen Punkten und Karten",
+    "appearanceTitle": "Darstellung",
+    "darkTheme": "Dunkles Design",
+    "soon": "Bald",
+    "languageTitle": "Sprache",
+    "languagesAvailable": "{count} Sprachen verfügbar",
+    "helpAndRules": "Hilfe & Regeln",
+    "deleteAccount": "Mein Konto löschen",
+    "editPseudo": "Benutzernamen ändern",
+    "cancel": "Abbrechen",
+    "pseudoLengthError": "Der Benutzername muss zwischen {min} und {max} Zeichen lang sein.",
+    "lightTheme": "Helles Design"
+  },
+  "Globes": {
+    "back": "← Zurück",
+    "title": "Saisontipps",
+    "intro": "6 große Tipps vor Saisonbeginn: Gesamtsieger, beste/r Nachwuchsathlet/in und beste Nation, jeweils für Männer und Frauen.",
+    "noSeason": "Derzeit keine aktive Saison.",
+    "loginRequired": "Melde dich an, um deine Saisontipps abzugeben.",
+    "lockedMessage": "Die Saisontipps sind seit Saisonbeginn gesperrt.",
+    "noPick": "— Auswählen —",
+    "category_gros_globe_f": "Gesamtsiegerin Frauen",
+    "category_gros_globe_h": "Gesamtsieger Männer",
+    "category_meilleur_jeune_f": "Beste Nachwuchsathletin",
+    "category_meilleur_jeune_h": "Bester Nachwuchsathlet",
+    "category_meilleure_nation_f": "Beste Nation Frauen",
+    "category_meilleure_nation_h": "Beste Nation Männer",
+    "saving": "Wird gespeichert...",
+    "saved": "Saisontipps gespeichert.",
+    "submit": "Meine Saisontipps bestätigen",
+    "pepiteTitle": "Dein Rohdiamant",
+    "pepiteHint": "Ein Außenseiter (Quote ≥ 30), zu Saisonbeginn gewählt, einer pro Geschlecht. Ein verdeckter Tipp: Bei seiner ersten Top-10-Platzierung der Saison wird seine Punktzahl aus diesem Rennen als Bonus zu deinem Punktestand addiert. Danach ist er wieder ein normaler Athlet.",
+    "pepiteClaimed": "Rohdiamant-Bonus bereits erhalten!",
+    "pepiteSubmit": "Meine Wahl bestätigen (endgültig)"
+  },
+  "Pronos": {
+    "seasonPredictionsLink": "Meine Saisontipps (Kugeln)",
+    "loginRequired": "Melde dich an, um deine Tipps zu sehen und zu verwalten.",
+    "pendingLabel": "Ausstehend",
+    "toPredictLabel": "Zu tippen",
+    "toPredictCount": "{count} zu tippen",
+    "emptyAll": "Kein Rennen zum Tippen offen und noch kein Tipp abgegeben."
+  },
+  "Ligues": {
+    "title": "Deine Ligen",
+    "loginRequired": "Melde dich an, um eine Liga zu erstellen oder ihr beizutreten.",
+    "createTitle": "Liga erstellen",
+    "namePlaceholder": "Name der Liga",
+    "createButton": "Erstellen",
+    "createError": "Die Liga konnte nicht erstellt werden.",
+    "joinTitle": "Mit Code beitreten",
+    "codePlaceholder": "Einladungscode",
+    "joinButton": "Beitreten",
+    "joinError": "Ungültiger Einladungscode.",
+    "backToList": "← Zurück zu deinen Ligen",
+    "notAMember": "Du bist kein Mitglied dieser Liga.",
+    "inviteCodeLabel": "Einladungscode"
+  },
+  "Classement": {
+    "title": "Gesamtwertung",
+    "emptyState": "Noch keine Punkte vergeben. Die Wertung füllt sich, sobald das erste Rennen ausgewertet ist.",
+    "streakTitle": "Rotes Trikot — beste laufende Serie"
+  },
+  "Courses": {
+    "title": "Kalender",
+    "emptyState": "Keine Station geplant. Lege eine Saison, Stationen und Rennen für diese Saison an.",
+    "noRacesInStage": "Kein Rennen für diese Station.",
+    "coefficientBadge": "Koeff. ×2",
+    "importButton": "Kalender importieren (CSV)",
+    "importLoading": "Wird importiert...",
+    "importSummary": "{stagesCreated} Station(en) erstellt, {stagesUpdated} aktualisiert · {racesCreated} Rennen erstellt, {racesUpdated} aktualisiert.",
+    "worldChampionships": "Weltmeisterschaften"
+  },
+  "RaceFormat": {
+    "sprint": "Sprint",
+    "poursuite": "Verfolgung",
+    "individuel": "Einzel",
+    "mass_start": "Massenstart",
+    "relais_h": "Staffel Männer",
+    "relais_f": "Staffel Frauen",
+    "relais_mixte": "Mixed-Staffel",
+    "relais_mixte_simple": "Single-Mixed-Staffel"
+  },
+  "Sex": {
+    "F": "Frauen",
+    "H": "Männer"
+  },
+  "Race": {
+    "lockLabel": "Tippschluss {date}",
+    "specialRulePrefix": "Spezialrennen:",
+    "specialRuleHint": "— sieh in den Regeln nach, welcher Bonus/Malus gilt.",
+    "noOddsMessage": "Für dieses Rennen sind keine Quoten eingetragen. Füge der Quotentabelle Zeilen (Format \"{format}\") für dieses Format und diese Saison hinzu.",
+    "status_upcoming": "Demnächst",
+    "status_ongoing": "Läuft",
+    "status_finished": "Beendet",
+    "myPredictionTitle": "Mein Tipp",
+    "noPredictionMessage": "Du hast für dieses Rennen keinen Tipp abgegeben.",
+    "bonusX2Badge": "×2-Bonus aktiv",
+    "adminEnterResultsButton": "Ergebnisse eintragen (Admin)",
+    "pointsEarnedLabel": "Deine Punkte für dieses Rennen",
+    "resultsTitle": "Ergebnisse",
+    "noResultsMessage": "Ergebnisse noch nicht eingetragen."
+  },
+  "PredictionForm": {
+    "chooseThree": "Wähle 3 Biathleten",
+    "chooseNation": "Wähle eine Nation",
+    "grilled": "gesperrt",
+    "loginRequired": "Melde dich an, um deinen Tipp zu bestätigen.",
+    "saving": "Wird gespeichert...",
+    "submit": "Meinen Tipp bestätigen",
+    "cardSectionTitle": "Bonuskarte",
+    "noCard": "Keine",
+    "cardBalleDePioche": "Joker",
+    "cardCaFarte": "Turbowachs",
+    "caFarteTargetRequired": "Wähle, welcher Athlet das ×3 bekommt.",
+    "cardFondueAction": "Fondue einsetzen (Sperre meiner Biathleten aufheben)",
+    "bonusX2Label": "Saison-×2-Bonus (noch {count})"
+  },
+  "SignIn": {
+    "prompt": "Melde dich an, um fortzufahren",
+    "continueGoogle": "Weiter mit Google",
+    "continueApple": "Weiter mit Apple",
+    "continueFacebook": "Weiter mit Facebook",
+    "or": "ODER",
+    "emailPlaceholder": "E-Mail",
+    "passwordPlaceholder": "Passwort",
+    "connecting": "Anmeldung läuft...",
+    "submit": "Anmelden",
+    "signUpSubmit": "Mein Konto erstellen",
+    "switchToSignUp": "Noch kein Konto? Jetzt erstellen",
+    "switchToSignIn": "Schon ein Konto? Anmelden"
+  },
+  "Support": {
+    "title": "Support",
+    "subtitle": "Wir helfen dir gern",
+    "contactTitle": "Kontakt",
+    "contactBody": "Bei Fragen, technischen Problemen oder Anfragen zur Kontolöschung schreib uns direkt per E-Mail.",
+    "email": "contact@biathlonpronos.fr",
+    "delayTitle": "Antwortzeit",
+    "delayBody": "Wir antworten in der Regel innerhalb von 24 bis 48 Stunden an Werktagen.",
+    "typesTitle": "Arten von Anfragen",
+    "types": [
+      {
+        "emoji": "🐛",
+        "label": "Fehlermeldung oder technisches Problem"
+      },
+      {
+        "emoji": "🗑️",
+        "label": "Anfrage zur Löschung von Konto und Daten"
+      },
+      {
+        "emoji": "🔑",
+        "label": "Anmelde- oder Zugangsproblem"
+      },
+      {
+        "emoji": "📊",
+        "label": "Frage zur Punkteberechnung"
+      },
+      {
+        "emoji": "🏆",
+        "label": "Frage zu Ligen oder Wertungen"
+      },
+      {
+        "emoji": "💡",
+        "label": "Verbesserungsvorschlag"
+      }
+    ],
+    "helpTitle": "Hilfe & Regeln",
+    "helpBody": "Lies die Regeln, um zu erfahren, wie das Spiel funktioniert, wie Punkte berechnet werden, wie Bonuskarten wirken und welche Funktionen Biathlonpronos bietet.",
+    "helpButton": "Hilfe ansehen",
+    "back": "Start",
+    "privacy": "Datenschutzerklärung",
+    "terms": "Nutzungsbedingungen"
+  },
+  "Privacy": {
+    "title": "Datenschutzerklärung",
+    "back": "Start",
+    "updated": "Zuletzt aktualisiert: Oktober 2026",
+    "sections": [
+      {
+        "title": "1. Einleitung",
+        "paragraphs": [
+          "Biathlonpronos („die Anwendung“) respektiert die Privatsphäre seiner Nutzer. Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten erhoben werden, wie sie verwendet werden und welche Rechte Sie haben."
+        ]
+      },
+      {
+        "title": "2. Erhobene Daten",
+        "paragraphs": [
+          "Wenn Sie die Anwendung nutzen, erheben wir:"
+        ],
+        "bullets": [
+          "E-Mail-Adresse (über Ihr Konto)",
+          "Profilinformationen (Benutzername, Lieblingsnation)",
+          "Tipps, Bonuskarten und Spielverlauf",
+          "Wertungen, Ligen und Statistiken",
+          "Anmeldedaten (E-Mail und Passwort oder OAuth-Anbieter: Google, Apple, Facebook)"
+        ],
+        "note": "Wir erheben keinerlei Bank- oder Zahlungsdaten: Das Spiel ist vollständig kostenlos."
+      },
+      {
+        "title": "3. Verwendung der Daten",
+        "paragraphs": [
+          "Die erhobenen Daten werden ausschließlich verwendet, um:"
+        ],
+        "bullets": [
+          "Die Spielfunktionen bereitzustellen (Tipps, Wertungen, Kugeln, Ligen)",
+          "Ihr Benutzerkonto zu verwalten",
+          "Das Nutzungserlebnis zu verbessern",
+          "Support-Anfragen zu beantworten",
+          "Benachrichtigungen zur Anwendung zu senden (sofern aktiviert)"
+        ]
+      },
+      {
+        "title": "4. Weitergabe von Daten",
+        "paragraphs": [
+          "Ihre personenbezogenen Daten werden niemals an Dritte verkauft oder vermietet.",
+          "Einige Daten können von unseren technischen Dienstleistern (Hosting, Datenbank, Authentifizierung) ausschließlich zum Betrieb des Dienstes verarbeitet werden."
+        ]
+      },
+      {
+        "title": "5. Anmeldung über Drittanbieter (OAuth)",
+        "paragraphs": [
+          "Die Anwendung bietet die Anmeldung über Google, Apple und Facebook an. Diese Anmeldungen unterliegen den Datenschutzrichtlinien der jeweiligen Anbieter, und wir erhalten niemals Ihr Passwort. Wenn Sie sich per E-Mail anmelden, wird Ihr Passwort von unserem Authentifizierungsanbieter verschlüsselt gespeichert: Wir haben niemals Zugriff darauf im Klartext."
+        ]
+      },
+      {
+        "title": "6. Speicherdauer",
+        "paragraphs": [
+          "Ihre Daten werden gespeichert, solange Ihr Konto aktiv ist. Wenn Sie Ihr Konto löschen, werden Ihre personenbezogenen Daten innerhalb von 30 Tagen gelöscht."
+        ]
+      },
+      {
+        "title": "7. Ihre Rechte (DSGVO)",
+        "paragraphs": [
+          "Gemäß der Datenschutz-Grundverordnung (DSGVO) haben Sie folgende Rechte:"
+        ],
+        "bullets": [
+          "Recht auf Auskunft über Ihre personenbezogenen Daten",
+          "Recht auf Berichtigung",
+          "Recht auf Löschung („Recht auf Vergessenwerden“)",
+          "Recht auf Datenübertragbarkeit",
+          "Recht auf Widerspruch gegen die Verarbeitung"
+        ],
+        "email": true
+      },
+      {
+        "title": "8. Sicherheit",
+        "paragraphs": [
+          "Wir setzen angemessene technische und organisatorische Sicherheitsmaßnahmen ein, um Ihre Daten vor unbefugtem Zugriff, Verlust oder Offenlegung zu schützen."
+        ]
+      },
+      {
+        "title": "9. Kontakt",
+        "paragraphs": [
+          "Bei Fragen zu dieser Datenschutzerklärung:"
+        ],
+        "email": true
+      }
+    ]
+  },
+  "Terms": {
+    "title": "Nutzungsbedingungen",
+    "back": "Start",
+    "updated": "Zuletzt aktualisiert: Oktober 2026",
+    "sections": [
+      {
+        "title": "1. Gegenstand",
+        "paragraphs": [
+          "Diese Nutzungsbedingungen regeln die Nutzung der Webanwendung Biathlonpronos (im Folgenden „die Anwendung“). Mit dem Zugriff auf die Anwendung akzeptieren Sie diese Nutzungsbedingungen vorbehaltlos."
+        ]
+      },
+      {
+        "title": "2. Beschreibung des Dienstes",
+        "paragraphs": [
+          "Biathlonpronos ist eine Anwendung für Tipps auf Biathlonrennen, mit der Nutzer:"
+        ],
+        "bullets": [
+          "Die bestplatzierten Biathleten und Nationen jedes Rennens tippen können",
+          "An privaten Ligen teilnehmen können",
+          "Ihre eigenen Leistungen und die anderer Spieler verfolgen können"
+        ],
+        "after": [
+          "Die Anwendung wird für die Saison 2026-27 kostenlos angeboten."
+        ]
+      },
+      {
+        "title": "3. Zugang und Registrierung",
+        "paragraphs": [
+          "Für den Zugang zur Anwendung ist die Erstellung eines Kontos erforderlich. Sie können sich registrieren mit:"
+        ],
+        "bullets": [
+          "E-Mail und Passwort",
+          "Google",
+          "Apple",
+          "Facebook"
+        ],
+        "after": [
+          "Sie müssen mindestens 13 Jahre alt sein, um die Anwendung zu nutzen."
+        ]
+      },
+      {
+        "title": "4. Spielregeln",
+        "paragraphs": [
+          "Biathlonpronos ist ein Tippspiel ohne Echtgeldeinsatz. Mit den Leistungen in der Anwendung ist kein finanzieller Gewinn verbunden. Es handelt sich um ein Tippspiel zum Spaß und für die Community."
+        ],
+        "link": {
+          "href": "/regles",
+          "label": "Regeln ansehen"
+        }
+      },
+      {
+        "title": "5. Verhalten der Nutzer",
+        "paragraphs": [
+          "Die Nutzer verpflichten sich:"
+        ],
+        "bullets": [
+          "Die Anwendung nicht für rechtswidrige Zwecke zu nutzen",
+          "Nicht zu versuchen, die Wertungen zu manipulieren",
+          "Sich nicht als andere Nutzer auszugeben",
+          "Die anderen Mitglieder der Community zu respektieren"
+        ],
+        "after": [
+          "Missbräuchliches Verhalten kann zur Sperrung oder Löschung des Kontos führen."
+        ]
+      },
+      {
+        "title": "6. Geistiges Eigentum",
+        "paragraphs": [
+          "Alle Elemente der Anwendung (Texte, Grafiken, Logo, Code) sind Eigentum von Biathlonpronos. Jede auch nur teilweise Vervielfältigung ohne schriftliche Genehmigung ist untersagt."
+        ]
+      },
+      {
+        "title": "7. Personenbezogene Daten",
+        "paragraphs": [
+          "Die Verarbeitung personenbezogener Daten ist in unserer Datenschutzerklärung beschrieben."
+        ],
+        "link": {
+          "href": "/confidentialite",
+          "label": "Datenschutzerklärung ansehen"
+        }
+      },
+      {
+        "title": "8. Haftungsbeschränkung",
+        "paragraphs": [
+          "Biathlonpronos bemüht sich, die Verfügbarkeit und Zuverlässigkeit der Anwendung sicherzustellen, kann jedoch keine unterbrechungsfreie Verfügbarkeit garantieren. Wir haften nicht für technische Störungen außerhalb unseres Einflussbereichs und nicht für Änderungen am offiziellen Rennkalender oder an den offiziellen Ergebnissen."
+        ]
+      },
+      {
+        "title": "9. Änderungen der Nutzungsbedingungen",
+        "paragraphs": [
+          "Wir behalten uns das Recht vor, diese Nutzungsbedingungen jederzeit zu ändern. Über wesentliche Änderungen werden die Nutzer in der Anwendung informiert. Die weitere Nutzung der Anwendung gilt als Zustimmung zu den neuen Nutzungsbedingungen."
+        ]
+      },
+      {
+        "title": "10. Kontolöschung",
+        "paragraphs": [
+          "Sie können die Löschung Ihres Kontos jederzeit beantragen, indem Sie sich an unseren Support wenden. Alle Ihre Daten werden innerhalb von 30 Tagen gelöscht."
+        ],
+        "email": true
+      },
+      {
+        "title": "11. Anwendbares Recht",
+        "paragraphs": [
+          "Diese Nutzungsbedingungen unterliegen französischem Recht. Im Streitfall sind ausschließlich die französischen Gerichte zuständig."
+        ]
+      },
+      {
+        "title": "12. Kontakt",
+        "paragraphs": [
+          "Bei Fragen zu diesen Nutzungsbedingungen:"
+        ],
+        "email": true
+      }
+    ]
+  }
+}

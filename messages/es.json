@@ -1,0 +1,504 @@
+{
+  "Metadata": {
+    "title": "Biathlonpronos",
+    "description": "Pronostica las carreras de biatlón. Reta a tus amigos."
+  },
+  "Nav": {
+    "home": "Inicio",
+    "stages": "Calendario",
+    "standings": "Clasificación",
+    "leagues": "Ligas",
+    "predictions": "Mi temporada",
+    "admin": "Admin"
+  },
+  "Home": {
+    "rulesButton": "Descubre las reglas",
+    "challengeButton": "Reta a tus amigos",
+    "seasonBadge": "Temporada {label}",
+    "favoriteNationLabel": "Mi nación favorita",
+    "rankLabel": "puesto general",
+    "pointsLabel": "puntos",
+    "standingsButton": "Clasificación",
+    "mySeasonButton": "Mi temporada",
+    "nowTitle": "Ahora mismo",
+    "nowBadge": "Ahora mismo",
+    "nextRaceTitle": "Próximamente",
+    "seeFullCalendar": "Ver el calendario completo",
+    "standingsPreviewTitle": "Clasificación de la temporada",
+    "seeFullStandings": "Ver la clasificación completa",
+    "emptyState": "Todavía no hay ninguna etapa programada. Añade una temporada, etapas y carreras desde Supabase (ver supabase/seed.sql) para rellenar esta pantalla.",
+    "coefficientBadge": "Coef. ×2"
+  },
+  "Landing": {
+    "heroTitle": "Pronostica las carreras de biatlón.",
+    "heroAccent": "Reta a tus amigos.",
+    "heroSubtitle": "30 segundos por carrera para jugar. Todo el día para seguir el tiro.",
+    "heroCta": "Empieza gratis",
+    "heroSignIn": "¿Ya estás registrado? Inicia sesión",
+    "appStoresTitle": "O descarga la app",
+    "appStoreSoon": "Próximamente en",
+    "howEyebrow": "Rápido y sencillo",
+    "howTitle": "¿Cómo funciona?",
+    "stepLabel": "Paso {n}",
+    "step1Title": "Elige a tus 3 biatletas antes de la salida.",
+    "step1Body": "En apenas 30 segundos, selecciona a tus favoritos para la carrera.",
+    "step2Title": "Sigue la carrera y suma puntos.",
+    "step2Body": "¿Tus biatletas hacen pleno en el tiro? Sumas puntos. Sencillo y adictivo.",
+    "step3Title": "Escala en la clasificación y gana a tus amigos.",
+    "step3Body": "Únete a ligas privadas y enfréntate a tu comunidad.",
+    "whyEyebrow": "Las ventajas",
+    "whyTitle": "¿Por qué jugar a Biathlonpronos?",
+    "whyFree": "100 % gratis",
+    "whyFast": "Rápido de jugar",
+    "whyBeginners": "Ideal para principiantes",
+    "whyLeagues": "Ligas privadas",
+    "whyCards": "Cartas bonus",
+    "whyGlobes": "Globos de temporada",
+    "appEyebrow": "La app",
+    "appTitle": "Descubre Biathlonpronos",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "slideHomeTitle": "Inicio",
+    "slideHomeBody": "Sigue la temporada en tiempo real",
+    "slideCalendarTitle": "Calendario",
+    "slideCalendarBody": "Todas las etapas y carreras para pronosticar",
+    "slideStandingsTitle": "Clasificación",
+    "slideStandingsBody": "La clasificación general y los globos de temporada",
+    "slideLeaguesTitle": "Ligas",
+    "slideLeaguesBody": "Enfréntate a tus amigos en ligas privadas",
+    "footerDisclaimer": "Biathlonpronos es un juego independiente de pronósticos de biatlón. Sin apuestas con dinero real. Sin ganancias económicas.",
+    "footerSupport": "Soporte",
+    "footerPrivacy": "Política de privacidad",
+    "footerTerms": "Condiciones de uso"
+  },
+  "Regles": {
+    "title": "Las reglas",
+    "intro": "Pronostica qué biatletas van a brillar, juega con sus cuotas e intenta hacerte con el Dorsal amarillo como mejor pronosticador de la temporada.",
+    "baremeTitle": "Baremo básico",
+    "baremeHint": "Cuota × multiplicador según el puesto final. Nada más allá del 10.º puesto.",
+    "s_principe_title": "1. El principio",
+    "s_principe_body": "En cada carrera individual, elige 3 biatletas. Cuanto más arriesgada sea tu elección (cuota alta), más puede reportarte, pero debe terminar en el Top 10. Bonus de combinación: Podio (+100), Top 5 (+50), Top 10 (+20) y Pronóstico perfecto si aciertas los 3 biatletas que más puntos dan (+200).",
+    "s_grillage_title": "2. Los biatletas quemados",
+    "s_grillage_body": "Un biatleta elegido deja de estar disponible para la siguiente carrera de la misma etapa. Vuelve a estar disponible en la siguiente etapa (salvo con la carta Deshielo).",
+    "s_cotes_title": "3. Las cuotas",
+    "s_cotes_body": "Cada biatleta tiene una cuota por formato (sprint/persecución/individual/salida en masa), revisada en momentos clave de la temporada. La cuota de persecución se recalcula automáticamente tras el sprint: +5 por cada tramo de 20 s de diferencia (el primer tramo es neutro), con un máximo de 40.",
+    "s_relais_title": "4. Los relevos",
+    "s_relais_body": "Pronosticas una nación en lugar de 3 biatletas. Solo puntúan las 5 primeras naciones, con un baremo reducido respecto a las carreras individuales.",
+    "s_globes_title": "5. Los pronósticos de temporada (globos)",
+    "s_globes_body": "Antes del inicio de la temporada: ganador de la general, mejor joven y mejor nación, tanto en hombres como en mujeres. El globo de la general es el que más premia la precisión en el Top 5 final.",
+    "s_bonusx2_title": "6. El bonus ×2 de temporada",
+    "s_bonusx2_body": "3 usos por temporada, en una carrera individual o un relevo de la Copa del Mundo (no en Mundiales/Juegos Olímpicos ni en carreras especiales). Duplica todos los puntos de ese pronóstico.",
+    "s_mondiaux_title": "7. Mundiales y Juegos Olímpicos",
+    "s_mondiaux_body": "Todas las carreras de estas competiciones cuentan doble automáticamente, no acumulable con el bonus ×2 personal.",
+    "s_special_title": "8. Las carreras especiales",
+    "s_special_body": "Vuelta de penalización: -20 pts por cada vuelta de penalización de tus biatletas. Niebla: fuera del Top 10, un malus igual al puesto obtenido. Pillado: un malus si uno o varios de tus 3 elegidos terminan fuera del Top 10 (hasta -300), y -200 si no pronosticas nada.",
+    "s_teamnation_title": "9. Team Nation y bonus Rebufo",
+    "s_teamnation_body": "Elige un equipo favorito (nación + sexo) para la temporada. En la etapa que se celebra en su país, los puntos del atleta de ese equipo que hayas pronosticado se duplican (bonus Team Nation). Independientemente de tu pronóstico, cuantos más atletas de ese equipo terminen en el Top 10 de una carrera, más puntos ganas (bonus Rebufo).",
+    "s_streak_title": "10. La racha 10/10 y las cartas bonus",
+    "s_streak_body": "10 carreras consecutivas sumando puntos te dan una carta bonus: Comodín (4 elecciones, cuentan las 3 mejores), Turbo (×3 a un atleta), Deshielo (desquemado excepcional), Gato negro (corregir un pronóstico de globo antes del final de la 3.ª etapa).",
+    "s_pepite_title": "11. El Diamante en bruto",
+    "s_pepite_body": "Una apuesta hecha al inicio de la temporada por un outsider de cada sexo (cuota ≥ 30). Un pronóstico oculto: en su primer Top 10 de la temporada, su puntuación de la carrera se suma como bonus y luego vuelve a ser un atleta como los demás.",
+    "s_fuseegachette_title": "12. Cohete y Gatillo",
+    "s_fuseegachette_body": "Cohete: +50 pts si uno de tus elegidos ha hecho el mejor tiempo de esquí de la carrera (una vez). Gatillo: +20 pts por cada elegido con pleno en el tiro (acumulable).",
+    "s_classement_title": "13. La clasificación general",
+    "s_classement_body": "Suma todos los puntos conseguidos durante la temporada. El líder lleva el Dorsal amarillo. También hay clasificaciones secundarias (Dorsal rojo) y ligas privadas entre amigos."
+  },
+  "Compte": {
+    "back": "← Volver",
+    "loginRequired": "Inicia sesión para acceder a tu cuenta.",
+    "favoriteTeamTitle": "Equipo favorito",
+    "favoriteTeamHint": "Una nación + un sexo (p. ej. Francia Mujeres). Activa el bonus Team Nation en la etapa que se celebra en ese país, y el bonus Rebufo según su rendimiento colectivo.",
+    "women": "Mujeres",
+    "men": "Hombres",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "saved": "Guardado.",
+    "signOut": "Cerrar sesión",
+    "claimCardTitle": "¡Tienes {count, plural, one {una carta} other {{count} cartas}} por elegir!",
+    "bonusCardsTitle": "Mis cartas bonus",
+    "bonusCardsEmpty": "Todavía no tienes ninguna carta. Suma puntos en 10 carreras consecutivas para conseguir una.",
+    "cardLabel_balle_de_pioche": "Comodín",
+    "cardLabel_ca_farte": "Turbo",
+    "cardLabel_fondue": "Deshielo",
+    "cardLabel_chat_noir": "Gato negro",
+    "title": "Perfil",
+    "emailNotificationsTitle": "Notificaciones por email",
+    "reminderTitle": "Recordatorio de pronóstico",
+    "reminderHint": "2 horas antes de cada carrera",
+    "resultsTitle": "Resultados disponibles",
+    "resultsHint": "Con tus puntos y tus cartas",
+    "appearanceTitle": "Apariencia",
+    "darkTheme": "Tema oscuro",
+    "soon": "Pronto",
+    "languageTitle": "Idioma",
+    "languagesAvailable": "{count} idiomas disponibles",
+    "helpAndRules": "Ayuda y Reglamento",
+    "deleteAccount": "Eliminar mi cuenta",
+    "editPseudo": "Editar el apodo",
+    "cancel": "Cancelar",
+    "pseudoLengthError": "El apodo debe tener entre {min} y {max} caracteres.",
+    "lightTheme": "Tema claro"
+  },
+  "Globes": {
+    "back": "← Volver",
+    "title": "Pronósticos de temporada",
+    "intro": "6 grandes pronósticos antes del inicio de la temporada: ganador de la general, mejor joven y mejor nación, tanto en hombres como en mujeres.",
+    "noSeason": "No hay ninguna temporada activa en este momento.",
+    "loginRequired": "Inicia sesión para hacer tus pronósticos de temporada.",
+    "lockedMessage": "Los pronósticos de temporada están bloqueados desde el inicio de la temporada.",
+    "noPick": "— Elegir —",
+    "category_gros_globe_f": "Ganadora de la general (mujeres)",
+    "category_gros_globe_h": "Ganador de la general (hombres)",
+    "category_meilleur_jeune_f": "Mejor joven (mujeres)",
+    "category_meilleur_jeune_h": "Mejor joven (hombres)",
+    "category_meilleure_nation_f": "Mejor nación (mujeres)",
+    "category_meilleure_nation_h": "Mejor nación (hombres)",
+    "saving": "Guardando...",
+    "saved": "Pronósticos de temporada guardados.",
+    "submit": "Confirmar mis pronósticos de temporada",
+    "pepiteTitle": "Tu Diamante en bruto",
+    "pepiteHint": "Un outsider (cuota ≥ 30) elegido al inicio de la temporada, uno por sexo. Un pronóstico oculto: en su primer Top 10 de la temporada, su puntuación en esa carrera se suma como bonus a tu puntuación. Después, vuelve a ser un atleta como los demás.",
+    "pepiteClaimed": "¡Bonus Diamante ya conseguido!",
+    "pepiteSubmit": "Confirmar mi elección (definitiva)"
+  },
+  "Pronos": {
+    "seasonPredictionsLink": "Mis pronósticos de temporada (globos)",
+    "loginRequired": "Inicia sesión para ver y gestionar tus pronósticos.",
+    "pendingLabel": "Pendientes",
+    "toPredictLabel": "Por pronosticar",
+    "toPredictCount": "{count} por pronosticar",
+    "emptyAll": "No hay ninguna carrera abierta a pronósticos ni has enviado todavía ningún pronóstico."
+  },
+  "Ligues": {
+    "title": "Tus ligas",
+    "loginRequired": "Inicia sesión para crear o unirte a una liga.",
+    "createTitle": "Crear una liga",
+    "namePlaceholder": "Nombre de la liga",
+    "createButton": "Crear",
+    "createError": "No se ha podido crear la liga.",
+    "joinTitle": "Unirse con un código",
+    "codePlaceholder": "Código de invitación",
+    "joinButton": "Unirse",
+    "joinError": "Código de invitación no válido.",
+    "backToList": "← Volver a tus ligas",
+    "notAMember": "No eres miembro de esta liga.",
+    "inviteCodeLabel": "Código de invitación"
+  },
+  "Classement": {
+    "title": "Clasificación general",
+    "emptyState": "Todavía no se ha sumado ningún punto. La clasificación se completará en cuanto se puntúe la primera carrera.",
+    "streakTitle": "Dorsal rojo — mejor racha actual"
+  },
+  "Courses": {
+    "title": "Calendario",
+    "emptyState": "No hay ninguna etapa programada. Añade una temporada, etapas y carreras para esta temporada.",
+    "noRacesInStage": "No hay carreras en esta etapa.",
+    "coefficientBadge": "Coef. ×2",
+    "importButton": "Importar calendario (CSV)",
+    "importLoading": "Importando...",
+    "importSummary": "{stagesCreated} etapa(s) creada(s), {stagesUpdated} actualizada(s) · {racesCreated} carrera(s) creada(s), {racesUpdated} actualizada(s).",
+    "worldChampionships": "Mundiales"
+  },
+  "RaceFormat": {
+    "sprint": "Sprint",
+    "poursuite": "Persecución",
+    "individuel": "Individual",
+    "mass_start": "Salida en masa",
+    "relais_h": "Relevo masculino",
+    "relais_f": "Relevo femenino",
+    "relais_mixte": "Relevo mixto",
+    "relais_mixte_simple": "Relevo mixto simple"
+  },
+  "Sex": {
+    "F": "Mujeres",
+    "H": "Hombres"
+  },
+  "Race": {
+    "lockLabel": "Cierre: {date}",
+    "specialRulePrefix": "Carrera especial:",
+    "specialRuleHint": "— consulta las reglas para ver el bonus/malus aplicable.",
+    "noOddsMessage": "No hay cuotas introducidas para esta carrera. Añade filas a la tabla de cuotas (formato \"{format}\") para este formato y temporada.",
+    "status_upcoming": "Próxima",
+    "status_ongoing": "En curso",
+    "status_finished": "Finalizada",
+    "myPredictionTitle": "Mi pronóstico",
+    "noPredictionMessage": "No hiciste ningún pronóstico para esta carrera.",
+    "bonusX2Badge": "Bonus ×2 activo",
+    "adminEnterResultsButton": "Introducir resultados (admin)",
+    "pointsEarnedLabel": "Tus puntos en esta carrera",
+    "resultsTitle": "Resultados",
+    "noResultsMessage": "Resultados aún no introducidos."
+  },
+  "PredictionForm": {
+    "chooseThree": "Elige 3 biatletas",
+    "chooseNation": "Elige una nación",
+    "grilled": "quemado",
+    "loginRequired": "Inicia sesión para confirmar tu pronóstico.",
+    "saving": "Guardando...",
+    "submit": "Confirmar mi pronóstico",
+    "cardSectionTitle": "Carta bonus",
+    "noCard": "Ninguna",
+    "cardBalleDePioche": "Comodín",
+    "cardCaFarte": "Turbo",
+    "caFarteTargetRequired": "Elige qué atleta recibe el ×3.",
+    "cardFondueAction": "Usar Deshielo (desquemar mis biatletas)",
+    "bonusX2Label": "Bonus ×2 de temporada (quedan {count})"
+  },
+  "SignIn": {
+    "prompt": "Inicia sesión para continuar",
+    "continueGoogle": "Continuar con Google",
+    "continueApple": "Continuar con Apple",
+    "continueFacebook": "Continuar con Facebook",
+    "or": "O",
+    "emailPlaceholder": "Correo electrónico",
+    "passwordPlaceholder": "Contraseña",
+    "connecting": "Iniciando sesión...",
+    "submit": "Iniciar sesión",
+    "signUpSubmit": "Crear mi cuenta",
+    "switchToSignUp": "¿Aún no tienes cuenta? Crea una",
+    "switchToSignIn": "¿Ya tienes cuenta? Inicia sesión"
+  },
+  "Support": {
+    "title": "Soporte",
+    "subtitle": "Estamos aquí para ayudarte",
+    "contactTitle": "Contacta con nosotros",
+    "contactBody": "Para cualquier pregunta, problema técnico o solicitud de eliminación de cuenta, escríbenos directamente por correo electrónico.",
+    "email": "contact@biathlonpronos.fr",
+    "delayTitle": "Tiempo de respuesta",
+    "delayBody": "Normalmente respondemos en un plazo de 24 a 48 horas en días laborables.",
+    "typesTitle": "Tipos de solicitudes",
+    "types": [
+      {
+        "emoji": "🐛",
+        "label": "Notificar un error o problema técnico"
+      },
+      {
+        "emoji": "🗑️",
+        "label": "Solicitud de eliminación de cuenta y datos"
+      },
+      {
+        "emoji": "🔑",
+        "label": "Problema de inicio de sesión o de acceso"
+      },
+      {
+        "emoji": "📊",
+        "label": "Pregunta sobre el cálculo de puntos"
+      },
+      {
+        "emoji": "🏆",
+        "label": "Pregunta sobre las ligas o la clasificación"
+      },
+      {
+        "emoji": "💡",
+        "label": "Sugerencia de mejora"
+      }
+    ],
+    "helpTitle": "Ayuda y reglas",
+    "helpBody": "Consulta las reglas para saber cómo funciona el juego, el cálculo de puntos, las cartas bonus y todas las funciones de Biathlonpronos.",
+    "helpButton": "Ver la ayuda",
+    "back": "Inicio",
+    "privacy": "Política de privacidad",
+    "terms": "Condiciones de uso"
+  },
+  "Privacy": {
+    "title": "Política de privacidad",
+    "back": "Inicio",
+    "updated": "Última actualización: octubre de 2026",
+    "sections": [
+      {
+        "title": "1. Introducción",
+        "paragraphs": [
+          "Biathlonpronos (\"la Aplicación\") respeta la privacidad de sus usuarios. Esta política de privacidad explica qué datos personales se recopilan, cómo se utilizan y cuáles son sus derechos."
+        ]
+      },
+      {
+        "title": "2. Datos recopilados",
+        "paragraphs": [
+          "Cuando utiliza la Aplicación, recopilamos:"
+        ],
+        "bullets": [
+          "Dirección de correo electrónico (a través de su cuenta)",
+          "Información del perfil (nombre de usuario, nación favorita)",
+          "Pronósticos, cartas bonus e historial de juego",
+          "Clasificaciones, ligas y estadísticas",
+          "Datos de inicio de sesión (correo electrónico y contraseña, o proveedor OAuth: Google, Apple, Facebook)"
+        ],
+        "note": "No recopilamos ningún dato bancario ni de pago: el juego es totalmente gratuito."
+      },
+      {
+        "title": "3. Uso de los datos",
+        "paragraphs": [
+          "Los datos recopilados se utilizan exclusivamente para:"
+        ],
+        "bullets": [
+          "Ofrecer las funciones del juego (pronósticos, clasificaciones, globos, ligas)",
+          "Gestionar su cuenta de usuario",
+          "Mejorar la experiencia de usuario",
+          "Responder a las solicitudes de soporte",
+          "Enviar notificaciones relacionadas con la aplicación (si están activadas)"
+        ]
+      },
+      {
+        "title": "4. Cesión de datos",
+        "paragraphs": [
+          "Sus datos personales nunca se venden ni se alquilan a terceros.",
+          "Algunos datos pueden ser tratados por nuestros proveedores técnicos (alojamiento, base de datos, autenticación) estrictamente para el funcionamiento del servicio."
+        ]
+      },
+      {
+        "title": "5. Inicio de sesión con terceros (OAuth)",
+        "paragraphs": [
+          "La aplicación permite iniciar sesión con Google, Apple y Facebook. Estos inicios de sesión están sujetos a las políticas de privacidad de dichos proveedores, y nunca recibimos su contraseña. Si inicia sesión con su correo electrónico, nuestro proveedor de autenticación almacena su contraseña cifrada: nunca tenemos acceso a ella en texto claro."
+        ]
+      },
+      {
+        "title": "6. Conservación de los datos",
+        "paragraphs": [
+          "Sus datos se conservan mientras su cuenta esté activa. Si elimina su cuenta, sus datos personales se eliminarán en un plazo de 30 días."
+        ]
+      },
+      {
+        "title": "7. Sus derechos (RGPD)",
+        "paragraphs": [
+          "De conformidad con el Reglamento General de Protección de Datos (RGPD), usted dispone de los siguientes derechos:"
+        ],
+        "bullets": [
+          "Derecho de acceso a sus datos personales",
+          "Derecho de rectificación",
+          "Derecho de supresión (\"derecho al olvido\")",
+          "Derecho a la portabilidad de los datos",
+          "Derecho de oposición al tratamiento"
+        ],
+        "email": true
+      },
+      {
+        "title": "8. Seguridad",
+        "paragraphs": [
+          "Aplicamos medidas de seguridad técnicas y organizativas razonables para proteger sus datos frente a accesos no autorizados, pérdida o divulgación."
+        ]
+      },
+      {
+        "title": "9. Contacto",
+        "paragraphs": [
+          "Para cualquier pregunta sobre esta política de privacidad:"
+        ],
+        "email": true
+      }
+    ]
+  },
+  "Terms": {
+    "title": "Condiciones de uso",
+    "back": "Inicio",
+    "updated": "Última actualización: octubre de 2026",
+    "sections": [
+      {
+        "title": "1. Objeto",
+        "paragraphs": [
+          "Las presentes Condiciones de uso regulan la utilización de la aplicación web Biathlonpronos (en adelante, \"la Aplicación\"). Al acceder a la Aplicación, usted acepta estas Condiciones sin reservas."
+        ]
+      },
+      {
+        "title": "2. Descripción del servicio",
+        "paragraphs": [
+          "Biathlonpronos es una aplicación de pronósticos de carreras de biatlón que permite a los usuarios:"
+        ],
+        "bullets": [
+          "Pronosticar los biatletas y las naciones mejor clasificados en cada carrera",
+          "Participar en ligas privadas",
+          "Seguir su propio rendimiento y el de los demás jugadores"
+        ],
+        "after": [
+          "La aplicación se ofrece de forma gratuita durante la temporada 2026-27."
+        ]
+      },
+      {
+        "title": "3. Acceso y registro",
+        "paragraphs": [
+          "El acceso a la Aplicación requiere crear una cuenta. Puede registrarse con:"
+        ],
+        "bullets": [
+          "Correo electrónico y contraseña",
+          "Google",
+          "Apple",
+          "Facebook"
+        ],
+        "after": [
+          "Debe tener al menos 13 años para utilizar la Aplicación."
+        ]
+      },
+      {
+        "title": "4. Reglas del juego",
+        "paragraphs": [
+          "Biathlonpronos es un juego de pronósticos sin dinero real. El rendimiento en la aplicación no conlleva ninguna ganancia económica. Es un juego de pronósticos con fines lúdicos y comunitarios."
+        ],
+        "link": {
+          "href": "/regles",
+          "label": "Ver las reglas"
+        }
+      },
+      {
+        "title": "5. Conducta de los usuarios",
+        "paragraphs": [
+          "Los usuarios se comprometen a:"
+        ],
+        "bullets": [
+          "No utilizar la Aplicación con fines ilícitos",
+          "No intentar manipular las clasificaciones",
+          "No suplantar la identidad de otros usuarios",
+          "Respetar a los demás miembros de la comunidad"
+        ],
+        "after": [
+          "Cualquier comportamiento abusivo podrá dar lugar a la suspensión o eliminación de la cuenta."
+        ]
+      },
+      {
+        "title": "6. Propiedad intelectual",
+        "paragraphs": [
+          "Todos los elementos de la Aplicación (textos, gráficos, logotipo, código) son propiedad de Biathlonpronos. Queda prohibida cualquier reproducción, incluso parcial, sin autorización por escrito."
+        ]
+      },
+      {
+        "title": "7. Datos personales",
+        "paragraphs": [
+          "El tratamiento de los datos personales se detalla en nuestra Política de privacidad."
+        ],
+        "link": {
+          "href": "/confidentialite",
+          "label": "Ver la política de privacidad"
+        }
+      },
+      {
+        "title": "8. Limitación de responsabilidad",
+        "paragraphs": [
+          "Biathlonpronos se esfuerza por garantizar la disponibilidad y fiabilidad de la Aplicación, pero no puede garantizar un funcionamiento ininterrumpido. No nos hacemos responsables de fallos técnicos ajenos a nuestro control, ni de cambios en el calendario o los resultados oficiales de las carreras."
+        ]
+      },
+      {
+        "title": "9. Modificación de las Condiciones",
+        "paragraphs": [
+          "Nos reservamos el derecho de modificar estas Condiciones en cualquier momento. Se informará a los usuarios de los cambios importantes a través de la aplicación. El uso continuado de la Aplicación implica la aceptación de las nuevas Condiciones."
+        ]
+      },
+      {
+        "title": "10. Eliminación de la cuenta",
+        "paragraphs": [
+          "Puede solicitar la eliminación de su cuenta en cualquier momento poniéndose en contacto con nuestro soporte. Todos sus datos se eliminarán en un plazo de 30 días."
+        ],
+        "email": true
+      },
+      {
+        "title": "11. Legislación aplicable",
+        "paragraphs": [
+          "Estas Condiciones se rigen por la legislación francesa. En caso de litigio, los tribunales franceses serán los únicos competentes."
+        ]
+      },
+      {
+        "title": "12. Contacto",
+        "paragraphs": [
+          "Para cualquier pregunta sobre estas Condiciones:"
+        ],
+        "email": true
+      }
+    ]
+  }
+}

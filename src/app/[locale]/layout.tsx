@@ -3,21 +3,15 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
-import { Sora, Work_Sans } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { routing, type Locale } from "@/i18n/routing";
-import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import "../globals.css";
 
-const sora = Sora({
+// Même typographie que VéloPronos (app sœur) : Poppins pour les titres comme pour le texte.
+const poppins = Poppins({
   subsets: ["latin"],
-  variable: "--font-sora",
-  weight: ["600", "700", "800"],
-});
-
-const workSans = Work_Sans({
-  subsets: ["latin"],
-  variable: "--font-work-sans",
-  weight: ["400", "500", "600"],
+  variable: "--font-poppins",
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export function generateStaticParams() {
@@ -48,10 +42,17 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className={`${sora.variable} ${workSans.variable}`}>
+    <html lang={locale} className={poppins.variable} suppressHydrationWarning>
+      <head>
+        {/* Thème clair choisi dans le Profil : appliqué avant l'affichage pour éviter un flash sombre. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem("theme")==="light")document.documentElement.classList.add("light")}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="bg-bg text-text font-body">
         <NextIntlClientProvider messages={messages}>
-          <LocaleSwitcher />
           {children}
         </NextIntlClientProvider>
       </body>

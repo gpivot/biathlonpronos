@@ -29,6 +29,48 @@
     "emptyState": "Aucune étape programmée pour le moment. Ajoute une saison, des étapes et des courses depuis Supabase (voir supabase/seed.sql) pour peupler cet écran.",
     "coefficientBadge": "Coeff. ×2"
   },
+  "Landing": {
+    "heroTitle": "Pronostique les courses de biathlon.",
+    "heroAccent": "Défie tes amis.",
+    "heroSubtitle": "30 secondes par course pour jouer. Toute la journée pour suivre le tir.",
+    "heroCta": "Commencer gratuitement",
+    "heroSignIn": "Déjà inscrit ? Se connecter",
+    "appStoresTitle": "Ou télécharger l'application",
+    "appStoreSoon": "Bientôt disponible sur",
+    "howEyebrow": "Simple & rapide",
+    "howTitle": "Comment ça marche ?",
+    "stepLabel": "Étape {n}",
+    "step1Title": "Choisis tes 3 biathlètes avant le départ.",
+    "step1Body": "En 30 secondes chrono, sélectionne tes favoris pour la course.",
+    "step2Title": "Suis la course et marque des points.",
+    "step2Body": "Tes biathlètes font le plein au tir ? Tu scores. Simple et addictif.",
+    "step3Title": "Grimpe dans les classements et bats tes amis.",
+    "step3Body": "Rejoins des ligues privées et affronte ta communauté.",
+    "whyEyebrow": "Des avantages",
+    "whyTitle": "Pourquoi jouer à Biathlonpronos ?",
+    "whyFree": "100 % gratuit",
+    "whyFast": "Rapide à jouer",
+    "whyBeginners": "Accessible aux débutants",
+    "whyLeagues": "Ligues privées",
+    "whyCards": "Cartes bonus",
+    "whyGlobes": "Globes de saison",
+    "appEyebrow": "L'application",
+    "appTitle": "Découvre Biathlonpronos",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "slideHomeTitle": "Accueil",
+    "slideHomeBody": "Suivi de la saison en temps réel",
+    "slideCalendarTitle": "Calendrier",
+    "slideCalendarBody": "Toutes les étapes et les courses à pronostiquer",
+    "slideStandingsTitle": "Classement",
+    "slideStandingsBody": "Le classement général et les globes de saison",
+    "slideLeaguesTitle": "Ligues",
+    "slideLeaguesBody": "Affronte tes amis dans des ligues privées",
+    "footerDisclaimer": "Biathlonpronos est un jeu de pronostics biathlon indépendant. Aucune mise d'argent réel. Aucun gain financier.",
+    "footerSupport": "Support",
+    "footerPrivacy": "Politique de confidentialité",
+    "footerTerms": "CGU"
+  },
   "Regles": {
     "title": "Le règlement",
     "intro": "Pronostique les biathlètes qui vont performer, joue avec leurs cotes, et tente de décrocher le Dossard Jaune du meilleur pronostiqueur de la saison.",
@@ -78,7 +120,24 @@
     "cardLabel_balle_de_pioche": "Balle de pioche",
     "cardLabel_ca_farte": "Ça farte",
     "cardLabel_fondue": "Fondue",
-    "cardLabel_chat_noir": "Chat noir"
+    "cardLabel_chat_noir": "Chat noir",
+    "title": "Profil",
+    "emailNotificationsTitle": "Notifications par email",
+    "reminderTitle": "Rappel de pronostic",
+    "reminderHint": "H-2 avant chaque course",
+    "resultsTitle": "Résultats disponibles",
+    "resultsHint": "Avec tes points et tes cartes",
+    "appearanceTitle": "Apparence",
+    "darkTheme": "Thème sombre",
+    "soon": "Bientôt",
+    "languageTitle": "Langue",
+    "languagesAvailable": "{count} langues disponibles",
+    "helpAndRules": "Aide & Règlement",
+    "deleteAccount": "Supprimer mon compte",
+    "editPseudo": "Modifier le pseudo",
+    "cancel": "Annuler",
+    "pseudoLengthError": "Le pseudo doit faire entre {min} et {max} caractères.",
+    "lightTheme": "Thème clair"
   },
   "Globes": {
     "back": "← Retour",
@@ -137,7 +196,8 @@
     "coefficientBadge": "Coeff. ×2",
     "importButton": "Importer le calendrier (CSV)",
     "importLoading": "Import en cours...",
-    "importSummary": "{stagesCreated} étape(s) créée(s), {stagesUpdated} mise(s) à jour · {racesCreated} course(s) créée(s), {racesUpdated} mise(s) à jour."
+    "importSummary": "{stagesCreated} étape(s) créée(s), {stagesUpdated} mise(s) à jour · {racesCreated} course(s) créée(s), {racesUpdated} mise(s) à jour.",
+    "worldChampionships": "Championnats du monde"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -185,8 +245,10 @@
     "bonusX2Label": "Bonus ×2 saison (il t'en reste {count})"
   },
   "SignIn": {
+    "prompt": "Connectez-vous pour continuer",
     "continueGoogle": "Continuer avec Google",
     "continueApple": "Continuer avec Apple",
+    "continueFacebook": "Continuer avec Facebook",
     "or": "OU",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Mot de passe",
@@ -195,5 +257,248 @@
     "signUpSubmit": "Créer mon compte",
     "switchToSignUp": "Pas encore de compte ? Crée-en un",
     "switchToSignIn": "Déjà un compte ? Connecte-toi"
+  },
+  "Support": {
+    "title": "Support",
+    "subtitle": "Nous sommes là pour t'aider",
+    "contactTitle": "Nous contacter",
+    "contactBody": "Pour toute question, problème technique ou demande de suppression de compte, contacte-nous directement par email.",
+    "email": "contact@biathlonpronos.fr",
+    "delayTitle": "Délai de réponse",
+    "delayBody": "Nous répondons généralement sous 24 à 48 heures les jours ouvrés.",
+    "typesTitle": "Types de demandes",
+    "types": [
+      {
+        "emoji": "🐛",
+        "label": "Signalement de bug ou problème technique"
+      },
+      {
+        "emoji": "🗑️",
+        "label": "Demande de suppression de compte et de données"
+      },
+      {
+        "emoji": "🔑",
+        "label": "Problème de connexion ou d'accès"
+      },
+      {
+        "emoji": "📊",
+        "label": "Question sur le calcul des points"
+      },
+      {
+        "emoji": "🏆",
+        "label": "Question sur les ligues ou le classement"
+      },
+      {
+        "emoji": "💡",
+        "label": "Suggestion d'amélioration"
+      }
+    ],
+    "helpTitle": "Aide & Règlement",
+    "helpBody": "Consulte le règlement pour les règles du jeu, le calcul des points, les cartes bonus et toutes les fonctionnalités de Biathlonpronos.",
+    "helpButton": "Voir l'aide",
+    "back": "Accueil",
+    "privacy": "Politique de confidentialité",
+    "terms": "CGU"
+  },
+  "Privacy": {
+    "title": "Politique de confidentialité",
+    "back": "Accueil",
+    "updated": "Dernière mise à jour : Octobre 2026",
+    "sections": [
+      {
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Biathlonpronos (« l'Application ») respecte la vie privée de ses utilisateurs. La présente politique de confidentialité explique quelles données personnelles sont collectées, comment elles sont utilisées, et quels sont vos droits."
+        ]
+      },
+      {
+        "title": "2. Données collectées",
+        "paragraphs": [
+          "Lors de l'utilisation de l'Application, nous collectons :"
+        ],
+        "bullets": [
+          "Adresse e-mail (via votre compte)",
+          "Informations de profil (pseudo, nation favorite)",
+          "Pronostics, cartes bonus et historique de jeu",
+          "Classements, ligues et statistiques",
+          "Données de connexion (e-mail et mot de passe, ou fournisseur OAuth : Google, Apple, Facebook)"
+        ],
+        "note": "Nous ne collectons aucune donnée bancaire ni de paiement : le jeu est entièrement gratuit."
+      },
+      {
+        "title": "3. Utilisation des données",
+        "paragraphs": [
+          "Les données collectées sont utilisées exclusivement pour :"
+        ],
+        "bullets": [
+          "Fournir les fonctionnalités de jeu (pronostics, classements, globes, ligues)",
+          "Gérer votre compte utilisateur",
+          "Améliorer l'expérience utilisateur",
+          "Répondre aux demandes de support",
+          "Envoyer des notifications liées à l'application (si activées)"
+        ]
+      },
+      {
+        "title": "4. Partage des données",
+        "paragraphs": [
+          "Vos données personnelles ne sont ni vendues ni louées à des tiers.",
+          "Certaines données peuvent être traitées par nos prestataires techniques (hébergement, base de données, authentification) dans le strict cadre du fonctionnement du service."
+        ]
+      },
+      {
+        "title": "5. Connexion via des tiers (OAuth)",
+        "paragraphs": [
+          "L'application propose la connexion via Google, Apple et Facebook. Ces connexions sont soumises aux politiques de confidentialité de ces fournisseurs, et nous ne recevons pas votre mot de passe. Si vous vous connectez par e-mail, votre mot de passe est stocké sous forme chiffrée par notre prestataire d'authentification : nous n'y avons jamais accès en clair."
+        ]
+      },
+      {
+        "title": "6. Conservation des données",
+        "paragraphs": [
+          "Vos données sont conservées tant que votre compte est actif. En cas de suppression de compte, vos données personnelles sont supprimées dans un délai de 30 jours."
+        ]
+      },
+      {
+        "title": "7. Vos droits (RGPD)",
+        "paragraphs": [
+          "Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :"
+        ],
+        "bullets": [
+          "Droit d'accès à vos données personnelles",
+          "Droit de rectification",
+          "Droit à l'effacement (« droit à l'oubli »)",
+          "Droit à la portabilité de vos données",
+          "Droit d'opposition au traitement"
+        ],
+        "email": true
+      },
+      {
+        "title": "8. Sécurité",
+        "paragraphs": [
+          "Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles raisonnables pour protéger vos données contre tout accès non autorisé, perte ou divulgation."
+        ]
+      },
+      {
+        "title": "9. Contact",
+        "paragraphs": [
+          "Pour toute question relative à cette politique de confidentialité :"
+        ],
+        "email": true
+      }
+    ]
+  },
+  "Terms": {
+    "title": "Conditions Générales d'Utilisation",
+    "back": "Accueil",
+    "updated": "Dernière mise à jour : Octobre 2026",
+    "sections": [
+      {
+        "title": "1. Objet",
+        "paragraphs": [
+          "Les présentes Conditions Générales d'Utilisation (CGU) régissent l'utilisation de l'application web Biathlonpronos (ci-après « l'Application »). En accédant à l'Application, vous acceptez sans réserve les présentes CGU."
+        ]
+      },
+      {
+        "title": "2. Description du service",
+        "paragraphs": [
+          "Biathlonpronos est une application de pronostics sur les courses de biathlon permettant aux utilisateurs de :"
+        ],
+        "bullets": [
+          "Pronostiquer les biathlètes et les nations les mieux classés de chaque course",
+          "Participer à des ligues privées",
+          "Suivre leurs performances et celles d'autres joueurs"
+        ],
+        "after": [
+          "L'application est proposée à titre gratuit pour la saison 2026-27."
+        ]
+      },
+      {
+        "title": "3. Accès et inscription",
+        "paragraphs": [
+          "L'accès à l'Application nécessite la création d'un compte. L'inscription est possible via :"
+        ],
+        "bullets": [
+          "E-mail et mot de passe",
+          "Google",
+          "Apple",
+          "Facebook"
+        ],
+        "after": [
+          "Vous devez être âgé de 13 ans minimum pour utiliser l'Application."
+        ]
+      },
+      {
+        "title": "4. Règles du jeu",
+        "paragraphs": [
+          "Biathlonpronos est un jeu de pronostics sans mise d'argent réelle. Aucun gain financier n'est associé aux performances dans l'application. Il s'agit d'un jeu de prédiction à vocation ludique et communautaire."
+        ],
+        "link": {
+          "href": "/regles",
+          "label": "Voir le règlement"
+        }
+      },
+      {
+        "title": "5. Comportement des utilisateurs",
+        "paragraphs": [
+          "Les utilisateurs s'engagent à :"
+        ],
+        "bullets": [
+          "Ne pas utiliser l'Application à des fins illicites",
+          "Ne pas tenter de manipuler les classements",
+          "Ne pas usurper l'identité d'autres utilisateurs",
+          "Respecter les autres membres de la communauté"
+        ],
+        "after": [
+          "Tout comportement abusif peut entraîner la suspension ou la suppression du compte."
+        ]
+      },
+      {
+        "title": "6. Propriété intellectuelle",
+        "paragraphs": [
+          "L'ensemble des éléments de l'Application (textes, graphiques, logo, code) sont la propriété de Biathlonpronos. Toute reproduction, même partielle, sans autorisation écrite est interdite."
+        ]
+      },
+      {
+        "title": "7. Données personnelles",
+        "paragraphs": [
+          "Le traitement des données personnelles est détaillé dans notre Politique de confidentialité."
+        ],
+        "link": {
+          "href": "/confidentialite",
+          "label": "Voir la politique de confidentialité"
+        }
+      },
+      {
+        "title": "8. Limitation de responsabilité",
+        "paragraphs": [
+          "Biathlonpronos s'efforce d'assurer la disponibilité et la fiabilité de l'Application, mais ne peut garantir une disponibilité sans interruption. Nous ne saurions être tenus responsables des dysfonctionnements techniques indépendants de notre volonté, ni des modifications du calendrier ou des résultats officiels des courses."
+        ]
+      },
+      {
+        "title": "9. Modification des CGU",
+        "paragraphs": [
+          "Nous nous réservons le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés des modifications importantes via l'application. La poursuite de l'utilisation de l'Application vaut acceptation des nouvelles CGU."
+        ]
+      },
+      {
+        "title": "10. Suppression de compte",
+        "paragraphs": [
+          "Vous pouvez demander la suppression de votre compte à tout moment en contactant notre support. Toutes vos données seront supprimées dans un délai de 30 jours."
+        ],
+        "email": true
+      },
+      {
+        "title": "11. Droit applicable",
+        "paragraphs": [
+          "Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux français seront seuls compétents."
+        ]
+      },
+      {
+        "title": "12. Contact",
+        "paragraphs": [
+          "Pour toute question relative aux présentes CGU :"
+        ],
+        "email": true
+      }
+    ]
   }
 }

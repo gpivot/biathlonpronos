@@ -29,6 +29,48 @@
     "emptyState": "No stage scheduled yet. Add a season, stages and races from Supabase (see supabase/seed.sql) to populate this screen.",
     "coefficientBadge": "×2 coeff."
   },
+  "Landing": {
+    "heroTitle": "Predict the biathlon races.",
+    "heroAccent": "Challenge your friends.",
+    "heroSubtitle": "30 seconds per race to play. All day long to follow the shooting.",
+    "heroCta": "Start for free",
+    "heroSignIn": "Already registered? Sign in",
+    "appStoresTitle": "Or download the app",
+    "appStoreSoon": "Coming soon on",
+    "howEyebrow": "Quick & simple",
+    "howTitle": "How does it work?",
+    "stepLabel": "Step {n}",
+    "step1Title": "Pick your 3 biathletes before the start.",
+    "step1Body": "In 30 seconds flat, select your favourites for the race.",
+    "step2Title": "Follow the race and score points.",
+    "step2Body": "Your biathletes shoot clean? You score. Simple and addictive.",
+    "step3Title": "Climb the standings and beat your friends.",
+    "step3Body": "Join private leagues and take on your community.",
+    "whyEyebrow": "The perks",
+    "whyTitle": "Why play Biathlonpronos?",
+    "whyFree": "100% free",
+    "whyFast": "Quick to play",
+    "whyBeginners": "Beginner friendly",
+    "whyLeagues": "Private leagues",
+    "whyCards": "Bonus cards",
+    "whyGlobes": "Season globes",
+    "appEyebrow": "The app",
+    "appTitle": "Discover Biathlonpronos",
+    "previous": "Previous",
+    "next": "Next",
+    "slideHomeTitle": "Home",
+    "slideHomeBody": "Follow the season in real time",
+    "slideCalendarTitle": "Calendar",
+    "slideCalendarBody": "Every stage and race to predict",
+    "slideStandingsTitle": "Standings",
+    "slideStandingsBody": "The overall standings and season globes",
+    "slideLeaguesTitle": "Leagues",
+    "slideLeaguesBody": "Take on your friends in private leagues",
+    "footerDisclaimer": "Biathlonpronos is an independent biathlon prediction game. No real money wagered. No financial winnings.",
+    "footerSupport": "Support",
+    "footerPrivacy": "Privacy policy",
+    "footerTerms": "Terms"
+  },
   "Regles": {
     "title": "The rules",
     "intro": "Predict which biathletes will perform, play their odds, and try to grab the Yellow Bib as the season's best predictor.",
@@ -78,7 +120,24 @@
     "cardLabel_balle_de_pioche": "Wildcard",
     "cardLabel_ca_farte": "Boost",
     "cardLabel_fondue": "Meltdown",
-    "cardLabel_chat_noir": "Black Cat"
+    "cardLabel_chat_noir": "Black Cat",
+    "title": "Profile",
+    "emailNotificationsTitle": "Email notifications",
+    "reminderTitle": "Prediction reminder",
+    "reminderHint": "2 hours before each race",
+    "resultsTitle": "Results available",
+    "resultsHint": "With your points and cards",
+    "appearanceTitle": "Appearance",
+    "darkTheme": "Dark theme",
+    "soon": "Soon",
+    "languageTitle": "Language",
+    "languagesAvailable": "{count} languages available",
+    "helpAndRules": "Help & Rules",
+    "deleteAccount": "Delete my account",
+    "editPseudo": "Edit username",
+    "cancel": "Cancel",
+    "pseudoLengthError": "Your username must be between {min} and {max} characters.",
+    "lightTheme": "Light theme"
   },
   "Globes": {
     "back": "← Back",
@@ -137,7 +196,8 @@
     "coefficientBadge": "×2 coeff.",
     "importButton": "Import calendar (CSV)",
     "importLoading": "Importing...",
-    "importSummary": "{stagesCreated} stage(s) created, {stagesUpdated} updated · {racesCreated} race(s) created, {racesUpdated} updated."
+    "importSummary": "{stagesCreated} stage(s) created, {stagesUpdated} updated · {racesCreated} race(s) created, {racesUpdated} updated.",
+    "worldChampionships": "World Championships"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -185,8 +245,10 @@
     "bonusX2Label": "Season ×2 bonus ({count} left)"
   },
   "SignIn": {
+    "prompt": "Sign in to continue",
     "continueGoogle": "Continue with Google",
     "continueApple": "Continue with Apple",
+    "continueFacebook": "Continue with Facebook",
     "or": "OR",
     "emailPlaceholder": "Email",
     "passwordPlaceholder": "Password",
@@ -195,5 +257,248 @@
     "signUpSubmit": "Create my account",
     "switchToSignUp": "No account yet? Create one",
     "switchToSignIn": "Already have an account? Sign in"
+  },
+  "Support": {
+    "title": "Support",
+    "subtitle": "We're here to help",
+    "contactTitle": "Contact us",
+    "contactBody": "For any question, technical issue or account deletion request, contact us directly by email.",
+    "email": "contact@biathlonpronos.fr",
+    "delayTitle": "Response time",
+    "delayBody": "We usually reply within 24 to 48 hours on working days.",
+    "typesTitle": "Types of requests",
+    "types": [
+      {
+        "emoji": "🐛",
+        "label": "Bug report or technical issue"
+      },
+      {
+        "emoji": "🗑️",
+        "label": "Account and data deletion request"
+      },
+      {
+        "emoji": "🔑",
+        "label": "Sign-in or access problem"
+      },
+      {
+        "emoji": "📊",
+        "label": "Question about points calculation"
+      },
+      {
+        "emoji": "🏆",
+        "label": "Question about leagues or standings"
+      },
+      {
+        "emoji": "💡",
+        "label": "Improvement suggestion"
+      }
+    ],
+    "helpTitle": "Help & Rules",
+    "helpBody": "Read the rules for how the game works, points calculation, bonus cards and every Biathlonpronos feature.",
+    "helpButton": "See help",
+    "back": "Home",
+    "privacy": "Privacy policy",
+    "terms": "Terms"
+  },
+  "Privacy": {
+    "title": "Privacy policy",
+    "back": "Home",
+    "updated": "Last updated: October 2026",
+    "sections": [
+      {
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Biathlonpronos (\"the Application\") respects its users' privacy. This privacy policy explains what personal data is collected, how it is used, and what your rights are."
+        ]
+      },
+      {
+        "title": "2. Data collected",
+        "paragraphs": [
+          "When you use the Application, we collect:"
+        ],
+        "bullets": [
+          "Email address (via your account)",
+          "Profile information (username, favorite nation)",
+          "Predictions, bonus cards and game history",
+          "Standings, leagues and statistics",
+          "Sign-in data (email and password, or OAuth provider: Google, Apple, Facebook)"
+        ],
+        "note": "We do not collect any bank or payment data: the game is entirely free."
+      },
+      {
+        "title": "3. Use of data",
+        "paragraphs": [
+          "The data collected is used exclusively to:"
+        ],
+        "bullets": [
+          "Provide the game features (predictions, standings, globes, leagues)",
+          "Manage your user account",
+          "Improve the user experience",
+          "Answer support requests",
+          "Send app-related notifications (if enabled)"
+        ]
+      },
+      {
+        "title": "4. Data sharing",
+        "paragraphs": [
+          "Your personal data is never sold or rented to third parties.",
+          "Some data may be processed by our technical providers (hosting, database, authentication) strictly to run the service."
+        ]
+      },
+      {
+        "title": "5. Third-party sign-in (OAuth)",
+        "paragraphs": [
+          "The application offers sign-in with Google, Apple and Facebook. These sign-ins are subject to those providers' privacy policies, and we never receive your password. If you sign in by email, your password is stored encrypted by our authentication provider: we never have access to it in plain text."
+        ]
+      },
+      {
+        "title": "6. Data retention",
+        "paragraphs": [
+          "Your data is kept as long as your account is active. If you delete your account, your personal data is deleted within 30 days."
+        ]
+      },
+      {
+        "title": "7. Your rights (GDPR)",
+        "paragraphs": [
+          "Under the General Data Protection Regulation (GDPR), you have the following rights:"
+        ],
+        "bullets": [
+          "Right of access to your personal data",
+          "Right to rectification",
+          "Right to erasure (\"right to be forgotten\")",
+          "Right to data portability",
+          "Right to object to processing"
+        ],
+        "email": true
+      },
+      {
+        "title": "8. Security",
+        "paragraphs": [
+          "We implement reasonable technical and organisational security measures to protect your data against unauthorised access, loss or disclosure."
+        ]
+      },
+      {
+        "title": "9. Contact",
+        "paragraphs": [
+          "For any question about this privacy policy:"
+        ],
+        "email": true
+      }
+    ]
+  },
+  "Terms": {
+    "title": "Terms of Use",
+    "back": "Home",
+    "updated": "Last updated: October 2026",
+    "sections": [
+      {
+        "title": "1. Purpose",
+        "paragraphs": [
+          "These Terms of Use govern the use of the Biathlonpronos web application (hereinafter \"the Application\"). By accessing the Application, you accept these Terms without reservation."
+        ]
+      },
+      {
+        "title": "2. Description of the service",
+        "paragraphs": [
+          "Biathlonpronos is a biathlon race prediction application allowing users to:"
+        ],
+        "bullets": [
+          "Predict the best-placed biathletes and nations in each race",
+          "Take part in private leagues",
+          "Follow their own performance and that of other players"
+        ],
+        "after": [
+          "The application is offered free of charge for the 2026-27 season."
+        ]
+      },
+      {
+        "title": "3. Access and registration",
+        "paragraphs": [
+          "Access to the Application requires creating an account. You can register with:"
+        ],
+        "bullets": [
+          "Email and password",
+          "Google",
+          "Apple",
+          "Facebook"
+        ],
+        "after": [
+          "You must be at least 13 years old to use the Application."
+        ]
+      },
+      {
+        "title": "4. Game rules",
+        "paragraphs": [
+          "Biathlonpronos is a prediction game with no real money involved. No financial gain is associated with performance in the application. It is a prediction game for fun and community."
+        ],
+        "link": {
+          "href": "/regles",
+          "label": "See the rules"
+        }
+      },
+      {
+        "title": "5. User conduct",
+        "paragraphs": [
+          "Users agree to:"
+        ],
+        "bullets": [
+          "Not use the Application for unlawful purposes",
+          "Not attempt to manipulate the standings",
+          "Not impersonate other users",
+          "Respect other members of the community"
+        ],
+        "after": [
+          "Any abusive behaviour may lead to suspension or deletion of the account."
+        ]
+      },
+      {
+        "title": "6. Intellectual property",
+        "paragraphs": [
+          "All elements of the Application (texts, graphics, logo, code) are the property of Biathlonpronos. Any reproduction, even partial, without written permission is prohibited."
+        ]
+      },
+      {
+        "title": "7. Personal data",
+        "paragraphs": [
+          "The processing of personal data is detailed in our Privacy policy."
+        ],
+        "link": {
+          "href": "/confidentialite",
+          "label": "See the privacy policy"
+        }
+      },
+      {
+        "title": "8. Limitation of liability",
+        "paragraphs": [
+          "Biathlonpronos strives to ensure the availability and reliability of the Application, but cannot guarantee uninterrupted availability. We cannot be held liable for technical failures beyond our control, nor for changes to the official race calendar or results."
+        ]
+      },
+      {
+        "title": "9. Changes to the Terms",
+        "paragraphs": [
+          "We reserve the right to change these Terms at any time. Users will be informed of significant changes through the application. Continued use of the Application constitutes acceptance of the new Terms."
+        ]
+      },
+      {
+        "title": "10. Account deletion",
+        "paragraphs": [
+          "You can request the deletion of your account at any time by contacting our support. All your data will be deleted within 30 days."
+        ],
+        "email": true
+      },
+      {
+        "title": "11. Governing law",
+        "paragraphs": [
+          "These Terms are governed by French law. In case of dispute, French courts shall have sole jurisdiction."
+        ]
+      },
+      {
+        "title": "12. Contact",
+        "paragraphs": [
+          "For any question about these Terms:"
+        ],
+        "email": true
+      }
+    ]
   }
 }

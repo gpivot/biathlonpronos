@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { LogoMark } from "@/components/icons";
+import { AppleIcon, FacebookIcon, GoogleIcon, LogoMark } from "@/components/icons";
 
 export default function SignInPage() {
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
@@ -17,7 +17,7 @@ export default function SignInPage() {
   const router = useRouter();
   const t = useTranslations("SignIn");
 
-  async function handleOAuth(provider: "google" | "apple") {
+  async function handleOAuth(provider: "google" | "apple" | "facebook") {
     await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
@@ -44,29 +44,36 @@ export default function SignInPage() {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-8 px-6">
-      <div className="flex items-center gap-3">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-ice">
-          <LogoMark className="h-8 w-8" />
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-ice">
+            <LogoMark className="h-8 w-8" />
+          </div>
+          <div className="font-display text-2xl font-extrabold">
+            <span className="text-frost">Biathlon</span>
+            <span className="text-ice">Pronos</span>
+          </div>
         </div>
-        <div className="font-display text-2xl font-extrabold">
-          <span className="text-frost">Biathlon</span>
-          <span className="text-ice">Pronos</span>
-        </div>
+        <p className="text-sm text-text-dim">{t("prompt")}</p>
       </div>
 
       <div className="flex w-full flex-col gap-3">
-        <button
-          onClick={() => handleOAuth("google")}
-          className="rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
-        >
-          {t("continueGoogle")}
-        </button>
-        <button
-          onClick={() => handleOAuth("apple")}
-          className="rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
-        >
-          {t("continueApple")}
-        </button>
+        {(
+          [
+            { provider: "google", label: t("continueGoogle"), icon: <GoogleIcon className="h-5 w-5" /> },
+            { provider: "apple", label: t("continueApple"), icon: <AppleIcon className="h-5 w-5" /> },
+            { provider: "facebook", label: t("continueFacebook"), icon: <FacebookIcon className="h-5 w-5" /> },
+          ] as const
+        ).map(({ provider, label, icon }) => (
+          <button
+            key={provider}
+            onClick={() => handleOAuth(provider)}
+            className="flex items-center justify-center gap-3 rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
+          >
+            {icon}
+            {label}
+          </button>
+        ))}
       </div>
 
       <div className="flex w-full items-center gap-3 text-xs text-text-dim">
@@ -96,9 +103,13 @@ export default function SignInPage() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-[#062024] disabled:opacity-60"
+          className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice disabled:opacity-60"
         >
-          {loading ? t("connecting") : mode === "sign-up" ? t("signUpSubmit") : t("submit")}
+          {loading
+            ? t("connecting")
+            : mode === "sign-up"
+              ? t("signUpSubmit")
+              : t("submit")}
         </button>
       </form>
 
