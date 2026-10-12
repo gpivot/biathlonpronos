@@ -350,3 +350,9 @@ velopronos.fr), avec la même typographie.
   `Terms` des fichiers `messages/*.json`. **À confirmer** : l'adresse de contact
   `contact@biathlonpronos.fr` (clé `Support.email`) est provisoire, et les textes de
   confidentialité et de CGU sont des brouillons à faire relire avant l'ouverture au public.
+- **Politique de confidentialité reprise de celle de VéloPronos** (9 sections, capture fournie par
+  Guillaume), adaptée : pas d'« équipe de cœur », connexion Google/Apple + e-mail/mot de passe
+  (pas de Facebook), mention du jeu gratuit. Rendue par `InfoPage` (sections avec paragraphes,
+  puces, encadré et lien de contact). **À confirmer** : connexion Google/Apple citée alors que
+  l'OAuth n'est pas encore finalisé, notifications « si activées » (pas encore implémentées),
+  suppression des données sous 30 jours.

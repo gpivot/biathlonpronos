@@ -282,34 +282,89 @@
   },
   "Privacy": {
     "title": "Politique de confidentialité",
-    "intro": "Document provisoire, à valider avant l'ouverture du jeu au public.",
+    "back": "Accueil",
+    "updated": "Dernière mise à jour : Octobre 2026",
     "sections": [
       {
-        "title": "Données collectées",
-        "body": "Ton adresse email et ton mot de passe (chiffré) pour la connexion, ton pseudo, ta nation favorite, tes pronostics, tes cartes bonus et tes ligues."
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Biathlonpronos (« l'Application ») respecte la vie privée de ses utilisateurs. La présente politique de confidentialité explique quelles données personnelles sont collectées, comment elles sont utilisées, et quels sont vos droits."
+        ]
       },
       {
-        "title": "Utilisation",
-        "body": "Ces données servent uniquement à faire fonctionner le jeu : calcul des points, classements et ligues. Elles ne sont ni vendues ni cédées à des tiers."
+        "title": "2. Données collectées",
+        "paragraphs": [
+          "Lors de l'utilisation de l'Application, nous collectons :"
+        ],
+        "bullets": [
+          "Adresse e-mail (via votre compte)",
+          "Informations de profil (pseudo, nation favorite)",
+          "Pronostics, cartes bonus et historique de jeu",
+          "Classements, ligues et statistiques",
+          "Données de connexion (e-mail et mot de passe, ou fournisseur OAuth : Google, Apple)"
+        ],
+        "note": "Nous ne collectons aucune donnée bancaire ni de paiement : le jeu est entièrement gratuit."
       },
       {
-        "title": "Hébergement",
-        "body": "Les données sont stockées chez notre hébergeur de base de données (Supabase)."
+        "title": "3. Utilisation des données",
+        "paragraphs": [
+          "Les données collectées sont utilisées exclusivement pour :"
+        ],
+        "bullets": [
+          "Fournir les fonctionnalités de jeu (pronostics, classements, globes, ligues)",
+          "Gérer votre compte utilisateur",
+          "Améliorer l'expérience utilisateur",
+          "Répondre aux demandes de support",
+          "Envoyer des notifications liées à l'application (si activées)"
+        ]
       },
       {
-        "title": "Durée de conservation",
-        "body": "Tes données sont conservées tant que ton compte existe. Elles sont supprimées sur simple demande."
+        "title": "4. Partage des données",
+        "paragraphs": [
+          "Vos données personnelles ne sont ni vendues ni louées à des tiers.",
+          "Certaines données peuvent être traitées par nos prestataires techniques (hébergement, base de données, authentification) dans le strict cadre du fonctionnement du service."
+        ]
       },
       {
-        "title": "Tes droits",
-        "body": "Conformément au RGPD, tu peux accéder à tes données, les corriger ou les supprimer en écrivant au support."
+        "title": "5. Connexion via des tiers (OAuth)",
+        "paragraphs": [
+          "L'application propose la connexion via Google et Apple. Ces connexions sont soumises aux politiques de confidentialité de ces fournisseurs, et nous ne recevons pas votre mot de passe. Si vous vous connectez par e-mail, votre mot de passe est stocké sous forme chiffrée par notre prestataire d'authentification : nous n'y avons jamais accès en clair."
+        ]
       },
       {
-        "title": "Cookies",
-        "body": "Le site utilise uniquement les cookies nécessaires à ta connexion. Aucun cookie publicitaire pour le moment."
+        "title": "6. Conservation des données",
+        "paragraphs": [
+          "Vos données sont conservées tant que votre compte est actif. En cas de suppression de compte, vos données personnelles sont supprimées dans un délai de 30 jours."
+        ]
+      },
+      {
+        "title": "7. Vos droits (RGPD)",
+        "paragraphs": [
+          "Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :"
+        ],
+        "bullets": [
+          "Droit d'accès à vos données personnelles",
+          "Droit de rectification",
+          "Droit à l'effacement (« droit à l'oubli »)",
+          "Droit à la portabilité de vos données",
+          "Droit d'opposition au traitement"
+        ],
+        "email": true
+      },
+      {
+        "title": "8. Sécurité",
+        "paragraphs": [
+          "Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles raisonnables pour protéger vos données contre tout accès non autorisé, perte ou divulgation."
+        ]
+      },
+      {
+        "title": "9. Contact",
+        "paragraphs": [
+          "Pour toute question relative à cette politique de confidentialité :"
+        ],
+        "email": true
       }
-    ],
-    "back": "Accueil"
+    ]
   },
   "Terms": {
     "title": "Conditions générales d'utilisation",
@@ -317,27 +372,39 @@
     "sections": [
       {
         "title": "Objet",
-        "body": "Biathlonpronos est un jeu gratuit de pronostics sur les courses de biathlon. Il n'est affilié ni à l'IBU ni à aucune fédération."
+        "paragraphs": [
+          "Biathlonpronos est un jeu gratuit de pronostics sur les courses de biathlon. Il n'est affilié ni à l'IBU ni à aucune fédération."
+        ]
       },
       {
         "title": "Gratuité",
-        "body": "Le jeu est entièrement gratuit. Aucune mise d'argent réel, aucun gain financier : ce n'est pas un jeu d'argent."
+        "paragraphs": [
+          "Le jeu est entièrement gratuit. Aucune mise d'argent réel, aucun gain financier : ce n'est pas un jeu d'argent."
+        ]
       },
       {
         "title": "Compte",
-        "body": "Un compte par personne. Ton pseudo ne doit pas être injurieux ni usurper l'identité de quelqu'un d'autre."
+        "paragraphs": [
+          "Un compte par personne. Ton pseudo ne doit pas être injurieux ni usurper l'identité de quelqu'un d'autre."
+        ]
       },
       {
         "title": "Règles du jeu",
-        "body": "Le calcul des points suit le règlement publié sur le site. En cas de litige sur un résultat, la décision de l'organisateur du jeu est définitive."
+        "paragraphs": [
+          "Le calcul des points suit le règlement publié sur le site. En cas de litige sur un résultat, la décision de l'organisateur du jeu est définitive."
+        ]
       },
       {
         "title": "Comportement",
-        "body": "Tout comportement abusif (comptes multiples, triche, propos insultants dans les ligues) peut entraîner la suppression du compte."
+        "paragraphs": [
+          "Tout comportement abusif (comptes multiples, triche, propos insultants dans les ligues) peut entraîner la suppression du compte."
+        ]
       },
       {
         "title": "Évolution",
-        "body": "Ces conditions peuvent évoluer. La version en ligne est celle qui s'applique."
+        "paragraphs": [
+          "Ces conditions peuvent évoluer. La version en ligne est celle qui s'applique."
+        ]
       }
     ],
     "back": "Accueil"

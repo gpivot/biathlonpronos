@@ -282,34 +282,89 @@
   },
   "Privacy": {
     "title": "Privacy policy",
-    "intro": "Draft document, to be validated before the game opens to the public.",
+    "back": "Home",
+    "updated": "Last updated: October 2026",
     "sections": [
       {
-        "title": "Data collected",
-        "body": "Your email address and (encrypted) password to sign in, your username, favorite nation, predictions, bonus cards and leagues."
+        "title": "1. Introduction",
+        "paragraphs": [
+          "Biathlonpronos (\"the Application\") respects its users' privacy. This privacy policy explains what personal data is collected, how it is used, and what your rights are."
+        ]
       },
       {
-        "title": "Use",
-        "body": "This data is only used to run the game: points, standings and leagues. It is never sold or shared with third parties."
+        "title": "2. Data collected",
+        "paragraphs": [
+          "When you use the Application, we collect:"
+        ],
+        "bullets": [
+          "Email address (via your account)",
+          "Profile information (username, favorite nation)",
+          "Predictions, bonus cards and game history",
+          "Standings, leagues and statistics",
+          "Sign-in data (email and password, or OAuth provider: Google, Apple)"
+        ],
+        "note": "We do not collect any bank or payment data: the game is entirely free."
       },
       {
-        "title": "Hosting",
-        "body": "Data is stored with our database provider (Supabase)."
+        "title": "3. Use of data",
+        "paragraphs": [
+          "The data collected is used exclusively to:"
+        ],
+        "bullets": [
+          "Provide the game features (predictions, standings, globes, leagues)",
+          "Manage your user account",
+          "Improve the user experience",
+          "Answer support requests",
+          "Send app-related notifications (if enabled)"
+        ]
       },
       {
-        "title": "Retention",
-        "body": "Your data is kept as long as your account exists, and deleted on request."
+        "title": "4. Data sharing",
+        "paragraphs": [
+          "Your personal data is never sold or rented to third parties.",
+          "Some data may be processed by our technical providers (hosting, database, authentication) strictly to run the service."
+        ]
       },
       {
-        "title": "Your rights",
-        "body": "Under the GDPR, you can access, correct or delete your data by writing to support."
+        "title": "5. Third-party sign-in (OAuth)",
+        "paragraphs": [
+          "The application offers sign-in with Google and Apple. These sign-ins are subject to those providers' privacy policies, and we never receive your password. If you sign in by email, your password is stored encrypted by our authentication provider: we never have access to it in plain text."
+        ]
       },
       {
-        "title": "Cookies",
-        "body": "The site only uses the cookies needed to keep you signed in. No advertising cookies for now."
+        "title": "6. Data retention",
+        "paragraphs": [
+          "Your data is kept as long as your account is active. If you delete your account, your personal data is deleted within 30 days."
+        ]
+      },
+      {
+        "title": "7. Your rights (GDPR)",
+        "paragraphs": [
+          "Under the General Data Protection Regulation (GDPR), you have the following rights:"
+        ],
+        "bullets": [
+          "Right of access to your personal data",
+          "Right to rectification",
+          "Right to erasure (\"right to be forgotten\")",
+          "Right to data portability",
+          "Right to object to processing"
+        ],
+        "email": true
+      },
+      {
+        "title": "8. Security",
+        "paragraphs": [
+          "We implement reasonable technical and organisational security measures to protect your data against unauthorised access, loss or disclosure."
+        ]
+      },
+      {
+        "title": "9. Contact",
+        "paragraphs": [
+          "For any question about this privacy policy:"
+        ],
+        "email": true
       }
-    ],
-    "back": "Home"
+    ]
   },
   "Terms": {
     "title": "Terms of use",
@@ -317,27 +372,39 @@
     "sections": [
       {
         "title": "Purpose",
-        "body": "Biathlonpronos is a free biathlon prediction game. It is not affiliated with the IBU or any federation."
+        "paragraphs": [
+          "Biathlonpronos is a free biathlon prediction game. It is not affiliated with the IBU or any federation."
+        ]
       },
       {
         "title": "Free to play",
-        "body": "The game is entirely free. No real money wagered, no financial winnings: this is not a gambling game."
+        "paragraphs": [
+          "The game is entirely free. No real money wagered, no financial winnings: this is not a gambling game."
+        ]
       },
       {
         "title": "Account",
-        "body": "One account per person. Your username must not be offensive or impersonate someone else."
+        "paragraphs": [
+          "One account per person. Your username must not be offensive or impersonate someone else."
+        ]
       },
       {
         "title": "Game rules",
-        "body": "Points are calculated according to the rules published on the site. In case of dispute over a result, the game organiser's decision is final."
+        "paragraphs": [
+          "Points are calculated according to the rules published on the site. In case of dispute over a result, the game organiser's decision is final."
+        ]
       },
       {
         "title": "Conduct",
-        "body": "Any abusive behaviour (multiple accounts, cheating, insults in leagues) may lead to account deletion."
+        "paragraphs": [
+          "Any abusive behaviour (multiple accounts, cheating, insults in leagues) may lead to account deletion."
+        ]
       },
       {
         "title": "Changes",
-        "body": "These terms may change. The version online is the one that applies."
+        "paragraphs": [
+          "These terms may change. The version online is the one that applies."
+        ]
       }
     ],
     "back": "Home"
