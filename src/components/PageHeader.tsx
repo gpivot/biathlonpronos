@@ -12,9 +12,8 @@ export function PageHeader({
   title: string;
   subtitle?: string;
 }) {
-  // Sur mobile, marge haute plus grande pour passer sous le sélecteur de langue (fixe, en haut à droite).
   return (
-    <header className="relative bg-gradient-to-r from-blue to-ice px-5 pb-8 pt-[6.5rem] text-center text-white sm:pt-10">
+    <header className="relative bg-gradient-to-r from-blue to-ice px-5 pb-8 pt-10 text-center text-white">
       <Link href="/" className="absolute left-4 top-3 font-display text-xs font-bold hover:opacity-80">
         ‹ {backLabel}
       </Link>

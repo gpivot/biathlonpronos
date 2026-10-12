@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { AppleIcon, LogoMark, PlayIcon } from "@/components/icons";
+import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { AppCarousel } from "./AppCarousel";
 
 // Page d'accueil visiteur (non connecté), calquée sur celle de VéloPronos : accroche, « Comment ça
@@ -38,6 +39,10 @@ export async function Landing() {
           aria-hidden
           className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[620px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,oklch(0.45_0.15_250/0.45),transparent)]"
         />
+
+        <div className="absolute right-4 top-4 z-10">
+          <LocaleSwitcher />
+        </div>
 
         <div className="relative flex flex-col items-center gap-3">
           <LogoMark className="h-20 w-20 text-text" />

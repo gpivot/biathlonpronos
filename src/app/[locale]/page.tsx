@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
+import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { LogoMark, UserIcon } from "@/components/icons";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -109,12 +110,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <span className="text-ice">Pronos</span>
             </div>
           </div>
-          <Link
-            href="/compte"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-text-dim"
-          >
-            <UserIcon className="h-4.5 w-4.5" />
-          </Link>
+          <div className="flex items-center gap-2">
+            <LocaleSwitcher />
+            <Link
+              href="/compte"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card text-text-dim"
+            >
+              <UserIcon className="h-4.5 w-4.5" />
+            </Link>
+          </div>
         </div>
 
         {loggedInWithSeason ? (

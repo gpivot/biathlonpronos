@@ -370,3 +370,8 @@ velopronos.fr), avec la même typographie.
   `coefficient = 2` (déjà la convention « Mondiaux / JO » de la table `stages`) a un encart doré,
   le libellé « Championnats du monde » et son lieu en or. Pas de nouvelle colonne : il suffit que
   l'étape soit saisie avec le coefficient 2 (cas d'Otepää 2027).
+- **Choix de la langue par drapeaux, en haut de l'Accueil** (comme VéloPronos) : bouton rond avec
+  le drapeau de la langue courante, qui déroule les autres drapeaux (`LocaleSwitcher`, drapeaux
+  en SVG car Windows n'affiche pas les emojis drapeaux). Affiché dans l'en-tête du dashboard (à
+  côté du profil) et en haut à droite de la vitrine. **Le sélecteur FR/EN flottant présent sur
+  toutes les pages a été retiré** : la langue se choisit depuis l'Accueil, puis reste dans l'URL.
