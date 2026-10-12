@@ -295,10 +295,8 @@ définitif de « Ma saison » reste à préciser avec Guillaume. Flèche de reto
 back-office (`AdminNav`).
 
 **Bouton retour et import CSV du calendrier (demandes complémentaires de Guillaume).**
-- Flèche de retour vers l'accueil en haut à gauche de `/courses`, cohérente avec le pattern déjà
-  utilisé sur les sous-écrans (`/globes`, `/regles`) — pas encore répliquée sur les autres onglets
-  de la navigation basse (Classement, Ma saison, Ligues) puisque ce sont des onglets racine, pas
-  demandé au-delà de cette page pour l'instant.
+- Flèche de retour vers l'accueil en haut à gauche de chaque onglet de la navigation basse
+  (Calendrier, Classement, Ma saison, Ligues), à la demande de Guillaume.
 - Bouton "Importer le calendrier (CSV)" en haut de `/courses`, visible uniquement si
   `profiles.is_admin` (même mécanisme que le lien Admin de la navigation basse). Fichier
   d'exemple fourni par Guillaume : calendrier IBU complet 2026-27 (12 étapes Coupe du Monde +
