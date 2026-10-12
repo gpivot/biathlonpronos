@@ -118,9 +118,15 @@ export async function Landing() {
           <LogoMark className="h-5 w-5 text-text" />
           <Wordmark className="text-base" />
         </div>
-        <div className="mt-5 flex justify-center gap-5 text-sm text-text-dim">
-          <Link href="/regles" className="hover:text-frost">
-            {t("footerRules")}
+        <div className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm text-text-dim">
+          <Link href="/support" className="hover:text-frost">
+            {t("footerSupport")}
+          </Link>
+          <Link href="/confidentialite" className="hover:text-frost">
+            {t("footerPrivacy")}
+          </Link>
+          <Link href="/cgu" className="hover:text-frost">
+            {t("footerTerms")}
           </Link>
         </div>
         <p className="mx-auto mt-5 max-w-sm text-xs leading-relaxed text-text-dim/80">{t("footerDisclaimer")}</p>

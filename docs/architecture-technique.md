@@ -339,7 +339,12 @@ velopronos.fr), avec la même typographie.
   basse sur la vitrine (comme VéloPronos).
 - Choix à confirmer : les badges App Store / Google Play sont affichés « Bientôt disponible » et
   non cliquables (pas d'app mobile) ; l'avantage « Mode cyclo gratuit » devient « 100 % gratuit »
-  (pas de freemium) et « Mode Expert » devient « Globes de saison » ; le pied de page ne montre
-  que le lien Règlement (pas encore de pages Support / Confidentialité / CGU) ; le carrousel montre
+  (pas de freemium) et « Mode Expert » devient « Globes de saison »  ; le carrousel montre
   des emojis, pas encore de vraies captures de l'app. Les deux boutons (« Commencer » et « Se
   connecter ») mènent à `/sign-in`, qui propose connexion et inscription.
+- **Pied de page : Support, Politique de confidentialité, CGU** (liens obligatoires, comme sur
+  VéloPronos), vers `/support`, `/confidentialite`, `/cgu`. Les trois pages partagent
+  `src/components/InfoPage.tsx` ; leur texte est dans les namespaces `Support` / `Privacy` /
+  `Terms` des fichiers `messages/*.json`. **À confirmer** : l'adresse de contact
+  `contact@biathlonpronos.fr` (clé `Support.email`) est provisoire, et les textes de
+  confidentialité et de CGU sont des brouillons à faire relire avant l'ouverture au public.

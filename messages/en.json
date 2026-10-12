@@ -66,8 +66,10 @@
     "slideStandingsBody": "The overall standings and season globes",
     "slideLeaguesTitle": "Leagues",
     "slideLeaguesBody": "Take on your friends in private leagues",
-    "footerRules": "Rules",
-    "footerDisclaimer": "Biathlonpronos is an independent biathlon prediction game. No real money wagered. No financial winnings."
+    "footerDisclaimer": "Biathlonpronos is an independent biathlon prediction game. No real money wagered. No financial winnings.",
+    "footerSupport": "Support",
+    "footerPrivacy": "Privacy policy",
+    "footerTerms": "Terms"
   },
   "Regles": {
     "title": "The rules",
@@ -235,5 +237,85 @@
     "signUpSubmit": "Create my account",
     "switchToSignUp": "No account yet? Create one",
     "switchToSignIn": "Already have an account? Sign in"
+  },
+  "Support": {
+    "title": "Support",
+    "intro": "A question, a bug, an idea? We'll get back to you.",
+    "sections": [
+      {
+        "title": "Contact us",
+        "body": "Write to us at {email}. Tell us your username and, if relevant, the race concerned: we usually reply within 48 hours."
+      },
+      {
+        "title": "Game rules",
+        "body": "Scoring, bonus cards, burned athletes, season globes: everything is explained in the rules."
+      },
+      {
+        "title": "Your account",
+        "body": "You can change your favorite nation from the Account page. To delete your account and data, write to us from your account's email address."
+      }
+    ],
+    "rulesLink": "Read the rules",
+    "email": "contact@biathlonpronos.fr"
+  },
+  "Privacy": {
+    "title": "Privacy policy",
+    "intro": "Draft document, to be validated before the game opens to the public.",
+    "sections": [
+      {
+        "title": "Data collected",
+        "body": "Your email address and (encrypted) password to sign in, your username, favorite nation, predictions, bonus cards and leagues."
+      },
+      {
+        "title": "Use",
+        "body": "This data is only used to run the game: points, standings and leagues. It is never sold or shared with third parties."
+      },
+      {
+        "title": "Hosting",
+        "body": "Data is stored with our database provider (Supabase)."
+      },
+      {
+        "title": "Retention",
+        "body": "Your data is kept as long as your account exists, and deleted on request."
+      },
+      {
+        "title": "Your rights",
+        "body": "Under the GDPR, you can access, correct or delete your data by writing to support."
+      },
+      {
+        "title": "Cookies",
+        "body": "The site only uses the cookies needed to keep you signed in. No advertising cookies for now."
+      }
+    ]
+  },
+  "Terms": {
+    "title": "Terms of use",
+    "intro": "Draft document, to be validated before the game opens to the public.",
+    "sections": [
+      {
+        "title": "Purpose",
+        "body": "Biathlonpronos is a free biathlon prediction game. It is not affiliated with the IBU or any federation."
+      },
+      {
+        "title": "Free to play",
+        "body": "The game is entirely free. No real money wagered, no financial winnings: this is not a gambling game."
+      },
+      {
+        "title": "Account",
+        "body": "One account per person. Your username must not be offensive or impersonate someone else."
+      },
+      {
+        "title": "Game rules",
+        "body": "Points are calculated according to the rules published on the site. In case of dispute over a result, the game organiser's decision is final."
+      },
+      {
+        "title": "Conduct",
+        "body": "Any abusive behaviour (multiple accounts, cheating, insults in leagues) may lead to account deletion."
+      },
+      {
+        "title": "Changes",
+        "body": "These terms may change. The version online is the one that applies."
+      }
+    ]
   }
 }
