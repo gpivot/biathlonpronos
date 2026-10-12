@@ -367,46 +367,117 @@
     ]
   },
   "Terms": {
-    "title": "Terms of use",
-    "intro": "Draft document, to be validated before the game opens to the public.",
+    "title": "Terms of Use",
+    "back": "Home",
+    "updated": "Last updated: October 2026",
     "sections": [
       {
-        "title": "Purpose",
+        "title": "1. Purpose",
         "paragraphs": [
-          "Biathlonpronos is a free biathlon prediction game. It is not affiliated with the IBU or any federation."
+          "These Terms of Use govern the use of the Biathlonpronos web application (hereinafter \"the Application\"). By accessing the Application, you accept these Terms without reservation."
         ]
       },
       {
-        "title": "Free to play",
+        "title": "2. Description of the service",
         "paragraphs": [
-          "The game is entirely free. No real money wagered, no financial winnings: this is not a gambling game."
+          "Biathlonpronos is a biathlon race prediction application allowing users to:"
+        ],
+        "bullets": [
+          "Predict the best-placed biathletes and nations in each race",
+          "Take part in private leagues",
+          "Follow their own performance and that of other players"
+        ],
+        "after": [
+          "The application is offered free of charge for the 2026-27 season."
         ]
       },
       {
-        "title": "Account",
+        "title": "3. Access and registration",
         "paragraphs": [
-          "One account per person. Your username must not be offensive or impersonate someone else."
+          "Access to the Application requires creating an account. You can register with:"
+        ],
+        "bullets": [
+          "Email and password",
+          "Google",
+          "Apple"
+        ],
+        "after": [
+          "You must be at least 13 years old to use the Application."
         ]
       },
       {
-        "title": "Game rules",
+        "title": "4. Game rules",
         "paragraphs": [
-          "Points are calculated according to the rules published on the site. In case of dispute over a result, the game organiser's decision is final."
+          "Biathlonpronos is a prediction game with no real money involved. No financial gain is associated with performance in the application. It is a prediction game for fun and community."
+        ],
+        "link": {
+          "href": "/regles",
+          "label": "See the rules"
+        }
+      },
+      {
+        "title": "5. User conduct",
+        "paragraphs": [
+          "Users agree to:"
+        ],
+        "bullets": [
+          "Not use the Application for unlawful purposes",
+          "Not attempt to manipulate the standings",
+          "Not impersonate other users",
+          "Respect other members of the community"
+        ],
+        "after": [
+          "Any abusive behaviour may lead to suspension or deletion of the account."
         ]
       },
       {
-        "title": "Conduct",
+        "title": "6. Intellectual property",
         "paragraphs": [
-          "Any abusive behaviour (multiple accounts, cheating, insults in leagues) may lead to account deletion."
+          "All elements of the Application (texts, graphics, logo, code) are the property of Biathlonpronos. Any reproduction, even partial, without written permission is prohibited."
         ]
       },
       {
-        "title": "Changes",
+        "title": "7. Personal data",
         "paragraphs": [
-          "These terms may change. The version online is the one that applies."
+          "The processing of personal data is detailed in our Privacy policy."
+        ],
+        "link": {
+          "href": "/confidentialite",
+          "label": "See the privacy policy"
+        }
+      },
+      {
+        "title": "8. Limitation of liability",
+        "paragraphs": [
+          "Biathlonpronos strives to ensure the availability and reliability of the Application, but cannot guarantee uninterrupted availability. We cannot be held liable for technical failures beyond our control, nor for changes to the official race calendar or results."
         ]
+      },
+      {
+        "title": "9. Changes to the Terms",
+        "paragraphs": [
+          "We reserve the right to change these Terms at any time. Users will be informed of significant changes through the application. Continued use of the Application constitutes acceptance of the new Terms."
+        ]
+      },
+      {
+        "title": "10. Account deletion",
+        "paragraphs": [
+          "You can request the deletion of your account at any time by contacting our support. All your data will be deleted within 30 days."
+        ],
+        "email": true
+      },
+      {
+        "title": "11. Governing law",
+        "paragraphs": [
+          "These Terms are governed by French law. In case of dispute, French courts shall have sole jurisdiction."
+        ]
+      },
+      {
+        "title": "12. Contact",
+        "paragraphs": [
+          "For any question about these Terms:"
+        ],
+        "email": true
       }
-    ],
-    "back": "Home"
+    ]
   }
 }

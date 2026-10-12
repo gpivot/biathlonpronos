@@ -367,46 +367,117 @@
     ]
   },
   "Terms": {
-    "title": "Conditions générales d'utilisation",
-    "intro": "Document provisoire, à valider avant l'ouverture du jeu au public.",
+    "title": "Conditions Générales d'Utilisation",
+    "back": "Accueil",
+    "updated": "Dernière mise à jour : Octobre 2026",
     "sections": [
       {
-        "title": "Objet",
+        "title": "1. Objet",
         "paragraphs": [
-          "Biathlonpronos est un jeu gratuit de pronostics sur les courses de biathlon. Il n'est affilié ni à l'IBU ni à aucune fédération."
+          "Les présentes Conditions Générales d'Utilisation (CGU) régissent l'utilisation de l'application web Biathlonpronos (ci-après « l'Application »). En accédant à l'Application, vous acceptez sans réserve les présentes CGU."
         ]
       },
       {
-        "title": "Gratuité",
+        "title": "2. Description du service",
         "paragraphs": [
-          "Le jeu est entièrement gratuit. Aucune mise d'argent réel, aucun gain financier : ce n'est pas un jeu d'argent."
+          "Biathlonpronos est une application de pronostics sur les courses de biathlon permettant aux utilisateurs de :"
+        ],
+        "bullets": [
+          "Pronostiquer les biathlètes et les nations les mieux classés de chaque course",
+          "Participer à des ligues privées",
+          "Suivre leurs performances et celles d'autres joueurs"
+        ],
+        "after": [
+          "L'application est proposée à titre gratuit pour la saison 2026-27."
         ]
       },
       {
-        "title": "Compte",
+        "title": "3. Accès et inscription",
         "paragraphs": [
-          "Un compte par personne. Ton pseudo ne doit pas être injurieux ni usurper l'identité de quelqu'un d'autre."
+          "L'accès à l'Application nécessite la création d'un compte. L'inscription est possible via :"
+        ],
+        "bullets": [
+          "E-mail et mot de passe",
+          "Google",
+          "Apple"
+        ],
+        "after": [
+          "Vous devez être âgé de 13 ans minimum pour utiliser l'Application."
         ]
       },
       {
-        "title": "Règles du jeu",
+        "title": "4. Règles du jeu",
         "paragraphs": [
-          "Le calcul des points suit le règlement publié sur le site. En cas de litige sur un résultat, la décision de l'organisateur du jeu est définitive."
+          "Biathlonpronos est un jeu de pronostics sans mise d'argent réelle. Aucun gain financier n'est associé aux performances dans l'application. Il s'agit d'un jeu de prédiction à vocation ludique et communautaire."
+        ],
+        "link": {
+          "href": "/regles",
+          "label": "Voir le règlement"
+        }
+      },
+      {
+        "title": "5. Comportement des utilisateurs",
+        "paragraphs": [
+          "Les utilisateurs s'engagent à :"
+        ],
+        "bullets": [
+          "Ne pas utiliser l'Application à des fins illicites",
+          "Ne pas tenter de manipuler les classements",
+          "Ne pas usurper l'identité d'autres utilisateurs",
+          "Respecter les autres membres de la communauté"
+        ],
+        "after": [
+          "Tout comportement abusif peut entraîner la suspension ou la suppression du compte."
         ]
       },
       {
-        "title": "Comportement",
+        "title": "6. Propriété intellectuelle",
         "paragraphs": [
-          "Tout comportement abusif (comptes multiples, triche, propos insultants dans les ligues) peut entraîner la suppression du compte."
+          "L'ensemble des éléments de l'Application (textes, graphiques, logo, code) sont la propriété de Biathlonpronos. Toute reproduction, même partielle, sans autorisation écrite est interdite."
         ]
       },
       {
-        "title": "Évolution",
+        "title": "7. Données personnelles",
         "paragraphs": [
-          "Ces conditions peuvent évoluer. La version en ligne est celle qui s'applique."
+          "Le traitement des données personnelles est détaillé dans notre Politique de confidentialité."
+        ],
+        "link": {
+          "href": "/confidentialite",
+          "label": "Voir la politique de confidentialité"
+        }
+      },
+      {
+        "title": "8. Limitation de responsabilité",
+        "paragraphs": [
+          "Biathlonpronos s'efforce d'assurer la disponibilité et la fiabilité de l'Application, mais ne peut garantir une disponibilité sans interruption. Nous ne saurions être tenus responsables des dysfonctionnements techniques indépendants de notre volonté, ni des modifications du calendrier ou des résultats officiels des courses."
         ]
+      },
+      {
+        "title": "9. Modification des CGU",
+        "paragraphs": [
+          "Nous nous réservons le droit de modifier les présentes CGU à tout moment. Les utilisateurs seront informés des modifications importantes via l'application. La poursuite de l'utilisation de l'Application vaut acceptation des nouvelles CGU."
+        ]
+      },
+      {
+        "title": "10. Suppression de compte",
+        "paragraphs": [
+          "Vous pouvez demander la suppression de votre compte à tout moment en contactant notre support. Toutes vos données seront supprimées dans un délai de 30 jours."
+        ],
+        "email": true
+      },
+      {
+        "title": "11. Droit applicable",
+        "paragraphs": [
+          "Les présentes CGU sont soumises au droit français. En cas de litige, les tribunaux français seront seuls compétents."
+        ]
+      },
+      {
+        "title": "12. Contact",
+        "paragraphs": [
+          "Pour toute question relative aux présentes CGU :"
+        ],
+        "email": true
       }
-    ],
-    "back": "Accueil"
+    ]
   }
 }

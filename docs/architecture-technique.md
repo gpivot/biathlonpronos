@@ -356,3 +356,8 @@ velopronos.fr), avec la même typographie.
   puces, encadré et lien de contact). **À confirmer** : connexion Google/Apple citée alors que
   l'OAuth n'est pas encore finalisé, notifications « si activées » (pas encore implémentées),
   suppression des données sous 30 jours.
+- **CGU reprises de celles de VéloPronos** (12 sections, capture fournie par Guillaume), adaptées :
+  application web (pas encore mobile), saison 2026-27, inscription e-mail/Google/Apple (pas de
+  Facebook), lien vers le règlement, mention des changements de calendrier/résultats officiels
+  dans la limitation de responsabilité. **À confirmer** : âge minimum 13 ans et droit français
+  repris tels quels de VéloPronos.

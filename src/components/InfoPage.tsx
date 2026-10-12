@@ -6,7 +6,10 @@ interface Section {
   title: string;
   paragraphs?: string[];
   bullets?: string[];
+  // Paragraphes affichés après la liste à puces.
+  after?: string[];
   note?: string;
+  link?: { href: string; label: string };
   // Affiche l'adresse de contact (clé Support.email) en fin de section.
   email?: boolean;
 }
@@ -50,6 +53,16 @@ export async function InfoPage({ namespace, emoji }: { namespace: "Privacy" | "T
                   </li>
                 ))}
               </ul>
+            )}
+            {section.after?.map((paragraph) => (
+              <p key={paragraph} className="text-[13px] leading-relaxed text-text-dim">
+                {paragraph}
+              </p>
+            ))}
+            {section.link && (
+              <Link href={section.link.href} className="w-fit text-[13px] font-semibold text-blue underline">
+                {section.link.label} →
+              </Link>
             )}
             {section.note && (
               <div className="rounded-xl bg-card2 px-3 py-2 text-[12px] leading-relaxed text-text-dim">{section.note}</div>
