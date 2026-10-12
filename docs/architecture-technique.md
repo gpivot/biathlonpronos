@@ -366,3 +366,7 @@ velopronos.fr), avec la même typographie.
   dans la Politique de confidentialité et les CGU. **Prérequis** : le fournisseur Facebook doit
   être activé dans Supabase (Authentication > Providers > Facebook, avec l'App ID et le secret
   d'une app Meta for Developers), comme Google et Apple ; sans ça le bouton renvoie une erreur.
+- **Calendrier : étape des Mondiaux en doré.** Dans `CalendarAccordion`, une étape à
+  `coefficient = 2` (déjà la convention « Mondiaux / JO » de la table `stages`) a un encart doré,
+  le libellé « Championnats du monde » et son lieu en or. Pas de nouvelle colonne : il suffit que
+  l'étape soit saisie avec le coefficient 2 (cas d'Otepää 2027).
