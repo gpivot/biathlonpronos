@@ -133,7 +133,10 @@
     "languageTitle": "Lingua",
     "languagesAvailable": "{count} lingue disponibili",
     "helpAndRules": "Aiuto e Regolamento",
-    "deleteAccount": "Elimina il mio account"
+    "deleteAccount": "Elimina il mio account",
+    "editPseudo": "Modifica il nickname",
+    "cancel": "Annulla",
+    "pseudoLengthError": "Il nickname deve contenere tra {min} e {max} caratteri."
   },
   "Globes": {
     "back": "← Indietro",

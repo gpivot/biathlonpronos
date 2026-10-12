@@ -133,7 +133,10 @@
     "languageTitle": "Idioma",
     "languagesAvailable": "{count} idiomas disponibles",
     "helpAndRules": "Ayuda y Reglamento",
-    "deleteAccount": "Eliminar mi cuenta"
+    "deleteAccount": "Eliminar mi cuenta",
+    "editPseudo": "Editar el apodo",
+    "cancel": "Cancelar",
+    "pseudoLengthError": "El apodo debe tener entre {min} y {max} caracteres."
   },
   "Globes": {
     "back": "← Volver",

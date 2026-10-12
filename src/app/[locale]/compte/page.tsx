@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon, ChevronRightIcon, HelpIcon, MessageIcon, MoonIcon } from "@/components/icons";
 import { LanguagePills } from "./LanguagePills";
+import { PseudoEditor } from "./PseudoEditor";
 import { FavoriteTeamForm } from "./FavoriteTeamForm";
 import { SignOutButton } from "./SignOutButton";
 import { ClaimCardPicker } from "./ClaimCardPicker";
@@ -84,7 +85,7 @@ export default async function ComptePage() {
           <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue to-ice font-display text-3xl font-extrabold text-white">
             {pseudo.charAt(0).toUpperCase() || "?"}
           </div>
-          <div className="mt-2 font-display text-xl font-extrabold">{pseudo}</div>
+          <PseudoEditor userId={user.id} initialPseudo={pseudo} />
           <div className="text-[13px] text-text-dim">{user.email}</div>
         </div>
 

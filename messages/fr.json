@@ -133,7 +133,10 @@
     "languageTitle": "Langue",
     "languagesAvailable": "{count} langues disponibles",
     "helpAndRules": "Aide & Règlement",
-    "deleteAccount": "Supprimer mon compte"
+    "deleteAccount": "Supprimer mon compte",
+    "editPseudo": "Modifier le pseudo",
+    "cancel": "Annuler",
+    "pseudoLengthError": "Le pseudo doit faire entre {min} et {max} caractères."
   },
   "Globes": {
     "back": "← Retour",

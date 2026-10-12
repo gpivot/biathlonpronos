@@ -133,7 +133,10 @@
     "languageTitle": "Language",
     "languagesAvailable": "{count} languages available",
     "helpAndRules": "Help & Rules",
-    "deleteAccount": "Delete my account"
+    "deleteAccount": "Delete my account",
+    "editPseudo": "Edit username",
+    "cancel": "Cancel",
+    "pseudoLengthError": "Your username must be between {min} and {max} characters."
   },
   "Globes": {
     "back": "← Back",

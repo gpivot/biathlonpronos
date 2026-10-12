@@ -207,3 +207,11 @@ export function ChevronRightIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function PencilIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M15.5 5.5l3 3M4 20l1-4L16 5l3 3L8 19l-4 1Z" />
+    </svg>
+  );
+}

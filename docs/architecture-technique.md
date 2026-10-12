@@ -386,5 +386,8 @@ velopronos.fr), avec la même typographie.
   marqués « Bientôt ») ; équipe favorite et cartes bonus (inchangés) ; langue (pastilles drapeau
   + nom, fonctionnelles) ; liens Aide & Règlement et Support ; déconnexion ; « Supprimer mon
   compte » ouvre un email au support (pas de suppression automatique). Pas de section « Mode de
-  jeu » (pas de freemium sur Biathlonpronos) ni « Mes messages » (remplacé par Support), et le
-  crayon de modification du pseudo n'est pas repris (pas encore de modification du pseudo).
+  jeu » (pas de freemium sur Biathlonpronos) ni « Mes messages » (remplacé par Support).
+- **Pseudo modifiable** via le crayon (`compte/PseudoEditor.tsx`, 2 à 20 caractères, contrôle
+  côté interface uniquement). **Migration 0016 à coller dans Supabase** : la policy « profiles:
+  update own » laissait un joueur modifier n'importe quelle colonne de son profil, y compris
+  `is_admin` ; la migration limite la mise à jour côté client à la colonne `pseudo`.
