@@ -240,23 +240,45 @@
   },
   "Support": {
     "title": "Support",
-    "intro": "Une question, un bug, une idée ? On te répond.",
-    "sections": [
+    "subtitle": "Nous sommes là pour t'aider",
+    "contactTitle": "Nous contacter",
+    "contactBody": "Pour toute question, problème technique ou demande de suppression de compte, contacte-nous directement par email.",
+    "email": "contact@biathlonpronos.fr",
+    "delayTitle": "Délai de réponse",
+    "delayBody": "Nous répondons généralement sous 24 à 48 heures les jours ouvrés.",
+    "typesTitle": "Types de demandes",
+    "types": [
       {
-        "title": "Nous contacter",
-        "body": "Écris-nous à {email}. Précise ton pseudo et, si besoin, la course concernée : on répond en général sous 48 heures."
+        "emoji": "🐛",
+        "label": "Signalement de bug ou problème technique"
       },
       {
-        "title": "Les règles du jeu",
-        "body": "Barèmes, cartes bonus, grillage, globes de saison : tout est expliqué dans le règlement."
+        "emoji": "🗑️",
+        "label": "Demande de suppression de compte et de données"
       },
       {
-        "title": "Ton compte",
-        "body": "Tu peux modifier ta nation favorite depuis la page Compte. Pour supprimer ton compte et tes données, écris-nous depuis l'adresse email de ton compte."
+        "emoji": "🔑",
+        "label": "Problème de connexion ou d'accès"
+      },
+      {
+        "emoji": "📊",
+        "label": "Question sur le calcul des points"
+      },
+      {
+        "emoji": "🏆",
+        "label": "Question sur les ligues ou le classement"
+      },
+      {
+        "emoji": "💡",
+        "label": "Suggestion d'amélioration"
       }
     ],
-    "rulesLink": "Lire le règlement",
-    "email": "contact@biathlonpronos.fr"
+    "helpTitle": "Aide & Règlement",
+    "helpBody": "Consulte le règlement pour les règles du jeu, le calcul des points, les cartes bonus et toutes les fonctionnalités de Biathlonpronos.",
+    "helpButton": "Voir l'aide",
+    "back": "Accueil",
+    "privacy": "Politique de confidentialité",
+    "terms": "CGU"
   },
   "Privacy": {
     "title": "Politique de confidentialité",
@@ -286,7 +308,8 @@
         "title": "Cookies",
         "body": "Le site utilise uniquement les cookies nécessaires à ta connexion. Aucun cookie publicitaire pour le moment."
       }
-    ]
+    ],
+    "back": "Accueil"
   },
   "Terms": {
     "title": "Conditions générales d'utilisation",
@@ -316,6 +339,7 @@
         "title": "Évolution",
         "body": "Ces conditions peuvent évoluer. La version en ligne est celle qui s'applique."
       }
-    ]
+    ],
+    "back": "Accueil"
   }
 }

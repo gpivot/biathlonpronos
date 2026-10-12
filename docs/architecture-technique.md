@@ -343,8 +343,10 @@ velopronos.fr), avec la même typographie.
   des emojis, pas encore de vraies captures de l'app. Les deux boutons (« Commencer » et « Se
   connecter ») mènent à `/sign-in`, qui propose connexion et inscription.
 - **Pied de page : Support, Politique de confidentialité, CGU** (liens obligatoires, comme sur
-  VéloPronos), vers `/support`, `/confidentialite`, `/cgu`. Les trois pages partagent
-  `src/components/InfoPage.tsx` ; leur texte est dans les namespaces `Support` / `Privacy` /
+  VéloPronos), vers `/support`, `/confidentialite`, `/cgu`. La page Support reprend la
+  page Support de VéloPronos (bandeau en dégradé, cartes contact / délai de réponse / types de
+  demandes / aide) ; Confidentialité et CGU partagent `src/components/InfoPage.tsx`, et les trois
+  utilisent le bandeau `src/components/PageHeader.tsx` ; leur texte est dans les namespaces `Support` / `Privacy` /
   `Terms` des fichiers `messages/*.json`. **À confirmer** : l'adresse de contact
   `contact@biathlonpronos.fr` (clé `Support.email`) est provisoire, et les textes de
   confidentialité et de CGU sont des brouillons à faire relire avant l'ouverture au public.

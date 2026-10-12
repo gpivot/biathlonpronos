@@ -240,23 +240,45 @@
   },
   "Support": {
     "title": "Support",
-    "intro": "A question, a bug, an idea? We'll get back to you.",
-    "sections": [
+    "subtitle": "We're here to help",
+    "contactTitle": "Contact us",
+    "contactBody": "For any question, technical issue or account deletion request, contact us directly by email.",
+    "email": "contact@biathlonpronos.fr",
+    "delayTitle": "Response time",
+    "delayBody": "We usually reply within 24 to 48 hours on working days.",
+    "typesTitle": "Types of requests",
+    "types": [
       {
-        "title": "Contact us",
-        "body": "Write to us at {email}. Tell us your username and, if relevant, the race concerned: we usually reply within 48 hours."
+        "emoji": "🐛",
+        "label": "Bug report or technical issue"
       },
       {
-        "title": "Game rules",
-        "body": "Scoring, bonus cards, burned athletes, season globes: everything is explained in the rules."
+        "emoji": "🗑️",
+        "label": "Account and data deletion request"
       },
       {
-        "title": "Your account",
-        "body": "You can change your favorite nation from the Account page. To delete your account and data, write to us from your account's email address."
+        "emoji": "🔑",
+        "label": "Sign-in or access problem"
+      },
+      {
+        "emoji": "📊",
+        "label": "Question about points calculation"
+      },
+      {
+        "emoji": "🏆",
+        "label": "Question about leagues or standings"
+      },
+      {
+        "emoji": "💡",
+        "label": "Improvement suggestion"
       }
     ],
-    "rulesLink": "Read the rules",
-    "email": "contact@biathlonpronos.fr"
+    "helpTitle": "Help & Rules",
+    "helpBody": "Read the rules for how the game works, points calculation, bonus cards and every Biathlonpronos feature.",
+    "helpButton": "See help",
+    "back": "Home",
+    "privacy": "Privacy policy",
+    "terms": "Terms"
   },
   "Privacy": {
     "title": "Privacy policy",
@@ -286,7 +308,8 @@
         "title": "Cookies",
         "body": "The site only uses the cookies needed to keep you signed in. No advertising cookies for now."
       }
-    ]
+    ],
+    "back": "Home"
   },
   "Terms": {
     "title": "Terms of use",
@@ -316,6 +339,7 @@
         "title": "Changes",
         "body": "These terms may change. The version online is the one that applies."
       }
-    ]
+    ],
+    "back": "Home"
   }
 }
