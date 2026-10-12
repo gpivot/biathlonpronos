@@ -44,14 +44,17 @@ export default function SignInPage() {
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-8 px-6">
-      <div className="flex items-center gap-3">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-ice">
-          <LogoMark className="h-8 w-8" />
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-border bg-card text-ice">
+            <LogoMark className="h-8 w-8" />
+          </div>
+          <div className="font-display text-2xl font-extrabold">
+            <span className="text-frost">Biathlon</span>
+            <span className="text-ice">Pronos</span>
+          </div>
         </div>
-        <div className="font-display text-2xl font-extrabold">
-          <span className="text-frost">Biathlon</span>
-          <span className="text-ice">Pronos</span>
-        </div>
+        <p className="text-sm text-text-dim">{t("prompt")}</p>
       </div>
 
       <div className="flex w-full flex-col gap-3">
@@ -98,7 +101,11 @@ export default function SignInPage() {
           disabled={loading}
           className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-[#062024] disabled:opacity-60"
         >
-          {loading ? t("connecting") : mode === "sign-up" ? t("signUpSubmit") : t("submit")}
+          {loading
+            ? t("connecting")
+            : mode === "sign-up"
+              ? t("signUpSubmit")
+              : t("submit")}
         </button>
       </form>
 

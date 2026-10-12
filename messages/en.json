@@ -227,6 +227,7 @@
     "bonusX2Label": "Season ×2 bonus ({count} left)"
   },
   "SignIn": {
+    "prompt": "Sign in to continue",
     "continueGoogle": "Continue with Google",
     "continueApple": "Continue with Apple",
     "or": "OR",
