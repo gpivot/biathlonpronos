@@ -179,7 +179,8 @@
     "coefficientBadge": "Coeff. ×2",
     "importButton": "Importer le calendrier (CSV)",
     "importLoading": "Import en cours...",
-    "importSummary": "{stagesCreated} étape(s) créée(s), {stagesUpdated} mise(s) à jour · {racesCreated} course(s) créée(s), {racesUpdated} mise(s) à jour."
+    "importSummary": "{stagesCreated} étape(s) créée(s), {stagesUpdated} mise(s) à jour · {racesCreated} course(s) créée(s), {racesUpdated} mise(s) à jour.",
+    "worldChampionships": "Championnats du monde"
   },
   "RaceFormat": {
     "sprint": "Sprint",
