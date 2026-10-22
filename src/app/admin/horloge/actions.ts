@@ -2,10 +2,10 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { SIMULATED_CLOCK_COOKIE, parseClockOffset } from "@/lib/simulatedClock";
 
-async function assertAdmin() {
+async function getAdminUserId() {
   const supabase = createClient();
   const {
     data: { user },
@@ -13,17 +13,22 @@ async function assertAdmin() {
   if (!user) throw new Error("Non connecté");
   const { data: profile } = await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
   if (!profile?.is_admin) throw new Error("Réservé aux admins");
+  return user.id;
 }
 
 /**
- * Règle l'horloge simulée sur `targetMs` (instant choisi, en ms epoch). On
- * stocke le décalage avec l'heure réelle pour que la pendule continue
- * d'avancer. Cookie lisible par le navigateur (bandeau d'avertissement) :
- * il n'accorde rien, le serveur revérifie is_admin à chaque lecture.
+ * Enregistre le décalage dans le profil de l'admin : c'est lui que lit la
+ * base (effective_now(), migration 0017) pour autoriser les pronos, et
+ * getClock() pour l'affichage. Le cookie, lisible par le navigateur, ne sert
+ * qu'au bandeau d'avertissement.
  */
-export async function setSimulatedClock(targetMs: number) {
-  await assertAdmin();
-  const offset = parseClockOffset(String(Math.round(targetMs - Date.now())));
+async function storeOffset(userId: string, offset: number | null) {
+  const { error } = await createAdminClient()
+    .from("profiles")
+    .update({ simulated_clock_offset_ms: offset })
+    .eq("id", userId);
+  if (error) throw new Error(error.message);
+
   if (offset === null) {
     cookies().delete(SIMULATED_CLOCK_COOKIE);
   } else {
@@ -31,13 +36,27 @@ export async function setSimulatedClock(targetMs: number) {
       path: "/",
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
-      maxAge: 7 * 24 * 60 * 60,
+      maxAge: 365 * 24 * 60 * 60,
     });
   }
   revalidatePath("/", "layout");
 }
 
+/** Règle l'horloge simulée sur `targetMs` (instant choisi, en ms epoch) ; la pendule continue d'avancer. */
+export async function setSimulatedClock(targetMs: number) {
+  const userId = await getAdminUserId();
+  await storeOffset(userId, parseClockOffset(String(Math.round(targetMs - Date.now()))));
+}
+
 export async function resetSimulatedClock() {
-  cookies().delete(SIMULATED_CLOCK_COOKIE);
-  revalidatePath("/", "layout");
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    await storeOffset(user.id, null);
+  } else {
+    cookies().delete(SIMULATED_CLOCK_COOKIE);
+    revalidatePath("/", "layout");
+  }
 }

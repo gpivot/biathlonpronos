@@ -34,10 +34,8 @@ export default async function GlobesPage() {
     );
   }
 
-  // Verrouillé si la saison a commencé dans l'horloge affichée OU en réalité :
-  // l'horloge simulée de l'admin ne doit jamais rouvrir une saisie réelle.
-  const { now, realNow } = await getClock();
-  const isLocked = new Date(season.starts_on) <= now || new Date(season.starts_on) <= realNow;
+  const { now } = await getClock();
+  const isLocked = new Date(season.starts_on) <= now;
 
   const {
     data: { user },
