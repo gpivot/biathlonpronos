@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
+import { displayedSex } from "@/lib/raceLabel";
 
 export interface PronosRace {
   id: string;
@@ -106,7 +107,7 @@ export function PronosAccordion({
                     <div className="flex flex-1 flex-col gap-0.5">
                       <div className="text-sm font-semibold">
                         {tFormat(race.format)}
-                        {race.sex ? ` ${tSex(race.sex)}` : ""}
+                        {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
                       </div>
                       <div className="text-xs text-text-dim">
                         {race.kind === "predicted" && race.names

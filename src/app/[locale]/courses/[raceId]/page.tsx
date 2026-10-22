@@ -10,6 +10,7 @@ import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
 import { FondueButton } from "./FondueButton";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
+import { displayedSex } from "@/lib/raceLabel";
 
 export const dynamic = "force-dynamic";
 
@@ -175,7 +176,7 @@ export default async function RacePage({
       <div className="flex flex-1 flex-col gap-5 overflow-auto px-5 pb-3 pt-5">
         <div className="text-center font-display text-[15px] font-bold">
           {tFormat(race.format)}
-          {race.sex ? ` ${tSex(race.sex)}` : ""}
+          {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
         </div>
 
         <div className="flex flex-col gap-3 rounded-[18px] border border-border bg-gradient-to-br from-card2 to-card px-4 py-4">
