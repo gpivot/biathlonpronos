@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { saveRaceResults, scoreRace, type ResultEntryInput } from "@/lib/admin/raceResults";
 
 export interface SubmitResultsState {
@@ -13,6 +14,7 @@ export async function submitResults(
   raceId: string,
   entries: ResultEntryInput[]
 ): Promise<SubmitResultsState> {
+  await requireAdmin();
   const admin = createAdminClient();
 
   try {

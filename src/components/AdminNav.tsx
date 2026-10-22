@@ -1,19 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowLeftIcon } from "./icons";
 
 const items = [
-  { href: "/admin", label: "Résultats" },
-  { href: "/admin/seasons", label: "Saisons" },
-  { href: "/admin/athletes", label: "Athlètes & cotes" },
-  { href: "/admin/relais", label: "Cotes de relais" },
-  { href: "/admin/import", label: "Import CSV" },
-  { href: "/admin/stages", label: "Étapes & courses" },
-  { href: "/admin/globes", label: "Globes de saison" },
-  { href: "/admin/joueurs", label: "Joueurs & rôles" },
-  { href: "/admin/horloge", label: "Horloge simulée" },
+  { href: "/admin/calendrier", label: "Calendrier", matches: ["/admin/calendrier"] },
+  { href: "/admin/athletes", label: "Athlètes & cotes", matches: ["/admin/athletes"] },
+  { href: "/admin", label: "Résultats & globes", matches: ["/admin/races"] },
+  { href: "/admin/joueurs", label: "Joueurs & rôles", matches: ["/admin/joueurs"] },
+  { href: "/admin/horloge", label: "Horloge simulée", matches: ["/admin/horloge"] },
 ];
 
 export function AdminNav() {
+  const pathname = usePathname();
+
   return (
     <nav className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border pb-3 text-sm">
       <Link
@@ -23,11 +24,18 @@ export function AdminNav() {
       >
         <ArrowLeftIcon className="h-4 w-4" />
       </Link>
-      {items.map((item) => (
-        <Link key={item.href} href={item.href} className="text-text-dim hover:text-ice">
-          {item.label}
-        </Link>
-      ))}
+      {items.map((item) => {
+        const isActive = pathname === item.href || item.matches.some((m) => pathname.startsWith(m));
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={isActive ? "font-semibold text-ice" : "text-text-dim hover:text-ice"}
+          >
+            {item.label}
+          </Link>
+        );
+      })}
     </nav>
   );
 }

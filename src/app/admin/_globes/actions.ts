@@ -1,10 +1,12 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { scoreSeasonPredictionCategory } from "@/lib/admin/seasonScoring";
 import type { SeasonPredictionCategory } from "@/lib/scoring";
 
 export async function saveGlobeRanking(formData: FormData): Promise<{ message: string }> {
+  await requireAdmin();
   const admin = createAdminClient();
   const seasonId = String(formData.get("season_id"));
   const category = String(formData.get("category")) as SeasonPredictionCategory;

@@ -26,7 +26,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <html lang="fr">
       <body className="bg-bg text-text">
         <SimulatedClockBanner />
-        <div className="mx-auto max-w-3xl px-6 py-8">
+        <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
           <AdminNav />
           {children}
         </div>

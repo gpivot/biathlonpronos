@@ -1,6 +1,6 @@
-import Papa from "papaparse";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { alpha2ToAlpha3, NATION_NAMES } from "@/lib/nationFlags";
+import { alpha2ToAlpha3, alpha3ToAlpha2, NATION_NAMES } from "../nationFlags";
+import { parseCsv, toCsv } from "./csv";
 
 export interface CalendarImportSummary {
   stagesCreated: number;
@@ -8,14 +8,6 @@ export interface CalendarImportSummary {
   racesCreated: number;
   racesUpdated: number;
   warnings: string[];
-}
-
-function normalizeHeader(header: string): string {
-  return header
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "") // retire les accents
-    .trim()
-    .toLowerCase();
 }
 
 const FORMAT_LABELS: Record<string, string> = {
@@ -66,12 +58,7 @@ export async function importCalendarCsv(
   seasonId: string,
   csvText: string
 ): Promise<CalendarImportSummary> {
-  const { data: rows, errors } = Papa.parse<Record<string, string>>(csvText, {
-    header: true,
-    skipEmptyLines: true,
-    transformHeader: normalizeHeader,
-  });
-  if (errors.length > 0) throw new Error(errors[0].message);
+  const rows = parseCsv(csvText);
 
   const summary: CalendarImportSummary = {
     stagesCreated: 0,
@@ -188,4 +175,58 @@ export async function importCalendarCsv(
   }
 
   return summary;
+}
+
+/** En-têtes du fichier calendrier, identiques à l'import pour pouvoir réimporter un export. */
+export const CALENDAR_CSV_HEADERS = [
+  "Lieu (ville)",
+  "Pays (pour code drapeau)",
+  "Date",
+  "Heure de départ UTC",
+  "Catégorie",
+  "Type de course",
+  "Sexe",
+];
+
+const EXPORT_TYPE_AND_SEX: Record<string, [string, string | null]> = {
+  sprint: ["Sprint", null],
+  poursuite: ["Poursuite", null],
+  individuel: ["Individuel", null],
+  mass_start: ["Mass-start", null],
+  relais_h: ["Relais", "Hommes"],
+  relais_f: ["Relais", "Femmes"],
+  relais_mixte: ["Relais mixte", "Mixte"],
+  relais_mixte_simple: ["Relais mixte simple", "Mixte"],
+};
+
+export interface CalendarExportStage {
+  location: string;
+  country_code: string;
+  coefficient: number;
+  races: Array<{ format: string; sex: string | null; locks_at: string }>;
+}
+
+/** Calendrier d'une saison au format de l'import : une ligne par course, triée par date. */
+export function buildCalendarCsv(stages: CalendarExportStage[]): string {
+  const rows = stages.flatMap((stage) =>
+    stage.races.map((race) => {
+      const [typeLabel, fixedSex] = EXPORT_TYPE_AND_SEX[race.format] ?? [race.format, null];
+      const sexLabel = fixedSex ?? (race.sex === "F" ? "Femmes" : race.sex === "H" ? "Hommes" : "Mixte");
+      const iso = new Date(race.locks_at).toISOString();
+      return {
+        sortKey: iso,
+        cells: [
+          stage.location,
+          alpha3ToAlpha2(stage.country_code) ?? stage.country_code,
+          iso.slice(0, 10),
+          iso.slice(11, 16),
+          stage.coefficient === 2 ? "Championnats du Monde" : "Coupe du Monde",
+          typeLabel,
+          sexLabel,
+        ],
+      };
+    })
+  );
+  rows.sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+  return toCsv(CALENDAR_CSV_HEADERS, rows.map((r) => r.cells));
 }

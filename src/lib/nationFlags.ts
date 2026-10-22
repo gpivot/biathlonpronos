@@ -20,6 +20,11 @@ const ALPHA2_TO_ALPHA3: Record<string, string> = Object.fromEntries(
   Object.entries(ALPHA3_TO_ALPHA2).map(([a3, a2]) => [a2, a3])
 );
 
+/** Code nation alpha-3 en base → code pays alpha-2 (ex. export du calendrier). */
+export function alpha3ToAlpha2(alpha3Code: string): string | undefined {
+  return ALPHA3_TO_ALPHA2[alpha3Code.toUpperCase()];
+}
+
 /** Code pays alpha-2 (ex. import calendrier) → code nation alpha-3 (style IOC) utilisé en base. */
 export function alpha2ToAlpha3(alpha2Code: string): string | undefined {
   return ALPHA2_TO_ALPHA3[alpha2Code.toUpperCase()];
