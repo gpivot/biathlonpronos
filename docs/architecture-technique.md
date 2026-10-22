@@ -492,3 +492,19 @@ Noms comparés sans accents ni casse. Le CSV **ne fait que pré-remplir le table
 puis clique « Enregistrer et calculer les scores » (même chemin que la saisie manuelle). Bouton de
 téléchargement du modèle (candidats ayant une cote, avec la saisie en cours). Format pensé pour être
 généré par une IA à partir du classement officiel IBU.
+
+**Récupération des résultats officiels IBU (octobre 2026, choix de Guillaume plutôt qu'une IA).**
+Bouton « Récupérer les résultats officiels IBU » sur la page d'une course (`src/lib/admin/ibuResults.ts`,
+action `loadIbuResults`). Lit l'API JSON publique du datacenter IBU (`biathlonresults.com/modules/sportapi/api`,
+celle qu'utilise leur propre site, sans clé) : `Events` (saison `2627` déduite du label `2026-27`,
+niveau 1 = Coupe du monde, Mondiaux, JO) → étape qui recouvre les dates de la nôtre (le lieu
+départage) → `Competitions` → course de même discipline (SP, PU, IN, MS, RL, SR) et catégorie (SW,
+SM, MX) la plus proche de l'heure de départ → `Results`. Converti au format du CSV de résultats et
+appliqué comme un import : le tableau est pré-rempli, **l'admin relit puis valide les points**.
+Gâchette = 0 faute (`ShootingTotal`), Fusée = rang 1 de l'analyse temps de ski (`AnalyticResults`
+TypeId `CRST`, sinon à cocher à la main), écart = `Behind`, DNF/DNS ignorés, relais = lignes
+d'équipe. Les noms sont comparés aussi sous forme translittérée (Öberg = OEBERG, Bø = BOE). Champ
+facultatif pour forcer l'identifiant IBU de la course si la correspondance automatique échoue.
+- **Non testé contre l'IBU depuis l'environnement de Claude** (accès réseau refusé) : structure de
+  l'API reprise de son usage connu, logique de correspondance couverte par des tests unitaires. À
+  vérifier en vrai sur la préversion Vercel. Conditions d'utilisation de l'API IBU non vérifiées.

@@ -37,6 +37,15 @@ function normalizeName(value: string): string {
   return normalizeLabel(value).replace(/[-'’.]/g, " ").replace(/\s+/g, " ").trim();
 }
 
+// L'IBU translittère les lettres nordiques et germaniques (Öberg → OEBERG, Bø → BOE).
+const TRANSLITERATIONS: Record<string, string> = { ä: "ae", ö: "oe", ü: "ue", ø: "oe", å: "aa", æ: "ae", ß: "ss" };
+
+/** Formes comparables d'un nom : accents retirés, et translittéré à la manière de l'IBU. */
+function nameVariants(value: string): string[] {
+  const transliterated = value.toLowerCase().replace(/[äöüøåæß]/g, (c) => TRANSLITERATIONS[c]);
+  return [...new Set([normalizeName(value), normalizeName(transliterated)])];
+}
+
 function parseFlag(value: string | undefined): boolean {
   return ["oui", "o", "x", "1", "true", "vrai", "yes", "y"].includes(normalizeLabel(value ?? ""));
 }
@@ -71,10 +80,16 @@ export function parseResultsCsv(
   for (const c of candidates) {
     const keys =
       mode === "nation"
-        ? [normalizeName(c.nationCode), ...(c.nationName ? [normalizeName(c.nationName)] : [])]
-        : [normalizeName(`${c.firstName} ${c.lastName}`), normalizeName(`${c.lastName} ${c.firstName}`)];
+        ? [c.nationCode, ...(c.nationName ? [c.nationName] : [])].flatMap(nameVariants)
+        : [`${c.firstName} ${c.lastName}`, `${c.lastName} ${c.firstName}`].flatMap(nameVariants);
     for (const key of new Set(keys)) byName.set(key, [...(byName.get(key) ?? []), c]);
   }
+
+  const findByName = (label: string) => {
+    const found = new Map<string, ResultsCsvCandidate>();
+    for (const key of nameVariants(label)) for (const c of byName.get(key) ?? []) found.set(c.id, c);
+    return [...found.values()];
+  };
 
   csvRows.forEach((row, index) => {
     const line = `Ligne ${index + 2}`;
@@ -91,13 +106,13 @@ export function parseResultsCsv(
     const nation = cell(row, "nation", "pays", "nat").toUpperCase();
     if (mode === "nation") {
       label = cell(row, "nation", "pays", "equipe");
-      found = byName.get(normalizeName(label)) ?? [];
+      found = findByName(label);
     } else {
       const fullName = cell(row, "athlete", "nom complet");
       const lastName = cell(row, "nom");
       const firstName = cell(row, "prenom");
       label = fullName || `${firstName} ${lastName}`.trim();
-      found = byName.get(normalizeName(label)) ?? [];
+      found = findByName(label);
       // Homonymes : la nation tranche.
       if (found.length > 1 && nation) found = found.filter((c) => c.nationCode === nation);
     }

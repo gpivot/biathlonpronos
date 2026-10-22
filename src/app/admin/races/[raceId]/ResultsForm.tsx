@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { submitResults, type SubmitResultsState } from "./actions";
+import { loadIbuResults, submitResults, type SubmitResultsState } from "./actions";
 import type { ResultEntryInput } from "@/lib/admin/raceResults";
 import {
   ATHLETE_RESULTS_HEADERS,
@@ -62,7 +62,7 @@ export function ResultsForm({
   );
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<SubmitResultsState | null>(null);
-  const [csvReport, setCsvReport] = useState<{ message: string; warnings: string[] } | null>(null);
+  const [csvReport, setCsvReport] = useState<{ ok: boolean; message: string; warnings: string[] } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isAthleteMode = mode === "athlete";
@@ -73,22 +73,43 @@ export function ResultsForm({
     setRows((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
   }
 
-  /** Le CSV remplace la saisie à l'écran ; rien n'est enregistré avant le clic sur le bouton. */
-  async function handleCsvFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
+  const [ibuLoading, setIbuLoading] = useState(false);
+  const [ibuRaceId, setIbuRaceId] = useState("");
+
+  /** Le CSV (fichier ou IBU) remplace la saisie à l'écran ; rien n'est enregistré avant le clic sur le bouton. */
+  function applyCsv(csvText: string, source: string, extraWarnings: string[] = []) {
     try {
-      const parsed = parseResultsCsv(await file.text(), mode, candidates);
+      const parsed = parseResultsCsv(csvText, mode, candidates);
       const empty: RowState = { rank: "", timeGapSeconds: "", penaltyLaps: "", isFusee: false, isGachette: false };
       setRows(Object.fromEntries(candidates.map((c) => [c.id, parsed.rows[c.id] ?? empty])));
       setResult(null);
       setCsvReport({
-        message: `${parsed.matched} ligne(s) reprise(s) du CSV. Vérifie le tableau puis enregistre pour calculer les points.`,
-        warnings: parsed.warnings,
+        ok: true,
+        message: `${source}${parsed.matched} ligne(s) reprise(s). Vérifie le tableau puis enregistre pour calculer les points.`,
+        warnings: [...extraWarnings, ...parsed.warnings],
       });
     } catch (err) {
-      setCsvReport({ message: err instanceof Error ? err.message : "CSV illisible.", warnings: [] });
+      setCsvReport({ ok: false, message: err instanceof Error ? err.message : "CSV illisible.", warnings: [] });
+    }
+  }
+
+  async function handleCsvFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (file) applyCsv(await file.text(), "CSV : ");
+  }
+
+  async function handleIbu() {
+    setIbuLoading(true);
+    setCsvReport(null);
+    try {
+      const outcome = await loadIbuResults(raceId, ibuRaceId || undefined);
+      if (outcome.ok && outcome.csv) applyCsv(outcome.csv, `${outcome.message} `, outcome.warnings);
+      else setCsvReport({ ok: false, message: outcome.message, warnings: [] });
+    } catch (err) {
+      setCsvReport({ ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", warnings: [] });
+    } finally {
+      setIbuLoading(false);
     }
   }
 
@@ -127,7 +148,25 @@ export function ResultsForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
-        <div className="text-sm font-semibold">Importer les résultats (CSV)</div>
+        <div className="text-sm font-semibold">Récupérer les résultats</div>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={handleIbu}
+            disabled={ibuLoading}
+            className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice disabled:opacity-60"
+          >
+            {ibuLoading ? "Lecture du site IBU..." : "Récupérer les résultats officiels IBU"}
+          </button>
+          <input
+            value={ibuRaceId}
+            onChange={(e) => setIbuRaceId(e.target.value)}
+            placeholder="Identifiant IBU (facultatif)"
+            title="À renseigner seulement si la course n'est pas retrouvée automatiquement, ex. BT2627SWRLCP01SWSP (visible dans l'adresse de la course sur biathlonresults.com)"
+            className="w-60 rounded border border-border bg-bg px-2 py-1.5 text-xs"
+          />
+        </div>
+        <div className="mt-2 border-t border-border/50 pt-3 text-xs font-semibold text-text-dim">ou importer un CSV</div>
         <p className="text-xs text-text-dim">
           {isAthleteMode
             ? "Une ligne par athlète classé. Nom et Prénom (ou une colonne Athlète avec le nom complet) sont retrouvés sans tenir compte des accents ni de la casse ; Nation départage les homonymes. Écart en secondes ou m:ss.s (utile au sprint pour la cote poursuite), Fusée et Gâchette à « oui » (ou une colonne Fautes : 0 = Gâchette). DNF/DNS : laisser le rang vide."
@@ -142,7 +181,7 @@ export function ResultsForm({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice"
+            className="rounded border border-border px-4 py-1.5 text-sm text-text-dim hover:text-ice"
           >
             Importer un CSV
           </button>
@@ -152,7 +191,7 @@ export function ResultsForm({
         </div>
         {csvReport && (
           <div className="flex flex-col gap-1 text-xs">
-            <div className="text-ice">{csvReport.message}</div>
+            <div className={csvReport.ok ? "text-ice" : "text-red"}>{csvReport.message}</div>
             {csvReport.warnings.length > 0 && (
               <ul className="list-disc pl-4 text-gold">
                 {csvReport.warnings.map((w, i) => (
