@@ -7,7 +7,7 @@
 -- modifiable côté client (cf. 0016 : seul pseudo l'est), uniquement via la
 -- clé service_role du back-office.
 
-alter table profiles add column simulated_clock_offset_ms bigint;
+alter table profiles add column if not exists simulated_clock_offset_ms bigint;
 
 create or replace function effective_now() returns timestamptz
 language sql stable security definer set search_path = public as $$
@@ -19,8 +19,8 @@ language sql stable security definer set search_path = public as $$
   );
 $$;
 
-drop policy "predictions: insert own before lock" on predictions;
-drop policy "predictions: update own before lock" on predictions;
+drop policy if exists "predictions: insert own before lock" on predictions;
+drop policy if exists "predictions: update own before lock" on predictions;
 
 create policy "predictions: insert own before lock" on predictions for insert with check (
   auth.uid() = user_id
