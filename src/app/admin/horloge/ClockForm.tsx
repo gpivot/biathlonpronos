@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { resetSimulatedClock, setSimulatedClock } from "./actions";
+import { DISPLAY_TIME_ZONE, fromParisWallTime, toParisWallTime } from "@/lib/displayTimeZone";
 
 export interface ClockRaceOption {
   id: string;
@@ -10,23 +11,15 @@ export interface ClockRaceOption {
   label: string;
 }
 
-/** Valeur pour un input datetime-local, dans le fuseau du navigateur. */
-function toLocalInputValue(date: Date) {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(
-    date.getMinutes()
-  )}`;
-}
-
 function formatDateTime(date: Date) {
-  return date.toLocaleString("fr-FR", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleString("fr-FR", { timeZone: DISPLAY_TIME_ZONE, weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 
 export function ClockForm({ simulated, nowIso, races }: { simulated: boolean; nowIso: string; races: ClockRaceOption[] }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const now = new Date(nowIso);
-  const [dateValue, setDateValue] = useState(() => toLocalInputValue(now));
+  const [dateValue, setDateValue] = useState(() => toParisWallTime(now));
   const [raceId, setRaceId] = useState(() => races.find((r) => new Date(r.locksAt) > now)?.id ?? races[0]?.id ?? "");
 
   const apply = (targetMs: number) =>
@@ -57,12 +50,12 @@ export function ClockForm({ simulated, nowIso, races }: { simulated: boolean; no
         className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4"
         onSubmit={(event) => {
           event.preventDefault();
-          const target = new Date(dateValue);
+          const target = fromParisWallTime(dateValue);
           if (!Number.isNaN(target.getTime())) apply(target.getTime());
         }}
       >
         <label className="text-sm font-semibold" htmlFor="sim-date">
-          Aller à une date et heure (heure de ton appareil)
+          Aller à une date et heure (heure de Paris)
         </label>
         <div className="flex flex-wrap gap-2">
           <input
@@ -149,8 +142,6 @@ export function ClockForm({ simulated, nowIso, races }: { simulated: boolean; no
 }
 
 function eveBefore(locksAt: string) {
-  const date = new Date(locksAt);
-  date.setDate(date.getDate() - 1);
-  date.setHours(20, 0, 0, 0);
-  return date.getTime();
+  const dayBefore = new Date(new Date(locksAt).getTime() - 24 * 3600_000);
+  return fromParisWallTime(`${toParisWallTime(dayBefore).slice(0, 10)}T20:00`).getTime();
 }
