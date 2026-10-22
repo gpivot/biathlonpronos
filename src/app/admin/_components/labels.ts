@@ -43,14 +43,20 @@ export function formatDateRange(startsOn: string, endsOn: string): string {
   return startsOn === endsOn ? fmt(startsOn) : `${fmt(startsOn)} → ${fmt(endsOn)}`;
 }
 
+/** Statut affiché dans l'admin (même règle que le Calendrier joueur, cf. getRaceDisplayStatus). */
 export const RACE_STATUS_LABELS: Record<string, string> = {
   upcoming: "à venir",
-  locked: "verrouillée",
+  ongoing: "résultats à saisir",
   finished: "résultats saisis",
 };
 
 export const RACE_STATUS_STYLES: Record<string, string> = {
   upcoming: "border border-border text-text-dim",
-  locked: "bg-gold-soft text-gold",
+  ongoing: "bg-gold-soft text-gold",
   finished: "bg-ice-soft text-ice",
 };
+
+/** Valeur d'un input datetime-local (UTC) à partir d'une date ISO. */
+export function toDateTimeLocalUtc(iso: string): string {
+  return new Date(iso).toISOString().slice(0, 16);
+}

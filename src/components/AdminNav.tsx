@@ -5,9 +5,8 @@ import { usePathname } from "next/navigation";
 import { ArrowLeftIcon } from "./icons";
 
 const items = [
-  { href: "/admin/calendrier", label: "Calendrier", matches: ["/admin/calendrier"] },
+  { href: "/admin", label: "Calendrier & résultats", matches: ["/admin/races", "/admin/calendrier"] },
   { href: "/admin/athletes", label: "Athlètes & cotes", matches: ["/admin/athletes"] },
-  { href: "/admin", label: "Résultats & globes", matches: ["/admin/races"] },
   { href: "/admin/joueurs", label: "Joueurs & rôles", matches: ["/admin/joueurs"] },
   { href: "/admin/horloge", label: "Horloge simulée", matches: ["/admin/horloge"] },
 ];

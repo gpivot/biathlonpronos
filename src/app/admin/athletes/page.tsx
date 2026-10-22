@@ -77,7 +77,7 @@ export default async function AdminAthletesPage({
       <div className="flex flex-col gap-3">
         <h1 className="text-xl font-bold">Athlètes & cotes</h1>
         <p className="text-sm text-text-dim">
-          Aucune saison active. <Link href="/admin/calendrier" className="underline">Active une saison</Link> avant
+          Aucune saison active. <Link href="/admin" className="underline">Active une saison</Link> avant
           d&apos;ajouter des athlètes.
         </p>
       </div>

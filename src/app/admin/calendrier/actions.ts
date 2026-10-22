@@ -16,7 +16,7 @@ export async function createSeason(formData: FormData) {
   });
   if (error) throw new Error(error.message);
 
-  revalidatePath("/admin/calendrier");
+  revalidatePath("/admin");
 }
 
 export async function activateSeason(formData: FormData) {
@@ -44,7 +44,7 @@ export async function createStage(formData: FormData) {
   });
   if (error) throw new Error(error.message);
 
-  revalidatePath("/admin/calendrier");
+  revalidatePath("/admin");
 }
 
 export async function createRace(formData: FormData) {
@@ -73,7 +73,7 @@ export async function createRace(formData: FormData) {
   });
   if (error) throw new Error(error.message);
 
-  revalidatePath("/admin/calendrier");
+  revalidatePath("/admin");
 }
 
 export async function importCalendar(seasonId: string, csvText: string): Promise<CsvActionResult> {

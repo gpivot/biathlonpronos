@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { fetchIbuResults } from "@/lib/admin/ibuResults";
-import { saveRaceResults, scoreRace, type ResultEntryInput } from "@/lib/admin/raceResults";
+import { redirect } from "next/navigation";
+import { deleteRace, resetRaceResults, saveRaceResults, scoreRace, type ResultEntryInput } from "@/lib/admin/raceResults";
 
 export interface SubmitResultsState {
   status: "idle" | "success" | "error";
@@ -64,4 +65,42 @@ export async function loadIbuResults(raceId: string, forcedIbuRaceId?: string): 
   } catch (err) {
     return { ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", warnings: [] };
   }
+}
+
+/** Modifie format, sexe, heure de départ (UTC) et course spéciale. */
+export async function updateRace(formData: FormData) {
+  await requireAdmin();
+  const raceId = String(formData.get("race_id"));
+  const format = String(formData.get("format"));
+  const sex = String(formData.get("sex"));
+  const specialRule = String(formData.get("special_rule"));
+  // relais_h/f portent le sexe dans le format, les relais mixtes n'en ont pas.
+  const sexless = format.startsWith("relais_");
+
+  const { error } = await createAdminClient()
+    .from("races")
+    .update({
+      format,
+      sex: sex === "" || sexless ? null : sex,
+      locks_at: `${String(formData.get("locks_at"))}:00Z`,
+      special_rule: specialRule === "" ? null : specialRule,
+    })
+    .eq("id", raceId);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin", "layout");
+}
+
+export async function resetResults(formData: FormData) {
+  await requireAdmin();
+  const raceId = String(formData.get("race_id"));
+  await resetRaceResults(createAdminClient(), raceId);
+  revalidatePath("/admin", "layout");
+}
+
+export async function removeRace(formData: FormData) {
+  await requireAdmin();
+  await deleteRace(createAdminClient(), String(formData.get("race_id")));
+  revalidatePath("/admin", "layout");
+  if (formData.get("redirect") === "1") redirect("/admin");
 }

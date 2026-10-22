@@ -508,3 +508,21 @@ facultatif pour forcer l'identifiant IBU de la course si la correspondance autom
 - **Non testé contre l'IBU depuis l'environnement de Claude** (accès réseau refusé) : structure de
   l'API reprise de son usage connu, logique de correspondance couverte par des tests unitaires. À
   vérifier en vrai sur la préversion Vercel. Conditions d'utilisation de l'API IBU non vérifiées.
+
+**Calendrier & résultats fusionnés (octobre 2026, demande de Guillaume).** Un seul onglet `/admin`
+(`/admin/calendrier` y redirige) : menu Calendrier & résultats · Athlètes & cotes · Joueurs & rôles ·
+Horloge simulée.
+- **Saisons** : chaque saison se déplie sur ses 6 globes de saison à compléter (classement final).
+  Rien n'est créé en base à la création d'une saison : les formulaires de globes sont affichés
+  d'office pour chaque saison et n'écrivent qu'à l'enregistrement d'un classement.
+- **Étapes & courses** : chaque course garde son statut (à venir / résultats à saisir / résultats
+  saisis, même règle que le Calendrier joueur, horloge simulée comprise), avec un crayon (page de la
+  course : modification format, sexe, heure UTC, course spéciale + saisie des résultats) et une
+  poubelle rouge (avec confirmation).
+- **Réinitialiser les résultats** (page de la course, `resetRaceResults`) : efface les résultats et
+  les points de la course (`score_ledger`), rend le bonus Pépite s'il avait été gagné dessus, repasse
+  la course « à venir ». **À confirmer / limites** : les séries 10/10 et cartes gagnées ne sont pas
+  recalculées, ni les cotes poursuite issues d'un sprint (elles se recalculent à la nouvelle saisie).
+  Même limite qu'avant pour une ressaisie sans réinitialisation (la série est réincrémentée).
+- **Supprimer une course** (`deleteRace`) : réinitialisation puis suppression ; pronostics supprimés
+  par cascade, carte bonus jouée dessus détachée de la course mais laissée consommée.

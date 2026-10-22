@@ -2,7 +2,21 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/server";
 import { ResultsForm, type CandidateRow } from "./ResultsForm";
-import { RELAY_FORMATS, raceLabel } from "../../_components/labels";
+import {
+  RACE_FORMATS,
+  RACE_STATUS_LABELS,
+  RACE_STATUS_STYLES,
+  RELAY_FORMATS,
+  SPECIAL_RULES,
+  raceLabel,
+  toDateTimeLocalUtc,
+} from "../../_components/labels";
+import { ConfirmButton } from "../../_components/ConfirmButton";
+import { getRaceDisplayStatus } from "@/lib/raceStatus";
+import { getClock } from "@/lib/clock";
+import { removeRace, resetResults, updateRace } from "./actions";
+
+const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
 export const dynamic = "force-dynamic";
 
@@ -92,15 +106,59 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
       .sort((a, b) => a.odds - b.odds);
   }
 
+  const { now } = await getClock();
+  const displayStatus = getRaceDisplayStatus(race, now);
+  const hasResults = (existingResults ?? []).length > 0 || race.status === "finished";
+
   return (
     <div className="flex flex-col gap-4">
       <BackLink />
-      <h1 className="text-xl font-bold">
-        {raceLabel(race)} — {stage.location}
-      </h1>
-      {race.special_rule && (
-        <p className="text-sm text-gold">Course spéciale : {race.special_rule.replace(/_/g, " ")}</p>
-      )}
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-xl font-bold">
+          {raceLabel(race)} — {stage.location}
+        </h1>
+        <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${RACE_STATUS_STYLES[displayStatus]}`}>
+          {RACE_STATUS_LABELS[displayStatus]}
+        </span>
+      </div>
+
+      <form action={updateRace} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="text-sm font-semibold">Infos de la course</div>
+        <input type="hidden" name="race_id" value={race.id} />
+        <div className="flex flex-wrap gap-2">
+          <select name="format" defaultValue={race.format} className={inputClass}>
+            {RACE_FORMATS.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+          <select name="sex" defaultValue={race.sex ?? ""} className={inputClass}>
+            <option value="F">Femmes</option>
+            <option value="H">Hommes</option>
+            <option value="">— (relais)</option>
+          </select>
+          <input
+            name="locks_at"
+            type="datetime-local"
+            required
+            defaultValue={toDateTimeLocalUtc(race.locks_at)}
+            title="Heure de départ (= verrouillage), en UTC"
+            className={inputClass}
+          />
+          <select name="special_rule" defaultValue={race.special_rule ?? ""} className={inputClass}>
+            {SPECIAL_RULES.map((r) => (
+              <option key={r.value} value={r.value}>
+                {r.label}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+            Enregistrer
+          </button>
+        </div>
+        <p className="text-xs text-text-dim">Heure de départ en UTC : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
+      </form>
 
       {candidates.length === 0 ? (
         <p className="text-sm text-text-dim">
@@ -109,6 +167,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         </p>
       ) : (
         <ResultsForm
+          key={`${race.status}-${(existingResults ?? []).length}`}
           raceId={raceId}
           mode={isRelay ? "nation" : "athlete"}
           format={race.format}
@@ -116,6 +175,30 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           candidates={candidates}
         />
       )}
+
+      <div className="flex flex-wrap gap-2 border-t border-border pt-4">
+        {hasResults && (
+          <form action={resetResults}>
+            <input type="hidden" name="race_id" value={race.id} />
+            <ConfirmButton
+              message="Réinitialiser les résultats de cette course ? Les résultats saisis et les points des joueurs sur cette course seront effacés."
+              className="rounded border border-gold/60 px-4 py-1.5 text-sm text-gold hover:bg-gold/10"
+            >
+              Réinitialiser les résultats
+            </ConfirmButton>
+          </form>
+        )}
+        <form action={removeRace}>
+          <input type="hidden" name="race_id" value={race.id} />
+          <input type="hidden" name="redirect" value="1" />
+          <ConfirmButton
+            message="Supprimer cette course ? Ses pronostics, résultats et points seront effacés."
+            className="rounded border border-red/50 px-4 py-1.5 text-sm text-red hover:bg-red/10"
+          >
+            Supprimer la course
+          </ConfirmButton>
+        </form>
+      </div>
     </div>
   );
 }
@@ -123,7 +206,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 function BackLink() {
   return (
     <Link href="/admin" className="text-sm text-text-dim underline">
-      ← Retour aux résultats
+      ← Retour au calendrier
     </Link>
   );
 }

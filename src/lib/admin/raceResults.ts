@@ -404,3 +404,53 @@ async function updateStreaks(
   const { error } = await admin.from("streak_counters").upsert(streakUpsertRows, { onConflict: "user_id,season_id" });
   if (error) throw new Error(error.message);
 }
+
+/**
+ * Annule la saisie des résultats d'une course : résultats et points (score_ledger) effacés, bonus
+ * Pépite rendu disponible s'il avait été gagné sur cette course, course repassée « à venir » (le
+ * statut affiché redevient « en cours » si l'heure de départ est passée).
+ * Non annulés (à confirmer) : les séries 10/10 et cartes gagnées, et les cotes poursuite
+ * recalculées depuis un sprint ; ils se recalculent à la nouvelle saisie.
+ */
+export async function resetRaceResults(admin: SupabaseClient, raceId: string): Promise<{ ledgerRowsDeleted: number }> {
+  const { data: race, error: raceError } = await admin
+    .from("races")
+    .select("id, sex, stages(season_id)")
+    .eq("id", raceId)
+    .single();
+  if (raceError || !race) throw new Error(raceError?.message ?? "Course introuvable.");
+  const seasonId = (race.stages as any).season_id as string;
+
+  const { data: ledger } = await admin.from("score_ledger").select("user_id, breakdown").eq("race_id", raceId);
+  const pepiteUserIds = (ledger ?? [])
+    .filter((row) => (row.breakdown as any)?.pepiteBonus)
+    .map((row) => row.user_id as string);
+  if (pepiteUserIds.length > 0 && race.sex) {
+    await admin
+      .from("pepites")
+      .update({ bonus_claimed: false })
+      .eq("season_id", seasonId)
+      .eq("sex", race.sex)
+      .in("user_id", pepiteUserIds);
+  }
+
+  const { error: ledgerError } = await admin.from("score_ledger").delete().eq("race_id", raceId);
+  if (ledgerError) throw new Error(ledgerError.message);
+  const { error: resultsError } = await admin.from("race_results").delete().eq("race_id", raceId);
+  if (resultsError) throw new Error(resultsError.message);
+  const { error: statusError } = await admin.from("races").update({ status: "upcoming" }).eq("id", raceId);
+  if (statusError) throw new Error(statusError.message);
+
+  return { ledgerRowsDeleted: ledger?.length ?? 0 };
+}
+
+/**
+ * Supprime une course : ses résultats et points d'abord (cf. resetRaceResults), puis la course
+ * elle-même (les pronostics suivent par cascade). Une carte bonus jouée dessus reste consommée.
+ */
+export async function deleteRace(admin: SupabaseClient, raceId: string): Promise<void> {
+  await resetRaceResults(admin, raceId);
+  await admin.from("bonus_cards").update({ used_on_race_id: null }).eq("used_on_race_id", raceId);
+  const { error } = await admin.from("races").delete().eq("id", raceId);
+  if (error) throw new Error(error.message);
+}
