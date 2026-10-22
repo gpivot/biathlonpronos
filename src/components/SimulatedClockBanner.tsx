@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { resetSimulatedClock } from "@/app/admin/horloge/actions";
 import { SIMULATED_CLOCK_COOKIE, parseClockOffset } from "@/lib/simulatedClock";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 
 /**
  * Bandeau affiché tant que l'horloge simulée de l'admin est active, pour ne
@@ -40,7 +41,7 @@ export function SimulatedClockBanner() {
     <div className="sticky top-0 z-50 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-gold px-4 py-1.5 text-center text-xs font-semibold text-bg">
       <span>
         Horloge simulée :{" "}
-        {simulatedNow.toLocaleString("fr-FR", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+        {simulatedNow.toLocaleString("fr-FR", { timeZone: DISPLAY_TIME_ZONE, weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
       </span>
       <a href="/admin/horloge" className="underline">
         Régler

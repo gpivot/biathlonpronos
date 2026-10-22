@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { RaceDisplayStatus } from "@/lib/raceStatus";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 
 export interface CalendarRace {
   id: string;
@@ -80,9 +81,9 @@ export function CalendarAccordion({
                 )}
                 <div className={`text-sm font-semibold ${isChampionship ? "text-gold" : ""}`}>{stage.location}</div>
                 <div className="text-xs text-text-dim">
-                  {new Date(stage.starts_on).toLocaleDateString(locale, { day: "numeric", month: "short" })}
+                  {new Date(stage.starts_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                   {" – "}
-                  {new Date(stage.ends_on).toLocaleDateString(locale, { day: "numeric", month: "short" })}
+                  {new Date(stage.ends_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                 </div>
               </div>
               {stage.coefficient === 2 && (
@@ -112,9 +113,9 @@ export function CalendarAccordion({
                           {race.sex ? ` ${tSex(race.sex)}` : ""}
                         </div>
                         <div className="text-xs text-text-dim">
-                          {new Date(race.locks_at).toLocaleDateString(locale, { day: "numeric", month: "short" })}
+                          {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                           {" · "}
-                          {new Date(race.locks_at).toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit" })}
+                          {new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}
                         </div>
                       </div>
                       <div

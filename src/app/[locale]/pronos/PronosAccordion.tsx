@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
 import { nationFlagEmoji } from "@/lib/nationFlags";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 
 export interface PronosRace {
   id: string;
@@ -77,9 +78,9 @@ export function PronosAccordion({
                 )}
                 <div className={`text-sm font-semibold ${isChampionship ? "text-gold" : ""}`}>{stage.location}</div>
                 <div className="text-xs text-text-dim">
-                  {new Date(stage.starts_on).toLocaleDateString(locale, { day: "numeric", month: "short" })}
+                  {new Date(stage.starts_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                   {" – "}
-                  {new Date(stage.ends_on).toLocaleDateString(locale, { day: "numeric", month: "short" })}
+                  {new Date(stage.ends_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                 </div>
               </div>
               {toPredictCount > 0 && (
@@ -110,7 +111,7 @@ export function PronosAccordion({
                       <div className="text-xs text-text-dim">
                         {race.kind === "predicted" && race.names
                           ? race.names
-                          : new Date(race.locks_at).toLocaleDateString(locale, { day: "numeric", month: "short" })}
+                          : new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                       </div>
                     </div>
                     {race.kind === "open" ? (

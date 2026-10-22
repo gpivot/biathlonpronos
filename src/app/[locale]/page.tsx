@@ -8,6 +8,7 @@ import { LogoMark } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 
 export const dynamic = "force-dynamic";
 
@@ -215,7 +216,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 </div>
               </div>
               <div className="whitespace-nowrap text-xs text-text-dim">
-                {new Date(nextRace.locks_at).toLocaleDateString(locale, { day: "numeric", month: "short" })}
+                {new Date(nextRace.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
               </div>
             </Link>
           </div>

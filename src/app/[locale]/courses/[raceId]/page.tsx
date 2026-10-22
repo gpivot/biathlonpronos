@@ -9,6 +9,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
 import { FondueButton } from "./FondueButton";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 
 export const dynamic = "force-dynamic";
 
@@ -185,7 +186,7 @@ export default async function RacePage({
             <ClockIcon className="h-4 w-4" />
             {displayStatus === "upcoming"
               ? t("lockLabel", {
-                  date: new Date(race.locks_at).toLocaleString(locale, {
+                  date: new Date(race.locks_at).toLocaleString(locale, { timeZone: DISPLAY_TIME_ZONE,
                     day: "numeric",
                     month: "short",
                     hour: "2-digit",
