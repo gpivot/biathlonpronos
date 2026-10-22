@@ -4,6 +4,7 @@ import { getMessages, getTranslations, setRequestLocale } from "next-intl/server
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { Poppins } from "next/font/google";
+import { SimulatedClockBanner } from "@/components/SimulatedClockBanner";
 import { routing, type Locale } from "@/i18n/routing";
 import "../globals.css";
 
@@ -52,6 +53,7 @@ export default async function LocaleLayout({
         />
       </head>
       <body className="bg-bg text-text font-body">
+        <SimulatedClockBanner />
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>

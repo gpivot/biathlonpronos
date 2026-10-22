@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdminNav } from "@/components/AdminNav";
+import { SimulatedClockBanner } from "@/components/SimulatedClockBanner";
 import "../globals.css";
 
 export const metadata: Metadata = { title: "Biathlonpronos — Admin" };
@@ -24,6 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <html lang="fr">
       <body className="bg-bg text-text">
+        <SimulatedClockBanner />
         <div className="mx-auto max-w-3xl px-6 py-8">
           <AdminNav />
           {children}

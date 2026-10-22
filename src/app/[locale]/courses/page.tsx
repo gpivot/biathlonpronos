@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
+import { getClock } from "@/lib/clock";
 import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
 
@@ -32,6 +33,8 @@ async function getCalendarData(): Promise<CalendarData> {
 
   if (!season) return { seasonId: null, stages: [], isAdmin };
 
+  const { now } = await getClock();
+
   const { data: stages, error } = await supabase
     .from("stages")
     .select("id, location, country_code, starts_on, ends_on, coefficient, races(id, format, sex, locks_at, status)")
@@ -51,7 +54,7 @@ async function getCalendarData(): Promise<CalendarData> {
     ends_on: stage.ends_on,
     coefficient: stage.coefficient,
     races: (stage.races ?? [])
-      .map((race: any) => ({ ...race, displayStatus: getRaceDisplayStatus(race) }))
+      .map((race: any) => ({ ...race, displayStatus: getRaceDisplayStatus(race, now) }))
       .sort((a: any, b: any) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
   }));
 
