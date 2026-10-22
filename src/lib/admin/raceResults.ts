@@ -575,3 +575,11 @@ export async function rescorePursuitAfterSprint(admin: SupabaseClient, sprintRac
   await scoreRace(admin, pursuit.id);
   return true;
 }
+
+/** Supprime une étape et toutes ses courses (chacune via deleteRace, pour ses points et cartes). */
+export async function deleteStage(admin: SupabaseClient, stageId: string): Promise<void> {
+  const { data: races } = await admin.from("races").select("id").eq("stage_id", stageId);
+  for (const race of races ?? []) await deleteRace(admin, race.id);
+  const { error } = await admin.from("stages").delete().eq("id", stageId);
+  if (error) throw new Error(error.message);
+}
