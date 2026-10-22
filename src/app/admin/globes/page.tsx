@@ -32,7 +32,7 @@ export default async function AdminGlobesPage() {
     <div className="flex flex-col gap-6">
       <h1 className="text-xl font-bold">Globes de saison — {season.label}</h1>
       <p className="text-sm text-text-dim">
-        Saisis le classement final officiel (jusqu'à 5 rangs) de chaque catégorie pour noter les
+        Saisis le classement final officiel (jusqu&apos;à 5 rangs) de chaque catégorie pour noter les
         pronostics de saison des joueurs.
       </p>
 

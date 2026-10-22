@@ -14,7 +14,7 @@ export default async function AdminImportPage() {
         <h1 className="text-xl font-bold">Import des cotes</h1>
         <p className="text-sm text-text-dim">
           Aucune saison active. <Link href="/admin/seasons" className="underline">Active une saison</Link> avant
-          d'importer des cotes.
+          d&apos;importer des cotes.
         </p>
       </div>
     );

@@ -15,7 +15,7 @@ export default async function AdminStagesPage() {
         <h1 className="text-xl font-bold">Étapes & courses</h1>
         <p className="text-sm text-text-dim">
           Aucune saison active. <Link href="/admin/seasons" className="underline">Active une saison</Link> avant
-          d'ajouter des étapes.
+          d&apos;ajouter des étapes.
         </p>
       </div>
     );
