@@ -413,6 +413,14 @@ pronostiquer s'ouvrait). L'étape de coefficient 2 (Otepää) reprend l'encart d
 la mention « Championnats du monde · Coeff. ×2 » ; la pastille « Coeff. ×2 » séparée est retirée
 pour ne pas déborder sur mobile.
 
+### Back-office : page « Joueurs & rôles » (octobre 2026)
+
+`/admin/joueurs` liste les joueurs (pseudo, email lu dans Supabase Auth via la clé service_role),
+avec une recherche et un bouton pour donner ou retirer le rôle d'admin (`profiles.is_admin`). La
+Server Action `setAdminRole` revérifie que l'appelant est admin (`src/lib/admin/requireAdmin.ts`),
+car une Server Action peut être appelée sans passer par le layout `/admin`. Un admin ne peut pas se
+retirer son propre rôle, pour ne pas se fermer l'accès au back-office.
+
 ### Horloge simulée pour l'admin (octobre 2026)
 
 Page `/admin/horloge` : un admin règle une date/heure fictive (saisie libre, raccourcis « la veille à
