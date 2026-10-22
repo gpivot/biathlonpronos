@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { importCalendarCsv } from "@/lib/admin/calendarImport";
+import { deleteStage } from "@/lib/admin/raceResults";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
 
 export async function createSeason(formData: FormData) {
@@ -88,4 +89,21 @@ export async function importCalendar(seasonId: string, csvText: string): Promise
     errors: [],
     warnings: summary.warnings,
   };
+}
+
+export async function removeStage(formData: FormData) {
+  await requireAdmin();
+  await deleteStage(createAdminClient(), String(formData.get("stage_id")));
+  revalidatePath("/admin", "layout");
+}
+
+/**
+ * Supprime une saison et, par cascade en base, tout ce qui lui appartient : étapes, courses,
+ * athlètes, cotes, pronostics, résultats, points, ligues, cartes, Pépites.
+ */
+export async function removeSeason(formData: FormData) {
+  await requireAdmin();
+  const { error } = await createAdminClient().from("seasons").delete().eq("id", String(formData.get("season_id")));
+  if (error) throw new Error(error.message);
+  revalidatePath("/admin", "layout");
 }

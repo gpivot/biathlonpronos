@@ -540,3 +540,9 @@ Guillaume, ex. disqualification après le premier classement IBU).**
 - **Notation rejouable** : `scoreRace` efface d'abord les points de la course et rend le bonus Pépite
   gagné dessus. Corrigé au passage : le bonus Pépite était écrasé par les points du pronostic quand
   le même joueur avait aussi pronostiqué la course (il est maintenant appliqué après).
+
+**Suppression d'une saison ou d'une étape (octobre 2026).** Poubelle rouge sur chaque saison et chaque
+étape de `/admin`. Étape : chaque course est supprimée via `deleteRace` (points, cartes, séries
+recalculées), puis l'étape (`deleteStage`). Saison : suppression en base, la cascade efface tout ce
+qui en dépend (étapes, courses, athlètes, cotes, pronostics, résultats, points, ligues, cartes,
+Pépites) ; il faut retaper le label de la saison pour confirmer.

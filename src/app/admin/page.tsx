@@ -17,12 +17,22 @@ import {
   formatLockTime,
   raceLabel,
 } from "./_components/labels";
-import { activateSeason, createRace, createSeason, createStage, importCalendar } from "./calendrier/actions";
+import {
+  activateSeason,
+  createRace,
+  createSeason,
+  createStage,
+  importCalendar,
+  removeSeason,
+  removeStage,
+} from "./calendrier/actions";
 import { removeRace } from "./races/[raceId]/actions";
 
 export const dynamic = "force-dynamic";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
+const trashClass =
+  "flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-red/40 text-red hover:bg-red/10";
 
 /** Calendrier & résultats : saisons (et leurs globes), étapes et courses de la saison active. */
 export default async function AdminCalendarResultsPage() {
@@ -66,16 +76,29 @@ export default async function AdminCalendarResultsPage() {
                     {s.starts_on} → {s.ends_on} · globes de saison
                   </div>
                 </div>
-                {s.status === "active" ? (
-                  <span className="rounded-full bg-ice-soft px-3 py-1 text-xs font-semibold text-ice">active</span>
-                ) : (
-                  <form action={activateSeason}>
+                <div className="flex items-center gap-2">
+                  {s.status === "active" ? (
+                    <span className="rounded-full bg-ice-soft px-3 py-1 text-xs font-semibold text-ice">active</span>
+                  ) : (
+                    <form action={activateSeason}>
+                      <input type="hidden" name="season_id" value={s.id} />
+                      <button type="submit" className="rounded border border-border px-3 py-1 text-xs">
+                        Activer
+                      </button>
+                    </form>
+                  )}
+                  <form action={removeSeason}>
                     <input type="hidden" name="season_id" value={s.id} />
-                    <button type="submit" className="rounded border border-border px-3 py-1 text-xs">
-                      Activer
-                    </button>
+                    <ConfirmButton
+                      title="Supprimer la saison"
+                      requireText={s.label}
+                      message={`Supprimer la saison ${s.label} ? Tout ce qui en dépend sera définitivement effacé : étapes, courses, athlètes, cotes, pronostics, résultats, points, classements, ligues, cartes et Pépites.`}
+                      className={trashClass}
+                    >
+                      <TrashIcon className="h-4 w-4" />
+                    </ConfirmButton>
                   </form>
-                )}
+                </div>
               </summary>
               <div className="flex flex-col gap-3 border-t border-border px-4 py-3">
                 <p className="text-xs text-text-dim">
@@ -124,9 +147,21 @@ export default async function AdminCalendarResultsPage() {
                       </div>
                       <div className="text-xs text-text-dim">{formatDateRange(stage.starts_on, stage.ends_on)}</div>
                     </div>
-                    <span className="text-xs text-text-dim">
-                      {done}/{stage.races.length} résultat(s) saisi(s)
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-text-dim">
+                        {done}/{stage.races.length} résultat(s) saisi(s)
+                      </span>
+                      <form action={removeStage}>
+                        <input type="hidden" name="stage_id" value={stage.id} />
+                        <ConfirmButton
+                          title="Supprimer l'étape"
+                          message={`Supprimer l'étape ${stage.location} et ses ${stage.races.length} course(s) ? Leurs pronostics, résultats et points seront effacés.`}
+                          className={trashClass}
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </ConfirmButton>
+                      </form>
+                    </div>
                   </summary>
 
                   <div className="flex flex-col gap-1 border-t border-border px-3 py-3">
@@ -161,7 +196,7 @@ export default async function AdminCalendarResultsPage() {
                           <ConfirmButton
                             title="Supprimer la course"
                             message={`Supprimer ${raceLabel(race)} (${stage.location}) ? Ses pronostics, résultats et points seront effacés.`}
-                            className="flex h-8 w-8 items-center justify-center rounded-full border border-red/40 text-red hover:bg-red/10"
+                            className={trashClass}
                           >
                             <TrashIcon className="h-4 w-4" />
                           </ConfirmButton>
