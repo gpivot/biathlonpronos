@@ -1,10 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { submitResults, type SubmitResultsState } from "./actions";
 import type { ResultEntryInput } from "@/lib/admin/raceResults";
+import {
+  ATHLETE_RESULTS_HEADERS,
+  NATION_RESULTS_HEADERS,
+  buildResultsCsv,
+  parseResultsCsv,
+  type ResultsCsvCandidate,
+} from "@/lib/admin/resultsCsv";
 
-export interface CandidateRow {
+export interface CandidateRow extends ResultsCsvCandidate {
   id: string;
   name: string;
   subtitle: string;
@@ -55,6 +62,8 @@ export function ResultsForm({
   );
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<SubmitResultsState | null>(null);
+  const [csvReport, setCsvReport] = useState<{ message: string; warnings: string[] } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const isAthleteMode = mode === "athlete";
   const showTimeGap = isAthleteMode && format === "sprint";
@@ -62,6 +71,35 @@ export function ResultsForm({
 
   function updateRow(id: string, patch: Partial<RowState>) {
     setRows((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
+  }
+
+  /** Le CSV remplace la saisie à l'écran ; rien n'est enregistré avant le clic sur le bouton. */
+  async function handleCsvFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      const parsed = parseResultsCsv(await file.text(), mode, candidates);
+      const empty: RowState = { rank: "", timeGapSeconds: "", penaltyLaps: "", isFusee: false, isGachette: false };
+      setRows(Object.fromEntries(candidates.map((c) => [c.id, parsed.rows[c.id] ?? empty])));
+      setResult(null);
+      setCsvReport({
+        message: `${parsed.matched} ligne(s) reprise(s) du CSV. Vérifie le tableau puis enregistre pour calculer les points.`,
+        warnings: parsed.warnings,
+      });
+    } catch (err) {
+      setCsvReport({ message: err instanceof Error ? err.message : "CSV illisible.", warnings: [] });
+    }
+  }
+
+  function downloadCsv() {
+    const blob = new Blob([buildResultsCsv(mode, candidates, rows)], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `resultats-${raceId}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -88,6 +126,44 @@ export function ResultsForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="text-sm font-semibold">Importer les résultats (CSV)</div>
+        <p className="text-xs text-text-dim">
+          {isAthleteMode
+            ? "Une ligne par athlète classé. Nom et Prénom (ou une colonne Athlète avec le nom complet) sont retrouvés sans tenir compte des accents ni de la casse ; Nation départage les homonymes. Écart en secondes ou m:ss.s (utile au sprint pour la cote poursuite), Fusée et Gâchette à « oui » (ou une colonne Fautes : 0 = Gâchette). DNF/DNS : laisser le rang vide."
+            : "Une ligne par nation classée, Nation en code à 3 lettres (NOR) ou en toutes lettres."}{" "}
+          Le CSV remplit le tableau ci-dessous : rien n&apos;est enregistré avant ta validation.
+        </p>
+        <code className="overflow-x-auto whitespace-nowrap rounded bg-bg px-2 py-1.5 text-[11px] text-text-dim">
+          {(isAthleteMode ? ATHLETE_RESULTS_HEADERS : NATION_RESULTS_HEADERS).join(";")}
+        </code>
+        <div className="flex flex-wrap gap-2">
+          <input ref={fileInputRef} type="file" accept=".csv,text/csv" onChange={handleCsvFile} className="hidden" />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice"
+          >
+            Importer un CSV
+          </button>
+          <button type="button" onClick={downloadCsv} className="rounded border border-border px-4 py-1.5 text-sm text-text-dim hover:text-ice">
+            Télécharger le modèle (avec la saisie en cours)
+          </button>
+        </div>
+        {csvReport && (
+          <div className="flex flex-col gap-1 text-xs">
+            <div className="text-ice">{csvReport.message}</div>
+            {csvReport.warnings.length > 0 && (
+              <ul className="list-disc pl-4 text-gold">
+                {csvReport.warnings.map((w, i) => (
+                  <li key={i}>{w}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </div>
+
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-sm">
           <thead>

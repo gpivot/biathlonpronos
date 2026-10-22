@@ -86,13 +86,12 @@ retenus dans `src/lib/scoring/individualRace.ts`, confirmés par Guillaume le 20
 - **Cote "meilleure nation"** (§6, pronostic de saison) : reste indépendante des cotes de relais —
   c'est une cote **saison** par (nation, sexe), fixée une fois en début de saison et ne bougeant
   plus (déjà correctement modélisée depuis 0001_init.sql, aucun changement nécessaire).
-- Écrans : `/admin/relais` (saisie des cotes par nation et par format), écran de pronostic joueur
+- Écrans : `/admin/athletes` (cotes par nation et par format, ex-`/admin/relais`), écran de pronostic joueur
   (`RelayPredictionForm.tsx`, sélection d'une nation), saisie des résultats admin (mode "nation"
   dans `ResultsForm.tsx`) — tout branché sur `scoreRace()` (`src/lib/admin/raceResults.ts`), y
   compris la mise à jour du 10/10 (§12 : "hommes et femmes confondus ainsi que relais").
-- **Import CSV des cotes** : Guillaume saisit ses cotes dans 3 fichiers (femmes / hommes / relais
-  mixtes) — format exact des colonnes à confirmer avant de construire l'import ; en attendant, la
-  saisie se fait ligne par ligne dans `/admin/athletes` et `/admin/relais`.
+- **Import CSV des cotes** : fichier unique depuis octobre 2026, cf. « Réorganisation du
+  back-office ».
 
 ### Hors périmètre de cette première version du moteur
 
@@ -142,7 +141,7 @@ verrouillage/correction des globes, non construit).
 **Globes de saison (§6) et Pépite (§14) — implémentés et testés de bout en bout.**
 `src/lib/scoring/seasonPredictions.ts` : barème gros globe vs jeune/nation (`GROS_GLOBE_MULTIPLIERS`
 / `PETIT_GLOBE_MULTIPLIERS`). Écran joueur `/globes` (lien depuis `/pronos`) : 6 pronostics de
-saison + choix de la Pépite. Écran admin `/admin/globes` : saisie du classement final officiel
+saison + choix de la Pépite. Écran admin `/admin/globes` (section « Globes de saison » de `/admin` depuis octobre 2026) : saisie du classement final officiel
 (jusqu'à 5 rangs) par catégorie, déclenche le calcul. **Pas encore fait** : verrouillage des globes
 avant le début de saison au niveau base (la page affiche un message mais rien n'empêche une écriture
 directe), correction Chat Noir (en suspens, cf. §12 ci-dessous).
@@ -163,7 +162,7 @@ L'idée initiale de Guillaume était un classement par type de course (sprint/po
 mass start/relais) ; **mise en suspens pour l'instant, à reprendre plus tard**. Seule la meilleure
 série 10/10 en cours (`/classement`, section rouge) est implémentée aujourd'hui.
 
-**Import CSV des cotes — implémenté et testé contre la vraie base (`/admin/import`).** En-têtes
+**Import CSV des cotes — première version (`/admin/import`), remplacée en octobre 2026 par un fichier unique (cf. « Réorganisation du back-office »).** En-têtes
 confirmés par Guillaume : fichiers femmes/hommes (`nom, prénom, nationalité, globe, jeune, nation,
 sprint, poursuite, individuel, mass, relais`) et fichier relais mixtes (`nation, mixte, simple`).
 Crée les athlètes manquants, met à jour les cotes des existants (recherche par nom+prénom+nation),
@@ -441,3 +440,55 @@ réelle dépasse le début de saison. Les résultats saisis dans le back-office 
 
 Effet de bord voulu : « Prochainement » (accueil) ignore désormais les courses dont l'heure de départ
 est passée mais pas encore notées (avant, une course en cours restait affichée comme prochaine).
+
+## Réorganisation du back-office (octobre 2026)
+
+**Demande de Guillaume** : moins d'onglets, CSV dans chaque onglet, courses triées par étape.
+Menu : **Calendrier** · **Athlètes & cotes** · **Résultats & globes** (`/admin`) · Joueurs & rôles ·
+Horloge simulée. Supprimés : Saisons, Étapes & courses, Cotes de relais, Import CSV, Globes de saison
+(leur contenu est repris ci-dessous). Toutes les Server Actions et routes d'export du back-office
+revérifient `is_admin` (`requireAdmin`), le layout `/admin` ne protégeant que l'affichage.
+
+**Calendrier** (`/admin/calendrier`) : saisons (création, activation) + étapes de la saison active en
+accordéon, avec leurs courses et un formulaire d'ajout de course. Import CSV (même format et même
+logique `importCalendarCsv` que le bouton de `/courses`, réimportable, ne supprime jamais rien) et
+export au même format (`/admin/calendrier/export`), réimportable tel quel.
+
+**Athlètes & cotes** (`/admin/athletes`) : filtres nation et sexe (paramètres d'URL), une carte par
+nation avec relais mixtes, puis par sexe la ligne équipe (relais + meilleure nation) et le tableau
+des athlètes (sprint, poursuite, individuel, mass start, globe, jeune), chaque ligne modifiable
+(case vidée = cote retirée). **Fichier CSV unique** (`src/lib/admin/oddsCsv.ts`), séparateur `;`
+ou `,`, en-têtes :
+`Type;Nation;Sexe;Nom;Prénom;Relais mixte;Relais mixte simple;Relais;Meilleure nation;Sprint;Poursuite;Individuel;Mass start;Globe;Jeune`.
+Par nation, dans l'ordre demandé par Guillaume : ligne `Nation` (relais mixte, mixte simple),
+ligne `Équipe` F (relais, meilleure nation), lignes `Athlète` F, ligne `Équipe` H, lignes
+`Athlète` H. L'import se fie aux colonnes Type/Sexe, pas à l'ordre ; Type vide = déduit (nom
+renseigné → athlète, sexe seul → équipe, sinon nation). Export (`/admin/athletes/export`) au même
+format, réimportable.
+- **L'import remplace toutes les cotes courantes de la saison** (demande de Guillaume : « un csv
+  qui efface le csv précédent ») : les anciennes sont historisées (`valid_until`), pas supprimées,
+  et remises en place si l'écriture des nouvelles échoue. Un fichier avec la moindre erreur
+  (nation inconnue, cote non entière, doublon, sexe manquant) n'écrit rien. Nations absentes de la
+  table créées si leur nom est connu (`NATION_NAMES`).
+- **À confirmer** : les athlètes absents du nouveau fichier ne sont pas supprimés (ils peuvent
+  figurer dans des pronostics, résultats, Pépites) ; ils restent en base sans cote, donc ne sont
+  plus proposés aux joueurs, et sont marqués « sans cote » dans le tableau.
+- **À confirmer** : la cote « meilleure nation » (par sexe) est placée sur la ligne Équipe, avec
+  la cote relais du même sexe.
+- Attention : réimporter entre le sprint et la poursuite d'une étape écrase les cotes poursuite
+  recalculées à partir des écarts du sprint (§4) par celles du fichier.
+- Corrigé au passage : `setCurrentOdds` filtrait les relais mixtes sur `nation_sex = undefined` au
+  lieu de `nation_sex is null` (requête invalide pour les cotes mixtes).
+- Les lectures de cotes passent par `fetchAll` : Supabase plafonne une requête à 1000 lignes, seuil
+  dépassé par une saison complète (≈ 6 cotes par athlète).
+
+**Résultats & globes** (`/admin`) : étapes en accordéon comme le Calendrier joueur (ouverte : la
+première avec une course non saisie), courses triées par heure, puis une section dépliable
+« Globes de saison ». Sur la page d'une course, **import CSV des résultats**
+(`src/lib/admin/resultsCsv.ts`) : `Rang;Nom;Prénom;Nation;Écart (s);Tours de péna;Fusée;Gâchette`
+(relais : `Rang;Nation`). Alternatives acceptées : colonne `Athlète` (nom complet, dans un ordre
+ou l'autre), `Fautes` (0 = Gâchette), écart en `m:ss.s`, nation en toutes lettres pour un relais.
+Noms comparés sans accents ni casse. Le CSV **ne fait que pré-remplir le tableau** : l'admin relit
+puis clique « Enregistrer et calculer les scores » (même chemin que la saisie manuelle). Bouton de
+téléchargement du modèle (candidats ayant une cote, avec la saisie en cours). Format pensé pour être
+généré par une IA à partir du classement officiel IBU.

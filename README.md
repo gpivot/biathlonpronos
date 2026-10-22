@@ -92,9 +92,9 @@ retenus dans ce moteur.
 - **Classements annexes (Dossard Rouge)** : une seule dimension implémentée (meilleure série
   10/10). Un classement par type de course (sprint/poursuite/individuel/mass start/relais) était
   envisagé mais mis en suspens pour l'instant.
-- **Import CSV des cotes** : logique testée contre la vraie base, mais l'écran `/admin/import`
-  lui-même n'a pas été testé interactivement (upload de fichier non automatisable avec les outils
-  de test actuels).
+- **Imports CSV du back-office** (calendrier, cotes, résultats) : logique couverte par les tests
+  unitaires et écrans vérifiés dans le navigateur sur des données factices ; l'import des cotes
+  (qui remplace les cotes en cours) n'a pas encore été rejoué sur la vraie base.
 - Google/Apple OAuth configurés dans le code mais jamais testés (nécessitent des credentials réels).
 - Pas d'emplacements publicitaires ni de bannière de consentement cookies (prévu dans l'architecture,
   pas encore posé dans le layout).

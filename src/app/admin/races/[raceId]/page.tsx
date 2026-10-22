@@ -2,21 +2,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/server";
 import { ResultsForm, type CandidateRow } from "./ResultsForm";
+import { RELAY_FORMATS, raceLabel } from "../../_components/labels";
 
 export const dynamic = "force-dynamic";
-
-const FORMAT_LABELS: Record<string, string> = {
-  sprint: "Sprint",
-  poursuite: "Poursuite",
-  individuel: "Individuel",
-  mass_start: "Mass Start",
-  relais_h: "Relais Hommes",
-  relais_f: "Relais Femmes",
-  relais_mixte: "Relais Mixte",
-  relais_mixte_simple: "Relais Mixte Simple",
-};
-
-const RELAY_FORMATS = ["relais_h", "relais_f", "relais_mixte", "relais_mixte_simple"];
 
 export default async function AdminRacePage({ params }: { params: Promise<{ raceId: string }> }) {
   const { raceId } = await params;
@@ -53,6 +41,8 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           id: o.nation_code,
           name: o.nations?.name ?? o.nation_code,
           subtitle: o.nation_code,
+          nationCode: o.nation_code,
+          nationName: o.nations?.name ?? undefined,
           odds: o.value,
           existingResult: existing
             ? {
@@ -84,6 +74,9 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           id: o.athlete_id,
           name: `${o.athletes?.first_name ?? ""} ${o.athletes?.last_name ?? ""}`.trim(),
           subtitle: o.athletes?.nation_code ?? "",
+          firstName: o.athletes?.first_name ?? "",
+          lastName: o.athletes?.last_name ?? "",
+          nationCode: o.athletes?.nation_code ?? "",
           odds: o.value,
           existingResult: existing
             ? {
@@ -103,8 +96,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
     <div className="flex flex-col gap-4">
       <BackLink />
       <h1 className="text-xl font-bold">
-        {FORMAT_LABELS[race.format] ?? race.format}
-        {race.sex ? ` ${race.sex === "F" ? "Femmes" : "Hommes"}` : ""} — {stage.location}
+        {raceLabel(race)} — {stage.location}
       </h1>
       {race.special_rule && (
         <p className="text-sm text-gold">Course spéciale : {race.special_rule.replace(/_/g, " ")}</p>
@@ -112,7 +104,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
       {candidates.length === 0 ? (
         <p className="text-sm text-text-dim">
-          Aucune cote saisie pour ce format ({isRelay ? "voir Admin > Cotes de relais" : "voir Admin > Athlètes & cotes"}) —
+          Aucune cote saisie pour ce format (voir Athlètes & cotes) —
           impossible de noter la course.
         </p>
       ) : (
@@ -131,7 +123,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 function BackLink() {
   return (
     <Link href="/admin" className="text-sm text-text-dim underline">
-      ← Retour à la liste des courses
+      ← Retour aux résultats
     </Link>
   );
 }
