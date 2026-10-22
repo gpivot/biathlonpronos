@@ -444,6 +444,11 @@ appareils de l'admin, mais le bandeau n'apparaît que sur le navigateur qui a r�
 Effet de bord voulu : « Prochainement » (accueil) ignore désormais les courses dont l'heure de départ
 est passée mais pas encore notées (avant, une course en cours restait affichée comme prochaine).
 
+« En ce moment » (accueil) : une course partie (pronos verrouillés) et pas encore notée, sur une
+étape pas terminée — même règle que le statut « en cours » du Calendrier. Une étape dont la prochaine
+course n'a pas commencé apparaît seulement dans « Prochainement » (avant, toute étape dont les dates
+encadraient le jour s'affichait « En ce moment », en doublon de « Prochainement »).
+
 Heures : tout l'affichage joueur est en heure de Paris (`src/lib/displayTimeZone.ts`), quel que soit
 le fuseau du serveur ou du navigateur. L'import/export CSV du calendrier et les champs admin restent
 en UTC (choix de Guillaume) : les heures du CSV doivent être saisies en UTC.
