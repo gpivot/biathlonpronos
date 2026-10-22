@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { GlobesForm, type GlobeCategoryConfig } from "./GlobesForm";
 import { PepiteForm } from "./PepiteForm";
+import { getClock } from "@/lib/clock";
 import { PEPITE_MIN_ODDS } from "@/lib/scoring";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +34,10 @@ export default async function GlobesPage() {
     );
   }
 
-  const isLocked = new Date(season.starts_on) <= new Date();
+  // Verrouillé si la saison a commencé dans l'horloge affichée OU en réalité :
+  // l'horloge simulée de l'admin ne doit jamais rouvrir une saisie réelle.
+  const { now, realNow } = await getClock();
+  const isLocked = new Date(season.starts_on) <= now || new Date(season.starts_on) <= realNow;
 
   const {
     data: { user },

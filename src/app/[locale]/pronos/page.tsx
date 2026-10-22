@@ -4,6 +4,7 @@ import { HeaderActions } from "@/components/HeaderActions";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
+import { getClock } from "@/lib/clock";
 import { PronosAccordion, type PronosRace, type PronosStage } from "./PronosAccordion";
 
 export const dynamic = "force-dynamic";
@@ -41,7 +42,7 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
     .from("races")
     .select("*, stages(id, location, country_code, starts_on, ends_on, coefficient)")
     .eq("status", "upcoming")
-    .gt("locks_at", new Date().toISOString())
+    .gt("locks_at", (await getClock()).now.toISOString())
     .order("locks_at", { ascending: true });
 
   const openRaces = (upcomingRaces ?? []).filter((race) => !predictedRaceIds.has(race.id));
