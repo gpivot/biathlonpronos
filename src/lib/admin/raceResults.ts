@@ -5,13 +5,14 @@ import {
   computePepiteBonus,
   computePursuitOdds,
   computeRelayScore,
-  updateStreak,
+  computeSeasonStreaks,
   type AthleteRaceResult,
   type BonusCardEffect,
   type FavoriteTeam,
   type NationRaceResult,
 } from "@/lib/scoring";
-import { setCurrentOdds } from "./odds";
+import { clearCurrentOdds, setCurrentOdds } from "./odds";
+import { fetchAll } from "./fetchAll";
 
 const RELAY_FORMATS = ["relais_h", "relais_f", "relais_mixte", "relais_mixte_simple"];
 
@@ -44,6 +45,10 @@ export async function saveRaceResults(
     .single();
   if (raceError || !race) throw new Error(raceError?.message ?? "Course introuvable.");
 
+  // Correction d'un sprint (disqualification…) : les cotes poursuite repartent de leur valeur
+  // d'avant la saisie précédente, puis sont recalculées avec les nouveaux écarts.
+  if (race.format === "sprint") await restorePursuitOdds(admin, race, (race.stages as any).season_id);
+
   await admin.from("race_results").delete().eq("race_id", raceId);
 
   if (entries.length > 0) {
@@ -64,6 +69,57 @@ export async function saveRaceResults(
 
   if (race.format === "sprint") {
     await cascadePursuitOdds(admin, race.stage_id, race.sex, (race.stages as any).season_id, entries);
+  }
+}
+
+/**
+ * Annule le recalcul des cotes poursuite fait à partir des résultats actuels d'un sprint : pour
+ * chaque athlète classé avec un écart, la cote poursuite reprend la dernière valeur antérieure à
+ * la saisie de ces résultats (cote importée, ou restaurée lors d'une correction précédente).
+ */
+async function restorePursuitOdds(
+  admin: SupabaseClient,
+  sprint: { id: string; stage_id: string; sex: string | null },
+  seasonId: string
+): Promise<void> {
+  const { data: previous } = await admin
+    .from("race_results")
+    .select("athlete_id, time_gap_seconds, created_at")
+    .eq("race_id", sprint.id);
+  const cascaded = (previous ?? []).filter((r) => r.athlete_id && r.time_gap_seconds != null);
+  if (cascaded.length === 0) return;
+
+  const { data: pursuitRace } = await admin
+    .from("races")
+    .select("id")
+    .eq("stage_id", sprint.stage_id)
+    .eq("format", "poursuite")
+    .eq("sex", sprint.sex)
+    .maybeSingle();
+  if (!pursuitRace) return;
+
+  const savedAt = cascaded.map((r) => r.created_at as string).sort()[0];
+  const athleteIds = cascaded.map((r) => r.athlete_id as string);
+  const history = await fetchAll((from, to) =>
+    admin
+      .from("odds")
+      .select("athlete_id, value, valid_from")
+      .eq("season_id", seasonId)
+      .eq("format", "poursuite")
+      .in("athlete_id", athleteIds)
+      .lt("valid_from", savedAt)
+      .order("valid_from", { ascending: false })
+      .range(from, to)
+  );
+  const baseByAthleteId = new Map<string, number>();
+  for (const row of history) {
+    if (!baseByAthleteId.has(row.athlete_id)) baseByAthleteId.set(row.athlete_id, row.value);
+  }
+
+  for (const athleteId of athleteIds) {
+    const base = baseByAthleteId.get(athleteId);
+    if (base != null) await setCurrentOdds(admin, { seasonId, format: "poursuite", athleteId, value: base });
+    else await clearCurrentOdds(admin, { seasonId, format: "poursuite", athleteId });
   }
 }
 
@@ -127,28 +183,117 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
 
   const stage = race.stages as any;
 
+  // Notation rejouable : les points déjà attribués sur cette course sont effacés d'abord.
+  await clearRaceScores(admin, raceId, stage.season_id, race.sex);
+
   const [{ data: results }, { data: predictions }] = await Promise.all([
     admin.from("race_results").select("*").eq("race_id", raceId),
     admin.from("predictions").select("*").eq("race_id", raceId),
   ]);
 
-  // §14 — la Pépite est indépendante du pronostic du joueur sur cette
-  // course précise : à vérifier même si personne n'a pronostiqué dessus.
-  await applyPepiteBonuses(admin, stage.season_id, raceId, race.format, results ?? []);
-
-  if (!predictions || predictions.length === 0) {
-    await admin.from("races").update({ status: "finished" }).eq("id", raceId);
-    return { scoredPredictions: 0 };
+  let scoredPredictions = 0;
+  if (predictions && predictions.length > 0) {
+    const pointsByUserId = RELAY_FORMATS.includes(race.format)
+      ? await scoreRelayPredictions(admin, race, stage, results ?? [], predictions)
+      : await scoreIndividualPredictions(admin, race, stage, results ?? [], predictions);
+    scoredPredictions = pointsByUserId.size;
   }
 
-  const pointsByUserId = RELAY_FORMATS.includes(race.format)
-    ? await scoreRelayPredictions(admin, race, stage, results ?? [], predictions)
-    : await scoreIndividualPredictions(admin, race, stage, results ?? [], predictions);
+  // §14 — la Pépite est indépendante du pronostic du joueur sur cette course précise : à vérifier
+  // même si personne n'a pronostiqué dessus. Après les pronostics, pour s'ajouter à leurs points.
+  await applyPepiteBonuses(admin, stage.season_id, raceId, race.format, results ?? []);
 
-  await updateStreaks(admin, stage.season_id, pointsByUserId);
   await admin.from("races").update({ status: "finished" }).eq("id", raceId);
+  await recomputeSeasonStreaks(admin, stage.season_id);
 
-  return { scoredPredictions: pointsByUserId.size };
+  return { scoredPredictions };
+}
+
+/**
+ * Efface les points d'une course (score_ledger) et rend le bonus Pépite à ceux qui l'avaient
+ * gagné dessus, pour pouvoir la renoter ou la réinitialiser.
+ */
+async function clearRaceScores(admin: SupabaseClient, raceId: string, seasonId: string, sex: string | null): Promise<void> {
+  const { data: ledger } = await admin.from("score_ledger").select("user_id, breakdown").eq("race_id", raceId);
+  const pepiteUserIds = (ledger ?? [])
+    .filter((row) => (row.breakdown as any)?.pepiteBonus)
+    .map((row) => row.user_id as string);
+  if (pepiteUserIds.length > 0 && sex) {
+    await admin
+      .from("pepites")
+      .update({ bonus_claimed: false })
+      .eq("season_id", seasonId)
+      .eq("sex", sex)
+      .in("user_id", pepiteUserIds);
+  }
+
+  const { error } = await admin.from("score_ledger").delete().eq("race_id", raceId);
+  if (error) throw new Error(error.message);
+}
+
+/**
+ * §12 — recalcule les séries 10/10 de toute la saison en rejouant les courses notées dans l'ordre
+ * (points des pronostics seuls, hors bonus Pépite). Appelé après chaque notation, correction ou
+ * réinitialisation, pour qu'un résultat modifié (disqualification…) se répercute sur la suite.
+ * Une carte déjà choisie par un joueur reste acquise même si le recalcul lui en retire le crédit.
+ */
+export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: string): Promise<void> {
+  const { data: races } = await admin
+    .from("races")
+    .select("id, locks_at, stages!inner(season_id)")
+    .eq("stages.season_id", seasonId)
+    .eq("status", "finished")
+    .order("locks_at");
+  const raceIds = (races ?? []).map((r) => r.id as string);
+
+  const [predictions, ledger, { data: counters }] = await Promise.all([
+    raceIds.length === 0
+      ? Promise.resolve([] as Array<{ user_id: string; race_id: string }>)
+      : fetchAll((from, to) =>
+          admin.from("predictions").select("user_id, race_id").in("race_id", raceIds).order("id").range(from, to)
+        ),
+    fetchAll((from, to) =>
+      admin
+        .from("score_ledger")
+        .select("user_id, race_id, points, breakdown")
+        .eq("season_id", seasonId)
+        .not("race_id", "is", null)
+        .order("id")
+        .range(from, to)
+    ),
+    admin.from("streak_counters").select("user_id").eq("season_id", seasonId),
+  ]);
+
+  const ledgerByKey = new Map(
+    ledger.map((row) => [
+      `${row.user_id}|${row.race_id}`,
+      Number(row.points) - Number((row.breakdown as any)?.pepiteBonus ?? 0),
+    ])
+  );
+  const pointsByRace = new Map<string, Map<string, number>>();
+  for (const p of predictions) {
+    const points = ledgerByKey.get(`${p.user_id}|${p.race_id}`) ?? 0;
+    if (!pointsByRace.has(p.race_id)) pointsByRace.set(p.race_id, new Map());
+    pointsByRace.get(p.race_id)!.set(p.user_id, points);
+  }
+
+  const streaks = computeSeasonStreaks(raceIds, pointsByRace);
+  // Un joueur qui n'a plus aucune course notée repart de zéro.
+  for (const c of counters ?? []) {
+    if (!streaks.has(c.user_id)) streaks.set(c.user_id, { currentStreak: 0, cardsEarned: 0 });
+  }
+  if (streaks.size === 0) return;
+
+  const { error } = await admin.from("streak_counters").upsert(
+    [...streaks.entries()].map(([userId, s]) => ({
+      user_id: userId,
+      season_id: seasonId,
+      current_streak: s.currentStreak,
+      cards_earned: s.cardsEarned,
+    })),
+    { onConflict: "user_id,season_id" }
+  );
+  if (error) throw new Error(error.message);
 }
 
 /**
@@ -373,75 +518,30 @@ async function scoreRelayPredictions(
   return pointsByUserId;
 }
 
-async function updateStreaks(
-  admin: SupabaseClient,
-  seasonId: string,
-  pointsByUserId: Map<string, number>
-): Promise<void> {
-  if (pointsByUserId.size === 0) return;
-
-  const { data: streaks } = await admin
-    .from("streak_counters")
-    .select("user_id, current_streak, cards_earned")
-    .eq("season_id", seasonId)
-    .in("user_id", Array.from(pointsByUserId.keys()));
-
-  const streakByUserId = new Map((streaks ?? []).map((s) => [s.user_id as string, s]));
-
-  // §12 — au 10/10, cards_earned est un crédit ; le joueur choisit lui-même
-  // le type de carte (écran /compte), il n'est pas attribué au hasard ici.
-  const streakUpsertRows = Array.from(pointsByUserId.entries()).map(([userId, points]) => {
-    const current = streakByUserId.get(userId);
-    const update = updateStreak(current?.current_streak ?? 0, points);
-    return {
-      user_id: userId,
-      season_id: seasonId,
-      current_streak: update.currentStreak,
-      cards_earned: (current?.cards_earned ?? 0) + (update.cardEarned ? 1 : 0),
-    };
-  });
-
-  const { error } = await admin.from("streak_counters").upsert(streakUpsertRows, { onConflict: "user_id,season_id" });
-  if (error) throw new Error(error.message);
-}
-
 /**
- * Annule la saisie des résultats d'une course : résultats et points (score_ledger) effacés, bonus
- * Pépite rendu disponible s'il avait été gagné sur cette course, course repassée « à venir » (le
- * statut affiché redevient « en cours » si l'heure de départ est passée).
- * Non annulés (à confirmer) : les séries 10/10 et cartes gagnées, et les cotes poursuite
- * recalculées depuis un sprint ; ils se recalculent à la nouvelle saisie.
+ * Annule la saisie des résultats d'une course : cotes poursuite d'un sprint restaurées, points
+ * (score_ledger) effacés, bonus Pépite rendu s'il avait été gagné dessus, résultats effacés, course
+ * repassée « à venir » (affichée « en cours » si l'heure de départ est passée), séries 10/10 de la
+ * saison recalculées.
  */
-export async function resetRaceResults(admin: SupabaseClient, raceId: string): Promise<{ ledgerRowsDeleted: number }> {
+export async function resetRaceResults(admin: SupabaseClient, raceId: string): Promise<void> {
   const { data: race, error: raceError } = await admin
     .from("races")
-    .select("id, sex, stages(season_id)")
+    .select("id, stage_id, sex, format, stages(season_id)")
     .eq("id", raceId)
     .single();
   if (raceError || !race) throw new Error(raceError?.message ?? "Course introuvable.");
   const seasonId = (race.stages as any).season_id as string;
 
-  const { data: ledger } = await admin.from("score_ledger").select("user_id, breakdown").eq("race_id", raceId);
-  const pepiteUserIds = (ledger ?? [])
-    .filter((row) => (row.breakdown as any)?.pepiteBonus)
-    .map((row) => row.user_id as string);
-  if (pepiteUserIds.length > 0 && race.sex) {
-    await admin
-      .from("pepites")
-      .update({ bonus_claimed: false })
-      .eq("season_id", seasonId)
-      .eq("sex", race.sex)
-      .in("user_id", pepiteUserIds);
-  }
+  if (race.format === "sprint") await restorePursuitOdds(admin, race, seasonId);
+  await clearRaceScores(admin, raceId, seasonId, race.sex);
 
-  const { error: ledgerError } = await admin.from("score_ledger").delete().eq("race_id", raceId);
-  if (ledgerError) throw new Error(ledgerError.message);
   const { error: resultsError } = await admin.from("race_results").delete().eq("race_id", raceId);
   if (resultsError) throw new Error(resultsError.message);
   const { error: statusError } = await admin.from("races").update({ status: "upcoming" }).eq("id", raceId);
   if (statusError) throw new Error(statusError.message);
 
-  return { ledgerRowsDeleted: ledger?.length ?? 0 };
+  await recomputeSeasonStreaks(admin, seasonId);
 }
 
 /**
@@ -453,4 +553,25 @@ export async function deleteRace(admin: SupabaseClient, raceId: string): Promise
   await admin.from("bonus_cards").update({ used_on_race_id: null }).eq("used_on_race_id", raceId);
   const { error } = await admin.from("races").delete().eq("id", raceId);
   if (error) throw new Error(error.message);
+}
+
+/**
+ * Après une correction des résultats d'un sprint, la poursuite de l'étape déjà notée est renotée
+ * avec ses cotes recalculées. Renvoie true si une poursuite a été renotée.
+ */
+export async function rescorePursuitAfterSprint(admin: SupabaseClient, sprintRaceId: string): Promise<boolean> {
+  const { data: sprint } = await admin.from("races").select("stage_id, sex, format").eq("id", sprintRaceId).single();
+  if (!sprint || sprint.format !== "sprint") return false;
+
+  const { data: pursuit } = await admin
+    .from("races")
+    .select("id, status")
+    .eq("stage_id", sprint.stage_id)
+    .eq("format", "poursuite")
+    .eq("sex", sprint.sex)
+    .maybeSingle();
+  if (!pursuit || pursuit.status !== "finished") return false;
+
+  await scoreRace(admin, pursuit.id);
+  return true;
 }

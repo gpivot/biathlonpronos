@@ -521,8 +521,22 @@ Horloge simulée.
   poubelle rouge (avec confirmation).
 - **Réinitialiser les résultats** (page de la course, `resetRaceResults`) : efface les résultats et
   les points de la course (`score_ledger`), rend le bonus Pépite s'il avait été gagné dessus, repasse
-  la course « à venir ». **À confirmer / limites** : les séries 10/10 et cartes gagnées ne sont pas
-  recalculées, ni les cotes poursuite issues d'un sprint (elles se recalculent à la nouvelle saisie).
-  Même limite qu'avant pour une ressaisie sans réinitialisation (la série est réincrémentée).
+  la course « à venir ». Séries 10/10 et cotes poursuite recalculées (cf. ci-dessous).
 - **Supprimer une course** (`deleteRace`) : réinitialisation puis suppression ; pronostics supprimés
   par cascade, carte bonus jouée dessus détachée de la course mais laissée consommée.
+
+**Corrections de résultats : séries et cotes poursuite recalculées (octobre 2026, demande de
+Guillaume, ex. disqualification après le premier classement IBU).**
+- **Séries 10/10** : après chaque notation, ressaisie, réinitialisation ou suppression, toute la saison
+  est rejouée (`recomputeSeasonStreaks`, `computeSeasonStreaks`) : courses notées dans l'ordre des
+  départs, points des pronostics hors bonus Pépite, un joueur sans prono sur une course n'est pas
+  compté (comme avant). Remplace la mise à jour incrémentale, qui réincrémentait la série à chaque
+  ressaisie. `cards_earned` est recalculé aussi ; une carte déjà choisie par un joueur reste acquise
+  même si le recalcul lui en retire le crédit (à confirmer).
+- **Cotes poursuite** : avant de remplacer ou d'effacer les résultats d'un sprint, la cote poursuite
+  de chaque athlète qui avait un écart reprend sa dernière valeur antérieure à la saisie précédente
+  (`restorePursuitOdds`), puis le recalcul se fait avec les nouveaux écarts. Si la poursuite de
+  l'étape était déjà notée, elle est renotée automatiquement avec ses nouvelles cotes.
+- **Notation rejouable** : `scoreRace` efface d'abord les points de la course et rend le bonus Pépite
+  gagné dessus. Corrigé au passage : le bonus Pépite était écrasé par les points du pronostic quand
+  le même joueur avait aussi pronostiqué la course (il est maintenant appliqué après).
