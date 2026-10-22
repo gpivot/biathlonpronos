@@ -102,12 +102,12 @@ export function CreateOrJoinLeague({ seasonId }: { seasonId: string }) {
             placeholder={t("namePlaceholder")}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="flex-1 rounded-xl border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-ice"
+            className="min-w-0 flex-1 rounded-xl border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-ice"
           />
           <button
             type="submit"
             disabled={loading}
-            className="rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-on-ice disabled:opacity-60"
+            className="flex-shrink-0 rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-on-ice disabled:opacity-60"
           >
             {t("createButton")}
           </button>
@@ -124,12 +124,12 @@ export function CreateOrJoinLeague({ seasonId }: { seasonId: string }) {
             placeholder={t("codePlaceholder")}
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="flex-1 rounded-xl border border-border bg-bg px-3 py-2 text-sm uppercase outline-none focus:border-ice"
+            className="min-w-0 flex-1 rounded-xl border border-border bg-bg px-3 py-2 text-sm uppercase outline-none focus:border-ice"
           />
           <button
             type="submit"
             disabled={loading}
-            className="rounded-xl border border-border px-4 py-2 font-display text-sm font-bold disabled:opacity-60"
+            className="flex-shrink-0 rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-on-ice disabled:opacity-60"
           >
             {t("joinButton")}
           </button>
