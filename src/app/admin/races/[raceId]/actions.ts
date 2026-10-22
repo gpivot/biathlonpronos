@@ -5,7 +5,14 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { fetchIbuResults } from "@/lib/admin/ibuResults";
 import { redirect } from "next/navigation";
-import { deleteRace, resetRaceResults, saveRaceResults, scoreRace, type ResultEntryInput } from "@/lib/admin/raceResults";
+import {
+  deleteRace,
+  rescorePursuitAfterSprint,
+  resetRaceResults,
+  saveRaceResults,
+  scoreRace,
+  type ResultEntryInput,
+} from "@/lib/admin/raceResults";
 
 export interface SubmitResultsState {
   status: "idle" | "success" | "error";
@@ -22,11 +29,13 @@ export async function submitResults(
   try {
     await saveRaceResults(admin, raceId, entries);
     const summary = await scoreRace(admin, raceId);
-    revalidatePath(`/admin/races/${raceId}`);
-    revalidatePath("/admin");
+    const pursuitRescored = await rescorePursuitAfterSprint(admin, raceId);
+    revalidatePath("/admin", "layout");
     return {
       status: "success",
-      message: `Résultats enregistrés, ${summary.scoredPredictions} pronostic(s) noté(s).`,
+      message:
+        `Résultats enregistrés, ${summary.scoredPredictions} pronostic(s) noté(s), séries 10/10 recalculées.` +
+        (pursuitRescored ? " Poursuite de l'étape renotée avec ses nouvelles cotes." : ""),
     };
   } catch (err) {
     return { status: "error", message: err instanceof Error ? err.message : "Erreur inconnue." };
@@ -94,7 +103,9 @@ export async function updateRace(formData: FormData) {
 export async function resetResults(formData: FormData) {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));
-  await resetRaceResults(createAdminClient(), raceId);
+  const admin = createAdminClient();
+  await resetRaceResults(admin, raceId);
+  await rescorePursuitAfterSprint(admin, raceId);
   revalidatePath("/admin", "layout");
 }
 

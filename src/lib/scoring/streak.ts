@@ -22,3 +22,31 @@ export function updateStreak(currentStreak: number, raceTotalPoints: number): St
 
   return { currentStreak: next, cardEarned: false };
 }
+
+export interface SeasonStreak {
+  currentStreak: number;
+  cardsEarned: number;
+}
+
+/**
+ * Rejoue toute la saison : `raceIds` dans l'ordre chronologique, `pointsByRace` donne pour chaque
+ * course les points de chaque joueur qui l'a pronostiquée (un joueur sans prono n'est pas compté,
+ * comme lors de la notation). Sert à recalculer les séries après une correction de résultats.
+ */
+export function computeSeasonStreaks(
+  raceIds: string[],
+  pointsByRace: Map<string, Map<string, number>>
+): Map<string, SeasonStreak> {
+  const streaks = new Map<string, SeasonStreak>();
+  for (const raceId of raceIds) {
+    for (const [userId, points] of pointsByRace.get(raceId) ?? []) {
+      const current = streaks.get(userId) ?? { currentStreak: 0, cardsEarned: 0 };
+      const update = updateStreak(current.currentStreak, points);
+      streaks.set(userId, {
+        currentStreak: update.currentStreak,
+        cardsEarned: current.cardsEarned + (update.cardEarned ? 1 : 0),
+      });
+    }
+  }
+  return streaks;
+}
