@@ -9,6 +9,7 @@ const items = [
   { href: "/admin/import", label: "Import CSV" },
   { href: "/admin/stages", label: "Étapes & courses" },
   { href: "/admin/globes", label: "Globes de saison" },
+  { href: "/admin/joueurs", label: "Joueurs & rôles" },
 ];
 
 export function AdminNav() {
