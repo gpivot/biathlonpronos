@@ -10,6 +10,7 @@ const items = [
   { href: "/admin/stages", label: "Étapes & courses" },
   { href: "/admin/globes", label: "Globes de saison" },
   { href: "/admin/joueurs", label: "Joueurs & rôles" },
+  { href: "/admin/horloge", label: "Horloge simulée" },
 ];
 
 export function AdminNav() {

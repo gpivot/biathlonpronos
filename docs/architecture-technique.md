@@ -420,3 +420,24 @@ avec une recherche et un bouton pour donner ou retirer le rôle d'admin (`profil
 Server Action `setAdminRole` revérifie que l'appelant est admin (`src/lib/admin/requireAdmin.ts`),
 car une Server Action peut être appelée sans passer par le layout `/admin`. Un admin ne peut pas se
 retirer son propre rôle, pour ne pas se fermer l'accès au back-office.
+
+### Horloge simulée pour l'admin (octobre 2026)
+
+Page `/admin/horloge` : un admin règle une date/heure fictive (saisie libre, raccourcis « la veille à
+20 h / 5 min avant / 5 min après » le départ d'une course, +1 h / +1 jour / +1 semaine). Le décalage
+avec l'heure réelle est stocké dans le cookie `bp_sim_offset` du navigateur de l'admin ; la pendule
+simulée continue donc d'avancer. `getClock()` (`src/lib/clock.ts`) ne l'honore que pour un profil
+`is_admin` : les autres joueurs restent toujours sur l'heure réelle. Un bandeau doré rappelle la
+simulation en haut de chaque page, avec un lien pour revenir à l'heure réelle.
+
+Pris en compte : statut des courses (à venir / en cours), formulaire de prono, « En ce moment » et
+« Prochainement » de l'accueil, courses ouvertes de Ma saison, verrouillage des globes.
+
+Limites : la base reste sur l'heure réelle (`now()` dans la policy RLS des pronostics, migration
+0010). Un prono saisi pendant la simulation est un vrai prono, accepté seulement si la course n'est
+pas réellement verrouillée ; si la simulation remonte avant une course déjà verrouillée, le
+formulaire est masqué. Les globes, non protégés en base, restent fermés dès que l'heure simulée OU
+réelle dépasse le début de saison. Les résultats saisis dans le back-office sont de vrais résultats.
+
+Effet de bord voulu : « Prochainement » (accueil) ignore désormais les courses dont l'heure de départ
+est passée mais pas encore notées (avant, une course en cours restait affichée comme prochaine).

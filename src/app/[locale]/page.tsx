@@ -5,6 +5,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
 import { LogoMark } from "@/components/icons";
+import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 
@@ -38,7 +39,8 @@ async function getHomeData(): Promise<HomeData> {
     return { season: null, userId: user?.id ?? null, currentStage: null, nextRace: null, leaderboard: [], favoriteTeam: null };
   }
 
-  const today = new Date().toISOString().slice(0, 10);
+  const { now } = await getClock();
+  const today = now.toISOString().slice(0, 10);
 
   const [{ data: currentStage }, { data: nextRace }, leaderboard, favoriteTeamResult] = await Promise.all([
     supabase
@@ -55,6 +57,7 @@ async function getHomeData(): Promise<HomeData> {
       .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id)")
       .eq("stages.season_id", season.id)
       .eq("status", "upcoming")
+      .gt("locks_at", now.toISOString())
       .order("locks_at", { ascending: true })
       .limit(1)
       .maybeSingle(),
