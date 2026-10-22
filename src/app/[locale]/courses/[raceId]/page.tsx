@@ -32,11 +32,8 @@ export default async function RacePage({
 
   const stage = race.stages as { id: string; location: string; country_code: string; season_id: string; coefficient: 1 | 2 };
   const isRelay = RELAY_FORMATS.includes(race.format);
-  const { now, realNow, simulated } = await getClock();
+  const { now } = await getClock();
   const displayStatus = getRaceDisplayStatus(race, now);
-  // Horloge simulée avant le départ alors que la course est réellement
-  // verrouillée : la base refuserait l'enregistrement, on n'affiche pas le formulaire.
-  const lockedInReality = simulated && displayStatus === "upcoming" && getRaceDisplayStatus(race, realNow) !== "upcoming";
 
   const {
     data: { user },
@@ -205,15 +202,7 @@ export default async function RacePage({
           </div>
         )}
 
-        {lockedInReality && (
-          <div className="rounded-2xl border border-dashed border-gold/50 p-5 text-[13px] text-text-dim">
-            Horloge simulée : la course paraît ouverte, mais elle est réellement verrouillée. Les pronostics ne peuvent
-            plus être enregistrés.
-          </div>
-        )}
-
         {displayStatus === "upcoming" &&
-          !lockedInReality &&
           (!hasOdds ? (
             <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
               {t("noOddsMessage", { format: race.format })}

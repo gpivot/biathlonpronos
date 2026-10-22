@@ -41,7 +41,7 @@ OAuth Google/Apple, publicité/RGPD). La refonte UI (dashboard d'accueil, naviga
 3. `npm run dev` puis http://localhost:3000. `npm test` (Vitest) et `npx tsc --noEmit` doivent
    rester verts.
 4. La base Supabase est unique et partagée entre toutes les machines. Les migrations
-   (`supabase/migrations/`, 0001 à 0015) sont déjà appliquées ; toute nouvelle migration se
+   (`supabase/migrations/`, 0001 à 0016) sont déjà appliquées ; toute nouvelle migration se
    colle dans l'éditeur SQL de Supabase par Guillaume (Claude ne peut pas exécuter de DDL).
 
 ## Façons de travailler avec Guillaume

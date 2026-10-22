@@ -422,24 +422,31 @@ retirer son propre rôle, pour ne pas se fermer l'accès au back-office.
 
 ### Horloge simulée pour l'admin (octobre 2026)
 
-Page `/admin/horloge` : un admin règle une date/heure fictive (saisie libre, raccourcis « la veille à
-20 h / 5 min avant / 5 min après » le départ d'une course, +1 h / +1 jour / +1 semaine). Le décalage
-avec l'heure réelle est stocké dans le cookie `bp_sim_offset` du navigateur de l'admin ; la pendule
-simulée continue donc d'avancer. `getClock()` (`src/lib/clock.ts`) ne l'honore que pour un profil
-`is_admin` : les autres joueurs restent toujours sur l'heure réelle. Un bandeau doré rappelle la
-simulation en haut de chaque page, avec un lien pour revenir à l'heure réelle.
+Page `/admin/horloge` : un admin règle une date/heure fictive, en heure de Paris (saisie libre,
+raccourcis « la veille à 20 h / 5 min avant / 5 min après » le départ d'une course, +1 h / +1 jour /
++1 semaine). Le décalage avec l'heure réelle est stocké dans `profiles.simulated_clock_offset_ms`
+(migration 0017, écrit par le back-office avec la clé service_role, non modifiable côté client) ;
+la pendule simulée continue donc d'avancer. Un cookie `bp_sim_offset` sert seulement au bandeau doré
+d'avertissement et à éviter une requête au profil quand rien n'est simulé.
 
-Pris en compte : statut des courses (à venir / en cours), formulaire de prono, « En ce moment » et
-« Prochainement » de l'accueil, courses ouvertes de Ma saison, verrouillage des globes.
+- Affichage : `getClock()` (`src/lib/clock.ts`) renvoie l'heure simulée pour un admin, l'heure réelle
+  pour tous les autres. Statut des courses, formulaire de prono, « En ce moment » et « Prochainement »
+  de l'accueil, courses ouvertes de Ma saison, verrouillage des globes.
+- Base : `effective_now()` ajoute ce décalage à `now()` pour un admin ; les policies d'écriture des
+  pronostics l'utilisent à la place de `now()`. Un admin peut donc saisir des pronos sur une saison
+  passée pour la tester (demandé par Guillaume, octobre 2026). Les joueurs ne sont jamais concernés.
 
-Limites : la base reste sur l'heure réelle (`now()` dans la policy RLS des pronostics, migration
-0010). Un prono saisi pendant la simulation est un vrai prono, accepté seulement si la course n'est
-pas réellement verrouillée ; si la simulation remonte avant une course déjà verrouillée, le
-formulaire est masqué. Les globes, non protégés en base, restent fermés dès que l'heure simulée OU
-réelle dépasse le début de saison. Les résultats saisis dans le back-office sont de vrais résultats.
+Limites : tout ce qui est saisi pendant une simulation est réel (pronos de l'admin, résultats saisis
+dans le back-office). Une fois le jeu lancé, un admin qui oublie de revenir à l'heure réelle peut
+enregistrer des pronos hors délai. Le décalage est lié au profil : il s'applique en base sur tous les
+appareils de l'admin, mais le bandeau n'apparaît que sur le navigateur qui a réglé l'horloge.
 
 Effet de bord voulu : « Prochainement » (accueil) ignore désormais les courses dont l'heure de départ
 est passée mais pas encore notées (avant, une course en cours restait affichée comme prochaine).
+
+Heures : tout l'affichage joueur est en heure de Paris (`src/lib/displayTimeZone.ts`), quel que soit
+le fuseau du serveur ou du navigateur. L'import/export CSV du calendrier et les champs admin restent
+en UTC (choix de Guillaume) : les heures du CSV doivent être saisies en UTC.
 
 ## Réorganisation du back-office (octobre 2026)
 

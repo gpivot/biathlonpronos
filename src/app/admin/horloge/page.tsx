@@ -47,13 +47,14 @@ export default async function AdminClockPage() {
           continue d&apos;avancer à partir de l&apos;instant choisi.
         </p>
         <p>
-          Ça ne change l&apos;affichage <strong className="text-frost">que pour toi, sur ce navigateur</strong> : les
-          autres joueurs restent sur l&apos;heure réelle.
+          La simulation ne vaut <strong className="text-frost">que pour toi</strong> : les autres joueurs restent sur
+          l&apos;heure réelle. La base suit aussi ton horloge, tu peux donc enregistrer des pronos sur des courses
+          passées (par exemple sur la saison dernière) tant que l&apos;heure simulée est avant leur départ.
         </p>
         <p>
-          Limites : la base de données reste sur l&apos;heure réelle. Un prono enregistré pendant la simulation est un
-          vrai prono (accepté seulement si la course n&apos;est pas réellement verrouillée), et des résultats saisis
-          dans le back-office sont de vrais résultats qui donnent des points à tout le monde.
+          Attention : ce sont de vrais enregistrements. Les pronos saisis restent dans ton compte et les résultats
+          saisis dans le back-office donnent des points à tout le monde. À réserver aux tests avant le lancement, ou à
+          nettoyer ensuite. Pense à revenir à l&apos;heure réelle à la fin.
         </p>
       </div>
 
