@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { CheckIcon } from "@/components/icons";
+import { SaveFeedback } from "./SaveFeedback";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -48,6 +49,8 @@ export function PredictionForm({
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Encart « pronostic validé », masqué dès que le joueur modifie son choix.
+  const [saved, setSaved] = useState(false);
   const supabase = createClient();
   const t = useTranslations("PredictionForm");
 
@@ -59,6 +62,7 @@ export function PredictionForm({
 
   function toggle(athleteId: string) {
     if (grilledSet.has(athleteId)) return;
+    setSaved(false);
     setSelected((prev) => {
       if (prev.includes(athleteId)) return prev.filter((id) => id !== athleteId);
       if (prev.length >= requiredCount) return prev;
@@ -68,6 +72,7 @@ export function PredictionForm({
 
   function changeCard(next: CardChoice) {
     setCardChoice(next);
+    setSaved(false);
     if (next !== "ca_farte") setCaFarteTarget(null);
     if (next !== "balle_de_pioche" && selected.length > 3) setSelected((prev) => prev.slice(0, 3));
   }
@@ -80,6 +85,7 @@ export function PredictionForm({
 
     setSaving(true);
     setError(null);
+    setSaved(false);
 
     const {
       data: { user },
@@ -91,7 +97,7 @@ export function PredictionForm({
       return;
     }
 
-    const { error } = await supabase.from("predictions").upsert(
+    const { error: predictionError } = await supabase.from("predictions").upsert(
       {
         user_id: user.id,
         race_id: raceId,
@@ -103,29 +109,42 @@ export function PredictionForm({
       { onConflict: "user_id,race_id" }
     );
 
-    if (!error) {
+    let failure = predictionError;
+
+    if (!failure) {
       // §2 — le grillage ne dure qu'une course : on remplace entièrement
       // l'état grillé de l'étape par les choix qui viennent d'être faits.
-      await supabase.from("grilled_states").delete().eq("user_id", user.id).eq("stage_id", stageId);
-      await supabase
+      const { error: deleteError } = await supabase
+        .from("grilled_states")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("stage_id", stageId);
+      const { error: insertError } = await supabase
         .from("grilled_states")
         .insert(selected.map((athleteId) => ({ user_id: user.id, athlete_id: athleteId, stage_id: stageId })));
+      failure = deleteError ?? insertError;
 
       // Consomme la carte si elle vient d'être appliquée (pas déjà utilisée
       // lors d'un enregistrement précédent de ce même pronostic).
       if (cardChoice !== "none" && cardChoice !== initialCardUsed) {
         const card = availableCards.find((c) => c.card_type === cardChoice);
         if (card) {
-          await supabase
+          const { error: cardError } = await supabase
             .from("bonus_cards")
             .update({ status: "used", used_at: new Date().toISOString(), used_on_race_id: raceId })
             .eq("id", card.id);
+          failure = failure ?? cardError;
         }
       }
     }
 
     setSaving(false);
-    if (error) setError(error.message);
+    if (failure) {
+      console.error(failure);
+      setError(t("saveError"));
+    } else {
+      setSaved(true);
+    }
   }
 
   return (
@@ -174,6 +193,7 @@ export function PredictionForm({
                   onClick={(e) => {
                     e.stopPropagation();
                     setCaFarteTarget(a.athlete_id);
+                    setSaved(false);
                   }}
                   className={`whitespace-nowrap rounded-full px-2 py-1 font-display text-[11px] font-bold ${
                     isCaFarteTarget ? "bg-gold text-[#2a1900]" : "border border-border text-text-dim"
@@ -224,12 +244,13 @@ export function PredictionForm({
 
       {canUseX2 && (
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={bonusX2} onChange={(e) => setBonusX2(e.target.checked)} />
+          <input type="checkbox" checked={bonusX2} onChange={(e) => {
+              setBonusX2(e.target.checked);
+              setSaved(false);
+            }} />
           {t("bonusX2Label", { count: x2UsesRemaining })}
         </label>
       )}
-
-      {error && <div className="text-xs text-red">{error}</div>}
 
       <button
         onClick={submit}
@@ -238,6 +259,8 @@ export function PredictionForm({
       >
         {saving ? t("saving") : t("submit")}
       </button>
+
+      <SaveFeedback success={saved ? t("saved") : null} error={error} />
     </div>
   );
 }

@@ -236,6 +236,8 @@
     "loginRequired": "Connecte-toi pour valider ton pronostic.",
     "saving": "Enregistrement...",
     "submit": "Valider mon pronostic",
+    "saved": "Ton pronostic est validé !",
+    "saveError": "Ton pronostic n'a pas pu être enregistré. Réessaie.",
     "cardSectionTitle": "Carte bonus",
     "noCard": "Aucune",
     "cardBalleDePioche": "Balle de pioche",

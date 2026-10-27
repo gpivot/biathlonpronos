@@ -236,6 +236,8 @@
     "loginRequired": "Melde dich an, um deinen Tipp zu bestätigen.",
     "saving": "Wird gespeichert...",
     "submit": "Meinen Tipp bestätigen",
+    "saved": "Dein Tipp ist bestätigt!",
+    "saveError": "Dein Tipp konnte nicht gespeichert werden. Versuch es noch einmal.",
     "cardSectionTitle": "Bonuskarte",
     "noCard": "Keine",
     "cardBalleDePioche": "Joker",
