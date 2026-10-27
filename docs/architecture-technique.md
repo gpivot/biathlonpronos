@@ -180,6 +180,16 @@ l'écran de pronostic désactive les athlètes grillés. Le dégrillage au chang
 automatique par construction (`grilled_states` est scopé par `stage_id`) ; la carte "Fondue"
 (dégrillage anticipé) reste à câbler une fois les cartes bonus construites.
 
+**Grillage recalculé à partir des pronostics (27/10/2026)** : `grilled_states` mélangeait les
+courses (il contenait toujours les choix du dernier pronostic enregistré, y compris celui de la
+course affichée), ce qui grillait ses propres choix et empêchait de modifier un pronostic avant le
+départ. Désormais l'écran de course calcule les grillés à la volée (`src/lib/grilling.ts`) : ce
+sont les biathlètes choisis par le joueur sur la course individuelle précédente de la même étape,
+**du même sexe** (les relais et les courses de l'autre sexe sont ignorés — *à confirmer*). La
+carte Fondue est rattachée à la course où elle est jouée (`bonus_cards.used_on_race_id`) et y
+supprime le grillage. Un biathlète grillé déjà présent dans le pronostic peut en être retiré. La
+table `grilled_states` n'est plus utilisée (aucune migration nécessaire).
+
 ## Refonte UI — dashboard d'accueil et navigation basse
 
 **Point de départ : demande de Guillaume de repartir de la structure de VéloPronos** (captures

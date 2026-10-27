@@ -18,7 +18,6 @@ type CardChoice = "none" | "balle_de_pioche" | "ca_farte";
 
 export function PredictionForm({
   raceId,
-  stageId,
   athletes,
   initialSelection,
   grilledAthleteIds,
@@ -30,7 +29,6 @@ export function PredictionForm({
   x2UsesRemaining,
 }: {
   raceId: string;
-  stageId: string;
   athletes: AthleteWithOdds[];
   initialSelection: string[];
   grilledAthleteIds: string[];
@@ -61,10 +59,11 @@ export function PredictionForm({
   const requiredCount = cardChoice === "balle_de_pioche" ? 4 : 3;
 
   function toggle(athleteId: string) {
-    if (grilledSet.has(athleteId)) return;
     setSaved(false);
     setSelected((prev) => {
       if (prev.includes(athleteId)) return prev.filter((id) => id !== athleteId);
+      // Un biathlète grillé peut être retiré du pronostic, pas ajouté.
+      if (grilledSet.has(athleteId)) return prev;
       if (prev.length >= requiredCount) return prev;
       return [...prev, athleteId];
     });
@@ -112,18 +111,6 @@ export function PredictionForm({
     let failure = predictionError;
 
     if (!failure) {
-      // §2 — le grillage ne dure qu'une course : on remplace entièrement
-      // l'état grillé de l'étape par les choix qui viennent d'être faits.
-      const { error: deleteError } = await supabase
-        .from("grilled_states")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("stage_id", stageId);
-      const { error: insertError } = await supabase
-        .from("grilled_states")
-        .insert(selected.map((athleteId) => ({ user_id: user.id, athlete_id: athleteId, stage_id: stageId })));
-      failure = deleteError ?? insertError;
-
       // Consomme la carte si elle vient d'être appliquée (pas déjà utilisée
       // lors d'un enregistrement précédent de ce même pronostic).
       if (cardChoice !== "none" && cardChoice !== initialCardUsed) {
@@ -167,9 +154,9 @@ export function PredictionForm({
             <button
               key={a.athlete_id}
               onClick={() => toggle(a.athlete_id)}
-              disabled={isGrilled}
+              disabled={isGrilled && !isSelected}
               className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
-                isGrilled
+                isGrilled && !isSelected
                   ? "border-border bg-card opacity-40"
                   : isCaFarteTarget
                     ? "border-gold bg-gold-soft"

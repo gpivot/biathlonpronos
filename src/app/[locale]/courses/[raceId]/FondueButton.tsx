@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export function FondueButton({ stageId, cardId }: { stageId: string; cardId: string }) {
+export function FondueButton({ raceId, cardId }: { raceId: string; cardId: string }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
@@ -16,26 +16,11 @@ export function FondueButton({ stageId, cardId }: { stageId: string; cardId: str
     setLoading(true);
     setError(null);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return;
-
-    const { error: deleteError } = await supabase
-      .from("grilled_states")
-      .delete()
-      .eq("user_id", user.id)
-      .eq("stage_id", stageId);
-
-    if (deleteError) {
-      setError(deleteError.message);
-      setLoading(false);
-      return;
-    }
-
+    // La carte est rattachée à cette course : l'écran n'y affiche alors plus
+    // aucun biathlète grillé (voir le calcul du grillage dans page.tsx).
     const { error: cardError } = await supabase
       .from("bonus_cards")
-      .update({ status: "used", used_at: new Date().toISOString() })
+      .update({ status: "used", used_at: new Date().toISOString(), used_on_race_id: raceId })
       .eq("id", cardId);
 
     setLoading(false);
