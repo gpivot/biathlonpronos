@@ -1,3 +1,4 @@
+import { displayedSex } from "@/lib/raceLabel";
 export const RACE_FORMATS = [
   { value: "sprint", label: "Sprint" },
   { value: "poursuite", label: "Poursuite" },
@@ -21,7 +22,8 @@ export const RELAY_FORMATS = ["relais_h", "relais_f", "relais_mixte", "relais_mi
 /** « Sprint Femmes », « Relais Mixte »… (le sexe des relais H/F est déjà dans le format). */
 export function raceLabel(race: { format: string; sex: string | null }): string {
   const base = RACE_FORMATS.find((f) => f.value === race.format)?.label ?? race.format;
-  return race.sex ? `${base} ${race.sex === "F" ? "Femmes" : "Hommes"}` : base;
+  const sex = displayedSex(race);
+  return sex ? `${base} ${sex === "F" ? "Femmes" : "Hommes"}` : base;
 }
 
 /** Heure de départ en UTC, comme saisie et importée. */

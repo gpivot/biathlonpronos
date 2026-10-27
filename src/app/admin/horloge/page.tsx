@@ -1,5 +1,6 @@
 import { createAdminClient } from "@/lib/supabase/server";
 import { getClock } from "@/lib/clock";
+import { displayedSex } from "@/lib/raceLabel";
 import { ClockForm, type ClockRaceOption } from "./ClockForm";
 
 export const dynamic = "force-dynamic";
@@ -32,7 +33,7 @@ export default async function AdminClockPage() {
     id: race.id,
     locksAt: race.locks_at,
     label: `${race.stages?.location ?? "?"} — ${FORMAT_LABELS[race.format] ?? race.format}${
-      race.sex ? ` ${race.sex === "F" ? "Femmes" : "Hommes"}` : ""
+      displayedSex(race) ? ` ${displayedSex(race) === "F" ? "Femmes" : "Hommes"}` : ""
     }`,
   }));
 
