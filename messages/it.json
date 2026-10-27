@@ -214,6 +214,7 @@
     "H": "Uomini"
   },
   "Race": {
+    "backToCalendar": "Torna al calendario",
     "lockLabel": "Chiusura {date}",
     "specialRulePrefix": "Gara speciale:",
     "specialRuleHint": "— consulta il regolamento per i bonus/malus previsti.",

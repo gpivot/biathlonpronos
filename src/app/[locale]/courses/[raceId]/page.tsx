@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
-import { ClockIcon } from "@/components/icons";
+import { Link } from "@/i18n/navigation";
+import { ArrowLeftIcon, ClockIcon } from "@/components/icons";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -174,9 +175,20 @@ export default async function RacePage({
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-5 overflow-auto px-5 pb-3 pt-5">
-        <div className="text-center font-display text-[15px] font-bold">
-          {tFormat(race.format)}
-          {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+        <div className="flex items-center gap-3">
+          <Link
+            href="/courses"
+            aria-label={t("backToCalendar")}
+            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-text-dim"
+          >
+            <ArrowLeftIcon className="h-4 w-4" />
+          </Link>
+          <div className="flex-1 text-center font-display text-[15px] font-bold">
+            {tFormat(race.format)}
+            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+          </div>
+          {/* Équilibre la flèche pour garder le titre centré. */}
+          <div className="h-8 w-8 flex-shrink-0" />
         </div>
 
         <div className="flex flex-col gap-3 rounded-[18px] border border-border bg-gradient-to-br from-card2 to-card px-4 py-4">

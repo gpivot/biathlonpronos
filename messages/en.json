@@ -214,6 +214,7 @@
     "H": "Men"
   },
   "Race": {
+    "backToCalendar": "Back to calendar",
     "lockLabel": "Locks {date}",
     "specialRulePrefix": "Special race:",
     "specialRuleHint": "— check the rules for the applicable bonus/malus.",

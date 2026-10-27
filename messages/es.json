@@ -214,6 +214,7 @@
     "H": "Hombres"
   },
   "Race": {
+    "backToCalendar": "Volver al calendario",
     "lockLabel": "Cierre: {date}",
     "specialRulePrefix": "Carrera especial:",
     "specialRuleHint": "— consulta las reglas para ver el bonus/malus aplicable.",

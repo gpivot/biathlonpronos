@@ -214,6 +214,7 @@
     "H": "Männer"
   },
   "Race": {
+    "backToCalendar": "Zurück zum Kalender",
     "lockLabel": "Tippschluss {date}",
     "specialRulePrefix": "Spezialrennen:",
     "specialRuleHint": "— sieh in den Regeln nach, welcher Bonus/Malus gilt.",

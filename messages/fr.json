@@ -214,6 +214,7 @@
     "H": "Hommes"
   },
   "Race": {
+    "backToCalendar": "Retour au calendrier",
     "lockLabel": "Verrouillage {date}",
     "specialRulePrefix": "Course spéciale :",
     "specialRuleHint": "— consulte le règlement pour le bonus/malus applicable.",
