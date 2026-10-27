@@ -236,6 +236,8 @@
     "loginRequired": "Inicia sesión para confirmar tu pronóstico.",
     "saving": "Guardando...",
     "submit": "Confirmar mi pronóstico",
+    "saved": "¡Tu pronóstico está confirmado!",
+    "saveError": "No se ha podido guardar tu pronóstico. Inténtalo de nuevo.",
     "cardSectionTitle": "Carta bonus",
     "noCard": "Ninguna",
     "cardBalleDePioche": "Comodín",

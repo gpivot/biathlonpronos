@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { CheckIcon } from "@/components/icons";
+import { SaveFeedback } from "./SaveFeedback";
 
 export type NationWithOdds = {
   nation_code: string;
@@ -30,6 +31,8 @@ export function RelayPredictionForm({
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Encart « pronostic validé », masqué dès que le joueur modifie son choix.
+  const [saved, setSaved] = useState(false);
   const supabase = createClient();
   const t = useTranslations("PredictionForm");
 
@@ -39,6 +42,7 @@ export function RelayPredictionForm({
     if (!selected) return;
     setSaving(true);
     setError(null);
+    setSaved(false);
 
     const {
       data: { user },
@@ -62,7 +66,12 @@ export function RelayPredictionForm({
     );
 
     setSaving(false);
-    if (error) setError(error.message);
+    if (error) {
+      console.error(error);
+      setError(t("saveError"));
+    } else {
+      setSaved(true);
+    }
   }
 
   return (
@@ -77,7 +86,10 @@ export function RelayPredictionForm({
           return (
             <button
               key={n.nation_code}
-              onClick={() => setSelected(n.nation_code)}
+              onClick={() => {
+                setSelected(n.nation_code);
+                setSaved(false);
+              }}
               className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
               }`}
@@ -103,12 +115,13 @@ export function RelayPredictionForm({
 
       {canUseX2 && (
         <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={bonusX2} onChange={(e) => setBonusX2(e.target.checked)} />
+          <input type="checkbox" checked={bonusX2} onChange={(e) => {
+              setBonusX2(e.target.checked);
+              setSaved(false);
+            }} />
           {t("bonusX2Label", { count: x2UsesRemaining })}
         </label>
       )}
-
-      {error && <div className="text-xs text-red">{error}</div>}
 
       <button
         onClick={submit}
@@ -117,6 +130,8 @@ export function RelayPredictionForm({
       >
         {saving ? t("saving") : t("submit")}
       </button>
+
+      <SaveFeedback success={saved ? t("saved") : null} error={error} />
     </div>
   );
 }

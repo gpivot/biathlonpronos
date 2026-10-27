@@ -236,6 +236,8 @@
     "loginRequired": "Log in to confirm your prediction.",
     "saving": "Saving...",
     "submit": "Confirm my prediction",
+    "saved": "Your prediction is confirmed!",
+    "saveError": "Your prediction couldn't be saved. Please try again.",
     "cardSectionTitle": "Bonus card",
     "noCard": "None",
     "cardBalleDePioche": "Wildcard",

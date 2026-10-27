@@ -236,6 +236,8 @@
     "loginRequired": "Accedi per confermare il tuo pronostico.",
     "saving": "Salvataggio...",
     "submit": "Conferma il mio pronostico",
+    "saved": "Il tuo pronostico è confermato!",
+    "saveError": "Non è stato possibile salvare il tuo pronostico. Riprova.",
     "cardSectionTitle": "Carta bonus",
     "noCard": "Nessuna",
     "cardBalleDePioche": "Jolly",
