@@ -227,7 +227,8 @@
     "adminEnterResultsButton": "Inserisci i risultati (admin)",
     "pointsEarnedLabel": "I tuoi punti in questa gara",
     "resultsTitle": "Risultati",
-    "noResultsMessage": "Risultati non ancora inseriti."
+    "noResultsMessage": "Risultati non ancora inseriti.",
+    "predicted": "Pronostico confermato"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",

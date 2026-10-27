@@ -227,7 +227,8 @@
     "adminEnterResultsButton": "Saisir les résultats (admin)",
     "pointsEarnedLabel": "Tes points sur cette course",
     "resultsTitle": "Résultats",
-    "noResultsMessage": "Résultats pas encore saisis."
+    "noResultsMessage": "Résultats pas encore saisis.",
+    "predicted": "Pronostic validé"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

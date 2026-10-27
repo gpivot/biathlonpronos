@@ -227,7 +227,8 @@
     "adminEnterResultsButton": "Ergebnisse eintragen (Admin)",
     "pointsEarnedLabel": "Deine Punkte für dieses Rennen",
     "resultsTitle": "Ergebnisse",
-    "noResultsMessage": "Ergebnisse noch nicht eingetragen."
+    "noResultsMessage": "Ergebnisse noch nicht eingetragen.",
+    "predicted": "Tipp bestätigt"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",

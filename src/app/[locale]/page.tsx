@@ -5,6 +5,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
 import { LogoMark } from "@/components/icons";
+import { PredictedBadge } from "@/components/PredictedBadge";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -23,6 +24,8 @@ interface HomeData {
     sex: string | null;
     locks_at: string;
     stages: { location: string; country_code: string };
+    /** Le joueur connecté a déjà déposé un pronostic sur cette course. */
+    predicted: boolean;
   } | null;
   leaderboard: LeaderboardRow[];
   favoriteTeam: { nation_code: string; sex: string; nations: { name: string } | null } | null;
@@ -74,11 +77,21 @@ async function getHomeData(): Promise<HomeData> {
       : Promise.resolve({ data: null }),
   ]);
 
+  let predicted = false;
+  if (user && nextRace) {
+    const { count } = await supabase
+      .from("predictions")
+      .select("race_id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("race_id", nextRace.id);
+    predicted = (count ?? 0) > 0;
+  }
+
   return {
     season,
     userId: user?.id ?? null,
     currentStage,
-    nextRace: nextRace as any,
+    nextRace: nextRace ? ({ ...(nextRace as any), predicted } as HomeData["nextRace"]) : null,
     leaderboard,
     favoriteTeam: favoriteTeamResult.data as any,
   };
@@ -86,10 +99,11 @@ async function getHomeData(): Promise<HomeData> {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tFormat, tSex, { season, userId, currentStage, nextRace, leaderboard, favoriteTeam }] = await Promise.all([
+  const [t, tFormat, tSex, tRace, { season, userId, currentStage, nextRace, leaderboard, favoriteTeam }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
+    getTranslations("Race"),
     getHomeData(),
   ]);
 
@@ -215,6 +229,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   {tFormat(nextRace.format)}
                   {displayedSex(nextRace) ? ` ${tSex(displayedSex(nextRace)!)}` : ""}
                 </div>
+                {nextRace.predicted && <PredictedBadge label={tRace("predicted")} />}
               </div>
               <div className="whitespace-nowrap text-xs text-text-dim">
                 {new Date(nextRace.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}

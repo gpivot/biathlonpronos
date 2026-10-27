@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
+import { PredictedBadge } from "@/components/PredictedBadge";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { RaceDisplayStatus } from "@/lib/raceStatus";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
@@ -15,6 +16,8 @@ export interface CalendarRace {
   sex: string | null;
   locks_at: string;
   displayStatus: RaceDisplayStatus;
+  /** Le joueur connecté a déjà déposé un pronostic sur cette course. */
+  predicted: boolean;
 }
 
 export interface CalendarStage {
@@ -118,6 +121,7 @@ export function CalendarAccordion({
                           {" · "}
                           {new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}
                         </div>
+                        {race.predicted && <PredictedBadge label={tRace("predicted")} />}
                       </div>
                       <div
                         className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[race.displayStatus]}`}

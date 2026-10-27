@@ -227,7 +227,8 @@
     "adminEnterResultsButton": "Enter results (admin)",
     "pointsEarnedLabel": "Your points for this race",
     "resultsTitle": "Results",
-    "noResultsMessage": "Results not entered yet."
+    "noResultsMessage": "Results not entered yet.",
+    "predicted": "Prediction confirmed"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

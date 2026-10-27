@@ -35,6 +35,11 @@ async function getCalendarData(): Promise<CalendarData> {
 
   const { now } = await getClock();
 
+  const { data: predictions } = userResult.user
+    ? await supabase.from("predictions").select("race_id").eq("user_id", userResult.user.id)
+    : { data: [] as { race_id: string }[] };
+  const predictedRaceIds = new Set((predictions ?? []).map((p) => p.race_id));
+
   const { data: stages, error } = await supabase
     .from("stages")
     .select("id, location, country_code, starts_on, ends_on, coefficient, races(id, format, sex, locks_at, status)")
@@ -54,7 +59,11 @@ async function getCalendarData(): Promise<CalendarData> {
     ends_on: stage.ends_on,
     coefficient: stage.coefficient,
     races: (stage.races ?? [])
-      .map((race: any) => ({ ...race, displayStatus: getRaceDisplayStatus(race, now) }))
+      .map((race: any) => ({
+        ...race,
+        displayStatus: getRaceDisplayStatus(race, now),
+        predicted: predictedRaceIds.has(race.id),
+      }))
       .sort((a: any, b: any) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
   }));
 
