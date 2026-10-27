@@ -170,7 +170,7 @@
     "emptyAll": "Nessuna gara aperta ai pronostici e nessun pronostico ancora inviato."
   },
   "Ligues": {
-    "title": "Le tue leghe",
+    "title": "Le mie leghe",
     "loginRequired": "Accedi per creare una lega o entrarci.",
     "createTitle": "Crea una lega",
     "namePlaceholder": "Nome della lega",
@@ -180,7 +180,7 @@
     "codePlaceholder": "Codice di invito",
     "joinButton": "Entra",
     "joinError": "Codice di invito non valido.",
-    "backToList": "← Torna alle tue leghe",
+    "backToList": "← Torna alle mie leghe",
     "notAMember": "Non fai parte di questa lega.",
     "inviteCodeLabel": "Codice di invito"
   },

@@ -170,7 +170,7 @@
     "emptyAll": "Aucune course ouverte au pronostic et aucun pronostic validé pour le moment."
   },
   "Ligues": {
-    "title": "Tes ligues",
+    "title": "Mes ligues",
     "loginRequired": "Connecte-toi pour créer ou rejoindre une ligue.",
     "createTitle": "Créer une ligue",
     "namePlaceholder": "Nom de la ligue",
@@ -180,7 +180,7 @@
     "codePlaceholder": "Code d'invitation",
     "joinButton": "Rejoindre",
     "joinError": "Code d'invitation invalide.",
-    "backToList": "← Retour à tes ligues",
+    "backToList": "← Retour à mes ligues",
     "notAMember": "Tu ne fais pas partie de cette ligue.",
     "inviteCodeLabel": "Code d'invitation"
   },
