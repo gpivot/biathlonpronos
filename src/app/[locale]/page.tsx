@@ -16,12 +16,7 @@ export const dynamic = "force-dynamic";
 interface HomeData {
   season: { id: string; label: string } | null;
   userId: string | null;
-  currentRace: {
-    id: string;
-    format: string;
-    sex: string | null;
-    stages: { location: string; country_code: string; coefficient: number };
-  } | null;
+  currentStage: { location: string; country_code: string; coefficient: number } | null;
   nextRace: {
     id: string;
     format: string;
@@ -43,25 +38,20 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, currentRace: null, nextRace: null, leaderboard: [], favoriteTeam: null };
+    return { season: null, userId: user?.id ?? null, currentStage: null, nextRace: null, leaderboard: [], favoriteTeam: null };
   }
 
   const { now } = await getClock();
   const today = now.toISOString().slice(0, 10);
 
-  const [{ data: currentRace }, { data: nextRace }, leaderboard, favoriteTeamResult] = await Promise.all([
-    // « En ce moment » = une course partie (pronos verrouillés) et pas encore
-    // notée, sur une étape pas terminée — même règle que le statut « en cours »
-    // du Calendrier. Une étape dont la prochaine course n'a pas commencé
-    // apparaît seulement dans « Prochainement ».
+  const [{ data: currentStage }, { data: nextRace }, leaderboard, favoriteTeamResult] = await Promise.all([
     supabase
-      .from("races")
-      .select("id, format, sex, stages!inner(location, country_code, coefficient, season_id, ends_on)")
-      .eq("stages.season_id", season.id)
-      .gte("stages.ends_on", today)
-      .neq("status", "finished")
-      .lte("locks_at", now.toISOString())
-      .order("locks_at", { ascending: false })
+      .from("stages")
+      .select("location, country_code, coefficient")
+      .eq("season_id", season.id)
+      .lte("starts_on", today)
+      .gte("ends_on", today)
+      .order("starts_on", { ascending: true })
       .limit(1)
       .maybeSingle(),
     supabase
@@ -87,7 +77,7 @@ async function getHomeData(): Promise<HomeData> {
   return {
     season,
     userId: user?.id ?? null,
-    currentRace: currentRace as any,
+    currentStage,
     nextRace: nextRace as any,
     leaderboard,
     favoriteTeam: favoriteTeamResult.data as any,
@@ -96,7 +86,7 @@ async function getHomeData(): Promise<HomeData> {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tFormat, tSex, { season, userId, currentRace, nextRace, leaderboard, favoriteTeam }] = await Promise.all([
+  const [t, tFormat, tSex, { season, userId, currentStage, nextRace, leaderboard, favoriteTeam }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
@@ -187,32 +177,25 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         )}
 
-        {currentRace && (
+        {currentStage && (
           <div className="flex flex-col gap-2">
             <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("nowTitle")}</div>
-            <Link
-              href={`/courses/${currentRace.id}`}
-              className="flex items-center gap-3.5 rounded-2xl border border-gold/30 bg-card px-4 py-3.5"
-            >
+            <div className="flex items-center gap-3.5 rounded-2xl border border-gold/30 bg-card px-4 py-3.5">
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">
-                {nationFlagEmoji(currentRace.stages.country_code)}
+                {nationFlagEmoji(currentStage.country_code)}
               </div>
               <div className="flex flex-1 flex-col gap-0.5">
                 <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
                   {t("nowBadge")}
                 </div>
-                <div className="text-sm font-semibold">{currentRace.stages.location}</div>
-                <div className="text-xs text-text-dim">
-                  {tFormat(currentRace.format)}
-                  {displayedSex(currentRace) ? ` ${tSex(displayedSex(currentRace)!)}` : ""}
-                </div>
+                <div className="text-sm font-semibold">{currentStage.location}</div>
               </div>
-              {currentRace.stages.coefficient === 2 && (
+              {currentStage.coefficient === 2 && (
                 <div className="whitespace-nowrap rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
                   {t("coefficientBadge")}
                 </div>
               )}
-            </Link>
+            </div>
           </div>
         )}
 
@@ -240,7 +223,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         )}
 
-        {!currentRace && !nextRace && (
+        {!currentStage && !nextRace && (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
             {t("emptyState")}
           </div>
