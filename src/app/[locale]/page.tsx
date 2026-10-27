@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
-import { LogoMark } from "@/components/icons";
+import { ChevronRightIcon, LogoMark } from "@/components/icons";
 import { PredictedBadge } from "@/components/PredictedBadge";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic";
 interface HomeData {
   season: { id: string; label: string } | null;
   userId: string | null;
-  currentStage: { location: string; country_code: string; coefficient: number } | null;
+  currentStage: { id: string; location: string; country_code: string; coefficient: number } | null;
   nextRace: {
     id: string;
     format: string;
@@ -50,7 +50,7 @@ async function getHomeData(): Promise<HomeData> {
   const [{ data: currentStage }, { data: nextRace }, leaderboard, favoriteTeamResult] = await Promise.all([
     supabase
       .from("stages")
-      .select("location, country_code, coefficient")
+      .select("id, location, country_code, coefficient")
       .eq("season_id", season.id)
       .lte("starts_on", today)
       .gte("ends_on", today)
@@ -194,7 +194,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         {currentStage && (
           <div className="flex flex-col gap-2">
             <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("nowTitle")}</div>
-            <div className="flex items-center gap-3.5 rounded-2xl border border-gold/30 bg-card px-4 py-3.5">
+            <Link
+              href={`/pronos?etape=${currentStage.id}`}
+              className="flex items-center gap-3.5 rounded-2xl border border-gold/30 bg-card px-4 py-3.5"
+            >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">
                 {nationFlagEmoji(currentStage.country_code)}
               </div>
@@ -209,7 +212,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   {t("coefficientBadge")}
                 </div>
               )}
-            </div>
+              <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-text-dim" />
+            </Link>
           </div>
         )}
 

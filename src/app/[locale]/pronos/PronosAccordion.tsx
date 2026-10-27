@@ -16,6 +16,7 @@ export interface PronosRace {
   /** "open" : ouverte au pronostic, rien de validé. "predicted" : pronostic déjà déposé. */
   kind: "open" | "predicted";
   names?: string;
+  bonusX2?: boolean;
   points?: number | null;
 }
 
@@ -32,12 +33,16 @@ export interface PronosStage {
 export function PronosAccordion({
   stages,
   locale,
+  initialOpenStageId = null,
 }: {
   stages: PronosStage[];
   locale: string;
+  /** Étape à déplier dès l'arrivée (lien « En ce moment » de l'accueil). */
+  initialOpenStageId?: string | null;
 }) {
-  // Toutes les étapes sont repliées à l'arrivée sur l'onglet.
-  const [openStageId, setOpenStageId] = useState<string | null>(null);
+  // Toutes les étapes sont repliées à l'arrivée sur l'onglet, sauf celle demandée par l'accueil.
+  const [openStageId, setOpenStageId] = useState<string | null>(initialOpenStageId);
+  const tRace = useTranslations("Race");
   const t = useTranslations("Pronos");
   const tCourses = useTranslations("Courses");
   const tFormat = useTranslations("RaceFormat");
@@ -54,6 +59,7 @@ export function PronosAccordion({
         return (
           <div
             key={stage.id}
+            ref={stage.id === initialOpenStageId ? scrollIntoViewOnMount : undefined}
             className={`overflow-hidden rounded-2xl border ${
               isChampionship
                 ? "border-gold/60 bg-gradient-to-br from-gold/25 to-card shadow-[0_0_24px_-8px_oklch(0.84_0.15_90/0.5)]"
@@ -114,6 +120,11 @@ export function PronosAccordion({
                           ? race.names
                           : new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                       </div>
+                      {race.kind === "predicted" && race.bonusX2 && (
+                        <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
+                          {tRace("bonusX2Badge")}
+                        </div>
+                      )}
                     </div>
                     {race.kind === "open" ? (
                       <div className="whitespace-nowrap font-display text-[11px] font-bold text-ice">
@@ -135,4 +146,8 @@ export function PronosAccordion({
       })}
     </div>
   );
+}
+
+function scrollIntoViewOnMount(element: HTMLDivElement | null) {
+  element?.scrollIntoView({ block: "start" });
 }

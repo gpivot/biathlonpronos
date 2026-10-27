@@ -9,8 +9,16 @@ import { PronosAccordion, type PronosRace, type PronosStage } from "./PronosAcco
 
 export const dynamic = "force-dynamic";
 
-export default async function PronosPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function PronosPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ etape?: string }>;
+}) {
   const { locale } = await params;
+  // Arrivée depuis la carte « En ce moment » de l'accueil : l'étape en cours est dépliée d'office.
+  const { etape: initialOpenStageId } = await searchParams;
   const supabase = createClient();
   const t = await getTranslations("Pronos");
   const tNav = await getTranslations("Nav");
@@ -99,6 +107,7 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
       locks_at: race.locks_at,
       kind: "predicted",
       names,
+      bonusX2: prediction.bonus_x2_used,
       points: pointsByRaceId.get(prediction.race_id) ?? null,
     });
   }
@@ -125,7 +134,7 @@ export default async function PronosPage({ params }: { params: Promise<{ locale:
           {t("emptyAll")}
         </div>
       ) : (
-        <PronosAccordion stages={stages} locale={locale} />
+        <PronosAccordion stages={stages} locale={locale} initialOpenStageId={initialOpenStageId ?? null} />
       )}
     </Shell>
   );
