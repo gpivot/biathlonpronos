@@ -133,6 +133,21 @@ describe("computeIndividualRaceScore — courses spéciales", () => {
     expect(result.breakdown.base.b).toBe(-48);
   });
 
+  it("brouillard : un biathlète sans rang (abandon, non-partant) compte derrière le dernier classé", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b"],
+        results: [
+          { athleteId: "a", rank: 13 },
+          { athleteId: "z", rank: 98 },
+        ],
+        oddsByAthleteId: { a: 10, b: 10 },
+        specialRule: "brouillard",
+      })
+    );
+    expect(result.breakdown.base.b).toBe(-99);
+  });
+
   it("t'es collé(e) : malus croissant selon le nombre hors Top 10", () => {
     const results: AthleteRaceResult[] = [
       { athleteId: "a", rank: 1 },

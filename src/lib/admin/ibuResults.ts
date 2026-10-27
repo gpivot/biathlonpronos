@@ -114,7 +114,14 @@ export function pickCompetition(
  * Classement IBU → CSV de résultats. Gâchette = 0 faute au tir ; Fusée = meilleur temps de ski
  * (`fastestSkiIbuId`, lu dans l'analyse « temps de course » quand elle est disponible).
  */
-export function ibuResultsToCsv(mode: "athlete" | "nation", rows: IbuResultRow[], fastestSkiIbuId?: string | null): string {
+export function ibuResultsToCsv(
+  mode: "athlete" | "nation",
+  rows: IbuResultRow[],
+  fastestSkiIbuId?: string | null,
+  discipline?: string
+): string {
+  // Sprint, poursuite, mass start : une faute = un tour de pénalité (l'individuel donne des minutes).
+  const missesAreLaps = discipline === "SP" || discipline === "PU" || discipline === "MS";
   const ranked = rows.filter((r) => {
     const rank = Number(r.Rank);
     if (!Number.isInteger(rank) || rank < 1 || r.IRM) return false;
@@ -135,7 +142,7 @@ export function ibuResultsToCsv(mode: "athlete" | "nation", rows: IbuResultRow[]
         r.GivenName ?? "",
         r.Nat,
         Number(r.Rank) === 1 ? "0" : (r.Behind ?? ""),
-        "",
+        missesAreLaps && misses != null ? misses : "",
         fastestSkiIbuId && r.IBUId === fastestSkiIbuId ? "oui" : "",
         misses === 0 ? "oui" : "",
       ];
@@ -204,5 +211,5 @@ export async function fetchIbuResults(params: {
     if (!fastestSkiIbuId) warnings.push("Temps de ski indisponible : coche la Fusée à la main.");
   }
 
-  return { raceId, description, csv: ibuResultsToCsv(mode, rows, fastestSkiIbuId), warnings };
+  return { raceId, description, csv: ibuResultsToCsv(mode, rows, fastestSkiIbuId, DISCIPLINE_BY_FORMAT[race.format]), warnings };
 }

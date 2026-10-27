@@ -62,6 +62,14 @@ describe("ibuResultsToCsv", () => {
     expect(parsed.rows.a1).toMatchObject({ rank: "1", timeGapSeconds: "0", isGachette: true, isFusee: false });
     expect(parsed.rows.a2).toMatchObject({ rank: "2", timeGapSeconds: "12.4", isGachette: false, isFusee: true });
     expect(parsed.rows.a3).toBeUndefined();
+    expect(parsed.rows.a2.penaltyLaps).toBe("");
+  });
+
+  it("sprint/poursuite : les fautes au tir donnent les tours de péna", () => {
+    const rows = [{ Rank: "1", FamilyName: "SIMON", GivenName: "Julia", Nat: "FRA", Behind: "0.0", ShootingTotal: "2" }];
+    const candidates = [{ id: "a1", firstName: "Julia", lastName: "Simon", nationCode: "FRA" }];
+    expect(parseResultsCsv(ibuResultsToCsv("athlete", rows, null, "SP"), "athlete", candidates).rows.a1.penaltyLaps).toBe("2");
+    expect(parseResultsCsv(ibuResultsToCsv("athlete", rows, null, "IN"), "athlete", candidates).rows.a1.penaltyLaps).toBe("");
   });
 
   it("relais : seules les lignes d'équipe comptent", () => {
