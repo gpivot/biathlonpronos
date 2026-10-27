@@ -28,6 +28,9 @@ export function computeIndividualRaceScore(
   input: IndividualRaceScoringInput
 ): IndividualRaceScoringResult {
   const resultsByAthleteId = new Map(input.results.map((r) => [r.athleteId, r]));
+  // Brouillard : un biathlète choisi sans rang (abandon, non-partant, absent du classement) est
+  // compté derrière le dernier classé, pour ne pas faire mieux qu'un 48e (à confirmer).
+  const unrankedBrouillardRank = Math.max(10, ...input.results.map((r) => r.rank ?? 0)) + 1;
 
   // 2. Points de base par athlète pronostiqué (cote × rang), + malus
   // "tour de péna" qui est propre à chacun des biathlètes choisis.
@@ -36,7 +39,8 @@ export function computeIndividualRaceScore(
     base[athleteId] = computeBaseAthletePoints(
       resultsByAthleteId.get(athleteId),
       input.oddsByAthleteId[athleteId] ?? 0,
-      input.specialRule
+      input.specialRule,
+      unrankedBrouillardRank
     );
   }
 
@@ -122,16 +126,17 @@ export function computeIndividualRaceScore(
 function computeBaseAthletePoints(
   result: AthleteRaceResult | undefined,
   odds: number,
-  specialRule: IndividualRaceScoringInput["specialRule"]
+  specialRule: IndividualRaceScoringInput["specialRule"],
+  unrankedBrouillardRank: number
 ): number {
   const rank = result?.rank;
   let points = 0;
 
   if (rank != null && rank <= 10) {
     points = RANK_MULTIPLIERS[rank] * odds;
-  } else if (specialRule === "brouillard" && rank != null) {
+  } else if (specialRule === "brouillard") {
     // §9 — hors Top 10 sous "brouillard" : -1 pt par place au-delà de la 10e.
-    points = -rank;
+    points = -(rank ?? unrankedBrouillardRank);
   }
 
   if (specialRule === "tour_de_pena") {

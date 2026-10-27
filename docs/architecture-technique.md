@@ -69,6 +69,14 @@ retenus dans `src/lib/scoring/individualRace.ts`, confirmés par Guillaume le 20
 - **"T'es collé(e)"** : le malus à -200 ne s'applique qu'en l'absence totale de pronostic sur
   la course ; choisir 1 ou 2 biathlètes applique le malus progressif normal (-30/-100/-300) en
   traitant les choix manquants comme hors Top 10, conformément à la formulation du règlement.
+  Un biathlète choisi sans rang (abandon, non-partant) compte lui aussi comme hors Top 10.
+- **"Brouillard" et biathlète sans rang** (à confirmer) : un biathlète choisi qui abandonne, ne
+  prend pas le départ ou n'apparaît pas dans le classement saisi est compté juste derrière le
+  dernier classé (dernier rang + 1, et au moins 11e) : il prend donc le plus gros malus de la
+  course au lieu de 0. Le classement saisi doit être complet jusqu'au dernier classé.
+- **"Tour de péna"** : les tours de pénalité sont remplis automatiquement par le bouton IBU sur
+  sprint, poursuite et mass start (1 faute = 1 tour). Sur un individuel, l'IBU donne des minutes
+  de pénalité et non des tours : la colonne reste vide. Un biathlète sans rang n'a pas de malus.
 
 ### Relais (§5) — décisions confirmées par Guillaume (2026-09-11)
 
