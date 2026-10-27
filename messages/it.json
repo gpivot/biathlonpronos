@@ -27,7 +27,21 @@
     "standingsPreviewTitle": "Classifica della stagione",
     "seeFullStandings": "Vedi la classifica completa",
     "emptyState": "Nessuna tappa ancora in programma. Aggiungi una stagione, delle tappe e delle gare da Supabase (vedi supabase/seed.sql) per popolare questa schermata.",
-    "coefficientBadge": "Coeff. ×2"
+    "coefficientBadge": "Coeff. ×2",
+    "lastResultTitle": "Ultimo risultato",
+    "lastResultSeeRace": "Vedi la gara",
+    "lastResultPlayerRank": "{rank}º su {count} giocatori",
+    "lastResultWinner": "1º in questa gara!",
+    "lastResultNoPrediction": "Non avevi pronosticato questa gara.",
+    "lastResultPodium": "Podio",
+    "lastResultUnranked": "–",
+    "lastResultNotCounted": "non conteggiato",
+    "lastResultBonusX2": "Bonus ×2",
+    "lastResultExtra_combination": "Bonus combinazione",
+    "lastResultExtra_pronoParfait": "Pronostico perfetto",
+    "lastResultExtra_specialMalus": "Malus gara speciale",
+    "lastResultExtra_aspiration": "Bonus scia",
+    "lastResultExtra_pepite": "Bonus Pepita"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",

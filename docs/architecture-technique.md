@@ -204,6 +204,14 @@ Admin est un `<a>` natif (pas le `Link` i18n) car `/admin` est hors routing `[lo
 - Section "Prochainement" : prochaine course non verrouillée (`locks_at` croissant), lien direct
   vers l'écran de pronostic.
 - Aperçu du classement (top 5) + bouton vers `/classement` complet.
+- Section "Dernier résultat" (`src/components/LastResultCard.tsx`, données `src/lib/lastResult.ts`,
+  modèle VéloPronos) : dernière course notée (`status = finished`, `locks_at` passé selon l'horloge
+  simulée), total de points, place du joueur sur la course (parmi les lignes `score_ledger` de la
+  course, ex aequo à la même place), badges Bonus ×2 / carte, chacun de ses choix avec sa place et
+  ses points (en rouge si négatifs), bonus hors athlète (combinaison, prono parfait, malus, aspiration,
+  Pépite) puis le podium. Les points par athlète ne sont pas stockés : ils sont **reconstitués** depuis
+  `score_ledger.breakdown` en rejouant les multiplicateurs du moteur (test qui vérifie l'égalité avec
+  `computeIndividualRaceScore`). Masquée tant qu'aucune course n'est notée.
 - Ancienne carte promo "Pronostics à 3 biathlètes / Gratuit" et liste brute des étapes à venir
   **supprimées** (remplacées par les sections ci-dessus, plus alignées sur VéloPronos).
 

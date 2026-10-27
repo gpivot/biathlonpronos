@@ -27,7 +27,21 @@
     "standingsPreviewTitle": "Season standings",
     "seeFullStandings": "See the full standings",
     "emptyState": "No stage scheduled yet. Add a season, stages and races from Supabase (see supabase/seed.sql) to populate this screen.",
-    "coefficientBadge": "×2 coeff."
+    "coefficientBadge": "×2 coeff.",
+    "lastResultTitle": "Latest result",
+    "lastResultSeeRace": "See the race",
+    "lastResultPlayerRank": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} of {count} players",
+    "lastResultWinner": "1st in this race!",
+    "lastResultNoPrediction": "You didn't make a prediction for this race.",
+    "lastResultPodium": "Podium",
+    "lastResultUnranked": "–",
+    "lastResultNotCounted": "not counted",
+    "lastResultBonusX2": "×2 bonus",
+    "lastResultExtra_combination": "Combination bonus",
+    "lastResultExtra_pronoParfait": "Perfect Pick",
+    "lastResultExtra_specialMalus": "Special race penalty",
+    "lastResultExtra_aspiration": "Draft bonus",
+    "lastResultExtra_pepite": "Diamond bonus"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",

@@ -27,7 +27,21 @@
     "standingsPreviewTitle": "Clasificación de la temporada",
     "seeFullStandings": "Ver la clasificación completa",
     "emptyState": "Todavía no hay ninguna etapa programada. Añade una temporada, etapas y carreras desde Supabase (ver supabase/seed.sql) para rellenar esta pantalla.",
-    "coefficientBadge": "Coef. ×2"
+    "coefficientBadge": "Coef. ×2",
+    "lastResultTitle": "Último resultado",
+    "lastResultSeeRace": "Ver la carrera",
+    "lastResultPlayerRank": "{rank}.º de {count} jugadores",
+    "lastResultWinner": "¡1.º de la carrera!",
+    "lastResultNoPrediction": "No hiciste pronóstico para esta carrera.",
+    "lastResultPodium": "Podio",
+    "lastResultUnranked": "–",
+    "lastResultNotCounted": "no cuenta",
+    "lastResultBonusX2": "Bonus ×2",
+    "lastResultExtra_combination": "Bonus de combinación",
+    "lastResultExtra_pronoParfait": "Pronóstico perfecto",
+    "lastResultExtra_specialMalus": "Penalización carrera especial",
+    "lastResultExtra_aspiration": "Bonus rebufo",
+    "lastResultExtra_pepite": "Bonus Diamante"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",

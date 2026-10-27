@@ -27,7 +27,21 @@
     "standingsPreviewTitle": "Saisonwertung",
     "seeFullStandings": "Ganze Wertung anzeigen",
     "emptyState": "Noch keine Station geplant. Lege in Supabase eine Saison, Stationen und Rennen an (siehe supabase/seed.sql), um diese Ansicht zu füllen.",
-    "coefficientBadge": "Koeff. ×2"
+    "coefficientBadge": "Koeff. ×2",
+    "lastResultTitle": "Letztes Ergebnis",
+    "lastResultSeeRace": "Zum Rennen",
+    "lastResultPlayerRank": "Platz {rank} von {count} Spielern",
+    "lastResultWinner": "Platz 1 in diesem Rennen!",
+    "lastResultNoPrediction": "Du hattest für dieses Rennen keinen Tipp abgegeben.",
+    "lastResultPodium": "Podium",
+    "lastResultUnranked": "–",
+    "lastResultNotCounted": "nicht gewertet",
+    "lastResultBonusX2": "×2-Bonus",
+    "lastResultExtra_combination": "Kombinationsbonus",
+    "lastResultExtra_pronoParfait": "Volltreffer",
+    "lastResultExtra_specialMalus": "Malus Spezialrennen",
+    "lastResultExtra_aspiration": "Windschattenbonus",
+    "lastResultExtra_pepite": "Rohdiamant-Bonus"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",

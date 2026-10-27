@@ -27,7 +27,21 @@
     "standingsPreviewTitle": "Classement saison",
     "seeFullStandings": "Voir le classement complet",
     "emptyState": "Aucune étape programmée pour le moment. Ajoute une saison, des étapes et des courses depuis Supabase (voir supabase/seed.sql) pour peupler cet écran.",
-    "coefficientBadge": "Coeff. ×2"
+    "coefficientBadge": "Coeff. ×2",
+    "lastResultTitle": "Dernier résultat",
+    "lastResultSeeRace": "Voir la course",
+    "lastResultPlayerRank": "{rank, selectordinal, one {#er} other {#e}} sur {count} joueurs",
+    "lastResultWinner": "1er de la course !",
+    "lastResultNoPrediction": "Tu n'avais pas pronostiqué cette course.",
+    "lastResultPodium": "Podium",
+    "lastResultUnranked": "–",
+    "lastResultNotCounted": "non compté",
+    "lastResultBonusX2": "Bonus ×2",
+    "lastResultExtra_combination": "Bonus de combinaison",
+    "lastResultExtra_pronoParfait": "Prono parfait",
+    "lastResultExtra_specialMalus": "Malus course spéciale",
+    "lastResultExtra_aspiration": "Bonus aspiration",
+    "lastResultExtra_pepite": "Bonus Pépite"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",

@@ -11,6 +11,8 @@ import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
+import { getLastResult, type LastResult } from "@/lib/lastResult";
+import { LastResultCard } from "@/components/LastResultCard";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +31,7 @@ interface HomeData {
   } | null;
   leaderboard: LeaderboardRow[];
   favoriteTeam: { nation_code: string; sex: string; nations: { name: string } | null } | null;
+  lastResult: LastResult | null;
 }
 
 async function getHomeData(): Promise<HomeData> {
@@ -41,13 +44,13 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, currentStage: null, nextRace: null, leaderboard: [], favoriteTeam: null };
+    return { season: null, userId: user?.id ?? null, currentStage: null, nextRace: null, leaderboard: [], favoriteTeam: null, lastResult: null };
   }
 
   const { now } = await getClock();
   const today = now.toISOString().slice(0, 10);
 
-  const [{ data: currentStage }, { data: nextRace }, leaderboard, favoriteTeamResult] = await Promise.all([
+  const [{ data: currentStage }, { data: nextRace }, leaderboard, favoriteTeamResult, lastResult] = await Promise.all([
     supabase
       .from("stages")
       .select("id, location, country_code, coefficient")
@@ -75,6 +78,7 @@ async function getHomeData(): Promise<HomeData> {
           .eq("season_id", season.id)
           .maybeSingle()
       : Promise.resolve({ data: null }),
+    user ? getLastResult(supabase, season.id, user.id, now) : Promise.resolve(null),
   ]);
 
   let predicted = false;
@@ -94,12 +98,13 @@ async function getHomeData(): Promise<HomeData> {
     nextRace: nextRace ? ({ ...(nextRace as any), predicted } as HomeData["nextRace"]) : null,
     leaderboard,
     favoriteTeam: favoriteTeamResult.data as any,
+    lastResult,
   };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tFormat, tSex, tRace, { season, userId, currentStage, nextRace, leaderboard, favoriteTeam }] = await Promise.all([
+  const [t, tFormat, tSex, tRace, { season, userId, currentStage, nextRace, leaderboard, favoriteTeam, lastResult }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
@@ -254,6 +259,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         >
           {t("seeFullCalendar")}
         </Link>
+
+        {lastResult && <LastResultCard result={lastResult} locale={locale} />}
 
         {top5.length > 0 && (
           <div className="flex flex-col gap-2">
