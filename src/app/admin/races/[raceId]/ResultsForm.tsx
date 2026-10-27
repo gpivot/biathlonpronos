@@ -8,6 +8,7 @@ import {
   NATION_RESULTS_HEADERS,
   buildResultsCsv,
   parseResultsCsv,
+  parseTimeGap,
   type ResultsCsvCandidate,
 } from "@/lib/admin/resultsCsv";
 
@@ -134,7 +135,8 @@ export function ResultsForm({
         athleteId: isAthleteMode ? id : undefined,
         nationCode: isAthleteMode ? undefined : id,
         rank: Number(row.rank),
-        timeGapSeconds: row.timeGapSeconds.trim() !== "" ? Number(row.timeGapSeconds) : undefined,
+        // Virgule ou point acceptés (« 34,5 », « +1:02,3 »).
+        timeGapSeconds: parseTimeGap(row.timeGapSeconds) ?? undefined,
         penaltyLaps: row.penaltyLaps.trim() !== "" ? Number(row.penaltyLaps) : undefined,
         isFusee: row.isFusee,
         isGachette: row.isGachette,
@@ -237,8 +239,8 @@ export function ResultsForm({
                   {showTimeGap && (
                     <td className="px-3 py-2">
                       <input
-                        type="number"
-                        min={0}
+                        type="text"
+                        inputMode="decimal"
                         value={row.timeGapSeconds}
                         onChange={(e) => updateRow(candidate.id, { timeGapSeconds: e.target.value })}
                         className="w-20 rounded border border-border bg-card px-2 py-1"
