@@ -170,7 +170,7 @@
     "emptyAll": "Kein Rennen zum Tippen offen und noch kein Tipp abgegeben."
   },
   "Ligues": {
-    "title": "Deine Ligen",
+    "title": "Meine Ligen",
     "loginRequired": "Melde dich an, um eine Liga zu erstellen oder ihr beizutreten.",
     "createTitle": "Liga erstellen",
     "namePlaceholder": "Name der Liga",
@@ -180,7 +180,7 @@
     "codePlaceholder": "Einladungscode",
     "joinButton": "Beitreten",
     "joinError": "Ungültiger Einladungscode.",
-    "backToList": "← Zurück zu deinen Ligen",
+    "backToList": "← Zurück zu meinen Ligen",
     "notAMember": "Du bist kein Mitglied dieser Liga.",
     "inviteCodeLabel": "Einladungscode"
   },
