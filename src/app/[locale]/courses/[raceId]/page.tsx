@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Link } from "@/i18n/navigation";
-import { ArrowLeftIcon, ClockIcon } from "@/components/icons";
+import { ArrowLeftIcon, CheckIcon, ClockIcon } from "@/components/icons";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -143,7 +143,7 @@ export default async function RacePage({
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
-  let results: { rank: number; label: string; flag: string }[] = [];
+  let results: { rank: number; label: string; flag: string; mine: boolean }[] = [];
   let pointsEarned: number | null = null;
 
   if (displayStatus === "finished") {
@@ -159,6 +159,8 @@ export default async function RacePage({
         ? `${r.athletes?.first_name ?? ""} ${r.athletes?.last_name ?? ""}`
         : r.nations?.name ?? r.nation_code,
       flag: nationFlagEmoji(r.athlete_id ? r.athletes?.nation_code : r.nation_code),
+      // Ligne pronostiquée par le joueur : mise en évidence dans la liste des résultats.
+      mine: r.athlete_id ? initialAthleteSelection.includes(r.athlete_id) : r.nation_code === initialNationSelection,
     }));
 
     if (user) {
@@ -295,11 +297,34 @@ export default async function RacePage({
         {displayStatus === "finished" && (
           <div className="flex flex-col gap-4">
             {user && (
-              <div className="flex flex-col gap-1 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-5">
-                <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-                  {t("pointsEarnedLabel")}
+              <div className="flex flex-col gap-3 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-5">
+                <div className="flex items-end justify-between gap-3">
+                  <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+                    {t("pointsEarnedLabel")}
+                  </div>
+                  <div className="font-display text-2xl font-extrabold text-ice">{pointsEarned ?? 0} pts</div>
                 </div>
-                <div className="font-display text-2xl font-extrabold text-ice">{pointsEarned ?? 0} pts</div>
+
+                {/* Rappel du pronostic juste sous les points, pour comprendre d'où ils viennent. */}
+                <div className="flex flex-col gap-2 border-t border-border pt-3">
+                  <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">
+                    {t("myPredictionTitle")}
+                  </div>
+                  {!hasPrediction ? (
+                    <div className="text-[13px] text-text-dim">{t("noPredictionMessage")}</div>
+                  ) : isRelay ? (
+                    <NationPickRow nation={nationsWithOdds.find((n) => n.nation_code === initialNationSelection)} />
+                  ) : (
+                    initialAthleteSelection.map((athleteId) => (
+                      <AthletePickRow key={athleteId} athlete={athletesWithOdds.find((a) => a.athlete_id === athleteId)} />
+                    ))
+                  )}
+                  {initialBonusX2 && (
+                    <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
+                      {t("bonusX2Badge")}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -317,7 +342,9 @@ export default async function RacePage({
                   {results.map((row) => (
                     <div
                       key={row.rank}
-                      className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3"
+                      className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3 ${
+                        row.mine ? "border-ice/60 bg-ice-soft" : "border-border bg-card"
+                      }`}
                     >
                       <div
                         className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-display text-xs font-bold ${
@@ -328,6 +355,7 @@ export default async function RacePage({
                       </div>
                       <div className="text-base">{row.flag}</div>
                       <div className="flex-1 text-sm font-semibold">{row.label}</div>
+                      {row.mine && <CheckIcon className="h-4 w-4 flex-shrink-0 text-ice" />}
                     </div>
                   ))}
                 </div>
