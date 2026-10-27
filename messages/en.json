@@ -170,7 +170,7 @@
     "emptyAll": "No race open for predictions and no prediction submitted yet."
   },
   "Ligues": {
-    "title": "Your leagues",
+    "title": "My leagues",
     "loginRequired": "Log in to create or join a league.",
     "createTitle": "Create a league",
     "namePlaceholder": "League name",
@@ -180,7 +180,7 @@
     "codePlaceholder": "Invite code",
     "joinButton": "Join",
     "joinError": "Invalid invite code.",
-    "backToList": "← Back to your leagues",
+    "backToList": "← Back to my leagues",
     "notAMember": "You're not a member of this league.",
     "inviteCodeLabel": "Invite code"
   },
