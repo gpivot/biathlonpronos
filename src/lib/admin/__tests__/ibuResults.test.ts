@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ibuResultsToCsv, ibuSeasonId, pickCompetition, pickEvent } from "../ibuResults";
+import { ibuResultsToCsv, ibuSeasonId, ibuSeasonIdForDate, pickCompetition, pickEvent } from "../ibuResults";
 import { parseResultsCsv } from "../resultsCsv";
 
 describe("ibuSeasonId", () => {
@@ -7,6 +7,12 @@ describe("ibuSeasonId", () => {
     expect(ibuSeasonId("2026-27")).toBe("2627");
     expect(ibuSeasonId("2026-2027")).toBe("2627");
     expect(ibuSeasonId("test")).toBeNull();
+  });
+
+  it("déduit la saison IBU de la date de l'étape", () => {
+    expect(ibuSeasonIdForDate("2025-11-29")).toBe("2526");
+    expect(ibuSeasonIdForDate("2026-03-15")).toBe("2526");
+    expect(ibuSeasonIdForDate("2026-11-28")).toBe("2627");
   });
 });
 
@@ -18,6 +24,8 @@ describe("pickEvent / pickCompetition", () => {
 
   it("retrouve l'étape par dates et lieu", () => {
     expect(pickEvent(events, { location: "Kontiolahti", starts_on: "2026-11-29", ends_on: "2026-12-07" })?.EventId).toBe("BT2627SWRLCP01");
+    const oestersund = [{ EventId: "BT2526SWRLCP01", StartDate: "2025-11-29T12:00:00Z", EndDate: "2025-12-07T12:00:00Z", Organizer: "Oestersund" }, ...events];
+    expect(pickEvent(oestersund, { location: "Östersund", starts_on: "2025-11-29", ends_on: "2025-12-07" })?.EventId).toBe("BT2526SWRLCP01");
     expect(pickEvent(events, { location: "Ailleurs", starts_on: "2027-01-10", ends_on: "2027-01-12" })).toBeNull();
   });
 

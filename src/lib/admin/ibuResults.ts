@@ -45,6 +45,18 @@ export function ibuSeasonId(label: string): string | null {
   return `${m[2]}${m[3].slice(-2)}`;
 }
 
+/**
+ * Saison IBU d'après la date de l'étape (une saison va de juillet à juin) : « 2025-11-29 » → « 2526 ».
+ * Plus fiable que le label, une étape pouvant être rangée dans une autre saison du jeu (tests, reprise
+ * d'un calendrier passé).
+ */
+export function ibuSeasonIdForDate(isoDate: string): string | null {
+  const m = isoDate.match(/^(\d{4})-(\d{2})/);
+  if (!m) return null;
+  const start = Number(m[2]) >= 7 ? Number(m[1]) : Number(m[1]) - 1;
+  return `${String(start).slice(-2)}${String(start + 1).slice(-2)}`;
+}
+
 const DISCIPLINE_BY_FORMAT: Record<string, string> = {
   sprint: "SP",
   poursuite: "PU",
@@ -71,9 +83,13 @@ export function pickEvent(events: IbuEvent[], stage: { location: string; starts_
   const overlapping = events.filter(
     (e) => new Date(e.StartDate).getTime() <= end + DAY && new Date(e.EndDate).getTime() >= start - DAY
   );
-  const location = normalizeLabel(stage.location);
+  // L'IBU écrit « Oestersund » : on compare aussi la forme translittérée (ö → oe).
+  const locations = [normalizeLabel(stage.location), normalizeLabel(stage.location.toLowerCase().replace(/[äöü]/g, (c) => `${c}e`))];
   return (
-    overlapping.find((e) => normalizeLabel(`${e.Organizer ?? ""} ${e.ShortDescription ?? ""}`).includes(location)) ??
+    overlapping.find((e) => {
+      const label = normalizeLabel(`${e.Organizer ?? ""} ${e.ShortDescription ?? ""}`);
+      return locations.some((l) => label.includes(l));
+    }) ??
     (overlapping.length === 1 ? overlapping[0] : null)
   );
 }
@@ -154,7 +170,7 @@ export async function fetchIbuResults(params: {
   let description = raceId ?? "";
 
   if (!raceId) {
-    const seasonId = ibuSeasonId(seasonLabel);
+    const seasonId = ibuSeasonIdForDate(stage.starts_on) ?? ibuSeasonId(seasonLabel);
     if (!seasonId) throw new Error(`Saison « ${seasonLabel} » : identifiant IBU introuvable.`);
     // Level 1 = Coupe du monde, Championnats du monde et JO compris.
     const events = await getJson<IbuEvent[]>(`Events?SeasonId=${seasonId}&Level=1`);
