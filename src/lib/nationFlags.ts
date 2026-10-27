@@ -7,6 +7,7 @@ const ALPHA3_TO_ALPHA2: Record<string, string> = {
   SLO: "SI", UKR: "UA", EST: "EE", LAT: "LV", BUL: "BG", JPN: "JP",
   KOR: "KR", CHN: "CN", KAZ: "KZ", BLR: "BY", SVK: "SK", BEL: "BE",
   GBR: "GB", NED: "NL", ROU: "RO", HUN: "HU", RUS: "RU",
+  MDA: "MD", LTU: "LT", CRO: "HR", GRL: "GL", AUS: "AU", DEN: "DK", GRE: "GR", BRA: "BR",
 };
 
 export function nationFlagEmoji(nationCode: string | null | undefined): string {
@@ -37,4 +38,6 @@ export const NATION_NAMES: Record<string, string> = {
   SLO: "Slovénie", UKR: "Ukraine", EST: "Estonie", LAT: "Lettonie", BUL: "Bulgarie", JPN: "Japon",
   KOR: "Corée du Sud", CHN: "Chine", KAZ: "Kazakhstan", BLR: "Biélorussie", SVK: "Slovaquie",
   BEL: "Belgique", GBR: "Royaume-Uni", NED: "Pays-Bas", ROU: "Roumanie", HUN: "Hongrie", RUS: "Russie",
+  MDA: "Moldavie", LTU: "Lituanie", CRO: "Croatie", GRL: "Groenland", AUS: "Australie", DEN: "Danemark",
+  GRE: "Grèce", BRA: "Brésil",
 };
