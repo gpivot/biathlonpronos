@@ -18,6 +18,11 @@ export interface CalendarRace {
   displayStatus: RaceDisplayStatus;
   /** Le joueur connecté a déjà déposé un pronostic sur cette course. */
   predicted: boolean;
+  /** Biathlètes (ou nation) pronostiqués, à la place de l'ancien onglet « Ma saison ». */
+  names: string | null;
+  bonusX2: boolean;
+  /** Points marqués une fois la course notée. */
+  points: number | null;
 }
 
 export interface CalendarStage {
@@ -39,10 +44,13 @@ const STATUS_STYLES: Record<RaceDisplayStatus, string> = {
 export function CalendarAccordion({
   stages,
   defaultOpenStageId,
+  scrollToStageId = null,
   locale,
 }: {
   stages: CalendarStage[];
   defaultOpenStageId: string | null;
+  /** Étape demandée par l'accueil : la page défile jusqu'à elle. */
+  scrollToStageId?: string | null;
   locale: string;
 }) {
   const [openStageId, setOpenStageId] = useState<string | null>(defaultOpenStageId);
@@ -57,9 +65,11 @@ export function CalendarAccordion({
         const isOpen = stage.id === openStageId;
         // Coefficient 2 = Mondiaux (ou JO) : encart doré pour le distinguer des étapes de Coupe du monde.
         const isChampionship = stage.coefficient === 2;
+        const toPlayCount = stage.races.filter((r) => r.displayStatus === "upcoming" && !r.predicted).length;
         return (
           <div
             key={stage.id}
+            ref={stage.id === scrollToStageId ? scrollIntoViewOnMount : undefined}
             className={`overflow-hidden rounded-2xl border ${
               isChampionship
                 ? "border-gold/60 bg-gradient-to-br from-gold/25 to-card shadow-[0_0_24px_-8px_oklch(0.84_0.15_90/0.5)]"
@@ -95,6 +105,11 @@ export function CalendarAccordion({
                   {t("coefficientBadge")}
                 </div>
               )}
+              {toPlayCount > 0 && (
+                <div className="whitespace-nowrap rounded-full bg-ice-soft px-2.5 py-1 font-display text-[11px] font-bold text-ice">
+                  {t("toPlayCount", { count: toPlayCount })}
+                </div>
+              )}
               <ChevronDownIcon
                 className={`h-4 w-4 flex-shrink-0 text-text-dim transition-transform ${isOpen ? "rotate-180" : ""}`}
               />
@@ -121,12 +136,31 @@ export function CalendarAccordion({
                           {" · "}
                           {new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}
                         </div>
-                        {race.predicted && <PredictedBadge label={tRace("predicted")} />}
+                        {race.names && <div className="truncate text-xs text-frost">{race.names}</div>}
+                        {race.predicted && race.displayStatus === "upcoming" && <PredictedBadge label={tRace("predicted")} />}
+                        {race.bonusX2 && (
+                          <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
+                            {tRace("bonusX2Badge")}
+                          </div>
+                        )}
+                        {race.displayStatus === "upcoming" && !race.predicted && (
+                          // Toute la ligne mène à la page de pronostic : simple pastille, pas un second lien.
+                          <span className="mt-1 w-fit rounded-full bg-ice px-3 py-1 font-display text-[12px] font-bold text-on-ice">
+                            {t("toPlayButton")}
+                          </span>
+                        )}
                       </div>
-                      <div
-                        className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[race.displayStatus]}`}
-                      >
-                        {tRace(`status_${race.displayStatus}`)}
+                      <div className="flex flex-col items-end gap-1">
+                        <div
+                          className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[race.displayStatus]}`}
+                        >
+                          {tRace(`status_${race.displayStatus}`)}
+                        </div>
+                        {race.displayStatus === "finished" && race.points != null && (
+                          <div className="whitespace-nowrap font-display text-sm font-bold text-ice">
+                            {Math.round(race.points * 10) / 10} pts
+                          </div>
+                        )}
                       </div>
                     </Link>
                   ))
@@ -138,4 +172,8 @@ export function CalendarAccordion({
       })}
     </div>
   );
+}
+
+function scrollIntoViewOnMount(element: HTMLDivElement | null) {
+  element?.scrollIntoView({ block: "start" });
 }

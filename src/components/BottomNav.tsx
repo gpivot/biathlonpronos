@@ -1,13 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { HomeIcon, CalendarIcon, PodiumIcon, StarIcon, LeaguesIcon, ShieldIcon } from "./icons";
+import { HomeIcon, CalendarIcon, PodiumIcon, LeaguesIcon, ShieldIcon } from "./icons";
 
 const items = [
   { href: "/", labelKey: "home", icon: HomeIcon },
   { href: "/courses", labelKey: "stages", icon: CalendarIcon },
   { href: "/classement", labelKey: "standings", icon: PodiumIcon },
-  { href: "/pronos", labelKey: "predictions", icon: StarIcon },
   { href: "/ligues", labelKey: "leagues", icon: LeaguesIcon },
 ] as const;
 

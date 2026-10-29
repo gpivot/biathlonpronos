@@ -164,7 +164,7 @@ export default async function GlobesPage() {
 async function BackLink() {
   const t = await getTranslations("Globes");
   return (
-    <Link href="/pronos" className="text-xs text-text-dim underline">
+    <Link href="/courses" className="text-xs text-text-dim underline">
       {t("back")}
     </Link>
   );

@@ -641,3 +641,15 @@ bonus ×2 pour tous. Lien vers le règlement complet.
 Validation : quand le pronostic affiché est celui enregistré (y compris à l'ouverture de la page), la
 mention « Ton pronostic est validé ! » remplace le bouton « Valider mon pronostic », qui revient dès
 qu'un choix, le bonus ×2, la carte ou la cible du ×3 change.
+
+## Fusion Calendrier + Ma saison (fin octobre 2026)
+
+Demande de Guillaume : l'onglet « Ma saison » (`/pronos`) disparaît de la barre du bas, son contenu
+passe dans le Calendrier (`/courses`), sur le modèle de l'accordéon du Calendrier. `/pronos` redirige
+vers `/courses` (avec `?etape=`, qui déplie et fait défiler jusqu'à l'étape, utilisé par « L'étape de
+la semaine » de l'accueil). Chaque course affiche désormais, en plus de sa date et de son statut :
+les biathlètes (ou la nation) pronostiqués, le badge Bonus ×2, les points une fois notée, et un bouton
+« À jouer » sous la date pour une course à venir sans pronostic. L'en-tête d'étape compte les courses
+« à jouer ». En haut, l'accordéon « Mes pronostics de saison » (replié par défaut) récapitule les
+6 globes et les 2 Pépites, avec un lien vers `/globes`. Le bouton « Ma saison » de l'accueil mène au
+Calendrier.

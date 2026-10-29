@@ -8,7 +8,6 @@
     "stages": "Calendario",
     "standings": "Classifiche",
     "leagues": "Leghe",
-    "predictions": "La mia stagione",
     "admin": "Admin"
   },
   "Home": {
@@ -186,14 +185,6 @@
     "pepiteClaimed": "Bonus Pepita già ottenuto!",
     "pepiteSubmit": "Conferma la mia scelta (definitiva)"
   },
-  "Pronos": {
-    "seasonPredictionsLink": "I miei pronostici di stagione (coppe)",
-    "loginRequired": "Accedi per vedere e gestire i tuoi pronostici.",
-    "pendingLabel": "In attesa",
-    "toPredictLabel": "Da pronosticare",
-    "toPredictCount": "{count} da pronosticare",
-    "emptyAll": "Nessuna gara aperta ai pronostici e nessun pronostico ancora inviato."
-  },
   "Ligues": {
     "title": "Le mie leghe",
     "loginRequired": "Accedi per creare una lega o entrarci.",
@@ -222,7 +213,15 @@
     "importButton": "Importa calendario (CSV)",
     "importLoading": "Importazione...",
     "importSummary": "{stagesCreated} tappa/e create, {stagesUpdated} aggiornate · {racesCreated} gara/e create, {racesUpdated} aggiornate.",
-    "worldChampionships": "Mondiali"
+    "worldChampionships": "Mondiali",
+    "toPlayCount": "{count} da giocare",
+    "toPlayButton": "Da giocare",
+    "seasonPredictionsTitle": "I miei pronostici di stagione",
+    "seasonPredictionsCount": "{chosen} su {total} scelti",
+    "seasonPredictionsNone": "Non ancora scelto",
+    "seasonPredictionsLink": "Vedi o modifica i miei pronostici di stagione",
+    "pepite_F": "La mia Pepita donne",
+    "pepite_H": "La mia Pepita uomini"
   },
   "RaceFormat": {
     "sprint": "Sprint",
