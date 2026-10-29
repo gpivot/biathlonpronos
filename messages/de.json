@@ -261,6 +261,8 @@
     "specialRulePrefix": "Spezialrennen:",
     "specialRuleHint": "— sieh in den Regeln nach, welcher Bonus/Malus gilt.",
     "noOddsMessage": "Für dieses Rennen sind keine Quoten eingetragen. Füge der Quotentabelle Zeilen (Format \"{format}\") für dieses Format und diese Saison hinzu.",
+    "startListPendingPursuit": "Die Startliste steht noch nicht fest: Nur die besten 60 des Sprints starten in der Verfolgung. Die Tipps öffnen, sobald die Sprintergebnisse eingetragen sind.",
+    "startListPendingMassStart": "Die Startliste steht noch nicht fest: Nur 30 Biathleten starten im Massenstart, qualifiziert über den Gesamtweltcup und die vorherigen Rennen. Die Tipps öffnen, sobald sie veröffentlicht ist.",
     "status_upcoming": "Demnächst",
     "status_ongoing": "Läuft",
     "status_finished": "Beendet",

@@ -261,6 +261,8 @@
     "specialRulePrefix": "Carrera especial:",
     "specialRuleHint": "— consulta las reglas para ver el bonus/malus aplicable.",
     "noOddsMessage": "No hay cuotas introducidas para esta carrera. Añade filas a la tabla de cuotas (formato \"{format}\") para este formato y temporada.",
+    "startListPendingPursuit": "La lista de salida aún no se conoce: solo los 60 primeros del sprint toman la salida de la persecución. Los pronósticos se abrirán en cuanto se introduzcan los resultados del sprint.",
+    "startListPendingMassStart": "La lista de salida aún no se conoce: solo 30 biatletas toman la salida de la mass start, clasificados según la general y las carreras anteriores. Los pronósticos se abrirán en cuanto se publique.",
     "status_upcoming": "Próxima",
     "status_ongoing": "En curso",
     "status_finished": "Finalizada",

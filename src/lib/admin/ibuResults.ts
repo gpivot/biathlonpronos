@@ -37,6 +37,9 @@ export interface IbuResultRow {
   Behind?: string | null;
   ShootingTotal?: string | number | null;
   IBUId?: string;
+  /** Liste de départ : place dans l'ordre de départ et dossard. */
+  StartOrder?: string | number | null;
+  Bib?: string | number | null;
 }
 
 /** Saison « 2026-27 » → identifiant IBU « 2627 ». */
@@ -157,33 +160,40 @@ export interface IbuFetchResult {
   warnings: string[];
 }
 
-/** Retrouve la course IBU (ou utilise `forcedRaceId`) et renvoie son classement au format CSV. */
-export async function fetchIbuResults(params: {
+interface IbuRaceLookup {
   seasonLabel: string;
   stage: { location: string; starts_on: string; ends_on: string };
   race: { format: string; sex: string | null; locks_at: string };
-  mode: "athlete" | "nation";
   forcedRaceId?: string;
-}): Promise<IbuFetchResult> {
-  const { seasonLabel, stage, race, mode, forcedRaceId } = params;
+}
+
+/** Identifiant IBU de la course : `forcedRaceId` s'il est fourni, sinon retrouvé par étape, format et heure. */
+async function findIbuRace({ seasonLabel, stage, race, forcedRaceId }: IbuRaceLookup): Promise<{ raceId: string; description: string }> {
+  const forced = forcedRaceId?.trim();
+  if (forced) return { raceId: forced, description: forced };
+
+  const seasonId = ibuSeasonIdForDate(stage.starts_on) ?? ibuSeasonId(seasonLabel);
+  if (!seasonId) throw new Error(`Saison « ${seasonLabel} » : identifiant IBU introuvable.`);
+  // Level 1 = Coupe du monde, Championnats du monde et JO compris.
+  const events = await getJson<IbuEvent[]>(`Events?SeasonId=${seasonId}&Level=1`);
+  const event = pickEvent(events, stage);
+  if (!event) throw new Error(`Aucune étape IBU trouvée pour ${stage.location} (${stage.starts_on}).`);
+
+  const competitions = await getJson<IbuCompetition[]>(`Competitions?EventId=${encodeURIComponent(event.EventId)}`);
+  const competition = pickCompetition(competitions, race);
+  if (!competition) throw new Error(`Course introuvable dans l'étape IBU ${event.EventId} : saisis son identifiant à la main.`);
+  return {
+    raceId: competition.RaceId,
+    description: `${event.ShortDescription ?? event.EventId} — ${competition.ShortDescription ?? competition.RaceId}`,
+  };
+}
+
+/** Retrouve la course IBU (ou utilise `forcedRaceId`) et renvoie son classement au format CSV. */
+export async function fetchIbuResults(params: IbuRaceLookup & { mode: "athlete" | "nation" }): Promise<IbuFetchResult> {
+  const { race, mode, forcedRaceId } = params;
   const warnings: string[] = [];
-  let raceId = forcedRaceId?.trim();
-  let description = raceId ?? "";
-
-  if (!raceId) {
-    const seasonId = ibuSeasonIdForDate(stage.starts_on) ?? ibuSeasonId(seasonLabel);
-    if (!seasonId) throw new Error(`Saison « ${seasonLabel} » : identifiant IBU introuvable.`);
-    // Level 1 = Coupe du monde, Championnats du monde et JO compris.
-    const events = await getJson<IbuEvent[]>(`Events?SeasonId=${seasonId}&Level=1`);
-    const event = pickEvent(events, stage);
-    if (!event) throw new Error(`Aucune étape IBU trouvée pour ${stage.location} (${stage.starts_on}).`);
-
-    const competitions = await getJson<IbuCompetition[]>(`Competitions?EventId=${encodeURIComponent(event.EventId)}`);
-    const competition = pickCompetition(competitions, race);
-    if (!competition) throw new Error(`Course introuvable dans l'étape IBU ${event.EventId} : saisis son identifiant à la main.`);
-    raceId = competition.RaceId;
-    description = `${event.ShortDescription ?? event.EventId} — ${competition.ShortDescription ?? raceId}`;
-  }
+  const { raceId, description: foundDescription } = await findIbuRace(params);
+  let description = foundDescription;
 
   const data = await getJson<{ Results?: IbuResultRow[]; Competition?: { ShortDescription?: string } }>(
     `Results?RaceId=${encodeURIComponent(raceId)}`
@@ -207,4 +217,49 @@ export async function fetchIbuResults(params: {
   }
 
   return { raceId, description, csv: ibuResultsToCsv(mode, rows, fastestSkiIbuId), warnings };
+}
+
+export interface IbuStartEntry {
+  position: number;
+  bib: number | null;
+  lastName: string;
+  firstName: string;
+  nation: string;
+}
+
+/**
+ * Lignes IBU → liste de départ, dans l'ordre de départ (`StartOrder`, à défaut le dossard). La
+ * même API sert la liste de départ avant la course et le classement après : les places de départ
+ * restent dans les deux cas.
+ */
+export function ibuRowsToStartList(rows: IbuResultRow[]): IbuStartEntry[] {
+  const toNumber = (v: string | number | null | undefined) => {
+    const n = Number(v);
+    return v == null || v === "" || !Number.isFinite(n) || n < 1 ? null : n;
+  };
+  return rows
+    .filter((r) => !r.IsTeam && !r.Leg && (r.FamilyName || r.Name))
+    .map((r) => ({ r, order: toNumber(r.StartOrder) ?? toNumber(r.Bib) }))
+    .filter((x): x is { r: IbuResultRow; order: number } => x.order != null)
+    .sort((a, b) => a.order - b.order)
+    .map(({ r }, index) => ({
+      position: index + 1,
+      bib: toNumber(r.Bib),
+      lastName: r.FamilyName ?? r.Name ?? "",
+      firstName: r.GivenName ?? "",
+      nation: r.Nat ?? "",
+    }));
+}
+
+/** Liste de départ officielle publiée par l'IBU (poursuite, mass start). */
+export async function fetchIbuStartList(params: IbuRaceLookup): Promise<{ raceId: string; description: string; entries: IbuStartEntry[] }> {
+  const { raceId, description: foundDescription } = await findIbuRace(params);
+  let description = foundDescription;
+  const data = await getJson<{ Results?: IbuResultRow[]; Competition?: { ShortDescription?: string } }>(
+    `Results?RaceId=${encodeURIComponent(raceId)}`
+  );
+  if (params.forcedRaceId) description = data.Competition?.ShortDescription ?? raceId;
+  const entries = ibuRowsToStartList(data.Results ?? []);
+  if (entries.length === 0) throw new Error(`L'IBU n'a pas encore publié la liste de départ de ${description}.`);
+  return { raceId, description, entries };
 }

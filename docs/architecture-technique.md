@@ -732,3 +732,30 @@ ouverte à tous (rien à copier), à coller par Guillaume.
   choix (token `green`, modèle « Bonus Musette » VéloPronos) ; encadré du haut avec drapeau, lieu,
   nom de l'épreuve, date et heure ; boutons « Course préc. » / « Course suiv. » au milieu de la
   barre du haut (ordre chronologique de la saison, grisés en début/fin de saison).
+
+## Listes de départ poursuite et mass start (octobre 2026)
+
+**Demande de Guillaume** : n'afficher dans le pronostic que les biathlètes qui prennent vraiment
+le départ, et ne rien afficher tant que la liste n'est pas connue.
+
+- **Règle IBU** : poursuite = 60 premiers du sprint. Mass start = 30 partants : les 25 premiers du
+  classement général de la Coupe du monde + les 5 meilleurs de l'étape en cours (points marqués
+  sur ses courses) non déjà qualifiés ; aux Mondiaux/JO, règle propre (15 premiers du général,
+  médaillés des courses précédentes, meilleurs points de l'événement). Le classement général
+  n'étant pas dans l'application, la liste de mass start ne peut pas être calculée : elle est
+  récupérée sur le site de l'IBU.
+- **Table `race_start_lists`** (migration `0020_race_start_lists.sql`) : `(race_id, athlete_id)`,
+  place de départ et dossard. Lecture publique, écriture admin (clé service).
+- **Résolution** (`src/lib/startList.ts`, `resolveStartList`, testée) : la liste IBU enregistrée
+  prime ; à défaut, la poursuite reprend les 60 premiers du sprint saisi (même sexe, même étape) ;
+  sinon la liste est « inconnue » et la page de la course affiche un message à la place du
+  formulaire (pronostics fermés).
+- **Back-office** (`/admin/races/{id}`, encart « Liste de départ », poursuite et mass start) :
+  bouton « Récupérer la liste de départ IBU ». Lecture directe de l'API publique
+  biathlonresults.com (la même que pour les résultats, `fetchIbuStartList`), pas une IA : plus
+  fiable (pas d'erreur de recopie), gratuit et instantané. Les biathlètes sont rapprochés par
+  nom (`matchStartList`) des athlètes ayant une cote pour ce format ; **les cotes ne sont pas
+  modifiées**. Ré-exécutable ; bouton « Effacer la liste IBU ».
+- **À confirmer** : un biathlète de la liste IBU sans cote dans le jeu n'est pas pronostiquable
+  (il est seulement signalé à l'admin). La restriction est faite par l'écran de pronostic, pas par
+  une règle de la base (un pronostic écrit directement en base n'est pas vérifié).

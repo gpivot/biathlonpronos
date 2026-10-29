@@ -41,7 +41,7 @@ function normalizeName(value: string): string {
 const TRANSLITERATIONS: Record<string, string> = { ä: "ae", ö: "oe", ü: "ue", ø: "oe", å: "aa", æ: "ae", ß: "ss" };
 
 /** Formes comparables d'un nom : accents retirés, et translittéré à la manière de l'IBU. */
-function nameVariants(value: string): string[] {
+export function nameVariants(value: string): string[] {
   const transliterated = value.toLowerCase().replace(/[äöüøåæß]/g, (c) => TRANSLITERATIONS[c]);
   return [...new Set([normalizeName(value), normalizeName(transliterated)])];
 }
