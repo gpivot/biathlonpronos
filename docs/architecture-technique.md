@@ -48,6 +48,10 @@ retenus dans `src/lib/scoring/individualRace.ts`, confirmés par Guillaume le 20
 - **Bonus de combinaison (podium/top5/top10)** : mutuellement exclusifs, seul le palier le
   plus élevé atteint est payé (pas de cumul). Ne s'applique que sur un pronostic complet de
   3 choix comptés.
+  **Depuis fin octobre 2026 (demande de Guillaume) : le Prono parfait remplace le bonus
+  Top 3/Top 5/Top 10, il ne s'y ajoute pas.** Les bonus sont affichés « Bonus Top 3 / Top 5 /
+  Top 10 » (le palier est retrouvé à partir du montant enregistré). Les courses déjà notées avant
+  ce changement gardent leurs points tant qu'elles ne sont pas renotées.
 - **Fusée / Gâchette** : attribués par athlète (et non plus comme un bonus global de fin de
   calcul), sur l'ensemble des biathlètes réellement pronostiqués. Le filtrage "3 meilleurs sur
   4" de la carte "Balle de pioche" s'applique **après** l'ajout de ce bonus — un athlète
@@ -595,3 +599,16 @@ en cours avec une croix rouge pour retirer chacun, le bouton « Activer mon bonu
 sur la saison, mis à jour en direct) et « Valider mon pronostic ». Retirer un choix ne supprime rien en
 base : le pronostic enregistré reste valable tant que le joueur n'a pas revalidé (un message le
 rappelle). Le choix de carte bonus (Balle de pioche, Ça farte) reste sous la liste.
+
+**Saisie et affichage des résultats (fin octobre 2026).** Back-office d'une course : bouton
+« Enregistrer et calculer les scores » en haut et en bas du tableau, lien retour vers la page
+publique de la course. Page d'une course notée (`getRaceResult` dans `src/lib/lastResult.ts`,
+partagé avec l'encart « Dernier résultat ») : le pronostic du joueur dans l'ordre d'arrivée, avec la
+place et les points de chaque choix, les bonus de course, et le classement complet avec les points du
+barème (cote × rang + Fusée/Gâchette, sans les multiplicateurs propres à chaque joueur) pour le
+Top 10 (Top 5 en relais) et pour tout athlète Fusée/Gâchette. Pictos 🚀 Fusée et 🎯 Gâchette.
+Les points du barème utilisent les cotes en vigueur, comme le calcul des scores.
+
+**Pronostic d'une poursuite.** Liste des biathlètes par ordre de départ (classement du sprint de
+l'étape, même sexe ; les non-classés ensuite, par cote), affichage par défaut, ou par cote. Les cotes
+affichées sont les cotes poursuite réévaluées après le sprint.

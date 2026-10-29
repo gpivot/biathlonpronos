@@ -13,6 +13,8 @@ import { FondueButton } from "./FondueButton";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
+import { getRaceResult } from "@/lib/lastResult";
+import { FuseeGachetteBadges, FuseeGachetteLegend, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 
 export const dynamic = "force-dynamic";
 
@@ -155,39 +157,32 @@ export default async function RacePage({
     }
   }
 
+  // Poursuite : ordre de départ = classement du sprint de l'étape (même sexe).
+  let startOrder: Record<string, number> = {};
+  if (race.format === "poursuite" && displayStatus === "upcoming") {
+    const { data: sprint } = await supabase
+      .from("races")
+      .select("id")
+      .eq("stage_id", stage.id)
+      .eq("format", "sprint")
+      .eq("sex", race.sex)
+      .lt("locks_at", race.locks_at)
+      .order("locks_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (sprint) {
+      const { data: sprintResults } = await supabase.from("race_results").select("athlete_id, rank").eq("race_id", sprint.id);
+      startOrder = Object.fromEntries((sprintResults ?? []).filter((r) => r.athlete_id).map((r) => [r.athlete_id, r.rank]));
+    }
+  }
+
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
-  let results: { rank: number; label: string; flag: string; mine: boolean }[] = [];
-  let pointsEarned: number | null = null;
-
-  if (displayStatus === "finished") {
-    const { data: raceResults } = await supabase
-      .from("race_results")
-      .select("rank, athlete_id, nation_code, athletes(first_name, last_name, nation_code), nations(name)")
-      .eq("race_id", race.id)
-      .order("rank", { ascending: true });
-
-    results = (raceResults ?? []).map((r: any) => ({
-      rank: r.rank,
-      label: r.athlete_id
-        ? `${r.athletes?.first_name ?? ""} ${r.athletes?.last_name ?? ""}`
-        : r.nations?.name ?? r.nation_code,
-      flag: nationFlagEmoji(r.athlete_id ? r.athletes?.nation_code : r.nation_code),
-      // Ligne pronostiquée par le joueur : mise en évidence dans la liste des résultats.
-      mine: r.athlete_id ? initialAthleteSelection.includes(r.athlete_id) : r.nation_code === initialNationSelection,
-    }));
-
-    if (user) {
-      const { data: ledgerEntry } = await supabase
-        .from("score_ledger")
-        .select("points")
-        .eq("user_id", user.id)
-        .eq("race_id", race.id)
-        .maybeSingle();
-      pointsEarned = ledgerEntry?.points ?? 0;
-    }
-  }
+  // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
+  const raceResult = displayStatus === "finished" ? await getRaceResult(supabase, race.id, user?.id ?? null) : null;
+  const results = raceResult?.results ?? [];
+  const pointsEarned = raceResult?.prediction?.points ?? 0;
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
@@ -264,6 +259,7 @@ export default async function RacePage({
                   initialCardTarget={initialCardTarget}
                   x2Eligible={x2Eligible}
                   x2UsesRemaining={x2UsesRemaining}
+                  startOrder={startOrder}
                 />
               )}
             </>
@@ -316,7 +312,7 @@ export default async function RacePage({
                   <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
                     {t("pointsEarnedLabel")}
                   </div>
-                  <div className="font-display text-2xl font-extrabold text-ice">{pointsEarned ?? 0} pts</div>
+                  <div className="font-display text-2xl font-extrabold text-ice">{Math.round(pointsEarned * 10) / 10} pts</div>
                 </div>
 
                 {/* Rappel du pronostic juste sous les points, pour comprendre d'où ils viennent. */}
@@ -324,14 +320,10 @@ export default async function RacePage({
                   <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">
                     {t("myPredictionTitle")}
                   </div>
-                  {!hasPrediction ? (
+                  {!raceResult?.prediction ? (
                     <div className="text-[13px] text-text-dim">{t("noPredictionMessage")}</div>
-                  ) : isRelay ? (
-                    <NationPickRow nation={nationsWithOdds.find((n) => n.nation_code === initialNationSelection)} />
                   ) : (
-                    initialAthleteSelection.map((athleteId) => (
-                      <AthletePickRow key={athleteId} athlete={athletesWithOdds.find((a) => a.athlete_id === athleteId)} />
-                    ))
+                    <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} />
                   )}
                   {initialBonusX2 && (
                     <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
@@ -355,7 +347,7 @@ export default async function RacePage({
                 <div className="flex flex-col gap-2">
                   {results.map((row) => (
                     <div
-                      key={row.rank}
+                      key={`${row.rank}-${row.name}`}
                       className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3 ${
                         row.mine ? "border-ice/60 bg-ice-soft" : "border-border bg-card"
                       }`}
@@ -367,11 +359,18 @@ export default async function RacePage({
                       >
                         {row.rank}
                       </div>
-                      <div className="text-base">{row.flag}</div>
-                      <div className="flex-1 text-sm font-semibold">{row.label}</div>
+                      <div className="text-base">{nationFlagEmoji(row.nationCode)}</div>
+                      <div className="flex flex-1 items-center gap-1 truncate text-sm font-semibold">
+                        <span className="truncate">{row.name}</span>
+                        <FuseeGachetteBadges fusee={row.fusee} gachette={row.gachette} />
+                      </div>
                       {row.mine && <CheckIcon className="h-4 w-4 flex-shrink-0 text-ice" />}
+                      {row.points != null && (
+                        <div className="whitespace-nowrap font-display text-[13px] font-bold text-gold">{formatPoints(row.points)}</div>
+                      )}
                     </div>
                   ))}
+                  {results.some((r) => r.fusee || r.gachette) && <FuseeGachetteLegend />}
                 </div>
               )}
             </div>

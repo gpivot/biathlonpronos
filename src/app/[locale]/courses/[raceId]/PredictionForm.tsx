@@ -27,6 +27,7 @@ export function PredictionForm({
   initialCardTarget,
   x2Eligible,
   x2UsesRemaining,
+  startOrder = {},
 }: {
   raceId: string;
   athletes: AthleteWithOdds[];
@@ -38,6 +39,8 @@ export function PredictionForm({
   initialCardTarget: string | null;
   x2Eligible: boolean;
   x2UsesRemaining: number;
+  /** Poursuite : place de départ (= classement du sprint) par athlète. Vide sinon. */
+  startOrder?: Record<string, number>;
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
   const [cardChoice, setCardChoice] = useState<CardChoice>(
@@ -45,6 +48,9 @@ export function PredictionForm({
   );
   const [caFarteTarget, setCaFarteTarget] = useState<string | null>(initialCardTarget);
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
+  const hasStartOrder = Object.keys(startOrder).length > 0;
+  // Poursuite : affichage par ordre de départ par défaut, ou par cote.
+  const [sortBy, setSortBy] = useState<"start" | "odds">(hasStartOrder ? "start" : "odds");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Encart « pronostic validé », masqué dès que le joueur modifie son choix.
@@ -141,6 +147,12 @@ export function PredictionForm({
     }
   }
 
+  // Ordre de départ : classés du sprint d'abord (1er en haut), puis les autres par cote.
+  const sortedAthletes =
+    sortBy === "start"
+      ? [...athletes].sort((a, b) => (startOrder[a.athlete_id] ?? Infinity) - (startOrder[b.athlete_id] ?? Infinity) || a.value - b.value)
+      : athletes;
+
   const athleteById = new Map(athletes.map((a) => [a.athlete_id, a]));
   const unsaved =
     savedState.key !== "" &&
@@ -172,12 +184,30 @@ export function PredictionForm({
         error={error}
       />
 
-      <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-        {requiredCount === 4 ? t("chooseFour") : t("chooseThree")}
+      <div className="flex items-center justify-between gap-2">
+        <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+          {requiredCount === 4 ? t("chooseFour") : t("chooseThree")}
+        </div>
+        {hasStartOrder && (
+          <div className="flex rounded-full border border-border p-0.5">
+            {(["start", "odds"] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => setSortBy(mode)}
+                className={`rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${
+                  sortBy === mode ? "bg-ice text-on-ice" : "text-text-dim"
+                }`}
+              >
+                {mode === "start" ? t("sortByStart") : t("sortByOdds")}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
-        {athletes.map((a) => {
+        {sortedAthletes.map((a) => {
           const isSelected = selected.includes(a.athlete_id);
           const isGrilled = grilledSet.has(a.athlete_id);
           const isCaFarteTarget = cardChoice === "ca_farte" && caFarteTarget === a.athlete_id;
@@ -196,6 +226,11 @@ export function PredictionForm({
                       : "border-border bg-card"
               }`}
             >
+              {sortBy === "start" && (
+                <div className="w-6 flex-shrink-0 text-center font-display text-xs font-bold text-text-dim">
+                  {startOrder[a.athlete_id] ?? "–"}
+                </div>
+              )}
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">
                   {a.first_name} {a.last_name}

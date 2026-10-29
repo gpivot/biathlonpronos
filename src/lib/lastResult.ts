@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { FUSEE_BONUS, GACHETTE_BONUS } from "./scoring/constants";
+import { COMBINATION_BONUS, FUSEE_BONUS, GACHETTE_BONUS, RANK_MULTIPLIERS, RELAY_RANK_MULTIPLIERS } from "./scoring/constants";
+import { RELAY_FORMATS } from "./grilling";
 
 /**
  * Encart « Dernier résultat » de l'accueil (inspiré de VéloPronos) : la
@@ -17,11 +18,27 @@ export interface LastResultPick {
   points: number | null;
   /** Choix visé par la carte « Ça farte » (×3). */
   caFarte: boolean;
+  /** Meilleur temps de ski (+50) / sans-faute au tir (+20), déjà inclus dans `points`. */
+  fusee: boolean;
+  gachette: boolean;
+}
+
+/** Une ligne du classement de la course, avec les points du barème (cote × rang + Fusée/Gâchette). */
+export interface RaceResultRow {
+  rank: number;
+  name: string;
+  nationCode: string;
+  /** null : aucun point au barème (hors Top 10, ou Top 5 pour un relais). */
+  points: number | null;
+  fusee: boolean;
+  gachette: boolean;
+  /** Ligne pronostiquée par le joueur. */
+  mine: boolean;
 }
 
 export interface LastResultExtra {
   /** Clé de traduction (Home.lastResultExtra_<kind>). */
-  kind: "combination" | "pronoParfait" | "specialMalus" | "aspiration" | "pepite";
+  kind: "top3" | "top5" | "top10" | "pronoParfait" | "specialMalus" | "aspiration" | "pepite";
   points: number;
 }
 
@@ -34,6 +51,8 @@ export interface LastResult {
   countryCode: string;
   coefficient: number;
   podium: { rank: number; name: string; nationCode: string }[];
+  /** Classement complet saisi par l'admin. */
+  results: RaceResultRow[];
   /** null : le joueur n'avait pas pronostiqué cette course. */
   prediction: {
     points: number;
@@ -102,10 +121,18 @@ export function computeIndividualPickPoints(params: {
   return points;
 }
 
+/** Palier du bonus de combinaison, retrouvé à partir de son montant (Top 3 = 100, Top 5 = 50, Top 10 = 20). */
+function combinationTierKind(points: number): "top3" | "top5" | "top10" {
+  if (points >= COMBINATION_BONUS.podium) return "top3";
+  if (points >= COMBINATION_BONUS.top5) return "top5";
+  return "top10";
+}
+
 /** Bonus et malus de course qui ne sont rattachés à aucun athlète en particulier. */
 export function computeIndividualExtras(breakdown: IndividualBreakdown): LastResultExtra[] {
+  const combination = breakdown.combinationBonus ?? 0;
   const extras: LastResultExtra[] = [
-    { kind: "combination", points: breakdown.combinationBonus ?? 0 },
+    { kind: combinationTierKind(combination), points: combination },
     { kind: "pronoParfait", points: breakdown.pronoParfaitBonus ?? 0 },
     { kind: "specialMalus", points: breakdown.specialMalus ?? 0 },
     { kind: "aspiration", points: breakdown.aspirationBonus ?? 0 },
@@ -113,6 +140,23 @@ export function computeIndividualExtras(breakdown: IndividualBreakdown): LastRes
   ];
   return extras.filter((e) => e.points !== 0);
 }
+
+/** Points du barème pour une ligne de résultat, sans les multiplicateurs propres à chaque joueur. */
+export function computeResultRowPoints(params: {
+  rank: number;
+  odds: number | undefined;
+  relay: boolean;
+  isFusee: boolean;
+  isGachette: boolean;
+}): number | null {
+  const { rank, odds, relay, isFusee, isGachette } = params;
+  const multiplier = (relay ? RELAY_RANK_MULTIPLIERS : RANK_MULTIPLIERS)[rank];
+  const base = multiplier && odds != null ? multiplier * odds : 0;
+  const bonus = relay ? 0 : (isFusee ? FUSEE_BONUS : 0) + (isGachette ? GACHETTE_BONUS : 0);
+  return base + bonus > 0 ? base + bonus : null;
+}
+
+const RACE_SELECT = "id, format, sex, locks_at, stages!inner(location, country_code, coefficient, season_id)";
 
 /**
  * Charge la dernière course notée (statut « finished ») dont l'heure de
@@ -126,29 +170,50 @@ export async function getLastResult(
 ): Promise<LastResult | null> {
   const { data: race } = await supabase
     .from("races")
-    .select("id, format, sex, locks_at, stages!inner(location, country_code, coefficient, season_id)")
+    .select(RACE_SELECT)
     .eq("stages.season_id", seasonId)
     .eq("status", "finished")
     .lte("locks_at", now.toISOString())
     .order("locks_at", { ascending: false })
     .limit(1)
     .maybeSingle();
-  if (!race) return null;
-  const stage = race.stages as any as { location: string; country_code: string; coefficient: number };
+  return race ? buildRaceResult(supabase, race, userId) : null;
+}
 
-  const [{ data: results }, { data: prediction }, { data: ledger }] = await Promise.all([
+/** Même détail pour une course donnée (page d'une course terminée). */
+export async function getRaceResult(supabase: SupabaseClient, raceId: string, userId: string | null): Promise<LastResult | null> {
+  const { data: race } = await supabase.from("races").select(RACE_SELECT).eq("id", raceId).maybeSingle();
+  return race ? buildRaceResult(supabase, race, userId) : null;
+}
+
+async function buildRaceResult(supabase: SupabaseClient, race: any, userId: string | null): Promise<LastResult> {
+  const stage = race.stages as any as { location: string; country_code: string; coefficient: number; season_id: string };
+  const relay = RELAY_FORMATS.includes(race.format);
+
+  const [{ data: results }, { data: prediction }, { data: ledger }, { data: odds }] = await Promise.all([
     supabase
       .from("race_results")
       .select("rank, athlete_id, nation_code, is_fusee, is_gachette, athletes(first_name, last_name, nation_code), nations(name)")
       .eq("race_id", race.id)
       .order("rank", { ascending: true }),
+    userId
+      ? supabase
+          .from("predictions")
+          .select("athlete_ids, nation_code, bonus_x2_used, bonus_card_used, bonus_card_target_athlete_id")
+          .eq("user_id", userId)
+          .eq("race_id", race.id)
+          .maybeSingle()
+      : Promise.resolve({ data: null as any }),
+    userId
+      ? supabase.from("score_ledger").select("points, breakdown").eq("user_id", userId).eq("race_id", race.id).maybeSingle()
+      : Promise.resolve({ data: null as any }),
+    // Cotes en vigueur, celles qu'utilise le calcul des points (cf. scoreRace).
     supabase
-      .from("predictions")
-      .select("athlete_ids, nation_code, bonus_x2_used, bonus_card_used, bonus_card_target_athlete_id")
-      .eq("user_id", userId)
-      .eq("race_id", race.id)
-      .maybeSingle(),
-    supabase.from("score_ledger").select("points, breakdown").eq("user_id", userId).eq("race_id", race.id).maybeSingle(),
+      .from("odds")
+      .select(relay ? "nation_code, value" : "athlete_id, value")
+      .eq("season_id", stage.season_id)
+      .eq("format", race.format)
+      .is("valid_until", null),
   ]);
 
   const resultRows = (results ?? []) as any[];
@@ -161,6 +226,24 @@ export async function getLastResult(
     .filter((r) => r.rank <= 3)
     .map((r) => ({ rank: r.rank as number, name: rowName(r), nationCode: rowNation(r) }));
 
+  const oddsByKey = new Map(((odds ?? []) as any[]).map((o) => [(relay ? o.nation_code : o.athlete_id) as string, o.value as number]));
+  const predictedKeys = new Set<string>(prediction?.nation_code ? [prediction.nation_code] : prediction?.athlete_ids ?? []);
+  const fullResults: RaceResultRow[] = resultRows.map((r) => ({
+    rank: r.rank,
+    name: rowName(r),
+    nationCode: rowNation(r),
+    points: computeResultRowPoints({
+      rank: r.rank,
+      odds: oddsByKey.get(r.athlete_id ?? r.nation_code),
+      relay,
+      isFusee: r.is_fusee,
+      isGachette: r.is_gachette,
+    }),
+    fusee: r.is_fusee,
+    gachette: r.is_gachette,
+    mine: predictedKeys.has(r.athlete_id ?? r.nation_code),
+  }));
+
   const base: Omit<LastResult, "prediction"> = {
     raceId: race.id,
     format: race.format,
@@ -170,6 +253,7 @@ export async function getLastResult(
     countryCode: stage.country_code,
     coefficient: stage.coefficient,
     podium,
+    results: fullResults,
   };
 
   const hasPrediction = prediction && ((prediction.athlete_ids?.length ?? 0) > 0 || prediction.nation_code);
@@ -195,7 +279,16 @@ export async function getLastResult(
       name = nation?.name ?? prediction.nation_code;
     }
     picks = [
-      { key: prediction.nation_code, name, nationCode: prediction.nation_code, rank: row?.rank ?? null, points, caFarte: false },
+      {
+        key: prediction.nation_code,
+        name,
+        nationCode: prediction.nation_code,
+        rank: row?.rank ?? null,
+        points,
+        caFarte: false,
+        fusee: false,
+        gachette: false,
+      },
     ];
   } else {
     const athleteIds: string[] = prediction.athlete_ids ?? [];
@@ -226,6 +319,8 @@ export async function getLastResult(
         rank: row?.rank ?? null,
         points: pickPoints[id],
         caFarte: id === caFarteTargetId,
+        fusee: row?.is_fusee ?? false,
+        gachette: row?.is_gachette ?? false,
       };
     });
     // Ordre d'arrivée, les non classés à la fin (comme VéloPronos).

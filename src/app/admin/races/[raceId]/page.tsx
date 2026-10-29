@@ -15,6 +15,7 @@ import { ConfirmButton } from "../../_components/ConfirmButton";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { removeRace, resetResults, updateRace } from "./actions";
+import { ArrowLeftIcon } from "@/components/icons";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
@@ -112,7 +113,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
   return (
     <div className="flex flex-col gap-4">
-      <BackLink />
+      <BackLinks raceId={race.id} />
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-xl font-bold">
           {raceLabel(race)} — {stage.location}
@@ -203,10 +204,20 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
   );
 }
 
-function BackLink() {
+function BackLinks({ raceId }: { raceId: string }) {
   return (
-    <Link href="/admin" className="text-sm text-text-dim underline">
-      ← Retour au calendrier
-    </Link>
+    <div className="flex flex-wrap items-center gap-4">
+      {/* Page publique de la course : classement et points une fois la course notée. */}
+      <Link
+        href={`/courses/${raceId}`}
+        className="flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-sm font-semibold text-frost hover:text-ice"
+      >
+        <ArrowLeftIcon className="h-4 w-4" />
+        Voir la course et son classement
+      </Link>
+      <Link href="/admin" className="text-sm text-text-dim underline">
+        Retour au calendrier
+      </Link>
+    </div>
   );
 }

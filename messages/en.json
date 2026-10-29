@@ -42,11 +42,16 @@
     "lastResultUnranked": "–",
     "lastResultNotCounted": "not counted",
     "lastResultBonusX2": "×2 bonus",
-    "lastResultExtra_combination": "Combination bonus",
+    "lastResultExtra_top3": "Top 3 bonus",
+    "lastResultExtra_top5": "Top 5 bonus",
+    "lastResultExtra_top10": "Top 10 bonus",
     "lastResultExtra_pronoParfait": "Perfect Pick",
     "lastResultExtra_specialMalus": "Special race penalty",
     "lastResultExtra_aspiration": "Draft bonus",
-    "lastResultExtra_pepite": "Diamond bonus"
+    "lastResultExtra_pepite": "Diamond bonus",
+    "fuseeLabel": "Rocket: fastest ski time",
+    "gachetteLabel": "Trigger: clean shooting",
+    "fuseeGachetteLegend": "🚀 Rocket +50 pts · 🎯 Trigger +20 pts, already included in the points"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -273,7 +278,9 @@
     "bonusX2Remaining": "{count, plural, =0 {No ×2 bonus left} one {# ×2 bonus left} other {# ×2 bonuses left}} this season",
     "bonusX2Cancel": "Remove",
     "unsavedHint": "Change not saved yet: confirm to apply it.",
-    "chooseFour": "Pick 4 biathletes"
+    "chooseFour": "Pick 4 biathletes",
+    "sortByStart": "Start order",
+    "sortByOdds": "By odds"
   },
   "SignIn": {
     "prompt": "Sign in to continue",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeIndividualPickPoints, computeIndividualExtras } from "../lastResult";
+import { computeIndividualPickPoints, computeIndividualExtras, computeResultRowPoints } from "../lastResult";
 import { computeIndividualRaceScore } from "../scoring";
 import type { IndividualRaceScoringInput } from "../scoring";
 
@@ -62,4 +62,21 @@ describe("encart Dernier résultat : points par athlète", () => {
   it("Team Nation à domicile", () =>
     expectSameAsEngine(baseInput({ favoriteTeam: { nationCode: "FRA", sex: "H" } })));
   it("podium complet (bonus de combinaison)", () => expectSameAsEngine(baseInput({ predictedAthleteIds: ["a", "b", "e"] })));
+});
+
+describe("points du barème dans le classement d'une course", () => {
+  it("cote × rang dans le Top 10, plus Fusée et Gâchette", () => {
+    expect(computeResultRowPoints({ rank: 1, odds: 2, relay: false, isFusee: true, isGachette: true })).toBe(50 + 50 + 20);
+    expect(computeResultRowPoints({ rank: 10, odds: 7, relay: false, isFusee: false, isGachette: false })).toBe(7);
+  });
+
+  it("rien au-delà du Top 10, sauf Fusée/Gâchette", () => {
+    expect(computeResultRowPoints({ rank: 11, odds: 7, relay: false, isFusee: false, isGachette: false })).toBeNull();
+    expect(computeResultRowPoints({ rank: 25, odds: 7, relay: false, isFusee: false, isGachette: true })).toBe(20);
+  });
+
+  it("relais : barème réduit, Top 5 seulement", () => {
+    expect(computeResultRowPoints({ rank: 1, odds: 3, relay: true, isFusee: false, isGachette: false })).toBe(30);
+    expect(computeResultRowPoints({ rank: 6, odds: 3, relay: true, isFusee: false, isGachette: false })).toBeNull();
+  });
 });

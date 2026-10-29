@@ -42,11 +42,16 @@
     "lastResultUnranked": "–",
     "lastResultNotCounted": "no cuenta",
     "lastResultBonusX2": "Bonus ×2",
-    "lastResultExtra_combination": "Bonus de combinación",
+    "lastResultExtra_top3": "Bonus Top 3",
+    "lastResultExtra_top5": "Bonus Top 5",
+    "lastResultExtra_top10": "Bonus Top 10",
     "lastResultExtra_pronoParfait": "Pronóstico perfecto",
     "lastResultExtra_specialMalus": "Penalización carrera especial",
     "lastResultExtra_aspiration": "Bonus rebufo",
-    "lastResultExtra_pepite": "Bonus Diamante"
+    "lastResultExtra_pepite": "Bonus Diamante",
+    "fuseeLabel": "Cohete: mejor tiempo de esquí",
+    "gachetteLabel": "Gatillo: tiro sin fallos",
+    "fuseeGachetteLegend": "🚀 Cohete +50 pts · 🎯 Gatillo +20 pts, ya incluidos en los puntos"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -273,7 +278,9 @@
     "bonusX2Remaining": "{count, plural, =0 {No te queda ningún bonus ×2} one {Te queda # bonus ×2} other {Te quedan # bonus ×2}} esta temporada",
     "bonusX2Cancel": "Quitar",
     "unsavedHint": "Cambio aún no guardado: valida para aplicarlo.",
-    "chooseFour": "Elige 4 biatletas"
+    "chooseFour": "Elige 4 biatletas",
+    "sortByStart": "Orden de salida",
+    "sortByOdds": "Por cuota"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",

@@ -80,14 +80,17 @@ export function computeIndividualRaceScore(
     perAthlete[athleteId] = value;
   }
 
-  // 3. Bonus de combinaison (podium/top5/top10, non cumulables entre eux —
+  // 3. Bonus de combinaison (Top 3/Top 5/Top 10, non cumulables entre eux —
   // seul le meilleur palier atteint est payé), sur les athlètes comptés.
-  const combinationBonus = computeCombinationBonus(counted, resultsByAthleteId);
+  const tierBonus = computeCombinationBonus(counted, resultsByAthleteId);
 
   // Prono parfait : comparé aux 3 athlètes effectivement comptés (donc,
   // avec la Balle de pioche, aux 3 meilleurs des 4 choix — confirmé par
   // Guillaume, puisque ce seront de fait les 3 qui comptent pour l'étape).
   const pronoParfaitBonus = computePronoParfaitBonus(counted, input.results, input.oddsByAthleteId);
+  // Demande de Guillaume (octobre 2026) : le Prono parfait remplace le bonus
+  // Top 3/Top 5/Top 10, il ne s'y ajoute pas.
+  const combinationBonus = pronoParfaitBonus > 0 ? 0 : tierBonus;
 
   // 4. Malus "t'es collé(e)" — lu sur l'ensemble du pronostic, pas par
   // athlète ("tour de péna" et "brouillard" sont déjà inclus au point 2).

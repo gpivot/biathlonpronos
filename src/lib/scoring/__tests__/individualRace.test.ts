@@ -53,7 +53,12 @@ describe("computeIndividualRaceScore — bonus de combinaison", () => {
 
   it("bonus podium quand les 3 sont dans le Top 3", () => {
     const result = computeIndividualRaceScore(
-      baseInput({ predictedAthleteIds: ["a", "b", "c"], results: athletes, oddsByAthleteId: odds })
+      // z (4e, grosse cote) rapporte plus que a, b ou c : pas de Prono parfait ici.
+      baseInput({
+        predictedAthleteIds: ["a", "b", "c"],
+        results: [...athletes, { athleteId: "z", rank: 4 }],
+        oddsByAthleteId: { ...odds, z: 100 },
+      })
     );
     expect(result.breakdown.combinationBonus).toBe(100);
   });
@@ -101,6 +106,20 @@ describe("computeIndividualRaceScore — prono parfait", () => {
       baseInput({ predictedAthleteIds: ["a", "b", "c"], results, oddsByAthleteId: odds })
     );
     expect(missed.breakdown.pronoParfaitBonus).toBe(0);
+  });
+
+  it("le Prono parfait remplace le bonus Top 3, sans s'y ajouter", () => {
+    const results: AthleteRaceResult[] = [
+      { athleteId: "a", rank: 1 },
+      { athleteId: "b", rank: 2 },
+      { athleteId: "c", rank: 3 },
+    ];
+    const result = computeIndividualRaceScore(
+      baseInput({ predictedAthleteIds: ["a", "b", "c"], results, oddsByAthleteId: { a: 1, b: 1, c: 1 } })
+    );
+    expect(result.breakdown.pronoParfaitBonus).toBe(200);
+    expect(result.breakdown.combinationBonus).toBe(0);
+    expect(result.total).toBe(25 + 18 + 13 + 200);
   });
 });
 
@@ -249,8 +268,9 @@ describe("computeIndividualRaceScore — coefficients et cartes", () => {
           { athleteId: "b", rank: 2 },
           { athleteId: "c", rank: 3 },
           { athleteId: "d", rank: 15 }, // le moins bon des 4, doit être exclu
+          { athleteId: "z", rank: 4 }, // non pronostiqué, évite le Prono parfait
         ],
-        oddsByAthleteId: { a: 10, b: 10, c: 10, d: 10 },
+        oddsByAthleteId: { a: 10, b: 10, c: 10, d: 10, z: 100 },
         card: { type: "balle_de_pioche" },
       })
     );
