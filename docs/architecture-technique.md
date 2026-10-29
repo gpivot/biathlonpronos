@@ -584,12 +584,11 @@ Pépites) ; il faut retaper le label de la saison pour confirmer.
   les 7 jours (à confirmer) ;
 - le badge « En ce moment » n'apparaît que si une course de l'étape part aujourd'hui (heure de Paris) ;
 - une ligne par course « en cours » (départ passé, pas encore notée) avec les biathlètes ou la nation
-  pronostiqués, ou « Pas de pronostic sur cette course » ;
-- bouton « À jouer » vers la prochaine course de l'étape encore ouverte et sans pronostic (à
-  confirmer : lecture retenue de « si pas de pronostic, bouton à jouer », une course en cours ne
-  pouvant plus être jouée).
+  pronostiqués, ou « Pas de pronostic sur cette course ».
 « Prochainement » devient « À suivre » (`NextRaceCard`) avec un compte à rebours jusqu'au départ
-(= verrouillage), qui part de l'horloge du serveur (horloge simulée de l'admin comprise).
+(= verrouillage), qui part de l'horloge du serveur (horloge simulée de l'admin comprise). Si le
+joueur n'a pas encore pronostiqué cette course, un bouton « À jouer » s'affiche dans la carte
+(demande de Guillaume), sinon la mention « Pronostic validé ».
 
 **Page de pronostic d'une course.** Encart « Mon pronostic » en haut (`PredictionSummary`) : les choix
 en cours avec une croix rouge pour retirer chacun, le bouton « Activer mon bonus ×2 » (nombre restant

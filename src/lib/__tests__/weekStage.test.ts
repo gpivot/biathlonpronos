@@ -16,13 +16,13 @@ describe("étape de la semaine", () => {
     race("d", "2026-11-30T14:00:00Z"),
   ];
 
-  it("course en cours, badge du jour et prochaine course à jouer", () => {
+  it("course en cours et badge du jour", () => {
     const now = new Date("2026-11-29T12:00:00Z");
-    expect(summarizeStageRaces(races, new Set(["c"]), now)).toEqual({ raceToday: true, ongoingIds: ["b"], toPlayId: "d" });
+    expect(summarizeStageRaces(races, now)).toEqual({ raceToday: true, ongoingIds: ["b"] });
   });
 
   it("pas de badge un jour sans course", () => {
     const now = new Date("2026-11-27T12:00:00Z");
-    expect(summarizeStageRaces(races, new Set(), now)).toEqual({ raceToday: false, ongoingIds: [], toPlayId: "b" });
+    expect(summarizeStageRaces(races, now)).toEqual({ raceToday: false, ongoingIds: [] });
   });
 });

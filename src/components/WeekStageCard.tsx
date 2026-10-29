@@ -59,19 +59,6 @@ export async function WeekStageCard({ stage }: { stage: WeekStage }) {
             </div>
           </Link>
         ))}
-
-        {stage.toPlay && (
-          <div className="border-t border-border px-4 py-3">
-            <Link
-              href={`/courses/${stage.toPlay.id}`}
-              className="flex items-center justify-center gap-1.5 rounded-full bg-ice py-2.5 font-display text-[13px] font-bold text-on-ice"
-            >
-              {t("toPlayButton")} ·{" "}
-              {tFormat(stage.toPlay.format)}
-              {displayedSex(stage.toPlay) ? ` ${tSex(displayedSex(stage.toPlay)!)}` : ""}
-            </Link>
-          </div>
-        )}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { getRaceDisplayStatus } from "./raceStatus";
 /**
  * Encart « L'étape de la semaine » de l'accueil : l'étape en cours (ou, à
  * défaut, celle qui commence dans les 7 prochains jours), avec les courses en
- * cours et le pronostic du joueur, et la prochaine course encore à jouer.
+ * cours et le pronostic du joueur.
  */
 
 export interface WeekStagePick {
@@ -32,8 +32,6 @@ export interface WeekStage {
   raceToday: boolean;
   /** Courses dont le départ est passé mais pas encore notées par l'admin. */
   ongoing: WeekStageRace[];
-  /** Prochaine course de l'étape sans pronostic, encore ouverte : bouton « À jouer ». */
-  toPlay: WeekStageRace | null;
 }
 
 /** Jour de Paris ("2026-11-29") d'un instant. */
@@ -56,18 +54,16 @@ interface RaceRow {
   status: string;
 }
 
-/** Partie pure (testée) : badge du jour, courses en cours, course à jouer. */
+/** Partie pure (testée) : badge du jour et courses en cours. */
 export function summarizeStageRaces(
   races: RaceRow[],
-  predictedRaceIds: Set<string>,
   now: Date
-): { raceToday: boolean; ongoingIds: string[]; toPlayId: string | null } {
+): { raceToday: boolean; ongoingIds: string[] } {
   const today = parisDay(now);
   const sorted = [...races].sort((a, b) => a.locks_at.localeCompare(b.locks_at));
   const raceToday = sorted.some((r) => parisDay(new Date(r.locks_at)) === today);
   const ongoingIds = sorted.filter((r) => getRaceDisplayStatus(r as any, now) === "ongoing").map((r) => r.id);
-  const toPlay = sorted.find((r) => getRaceDisplayStatus(r as any, now) === "upcoming" && !predictedRaceIds.has(r.id));
-  return { raceToday, ongoingIds, toPlayId: toPlay?.id ?? null };
+  return { raceToday, ongoingIds };
 }
 
 export async function getWeekStage(
@@ -124,7 +120,7 @@ export async function getWeekStage(
       .map((p) => [p.race_id, p])
   );
 
-  const { raceToday, ongoingIds, toPlayId } = summarizeStageRaces(races, new Set(predictions.keys()), now);
+  const { raceToday, ongoingIds } = summarizeStageRaces(races, now);
 
   // Noms des athlètes et nations pronostiqués sur les courses en cours.
   const ongoingPredictions = ongoingIds.map((id) => predictions.get(id)).filter(Boolean) as {
@@ -166,7 +162,6 @@ export async function getWeekStage(
     return { id: r.id, format: r.format, sex: r.sex, locksAt: r.locks_at, picks };
   };
 
-  const toPlayRow = races.find((r) => r.id === toPlayId);
   return {
     id: stage.id,
     location: stage.location,
@@ -174,6 +169,5 @@ export async function getWeekStage(
     coefficient: stage.coefficient,
     raceToday,
     ongoing: races.filter((r) => ongoingIds.includes(r.id)).map((r) => toRace(r, true)),
-    toPlay: toPlayRow ? toRace(toPlayRow, false) : null,
   };
 }

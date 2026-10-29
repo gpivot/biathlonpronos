@@ -41,7 +41,13 @@ export async function NextRaceCard({ race, nowMs, locale }: { race: NextRace; no
             {tFormat(race.format)}
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
-          {race.predicted && <PredictedBadge label={tRace("predicted")} />}
+          {race.predicted ? (
+            <PredictedBadge label={tRace("predicted")} />
+          ) : (
+            <span className="mt-1 w-fit rounded-full bg-ice px-3 py-1 font-display text-[12px] font-bold text-on-ice">
+              {t("toPlayButton")}
+            </span>
+          )}
           <Countdown target={race.locks_at} serverNow={nowMs} />
         </div>
         <div className="whitespace-nowrap text-xs text-text-dim">
