@@ -203,7 +203,14 @@
   "Classement": {
     "title": "Gesamtwertung",
     "emptyState": "Noch keine Punkte vergeben. Die Wertung füllt sich, sobald das erste Rennen ausgewertet ist.",
-    "streakTitle": "Rotes Trikot — beste laufende Serie"
+    "streakTitle": "Beste laufende Serien",
+    "streakCardTitle": "Laufende Serie",
+    "streakCardRemaining": "{count, plural, one {Noch ein Rennen bis zur Bonuskarte} other {Noch # Rennen bis zur Bonuskarte}}",
+    "playerTitle": "Spieler",
+    "close": "Schließen",
+    "playerLoading": "Wird geladen…",
+    "playerError": "Dieser Spieler kann nicht angezeigt werden.",
+    "playerHiddenHint": "Die Tipps erscheinen beim Start jedes Rennens."
   },
   "Courses": {
     "title": "Kalender",
@@ -217,6 +224,7 @@
     "toPlayCount": "{count} offen",
     "toPlayButton": "Jetzt tippen",
     "seasonPredictionsTitle": "Meine Saisontipps",
+    "seasonPredictionsTitleOther": "Saisontipps",
     "seasonPredictionsCount": "{chosen} von {total} gewählt",
     "seasonPredictionsNone": "Noch nicht gewählt",
     "seasonPredictionsLink": "Saisontipps ansehen oder ändern",

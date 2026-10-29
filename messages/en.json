@@ -203,7 +203,14 @@
   "Classement": {
     "title": "Overall standings",
     "emptyState": "No points scored yet. The standings fill in as soon as the first race is scored.",
-    "streakTitle": "Red Bib — best current streak"
+    "streakTitle": "Best current streaks",
+    "streakCardTitle": "Current streak",
+    "streakCardRemaining": "{count, plural, one {One more race for a bonus card} other {# more races for a bonus card}}",
+    "playerTitle": "Player",
+    "close": "Close",
+    "playerLoading": "Loading…",
+    "playerError": "This player can't be displayed.",
+    "playerHiddenHint": "Their picks appear when each race starts."
   },
   "Courses": {
     "title": "Calendar",
@@ -217,6 +224,7 @@
     "toPlayCount": "{count} to play",
     "toPlayButton": "Play",
     "seasonPredictionsTitle": "My season predictions",
+    "seasonPredictionsTitleOther": "Season predictions",
     "seasonPredictionsCount": "{chosen} of {total} chosen",
     "seasonPredictionsNone": "Not chosen yet",
     "seasonPredictionsLink": "See or edit my season predictions",

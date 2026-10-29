@@ -657,3 +657,20 @@ les biathlètes (ou la nation) pronostiqués, le badge Bonus ×2, les points une
 6 globes et les 2 Pépites, avec un lien vers `/globes`. Le bouton « Ma saison » de l'accueil mène au
 Calendrier. L'onglet de la barre du bas (`/courses`) s'appelle désormais « Ma saison » (clé
 `Nav.stages`, le titre de la page reste « Calendrier »).
+
+## Classement : série en cours et pop-up joueur (fin octobre 2026)
+
+**Série en cours.** La notion de « Dossard Rouge » disparaît du Classement. Le joueur connecté voit
+sa carte « 🔥 Série en cours x / 10 » (10 segments, « Plus que N courses pour une carte bonus »),
+sur le modèle de la capture VéloPronos fournie par Guillaume. En dessous, la liste « Meilleures
+séries en cours » (top 10) est gardée, aux couleurs neutres (choix pragmatique, à confirmer : la
+demande parlait de l'habillage, pas de retirer la liste).
+
+**Pop-up joueur.** Un clic sur un joueur (classement général ou séries) ouvre sa page « Ma saison »
+en lecture seule : « Pronostics de saison » replié, puis ses étapes en accordéon avec pronostics,
+bonus ×2 et points (`getSeasonView` dans `src/lib/seasonView.ts`, partagé avec `/courses` ;
+Server Action `getPlayerSeason`). Pour qu'on ne puisse pas copier (à confirmer) : les pronostics
+d'un autre joueur n'apparaissent qu'une fois la course partie, ses globes une fois la saison
+commencée, et sa Pépite seulement une fois révélée (bonus obtenu), puisque c'est un pronostic caché.
+Migration **0018** (règles de lecture Supabase correspondantes) à coller par Guillaume ; tant
+qu'elle n'est pas appliquée, le pop-up d'un autre joueur s'affiche sans ses pronostics.
