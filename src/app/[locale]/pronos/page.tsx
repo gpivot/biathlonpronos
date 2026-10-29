@@ -38,22 +38,30 @@ export default async function PronosPage({
     );
   }
 
-  const { data: predictions } = await supabase
+  // Seules les étapes de la saison active sont listées (comme l'accueil) : les étapes de la saison
+  // suivante, déjà importées dans le calendrier, n'apparaissent qu'une fois cette saison activée.
+  const { data: activeSeason } = await supabase.from("seasons").select("id").eq("status", "active").maybeSingle();
+  const inActiveSeason = (stage: { season_id: string } | null) => !activeSeason || stage?.season_id === activeSeason.id;
+
+  const { data: allPredictions } = await supabase
     .from("predictions")
-    .select("*, races(*, stages(id, location, country_code, starts_on, ends_on, coefficient))")
+    .select("*, races(*, stages(id, season_id, location, country_code, starts_on, ends_on, coefficient))")
     .eq("user_id", user.id)
     .order("submitted_at", { ascending: false });
+  const predictions = (allPredictions ?? []).filter((p: any) => inActiveSeason(p.races?.stages));
 
   const predictedRaceIds = new Set((predictions ?? []).map((p) => p.race_id));
 
   const { data: upcomingRaces } = await supabase
     .from("races")
-    .select("*, stages(id, location, country_code, starts_on, ends_on, coefficient)")
+    .select("*, stages(id, season_id, location, country_code, starts_on, ends_on, coefficient)")
     .eq("status", "upcoming")
     .gt("locks_at", (await getClock()).now.toISOString())
     .order("locks_at", { ascending: true });
 
-  const openRaces = (upcomingRaces ?? []).filter((race) => !predictedRaceIds.has(race.id));
+  const openRaces = (upcomingRaces ?? []).filter(
+    (race: any) => !predictedRaceIds.has(race.id) && inActiveSeason(race.stages),
+  );
 
   const allAthleteIds = Array.from(new Set((predictions ?? []).flatMap((p) => p.athlete_ids ?? [])));
   const { data: athletes } =
