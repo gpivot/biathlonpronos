@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { CheckIcon } from "@/components/icons";
 import { PredictionSummary } from "./PredictionSummary";
+import { RuleInfoButton } from "./RuleInfoButton";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -18,6 +19,7 @@ type CardChoice = "none" | "balle_de_pioche" | "ca_farte";
 
 export function PredictionForm({
   raceId,
+  format,
   athletes,
   initialSelection,
   grilledAthleteIds,
@@ -30,6 +32,7 @@ export function PredictionForm({
   startOrder = {},
 }: {
   raceId: string;
+  format: string;
   athletes: AthleteWithOdds[];
   initialSelection: string[];
   grilledAthleteIds: string[];
@@ -187,8 +190,11 @@ export function PredictionForm({
       />
 
       <div className="flex items-center justify-between gap-2">
-        <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-          {requiredCount === 4 ? t("chooseFour") : t("chooseThree")}
+        <div className="flex items-center gap-2">
+          <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+            {requiredCount === 4 ? t("chooseFour") : t("chooseThree")}
+          </div>
+          <RuleInfoButton format={format} small />
         </div>
         {hasStartOrder && (
           <div className="flex rounded-full border border-border p-0.5">

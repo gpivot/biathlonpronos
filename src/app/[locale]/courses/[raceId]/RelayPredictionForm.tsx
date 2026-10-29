@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { CheckIcon } from "@/components/icons";
 import { PredictionSummary } from "./PredictionSummary";
+import { RuleInfoButton } from "./RuleInfoButton";
 
 export type NationWithOdds = {
   nation_code: string;
@@ -14,6 +15,7 @@ export type NationWithOdds = {
 
 export function RelayPredictionForm({
   raceId,
+  format,
   nations,
   initialSelection,
   initialBonusX2,
@@ -21,6 +23,7 @@ export function RelayPredictionForm({
   x2UsesRemaining,
 }: {
   raceId: string;
+  format: string;
   nations: NationWithOdds[];
   initialSelection: string | null;
   initialBonusX2: boolean;
@@ -100,8 +103,9 @@ export function RelayPredictionForm({
         error={error}
       />
 
-      <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-        {t("chooseNation")}
+      <div className="flex items-center gap-2">
+        <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("chooseNation")}</div>
+        <RuleInfoButton format={format} small />
       </div>
 
       <div className="flex flex-col gap-2">

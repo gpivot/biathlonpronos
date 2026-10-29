@@ -638,6 +638,9 @@ La barre d'onglets du bas (`BottomNav`) est figée en bas de l'écran pendant le
 individuel) ou Gâchette (poursuite, mass start), départ de la poursuite, biathlètes grillés ; relais :
 une équipe, points dans le Top 5 (règlement §5, alors que l'exemple de Guillaume parlait du podium) ;
 bonus ×2 pour tous. Lien vers le règlement complet.
+Puis, à la demande de Guillaume, le « i » devient un « ? » placé à côté du titre « Choisis une
+nation » / « Choisis tes biathlètes » ; il ne reste en haut à droite que quand aucun formulaire n'est
+affiché (course en cours, terminée, ou sans cotes).
 Validation : quand le pronostic affiché est celui enregistré (y compris à l'ouverture de la page), la
 mention « Ton pronostic est validé ! » remplace le bouton « Valider mon pronostic », qui revient dès
 qu'un choix, le bonus ×2, la carte ou la cible du ×3 change.
@@ -652,4 +655,5 @@ les biathlètes (ou la nation) pronostiqués, le badge Bonus ×2, les points une
 « À jouer » sous la date pour une course à venir sans pronostic. L'en-tête d'étape compte les courses
 « à jouer ». En haut, l'accordéon « Mes pronostics de saison » (replié par défaut) récapitule les
 6 globes et les 2 Pépites, avec un lien vers `/globes`. Le bouton « Ma saison » de l'accueil mène au
-Calendrier.
+Calendrier. L'onglet de la barre du bas (`/courses`) s'appelle désormais « Ma saison » (clé
+`Nav.stages`, le titre de la page reste « Calendrier »).

@@ -178,6 +178,7 @@ export default async function RacePage({
   }
 
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
+  const showForm = displayStatus === "upcoming" && hasOdds;
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
   // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
@@ -200,7 +201,8 @@ export default async function RacePage({
             {tFormat(race.format)}
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
-          <RuleInfoButton format={race.format} />
+          {/* Avec un formulaire, le « ? » est à côté de « Choisis… » ; sinon il reste ici. */}
+          {showForm ? <div className="h-8 w-8 flex-shrink-0" /> : <RuleInfoButton format={race.format} />}
         </div>
 
         <div className="flex flex-col gap-3 rounded-[18px] border border-border bg-gradient-to-br from-card2 to-card px-4 py-4">
@@ -241,6 +243,7 @@ export default async function RacePage({
               {isRelay ? (
                 <RelayPredictionForm
                   raceId={race.id}
+                  format={race.format}
                   nations={nationsWithOdds}
                   initialSelection={initialNationSelection}
                   initialBonusX2={initialBonusX2}
@@ -250,6 +253,7 @@ export default async function RacePage({
               ) : (
                 <PredictionForm
                   raceId={race.id}
+                  format={race.format}
                   athletes={athletesWithOdds}
                   initialSelection={initialAthleteSelection}
                   grilledAthleteIds={grilledAthleteIds}
