@@ -18,7 +18,7 @@ export async function WeekStageCard({ stage }: { stage: WeekStage }) {
     <div className="flex flex-col gap-2">
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("weekStageTitle")}</div>
       <div className="overflow-hidden rounded-2xl border border-gold/30 bg-card">
-        <Link href={`/pronos?etape=${stage.id}`} className="flex items-center gap-3.5 px-4 py-3.5">
+        <Link href={`/courses?etape=${stage.id}`} className="flex items-center gap-3.5 px-4 py-3.5">
           <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">
             {nationFlagEmoji(stage.countryCode)}
           </div>

@@ -5,10 +5,9 @@
   },
   "Nav": {
     "home": "Start",
-    "stages": "Kalender",
+    "stages": "Meine Saison",
     "standings": "Wertung",
     "leagues": "Ligen",
-    "predictions": "Meine Saison",
     "admin": "Admin"
   },
   "Home": {
@@ -186,14 +185,6 @@
     "pepiteClaimed": "Rohdiamant-Bonus bereits erhalten!",
     "pepiteSubmit": "Meine Wahl bestätigen (endgültig)"
   },
-  "Pronos": {
-    "seasonPredictionsLink": "Meine Saisontipps (Kugeln)",
-    "loginRequired": "Melde dich an, um deine Tipps zu sehen und zu verwalten.",
-    "pendingLabel": "Ausstehend",
-    "toPredictLabel": "Zu tippen",
-    "toPredictCount": "{count} zu tippen",
-    "emptyAll": "Kein Rennen zum Tippen offen und noch kein Tipp abgegeben."
-  },
   "Ligues": {
     "title": "Meine Ligen",
     "loginRequired": "Melde dich an, um eine Liga zu erstellen oder ihr beizutreten.",
@@ -222,7 +213,15 @@
     "importButton": "Kalender importieren (CSV)",
     "importLoading": "Wird importiert...",
     "importSummary": "{stagesCreated} Station(en) erstellt, {stagesUpdated} aktualisiert · {racesCreated} Rennen erstellt, {racesUpdated} aktualisiert.",
-    "worldChampionships": "Weltmeisterschaften"
+    "worldChampionships": "Weltmeisterschaften",
+    "toPlayCount": "{count} offen",
+    "toPlayButton": "Jetzt tippen",
+    "seasonPredictionsTitle": "Meine Saisontipps",
+    "seasonPredictionsCount": "{chosen} von {total} gewählt",
+    "seasonPredictionsNone": "Noch nicht gewählt",
+    "seasonPredictionsLink": "Saisontipps ansehen oder ändern",
+    "pepite_F": "Mein Rohdiamant Frauen",
+    "pepite_H": "Mein Rohdiamant Männer"
   },
   "RaceFormat": {
     "sprint": "Sprint",

@@ -5,10 +5,9 @@
   },
   "Nav": {
     "home": "Accueil",
-    "stages": "Calendrier",
+    "stages": "Ma saison",
     "standings": "Classement",
     "leagues": "Ligues",
-    "predictions": "Ma saison",
     "admin": "Admin"
   },
   "Home": {
@@ -186,14 +185,6 @@
     "pepiteClaimed": "Bonus Pépite déjà obtenu !",
     "pepiteSubmit": "Valider ma Pépite (définitif)"
   },
-  "Pronos": {
-    "seasonPredictionsLink": "Mes pronostics de saison (globes)",
-    "loginRequired": "Connecte-toi pour voir et gérer tes pronostics.",
-    "pendingLabel": "En attente",
-    "toPredictLabel": "À pronostiquer",
-    "toPredictCount": "{count} à pronostiquer",
-    "emptyAll": "Aucune course ouverte au pronostic et aucun pronostic validé pour le moment."
-  },
   "Ligues": {
     "title": "Mes ligues",
     "loginRequired": "Connecte-toi pour créer ou rejoindre une ligue.",
@@ -222,7 +213,15 @@
     "importButton": "Importer le calendrier (CSV)",
     "importLoading": "Import en cours...",
     "importSummary": "{stagesCreated} étape(s) créée(s), {stagesUpdated} mise(s) à jour · {racesCreated} course(s) créée(s), {racesUpdated} mise(s) à jour.",
-    "worldChampionships": "Championnats du monde"
+    "worldChampionships": "Championnats du monde",
+    "toPlayCount": "{count} à jouer",
+    "toPlayButton": "À jouer",
+    "seasonPredictionsTitle": "Mes pronostics de saison",
+    "seasonPredictionsCount": "{chosen} sur {total} choisis",
+    "seasonPredictionsNone": "Pas encore choisi",
+    "seasonPredictionsLink": "Voir ou modifier mes pronostics de saison",
+    "pepite_F": "Ma Pépite Femmes",
+    "pepite_H": "Ma Pépite Hommes"
   },
   "RaceFormat": {
     "sprint": "Sprint",

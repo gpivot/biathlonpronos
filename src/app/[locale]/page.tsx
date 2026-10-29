@@ -156,7 +156,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 {t("standingsButton")}
               </Link>
               <Link
-                href="/pronos"
+                href="/courses"
                 className="flex-1 rounded-full border border-border bg-card py-2.5 text-center font-display text-[13px] font-bold text-frost"
               >
                 {t("mySeasonButton")}

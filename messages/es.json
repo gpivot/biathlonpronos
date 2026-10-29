@@ -5,10 +5,9 @@
   },
   "Nav": {
     "home": "Inicio",
-    "stages": "Calendario",
+    "stages": "Mi temporada",
     "standings": "Clasificación",
     "leagues": "Ligas",
-    "predictions": "Mi temporada",
     "admin": "Admin"
   },
   "Home": {
@@ -186,14 +185,6 @@
     "pepiteClaimed": "¡Bonus Diamante ya conseguido!",
     "pepiteSubmit": "Confirmar mi elección (definitiva)"
   },
-  "Pronos": {
-    "seasonPredictionsLink": "Mis pronósticos de temporada (globos)",
-    "loginRequired": "Inicia sesión para ver y gestionar tus pronósticos.",
-    "pendingLabel": "Pendientes",
-    "toPredictLabel": "Por pronosticar",
-    "toPredictCount": "{count} por pronosticar",
-    "emptyAll": "No hay ninguna carrera abierta a pronósticos ni has enviado todavía ningún pronóstico."
-  },
   "Ligues": {
     "title": "Mis ligas",
     "loginRequired": "Inicia sesión para crear o unirte a una liga.",
@@ -222,7 +213,15 @@
     "importButton": "Importar calendario (CSV)",
     "importLoading": "Importando...",
     "importSummary": "{stagesCreated} etapa(s) creada(s), {stagesUpdated} actualizada(s) · {racesCreated} carrera(s) creada(s), {racesUpdated} actualizada(s).",
-    "worldChampionships": "Mundiales"
+    "worldChampionships": "Mundiales",
+    "toPlayCount": "{count} por jugar",
+    "toPlayButton": "Por jugar",
+    "seasonPredictionsTitle": "Mis pronósticos de temporada",
+    "seasonPredictionsCount": "{chosen} de {total} elegidos",
+    "seasonPredictionsNone": "Aún sin elegir",
+    "seasonPredictionsLink": "Ver o modificar mis pronósticos de temporada",
+    "pepite_F": "Mi Diamante en bruto femenino",
+    "pepite_H": "Mi Diamante en bruto masculino"
   },
   "RaceFormat": {
     "sprint": "Sprint",

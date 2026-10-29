@@ -14,8 +14,8 @@ const FORMAT_LINES: Record<string, string[]> = {
   mass_start: ["individual", "gachette"],
 };
 
-/** Bouton « i » de la page d'une course : rappel simple de la règle du format. */
-export function RuleInfoButton({ format }: { format: string }) {
+/** Bouton « ? » de la page d'une course : rappel simple de la règle du format. */
+export function RuleInfoButton({ format, small = false }: { format: string; small?: boolean }) {
   const t = useTranslations("RuleInfo");
   const [open, setOpen] = useState(false);
   const isRelay = RELAY_FORMATS.includes(format);
@@ -27,9 +27,11 @@ export function RuleInfoButton({ format }: { format: string }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t("open")}
-        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card font-display text-sm font-extrabold italic text-ice"
+        className={`flex flex-shrink-0 items-center justify-center rounded-full border border-border bg-card font-display font-extrabold text-ice ${
+          small ? "h-6 w-6 text-xs" : "h-8 w-8 text-sm"
+        }`}
       >
-        i
+        ?
       </button>
 
       {open && (
