@@ -638,3 +638,6 @@ La barre d'onglets du bas (`BottomNav`) est figée en bas de l'écran pendant le
 individuel) ou Gâchette (poursuite, mass start), départ de la poursuite, biathlètes grillés ; relais :
 une équipe, points dans le Top 5 (règlement §5, alors que l'exemple de Guillaume parlait du podium) ;
 bonus ×2 pour tous. Lien vers le règlement complet.
+Validation : quand le pronostic affiché est celui enregistré (y compris à l'ouverture de la page), la
+mention « Ton pronostic est validé ! » remplace le bouton « Valider mon pronostic », qui revient dès
+qu'un choix, le bonus ×2, la carte ou la cible du ×3 change.

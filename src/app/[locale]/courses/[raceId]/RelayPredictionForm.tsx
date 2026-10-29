@@ -31,8 +31,6 @@ export function RelayPredictionForm({
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Encart « pronostic validé », masqué dès que le joueur modifie son choix.
-  const [saved, setSaved] = useState(false);
   // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
   const [savedState, setSavedState] = useState({ nation: initialSelection, bonusX2: initialBonusX2 });
   const supabase = createClient();
@@ -44,7 +42,6 @@ export function RelayPredictionForm({
     if (!selected) return;
     setSaving(true);
     setError(null);
-    setSaved(false);
 
     const {
       data: { user },
@@ -72,13 +69,14 @@ export function RelayPredictionForm({
       console.error(error);
       setError(t("saveError"));
     } else {
-      setSaved(true);
       setSavedState({ nation: selected, bonusX2 });
     }
   }
 
   const selectedNation = nations.find((n) => n.nation_code === selected);
+  // Pronostic enregistré et inchangé : « Ton pronostic est validé ! » remplace le bouton.
   const unsaved = savedState.nation !== null && (savedState.nation !== selected || savedState.bonusX2 !== bonusX2);
+  const validated = savedState.nation !== null && !unsaved;
 
   return (
     <div className="flex flex-col gap-4">
@@ -87,20 +85,18 @@ export function RelayPredictionForm({
         requiredCount={1}
         onRemove={() => {
           setSelected(null);
-          setSaved(false);
         }}
         x2Available={canUseX2}
         bonusX2={bonusX2}
         x2Remaining={x2UsesRemaining + (initialBonusX2 ? 1 : 0) - (bonusX2 ? 1 : 0)}
         onToggleX2={() => {
           setBonusX2((v) => !v);
-          setSaved(false);
         }}
         canSubmit={Boolean(selected)}
         saving={saving}
         onSubmit={submit}
         unsaved={unsaved}
-        success={saved ? t("saved") : null}
+        success={validated ? t("saved") : null}
         error={error}
       />
 
@@ -116,7 +112,6 @@ export function RelayPredictionForm({
               key={n.nation_code}
               onClick={() => {
                 setSelected(n.nation_code);
-                setSaved(false);
               }}
               className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
