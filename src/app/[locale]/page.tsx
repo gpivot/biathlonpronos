@@ -4,31 +4,25 @@ import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
-import { ChevronRightIcon, LogoMark } from "@/components/icons";
-import { PredictedBadge } from "@/components/PredictedBadge";
+import { LogoMark } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
-import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
-import { displayedSex } from "@/lib/raceLabel";
 import { getLastResult, type LastResult } from "@/lib/lastResult";
 import { LastResultCard } from "@/components/LastResultCard";
+import { getWeekStage, type WeekStage } from "@/lib/weekStage";
+import { WeekStageCard } from "@/components/WeekStageCard";
+import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 
 export const dynamic = "force-dynamic";
 
 interface HomeData {
   season: { id: string; label: string } | null;
   userId: string | null;
-  currentStage: { id: string; location: string; country_code: string; coefficient: number } | null;
-  nextRace: {
-    id: string;
-    format: string;
-    sex: string | null;
-    locks_at: string;
-    stages: { location: string; country_code: string };
-    /** Le joueur connecté a déjà déposé un pronostic sur cette course. */
-    predicted: boolean;
-  } | null;
+  weekStage: WeekStage | null;
+  /** « Maintenant » au rendu (horloge simulée comprise), point de départ du compte à rebours. */
+  nowMs: number;
+  nextRace: NextRace | null;
   leaderboard: LeaderboardRow[];
   favoriteTeam: { nation_code: string; sex: string; nations: { name: string } | null } | null;
   lastResult: LastResult | null;
@@ -44,22 +38,13 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, currentStage: null, nextRace: null, leaderboard: [], favoriteTeam: null, lastResult: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, lastResult: null };
   }
 
   const { now } = await getClock();
-  const today = now.toISOString().slice(0, 10);
 
-  const [{ data: currentStage }, { data: nextRace }, leaderboard, favoriteTeamResult, lastResult] = await Promise.all([
-    supabase
-      .from("stages")
-      .select("id, location, country_code, coefficient")
-      .eq("season_id", season.id)
-      .lte("starts_on", today)
-      .gte("ends_on", today)
-      .order("starts_on", { ascending: true })
-      .limit(1)
-      .maybeSingle(),
+  const [weekStage, { data: nextRace }, leaderboard, favoriteTeamResult, lastResult] = await Promise.all([
+    user ? getWeekStage(supabase, season.id, user.id, now) : Promise.resolve(null),
     supabase
       .from("races")
       .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id)")
@@ -94,7 +79,8 @@ async function getHomeData(): Promise<HomeData> {
   return {
     season,
     userId: user?.id ?? null,
-    currentStage,
+    weekStage,
+    nowMs: now.getTime(),
     nextRace: nextRace ? ({ ...(nextRace as any), predicted } as HomeData["nextRace"]) : null,
     leaderboard,
     favoriteTeam: favoriteTeamResult.data as any,
@@ -104,11 +90,9 @@ async function getHomeData(): Promise<HomeData> {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tFormat, tSex, tRace, { season, userId, currentStage, nextRace, leaderboard, favoriteTeam, lastResult }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, nowMs, nextRace, leaderboard, favoriteTeam, lastResult }] = await Promise.all([
     getTranslations("Home"),
-    getTranslations("RaceFormat"),
     getTranslations("Sex"),
-    getTranslations("Race"),
     getHomeData(),
   ]);
 
@@ -196,58 +180,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         )}
 
-        {currentStage && (
-          <div className="flex flex-col gap-2">
-            <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("nowTitle")}</div>
-            <Link
-              href={`/pronos?etape=${currentStage.id}`}
-              className="flex items-center gap-3.5 rounded-2xl border border-gold/30 bg-card px-4 py-3.5"
-            >
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">
-                {nationFlagEmoji(currentStage.country_code)}
-              </div>
-              <div className="flex flex-1 flex-col gap-0.5">
-                <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
-                  {t("nowBadge")}
-                </div>
-                <div className="text-sm font-semibold">{currentStage.location}</div>
-              </div>
-              {currentStage.coefficient === 2 && (
-                <div className="whitespace-nowrap rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
-                  {t("coefficientBadge")}
-                </div>
-              )}
-              <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-text-dim" />
-            </Link>
-          </div>
-        )}
+        {weekStage && <WeekStageCard stage={weekStage} />}
 
-        {nextRace && (
-          <div className="flex flex-col gap-2">
-            <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("nextRaceTitle")}</div>
-            <Link
-              href={`/courses/${nextRace.id}`}
-              className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5"
-            >
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-lg">
-                {nationFlagEmoji(nextRace.stages.country_code)}
-              </div>
-              <div className="flex flex-1 flex-col gap-0.5">
-                <div className="text-sm font-semibold">{nextRace.stages.location}</div>
-                <div className="text-xs text-text-dim">
-                  {tFormat(nextRace.format)}
-                  {displayedSex(nextRace) ? ` ${tSex(displayedSex(nextRace)!)}` : ""}
-                </div>
-                {nextRace.predicted && <PredictedBadge label={tRace("predicted")} />}
-              </div>
-              <div className="whitespace-nowrap text-xs text-text-dim">
-                {new Date(nextRace.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
-              </div>
-            </Link>
-          </div>
-        )}
+        {nextRace && <NextRaceCard race={nextRace} nowMs={nowMs} locale={locale} />}
 
-        {!currentStage && !nextRace && (
+        {!weekStage && !nextRace && (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
             {t("emptyState")}
           </div>

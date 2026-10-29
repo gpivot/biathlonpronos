@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { CheckIcon } from "@/components/icons";
-import { SaveFeedback } from "./SaveFeedback";
+import { PredictionSummary } from "./PredictionSummary";
 
 export type NationWithOdds = {
   nation_code: string;
@@ -33,6 +33,8 @@ export function RelayPredictionForm({
   const [error, setError] = useState<string | null>(null);
   // Encart « pronostic validé », masqué dès que le joueur modifie son choix.
   const [saved, setSaved] = useState(false);
+  // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
+  const [savedState, setSavedState] = useState({ nation: initialSelection, bonusX2: initialBonusX2 });
   const supabase = createClient();
   const t = useTranslations("PredictionForm");
 
@@ -71,11 +73,37 @@ export function RelayPredictionForm({
       setError(t("saveError"));
     } else {
       setSaved(true);
+      setSavedState({ nation: selected, bonusX2 });
     }
   }
 
+  const selectedNation = nations.find((n) => n.nation_code === selected);
+  const unsaved = savedState.nation !== null && (savedState.nation !== selected || savedState.bonusX2 !== bonusX2);
+
   return (
     <div className="flex flex-col gap-4">
+      <PredictionSummary
+        picks={selected ? [{ key: selected, label: selectedNation?.name ?? selected, nationCode: selected }] : []}
+        requiredCount={1}
+        onRemove={() => {
+          setSelected(null);
+          setSaved(false);
+        }}
+        x2Available={canUseX2}
+        bonusX2={bonusX2}
+        x2Remaining={x2UsesRemaining + (initialBonusX2 ? 1 : 0) - (bonusX2 ? 1 : 0)}
+        onToggleX2={() => {
+          setBonusX2((v) => !v);
+          setSaved(false);
+        }}
+        canSubmit={Boolean(selected)}
+        saving={saving}
+        onSubmit={submit}
+        unsaved={unsaved}
+        success={saved ? t("saved") : null}
+        error={error}
+      />
+
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
         {t("chooseNation")}
       </div>
@@ -112,26 +140,6 @@ export function RelayPredictionForm({
           );
         })}
       </div>
-
-      {canUseX2 && (
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={bonusX2} onChange={(e) => {
-              setBonusX2(e.target.checked);
-              setSaved(false);
-            }} />
-          {t("bonusX2Label", { count: x2UsesRemaining })}
-        </label>
-      )}
-
-      <button
-        onClick={submit}
-        disabled={!selected || saving}
-        className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-on-ice disabled:opacity-40"
-      >
-        {saving ? t("saving") : t("submit")}
-      </button>
-
-      <SaveFeedback success={saved ? t("saved") : null} error={error} />
     </div>
   );
 }

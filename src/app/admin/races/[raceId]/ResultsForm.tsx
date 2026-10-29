@@ -149,6 +149,8 @@ export function ResultsForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <SubmitBar submitting={submitting} result={result} />
+
       <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">Récupérer les résultats</div>
         <div className="flex flex-wrap items-center gap-2">
@@ -283,19 +285,23 @@ export function ResultsForm({
         </table>
       </div>
 
-      {result && (
-        <div className={result.status === "error" ? "text-sm text-red" : "text-sm text-ice"}>
-          {result.message}
-        </div>
-      )}
+      <SubmitBar submitting={submitting} result={result} />
+    </form>
+  );
+}
 
+/** Bouton de calcul et message de retour, affichés en haut et en bas du tableau. */
+function SubmitBar({ submitting, result }: { submitting: boolean; result: SubmitResultsState | null }) {
+  return (
+    <div className="flex flex-wrap items-center gap-3">
       <button
         type="submit"
         disabled={submitting}
-        className="self-start rounded-xl bg-ice px-5 py-2.5 text-sm font-bold text-on-ice disabled:opacity-60"
+        className="rounded-xl bg-ice px-5 py-2.5 text-sm font-bold text-on-ice disabled:opacity-60"
       >
         {submitting ? "Calcul en cours..." : "Enregistrer et calculer les scores"}
       </button>
-    </form>
+      {result && <div className={result.status === "error" ? "text-sm text-red" : "text-sm text-ice"}>{result.message}</div>}
+    </div>
   );
 }

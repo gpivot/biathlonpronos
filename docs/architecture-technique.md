@@ -48,6 +48,10 @@ retenus dans `src/lib/scoring/individualRace.ts`, confirmés par Guillaume le 20
 - **Bonus de combinaison (podium/top5/top10)** : mutuellement exclusifs, seul le palier le
   plus élevé atteint est payé (pas de cumul). Ne s'applique que sur un pronostic complet de
   3 choix comptés.
+  **Depuis fin octobre 2026 (demande de Guillaume) : le Prono parfait remplace le bonus
+  Top 3/Top 5/Top 10, il ne s'y ajoute pas.** Les bonus sont affichés « Bonus Top 3 / Top 5 /
+  Top 10 » (le palier est retrouvé à partir du montant enregistré). Les courses déjà notées avant
+  ce changement gardent leurs points tant qu'elles ne sont pas renotées.
 - **Fusée / Gâchette** : attribués par athlète (et non plus comme un bonus global de fin de
   calcul), sur l'ensemble des biathlètes réellement pronostiqués. Le filtrage "3 meilleurs sur
   4" de la carte "Balle de pioche" s'applique **après** l'ajout de ce bonus — un athlète
@@ -575,3 +579,36 @@ Guillaume, ex. disqualification après le premier classement IBU).**
 recalculées), puis l'étape (`deleteStage`). Saison : suppression en base, la cascade efface tout ce
 qui en dépend (étapes, courses, athlètes, cotes, pronostics, résultats, points, ligues, cartes,
 Pépites) ; il faut retaper le label de la saison pour confirmer.
+
+## Accueil et page de pronostic — lot « page par page » (fin octobre 2026)
+
+**Accueil.** L'encart « En ce moment » devient « L'étape de la semaine » (`WeekStageCard`,
+`src/lib/weekStage.ts`) :
+- étape affichée : celle en cours (dates de l'étape, jour de Paris), sinon celle qui commence dans
+  les 7 jours (à confirmer) ;
+- le badge « En ce moment » n'apparaît que si une course de l'étape part aujourd'hui (heure de Paris) ;
+- une ligne par course « en cours » (départ passé, pas encore notée) avec les biathlètes ou la nation
+  pronostiqués, ou « Pas de pronostic sur cette course ».
+« Prochainement » devient « À suivre » (`NextRaceCard`) avec un compte à rebours jusqu'au départ
+(= verrouillage), qui part de l'horloge du serveur (horloge simulée de l'admin comprise). Si le
+joueur n'a pas encore pronostiqué cette course, un bouton « À jouer » s'affiche dans la carte
+(demande de Guillaume), sinon la mention « Pronostic validé ».
+
+**Page de pronostic d'une course.** Encart « Mon pronostic » en haut (`PredictionSummary`) : les choix
+en cours avec une croix rouge pour retirer chacun, le bouton « Activer mon bonus ×2 » (nombre restant
+sur la saison, mis à jour en direct) et « Valider mon pronostic ». Retirer un choix ne supprime rien en
+base : le pronostic enregistré reste valable tant que le joueur n'a pas revalidé (un message le
+rappelle). Le choix de carte bonus (Balle de pioche, Ça farte) reste sous la liste.
+
+**Saisie et affichage des résultats (fin octobre 2026).** Back-office d'une course : bouton
+« Enregistrer et calculer les scores » en haut et en bas du tableau, lien retour vers la page
+publique de la course. Page d'une course notée (`getRaceResult` dans `src/lib/lastResult.ts`,
+partagé avec l'encart « Dernier résultat ») : le pronostic du joueur dans l'ordre d'arrivée, avec la
+place et les points de chaque choix, les bonus de course, et le classement complet avec les points du
+barème (cote × rang + Fusée/Gâchette, sans les multiplicateurs propres à chaque joueur) pour le
+Top 10 (Top 5 en relais) et pour tout athlète Fusée/Gâchette. Pictos 🚀 Fusée et 🎯 Gâchette.
+Les points du barème utilisent les cotes en vigueur, comme le calcul des scores.
+
+**Pronostic d'une poursuite.** Liste des biathlètes par ordre de départ (classement du sprint de
+l'étape, même sexe ; les non-classés ensuite, par cote), affichage par défaut, ou par cote. Les cotes
+affichées sont les cotes poursuite réévaluées après le sprint.
