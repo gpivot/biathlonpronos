@@ -540,5 +540,18 @@
         "email": true
       }
     ]
+  },
+  "RuleInfo": {
+    "open": "Wie funktioniert's?",
+    "title": "Wie funktioniert's?",
+    "close": "Schließen",
+    "seeRules": "Komplettes Regelwerk ansehen",
+    "individual": "Wähle 3 Biathleten. Jeder punktet, wenn er unter die Top 10 kommt: Quote × 25 für einen Sieg, × 18 für Platz 2 … bis × 1 für Platz 10. Bonus, wenn alle 3 Tipps unter die Top 3, Top 5 oder Top 10 kommen.",
+    "fusee": "Raketen-Bonus: +50 Pkt., wenn einer deiner Biathleten die schnellste Laufzeit hat.",
+    "gachette": "Abzug-Bonus: +20 Pkt. pro Biathlet mit 20/20 am Schießstand.",
+    "pursuitStart": "Gestartet wird in der Reihenfolge des Sprints, die Quoten werden je nach Rückstand neu bewertet.",
+    "grilled": "Die Biathleten aus dem vorherigen Rennen der Etappe sind gesperrt: Du kannst sie nicht erneut wählen.",
+    "relay": "Bei Staffeln wählst du ein einziges Team: Es punktet, wenn es unter die Top 5 kommt (Quote × 10 für den Sieg, dann × 6, × 4, × 2 und × 1).",
+    "x2": "Bis zum Start kannst du deinen Tipp ändern und einen ×2-Bonus aktivieren (3 pro Saison)."
   }
 }

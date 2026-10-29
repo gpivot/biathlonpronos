@@ -540,5 +540,18 @@
         "email": true
       }
     ]
+  },
+  "RuleInfo": {
+    "open": "How does it work?",
+    "title": "How does it work?",
+    "close": "Close",
+    "seeRules": "See the full rules",
+    "individual": "Pick 3 biathletes. Each one scores if they finish in the Top 10: their odds × 25 for a win, × 18 for 2nd place… down to × 1 for 10th. Bonus if your 3 picks all finish in the Top 3, Top 5 or Top 10.",
+    "fusee": "Rocket bonus: +50 pts if one of your biathletes has the fastest ski time.",
+    "gachette": "Trigger bonus: +20 pts per biathlete who shoots 20/20.",
+    "pursuitStart": "Athletes start in the order of the sprint results, and odds are re-evaluated based on the time gap.",
+    "grilled": "Biathletes picked for the previous race of the stage are burned: you can't pick them again.",
+    "relay": "For relays, pick a single team: it scores if it finishes in the Top 5 (its odds × 10 for a win, then × 6, × 4, × 2 and × 1).",
+    "x2": "Until the start, you can change your prediction and activate a ×2 bonus (3 per season)."
   }
 }

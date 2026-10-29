@@ -53,13 +53,12 @@ export function PredictionForm({
   const [sortBy, setSortBy] = useState<"start" | "odds">(hasStartOrder ? "start" : "odds");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // Encart « pronostic validé », masqué dès que le joueur modifie son choix.
-  const [saved, setSaved] = useState(false);
   // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
   const [savedState, setSavedState] = useState(() => ({
     key: [...initialSelection].sort().join(","),
     bonusX2: initialBonusX2,
     card: initialCardUsed,
+    target: initialCardTarget,
   }));
   const supabase = createClient();
   const t = useTranslations("PredictionForm");
@@ -71,7 +70,6 @@ export function PredictionForm({
   const requiredCount = cardChoice === "balle_de_pioche" ? 4 : 3;
 
   function toggle(athleteId: string) {
-    setSaved(false);
     setSelected((prev) => {
       if (prev.includes(athleteId)) return prev.filter((id) => id !== athleteId);
       // Un biathlète grillé peut être retiré du pronostic, pas ajouté.
@@ -83,7 +81,6 @@ export function PredictionForm({
 
   function changeCard(next: CardChoice) {
     setCardChoice(next);
-    setSaved(false);
     if (next !== "ca_farte") setCaFarteTarget(null);
     if (next !== "balle_de_pioche" && selected.length > 3) setSelected((prev) => prev.slice(0, 3));
   }
@@ -96,7 +93,6 @@ export function PredictionForm({
 
     setSaving(true);
     setError(null);
-    setSaved(false);
 
     const {
       data: { user },
@@ -142,8 +138,12 @@ export function PredictionForm({
       console.error(failure);
       setError(t("saveError"));
     } else {
-      setSaved(true);
-      setSavedState({ key: [...selected].sort().join(","), bonusX2, card: cardChoice === "none" ? null : cardChoice });
+      setSavedState({
+        key: [...selected].sort().join(","),
+        bonusX2,
+        card: cardChoice === "none" ? null : cardChoice,
+        target: cardChoice === "ca_farte" ? caFarteTarget : null,
+      });
     }
   }
 
@@ -154,11 +154,14 @@ export function PredictionForm({
       : athletes;
 
   const athleteById = new Map(athletes.map((a) => [a.athlete_id, a]));
+  // Pronostic enregistré et inchangé : « Ton pronostic est validé ! » remplace le bouton.
   const unsaved =
     savedState.key !== "" &&
     (savedState.key !== [...selected].sort().join(",") ||
       savedState.bonusX2 !== bonusX2 ||
-      savedState.card !== (cardChoice === "none" ? null : cardChoice));
+      savedState.card !== (cardChoice === "none" ? null : cardChoice) ||
+      (cardChoice === "ca_farte" && savedState.target !== caFarteTarget));
+  const validated = savedState.key !== "" && !unsaved;
 
   return (
     <div className="flex flex-col gap-4">
@@ -174,13 +177,12 @@ export function PredictionForm({
         x2Remaining={x2UsesRemaining + (initialBonusX2 ? 1 : 0) - (bonusX2 ? 1 : 0)}
         onToggleX2={() => {
           setBonusX2((v) => !v);
-          setSaved(false);
         }}
         canSubmit={selected.length === requiredCount}
         saving={saving}
         onSubmit={submit}
         unsaved={unsaved}
-        success={saved ? t("saved") : null}
+        success={validated ? t("saved") : null}
         error={error}
       />
 
@@ -250,7 +252,6 @@ export function PredictionForm({
                   onClick={(e) => {
                     e.stopPropagation();
                     setCaFarteTarget(a.athlete_id);
-                    setSaved(false);
                   }}
                   className={`whitespace-nowrap rounded-full px-2 py-1 font-display text-[11px] font-bold ${
                     isCaFarteTarget ? "bg-gold text-[#2a1900]" : "border border-border text-text-dim"

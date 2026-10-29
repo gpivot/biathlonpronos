@@ -103,16 +103,22 @@ export function PredictionSummary({
         </button>
       )}
 
-      <button
-        onClick={onSubmit}
-        disabled={!canSubmit || saving}
-        className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-on-ice disabled:opacity-40"
-      >
-        {saving ? t("saving") : t("submit")}
-      </button>
-
-      {unsaved && !error && <div className="text-center text-[12px] text-text-dim">{t("unsavedHint")}</div>}
-      <SaveFeedback success={success} error={error} />
+      {/* Une fois validé, la confirmation prend la place du bouton ; il revient dès qu'un choix change. */}
+      {success && !error ? (
+        <SaveFeedback success={success} error={null} />
+      ) : (
+        <>
+          <button
+            onClick={onSubmit}
+            disabled={!canSubmit || saving}
+            className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-on-ice disabled:opacity-40"
+          >
+            {saving ? t("saving") : t("submit")}
+          </button>
+          {unsaved && !error && <div className="text-center text-[12px] text-text-dim">{t("unsavedHint")}</div>}
+          <SaveFeedback success={null} error={error} />
+        </>
+      )}
     </div>
   );
 }

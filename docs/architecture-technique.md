@@ -631,3 +631,13 @@ aussi (à confirmer). Sans aucun résultat dans les 48 h, la dernière course no
 sur l'accueil (gardée sur la page d'une course).
 La barre d'onglets du bas (`BottomNav`) est figée en bas de l'écran pendant le défilement
 (`sticky bottom-0`), sur toutes les pages qui l'affichent.
+
+**Bouton « i » sur la page d'une course (fin octobre 2026).** En haut à droite, il ouvre une fenêtre
+« Comment ça marche ? » qui résume la règle du format (`RuleInfoButton`, textes `RuleInfo.*` en
+5 langues) : barème Top 10 et bonus Top 3/5/10 pour les courses individuelles, Fusée (sprint,
+individuel) ou Gâchette (poursuite, mass start), départ de la poursuite, biathlètes grillés ; relais :
+une équipe, points dans le Top 5 (règlement §5, alors que l'exemple de Guillaume parlait du podium) ;
+bonus ×2 pour tous. Lien vers le règlement complet.
+Validation : quand le pronostic affiché est celui enregistré (y compris à l'ouverture de la page), la
+mention « Ton pronostic est validé ! » remplace le bouton « Valider mon pronostic », qui revient dès
+qu'un choix, le bonus ×2, la carte ou la cible du ×3 change.
