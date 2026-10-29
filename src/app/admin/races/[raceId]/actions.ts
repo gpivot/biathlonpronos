@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { isSpecialRuleAllowed } from "../../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { fetchIbuResults } from "@/lib/admin/ibuResults";
@@ -83,6 +84,7 @@ export async function updateRace(formData: FormData) {
   const format = String(formData.get("format"));
   const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
+  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle.");
   // relais_h/f portent le sexe dans le format, les relais mixtes n'en ont pas.
   const sexless = format.startsWith("relais_");
 

@@ -18,6 +18,7 @@ import { getRaceResult } from "@/lib/lastResult";
 import { getRacePlayers } from "@/lib/racePlayers";
 import { PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
+import { SPECIAL_RULE_ICONS } from "@/lib/specialRules";
 import { FuseeGachetteLegend, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 
 export const dynamic = "force-dynamic";
@@ -228,8 +229,9 @@ export default async function RacePage({
         </div>
 
         {race.special_rule && (
-          <div className="rounded-2xl border border-gold/35 bg-gold-soft px-3.5 py-3 text-[12px] leading-relaxed text-frost">
-            {t("specialRulePrefix")} <span className="font-semibold text-gold">{race.special_rule.replace(/_/g, " ")}</span>{" "}
+          <div className="rounded-2xl border border-red/50 bg-red/10 px-3.5 py-3 text-[12px] leading-relaxed text-frost">
+            {SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"} {t("specialRulePrefix")}{" "}
+            <span className="font-semibold text-red">{tFormat(`specialRule_${race.special_rule}`)}</span>{" "}
             {t("specialRuleHint")}
           </div>
         )}

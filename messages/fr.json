@@ -215,7 +215,7 @@
     "playerFavoriteTeam": "Équipe favorite"
   },
   "Courses": {
-    "title": "Calendrier",
+    "title": "Ma saison",
     "emptyState": "Aucune étape programmée. Ajoute une saison, des étapes et des courses pour cette saison.",
     "noRacesInStage": "Aucune course pour cette étape.",
     "coefficientBadge": "Coeff. ×2",
@@ -231,7 +231,8 @@
     "seasonPredictionsNone": "Pas encore choisi",
     "seasonPredictionsLink": "Voir ou modifier mes pronostics de saison",
     "pepite_F": "Ma Pépite Femmes",
-    "pepite_H": "Ma Pépite Hommes"
+    "pepite_H": "Ma Pépite Hommes",
+    "specialRaceBanner": "Course malus · {name}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -241,7 +242,10 @@
     "relais_h": "Relais Hommes",
     "relais_f": "Relais Femmes",
     "relais_mixte": "Relais Mixte",
-    "relais_mixte_simple": "Relais Mixte Simple"
+    "relais_mixte_simple": "Relais Mixte Simple",
+    "specialRule_tour_de_pena": "Tour de péna",
+    "specialRule_brouillard": "Brouillard",
+    "specialRule_tes_colle": "T'es collé(e)"
   },
   "Sex": {
     "F": "Femmes",

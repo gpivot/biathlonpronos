@@ -197,7 +197,8 @@ export function pickLastResultRaces<T extends { sex: string | null; locks_at: st
     if (!byCategory.has(category)) byCategory.set(category, race);
   }
   const picked = byCategory.size > 0 ? Array.from(byCategory.values()) : racesNewestFirst.slice(0, 1);
-  return picked.sort((x, y) => x.locks_at.localeCompare(y.locks_at));
+  // Le plus récent en haut (demande de Guillaume).
+  return picked.sort((x, y) => y.locks_at.localeCompare(x.locks_at));
 }
 
 /** « Derniers résultats » de l'accueil (voir pickLastResultRaces). */

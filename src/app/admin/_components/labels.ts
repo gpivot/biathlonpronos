@@ -13,9 +13,19 @@ export const RACE_FORMATS = [
 export const SPECIAL_RULES = [
   { value: "", label: "Aucune" },
   { value: "tour_de_pena", label: "Tour de péna" },
-  { value: "brouillard", label: "Brouillard" },
+  { value: "brouillard", label: "Brouillard (sprint, individuelle)" },
   { value: "tes_colle", label: "T'es collé(e)" },
 ];
+
+/** Formats autorisés par course spéciale (absent : tous). Brouillard : sprint ou individuelle (demande de Guillaume). */
+export const SPECIAL_RULE_FORMATS: Record<string, string[]> = {
+  brouillard: ["sprint", "individuel"],
+};
+
+export function isSpecialRuleAllowed(format: string, specialRule: string): boolean {
+  const allowed = SPECIAL_RULE_FORMATS[specialRule];
+  return !allowed || allowed.includes(format);
+}
 
 export const RELAY_FORMATS = ["relais_h", "relais_f", "relais_mixte", "relais_mixte_simple"];
 

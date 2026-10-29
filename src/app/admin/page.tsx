@@ -7,6 +7,7 @@ import { getClock } from "@/lib/clock";
 import { PencilIcon, TrashIcon } from "@/components/icons";
 import { CsvImportPanel } from "./_components/CsvImportPanel";
 import { ConfirmButton } from "./_components/ConfirmButton";
+import { SpecialRuleSelect } from "./_components/SpecialRuleSelect";
 import { GlobesSection } from "./_globes/GlobesSection";
 import {
   RACE_FORMATS,
@@ -226,13 +227,7 @@ export default async function AdminCalendarResultsPage() {
                         title="Heure de départ (= verrouillage), en UTC"
                         className={inputClass}
                       />
-                      <select name="special_rule" className={inputClass}>
-                        {SPECIAL_RULES.map((r) => (
-                          <option key={r.value} value={r.value}>
-                            {r.label}
-                          </option>
-                        ))}
-                      </select>
+                      <SpecialRuleSelect defaultFormat={RACE_FORMATS[0].value} className={inputClass} />
                       <button type="submit" className="rounded border border-border px-3 py-1.5 text-xs">
                         Ajouter la course
                       </button>

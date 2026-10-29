@@ -65,7 +65,7 @@ export async function getSeasonView(
 
   const { data: stages, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, ends_on, coefficient, races(id, format, sex, locks_at, status)")
+    .select("id, location, country_code, starts_on, ends_on, coefficient, races(id, format, sex, locks_at, status, special_rule)")
     .eq("season_id", season.id)
     .order("starts_on", { ascending: true });
   if (error) console.error("getSeasonView:", error.message);

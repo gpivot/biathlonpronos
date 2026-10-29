@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { isSpecialRuleAllowed } from "../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { importCalendarCsv } from "@/lib/admin/calendarImport";
@@ -53,6 +54,7 @@ export async function createRace(formData: FormData) {
   const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
   const format = String(formData.get("format"));
+  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle.");
 
   // L'input datetime-local ne porte pas de fuseau ; on le traite comme UTC
   // (cohérent avec supabase/seed.sql) pour éviter toute ambiguïté serveur.

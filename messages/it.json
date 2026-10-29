@@ -215,7 +215,7 @@
     "playerFavoriteTeam": "Squadra preferita"
   },
   "Courses": {
-    "title": "Calendario",
+    "title": "La mia stagione",
     "emptyState": "Nessuna tappa in programma. Aggiungi una stagione, delle tappe e delle gare per questa stagione.",
     "noRacesInStage": "Nessuna gara in questa tappa.",
     "coefficientBadge": "Coeff. ×2",
@@ -231,7 +231,8 @@
     "seasonPredictionsNone": "Non ancora scelto",
     "seasonPredictionsLink": "Vedi o modifica i miei pronostici di stagione",
     "pepite_F": "La mia Pepita donne",
-    "pepite_H": "La mia Pepita uomini"
+    "pepite_H": "La mia Pepita uomini",
+    "specialRaceBanner": "Gara malus · {name}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -241,7 +242,10 @@
     "relais_h": "Staffetta maschile",
     "relais_f": "Staffetta femminile",
     "relais_mixte": "Staffetta mista",
-    "relais_mixte_simple": "Single mixed"
+    "relais_mixte_simple": "Single mixed",
+    "specialRule_tour_de_pena": "Giro di penalità",
+    "specialRule_brouillard": "Nebbia",
+    "specialRule_tes_colle": "In castigo"
   },
   "Sex": {
     "F": "Donne",
