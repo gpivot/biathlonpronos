@@ -211,7 +211,8 @@
     "close": "Chiudi",
     "playerLoading": "Caricamento…",
     "playerError": "Impossibile mostrare questo giocatore.",
-    "playerHiddenHint": "I suoi pronostici compaiono alla partenza di ogni gara."
+    "playerHiddenHint": "I suoi pronostici compaiono alla partenza di ogni gara.",
+    "playerFavoriteTeam": "Squadra preferita"
   },
   "Courses": {
     "title": "Calendario",

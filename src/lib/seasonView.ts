@@ -3,6 +3,7 @@ import { getRaceDisplayStatus } from "./raceStatus";
 import type { CalendarStage } from "../app/[locale]/courses/CalendarAccordion";
 import type { SeasonPick } from "../app/[locale]/courses/SeasonPredictionsAccordion";
 import { shortAthleteName } from "./athleteName";
+import { getCurrentStreak } from "./streakCounter";
 
 /**
  * Contenu de « Ma saison » (`/courses`) pour un joueur : courses de chaque étape avec son
@@ -28,6 +29,8 @@ export interface SeasonView {
   stages: CalendarStage[];
   /** null : visiteur non connecté. */
   seasonPicks: SeasonPick[] | null;
+  /** Série en cours (10/10), null pour un visiteur. */
+  streak: number | null;
 }
 
 export async function getSeasonView(
@@ -40,7 +43,7 @@ export async function getSeasonView(
   const seasonStarted = new Date(season.starts_on) <= now;
   const showSeasonPicks = isOwner || seasonStarted;
 
-  const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }] = await Promise.all([
+  const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak] = await Promise.all([
     userId
       ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, bonus_x2_used").eq("user_id", userId)
       : Promise.resolve({ data: [] as any[] }),
@@ -57,6 +60,7 @@ export async function getSeasonView(
     userId
       ? supabase.from("pepites").select("sex, athlete_id, bonus_claimed").eq("user_id", userId).eq("season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
+    userId ? getCurrentStreak(supabase, season.id, userId) : Promise.resolve(null),
   ]);
 
   const { data: stages, error } = await supabase
@@ -146,7 +150,7 @@ export async function getSeasonView(
       .sort((a: any, b: any) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
   }));
 
-  return { stages: mapped, seasonPicks };
+  return { stages: mapped, seasonPicks, streak };
 }
 
 /** Étape ouverte par défaut : la première qui n'est pas entièrement terminée. */

@@ -3,6 +3,8 @@
 import { useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CloseIcon } from "@/components/icons";
+import { StreakCard } from "@/components/StreakCard";
+import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CalendarAccordion } from "../courses/CalendarAccordion";
 import { SeasonPredictionsAccordion } from "../courses/SeasonPredictionsAccordion";
 import { getPlayerSeason, type PlayerSeason } from "./actions";
@@ -13,6 +15,8 @@ import { getPlayerSeason, type PlayerSeason } from "./actions";
  */
 export function PlayerSeasonButton({ userId, className, children }: { userId: string; className: string; children: ReactNode }) {
   const t = useTranslations("Classement");
+  const tHome = useTranslations("Home");
+  const tSex = useTranslations("Sex");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<PlayerSeason | null>(null);
@@ -66,7 +70,29 @@ export function PlayerSeasonButton({ userId, className, children }: { userId: st
               {state === "error" && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerError")}</div>}
               {data && (
                 <>
+                  <div className="flex flex-col gap-2 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-4">
+                    <div className="flex items-end justify-between">
+                      <div>
+                        <div className="font-display text-xl font-extrabold text-frost">{data.rank ? `#${data.rank}` : "–"}</div>
+                        <div className="text-xs text-text-dim">{tHome("rankLabel")}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-display text-xl font-extrabold text-ice">{Math.round(data.points * 10) / 10} pts</div>
+                        <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
+                      </div>
+                    </div>
+                    {data.favoriteTeam && (
+                      <div className="flex items-center gap-2 text-[13px] text-text-dim">
+                        <span className="text-base">{nationFlagEmoji(data.favoriteTeam.nationCode)}</span>
+                        {t("playerFavoriteTeam")}
+                        <span className="font-semibold text-frost">
+                          {data.favoriteTeam.name} {tSex(data.favoriteTeam.sex)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   {data.seasonPicks && <SeasonPredictionsAccordion picks={data.seasonPicks} readOnly />}
+                  {data.streak != null && <StreakCard current={data.streak} />}
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
                   <CalendarAccordion stages={data.stages} defaultOpenStageId={data.defaultOpenStageId} locale={locale} readOnly />
                 </>

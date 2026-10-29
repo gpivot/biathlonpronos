@@ -6,7 +6,6 @@ import { HeaderActions } from "@/components/HeaderActions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getLeaderboard as getLeaderboardRows } from "@/lib/leaderboard";
 import { PlayerSeasonButton } from "./PlayerSeasonButton";
-import { StreakCard } from "./StreakCard";
 
 export const dynamic = "force-dynamic";
 
@@ -23,20 +22,11 @@ interface StreakRow {
   currentStreak: number;
 }
 
-async function getStreakLeaderboard(): Promise<{ rows: StreakRow[]; myStreak: number | null }> {
+async function getStreakLeaderboard(): Promise<StreakRow[]> {
   const supabase = createClient();
 
-  const [{ data: season }, { data: userResult }] = await Promise.all([
-    supabase.from("seasons").select("id").eq("status", "active").maybeSingle(),
-    supabase.auth.getUser(),
-  ]);
-  if (!season) return { rows: [], myStreak: null };
-
-  const user = userResult.user;
-  const { data: mine } = user
-    ? await supabase.from("streak_counters").select("current_streak").eq("season_id", season.id).eq("user_id", user.id).maybeSingle()
-    : { data: null };
-  const myStreak = user ? mine?.current_streak ?? 0 : null;
+  const { data: season } = await supabase.from("seasons").select("id").eq("status", "active").maybeSingle();
+  if (!season) return [];
 
   const { data: streaks } = await supabase
     .from("streak_counters")
@@ -46,16 +36,15 @@ async function getStreakLeaderboard(): Promise<{ rows: StreakRow[]; myStreak: nu
     .order("current_streak", { ascending: false })
     .limit(10);
 
-  const rows = (streaks ?? []).map((s) => ({
+  return (streaks ?? []).map((s) => ({
     userId: s.user_id,
     pseudo: (s.profiles as any)?.pseudo ?? "?",
     currentStreak: s.current_streak,
   }));
-  return { rows, myStreak };
 }
 
 export default async function ClassementPage() {
-  const [leaderboard, { rows: streakLeaderboard, myStreak }] = await Promise.all([getLeaderboard(), getStreakLeaderboard()]);
+  const [leaderboard, streakLeaderboard] = await Promise.all([getLeaderboard(), getStreakLeaderboard()]);
   const t = await getTranslations("Classement");
 
   return (
@@ -97,8 +86,6 @@ export default async function ClassementPage() {
             ))}
           </div>
         )}
-
-        {myStreak != null && <StreakCard current={myStreak} />}
 
         {streakLeaderboard.length > 0 && (
           <div className="flex flex-col gap-2">

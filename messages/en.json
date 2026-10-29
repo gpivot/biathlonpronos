@@ -211,7 +211,8 @@
     "close": "Close",
     "playerLoading": "Loading…",
     "playerError": "This player can't be displayed.",
-    "playerHiddenHint": "Their picks appear when each race starts."
+    "playerHiddenHint": "Their picks appear when each race starts.",
+    "playerFavoriteTeam": "Favourite team"
   },
   "Courses": {
     "title": "Calendar",

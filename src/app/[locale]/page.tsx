@@ -13,6 +13,8 @@ import { LastResultCard } from "@/components/LastResultCard";
 import { getWeekStage, type WeekStage } from "@/lib/weekStage";
 import { WeekStageCard } from "@/components/WeekStageCard";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
+import { StreakCard } from "@/components/StreakCard";
+import { getCurrentStreak } from "@/lib/streakCounter";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +28,7 @@ interface HomeData {
   leaderboard: LeaderboardRow[];
   favoriteTeam: { nation_code: string; sex: string; nations: { name: string } | null } | null;
   lastResults: LastResult[];
+  streak: number | null;
 }
 
 async function getHomeData(): Promise<HomeData> {
@@ -38,12 +41,12 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, lastResults: [] };
+    return { season: null, userId: user?.id ?? null, weekStage: null, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, lastResults: [], streak: null };
   }
 
   const { now } = await getClock();
 
-  const [weekStage, { data: nextRace }, leaderboard, favoriteTeamResult, lastResults] = await Promise.all([
+  const [weekStage, { data: nextRace }, leaderboard, favoriteTeamResult, lastResults, streak] = await Promise.all([
     user ? getWeekStage(supabase, season.id, user.id, now) : Promise.resolve(null),
     supabase
       .from("races")
@@ -64,6 +67,7 @@ async function getHomeData(): Promise<HomeData> {
           .maybeSingle()
       : Promise.resolve({ data: null }),
     user ? getLastResults(supabase, season.id, user.id, now) : Promise.resolve([]),
+    user ? getCurrentStreak(supabase, season.id, user.id) : Promise.resolve(null),
   ]);
 
   let predicted = false;
@@ -85,12 +89,13 @@ async function getHomeData(): Promise<HomeData> {
     leaderboard,
     favoriteTeam: favoriteTeamResult.data as any,
     lastResults,
+    streak,
   };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, nowMs, nextRace, leaderboard, favoriteTeam, lastResults }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, nowMs, nextRace, leaderboard, favoriteTeam, lastResults, streak }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -122,6 +127,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
 
         {loggedInWithSeason ? (
+          <>
           <div className="flex flex-col gap-3 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-5">
             <div className="font-display text-[11px] font-bold uppercase tracking-wider text-gold">
               {t("seasonBadge", { label: season!.label })}
@@ -163,6 +169,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </Link>
             </div>
           </div>
+          {streak != null && <StreakCard current={streak} />}
+          </>
         ) : (
           <div className="flex gap-2.5">
             <Link

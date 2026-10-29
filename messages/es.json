@@ -211,7 +211,8 @@
     "close": "Cerrar",
     "playerLoading": "Cargando…",
     "playerError": "No se puede mostrar este jugador.",
-    "playerHiddenHint": "Sus pronósticos aparecen al inicio de cada carrera."
+    "playerHiddenHint": "Sus pronósticos aparecen al inicio de cada carrera.",
+    "playerFavoriteTeam": "Equipo favorito"
   },
   "Courses": {
     "title": "Calendario",

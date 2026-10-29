@@ -211,7 +211,8 @@
     "close": "Schließen",
     "playerLoading": "Wird geladen…",
     "playerError": "Dieser Spieler kann nicht angezeigt werden.",
-    "playerHiddenHint": "Die Tipps erscheinen beim Start jedes Rennens."
+    "playerHiddenHint": "Die Tipps erscheinen beim Start jedes Rennens.",
+    "playerFavoriteTeam": "Lieblingsteam"
   },
   "Courses": {
     "title": "Kalender",

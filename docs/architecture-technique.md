@@ -695,3 +695,11 @@ qu'elle n'est pas appliquée, le pop-up d'un autre joueur s'affiche sans ses pro
   nom composé garde son premier nom entier et l'initiale des suivants (« J. Dale-S. »,
   « Q. Fillon M. »). Utilisé partout où les noms courts s'affichent ; les lignes étroites tronquent
   aussi proprement au lieu de déborder.
+
+**Série en cours déplacée (fin octobre 2026).** À la demande de Guillaume, la carte « Série en
+cours » quitte le Classement (où reste la liste « Meilleures séries en cours ») : elle est sur
+l'accueil sous les boutons Classement / Ma saison, et dans Ma saison entre « Mes pronostics de
+saison » et les étapes (`StreakCard`, `getCurrentStreak`). Le pop-up d'un joueur affiche en haut
+sa place et ses points au classement général et son équipe favorite, puis ses pronostics de
+saison, sa série en cours, et ses étapes. Migration **0019** : lecture des équipes favorites
+ouverte à tous (rien à copier), à coller par Guillaume.

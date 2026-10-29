@@ -1,9 +1,12 @@
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { STREAK_TARGET } from "@/lib/scoring/constants";
 
-/** « Série en cours » du joueur connecté : courses d'affilée avec des points, sur 10 pour une carte bonus. */
-export async function StreakCard({ current }: { current: number }) {
-  const t = await getTranslations("Classement");
+/**
+ * « Série en cours » d'un joueur : courses d'affilée avec des points, sur 10 pour une carte bonus.
+ * Accueil, Ma saison et pop-up d'un joueur du Classement.
+ */
+export function StreakCard({ current }: { current: number }) {
+  const t = useTranslations("Classement");
   const remaining = STREAK_TARGET - current;
 
   return (
