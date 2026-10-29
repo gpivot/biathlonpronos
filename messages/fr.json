@@ -34,6 +34,7 @@
     "emptyState": "Aucune étape programmée pour le moment. Ajoute une saison, des étapes et des courses depuis Supabase (voir supabase/seed.sql) pour peupler cet écran.",
     "coefficientBadge": "Coeff. ×2",
     "lastResultTitle": "Dernier résultat",
+    "lastResultsTitle": "Derniers résultats",
     "lastResultSeeRace": "Voir la course",
     "lastResultPlayerRank": "{rank, selectordinal, one {#er} other {#e}} sur {count} joueurs",
     "lastResultWinner": "1er de la course !",
@@ -123,7 +124,7 @@
     "s_pepite_title": "11. La Pépite",
     "s_pepite_body": "Mise en début de saison sur un outsider par sexe (cote ≥ 30). Pronostic caché : à son premier Top 10 de la saison, son score de la course s'ajoute en bonus, puis elle redevient une biathlète comme une autre.",
     "s_fuseegachette_title": "12. Fusée & Gâchette",
-    "s_fuseegachette_body": "Fusée : +50 pts si l'un de tes choix a le meilleur temps de ski de la course (une fois). Gâchette : +20 pts par choix ayant fait un sans-faute au tir (cumulable).",
+    "s_fuseegachette_body": "Fusée (sprint et individuel uniquement) : +50 pts si l'un de tes choix a le meilleur temps de ski de la course (une fois). Gâchette (poursuite et mass start uniquement) : +20 pts par choix ayant fait un 20/20 au tir (cumulable).",
     "s_classement_title": "13. Le classement général",
     "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Des classements annexes (Dossard Rouge) et des ligues privées entre amis existent aussi."
   },
@@ -280,7 +281,8 @@
     "unsavedHint": "Modification pas encore enregistrée : valide pour la prendre en compte.",
     "chooseFour": "Choisis 4 biathlètes",
     "sortByStart": "Ordre de départ",
-    "sortByOdds": "Par cote"
+    "sortByOdds": "Par cote",
+    "startPosition": "départ {position, selectordinal, one {#er} other {#e}}"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",

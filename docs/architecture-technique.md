@@ -610,5 +610,24 @@ Top 10 (Top 5 en relais) et pour tout athlète Fusée/Gâchette. Pictos 🚀 Fus
 Les points du barème utilisent les cotes en vigueur, comme le calcul des scores.
 
 **Pronostic d'une poursuite.** Liste des biathlètes par ordre de départ (classement du sprint de
-l'étape, même sexe ; les non-classés ensuite, par cote), affichage par défaut, ou par cote. Les cotes
+l'étape, même sexe ; les non-classés ensuite, par cote), affichage par défaut, ou par cote ; en tri par
+cote, la position de départ reste affichée à côté de la nation. Les cotes
 affichées sont les cotes poursuite réévaluées après le sprint.
+
+**Fusée et Gâchette selon le format (fin octobre 2026, demande de Guillaume, conforme au §15 du
+règlement).** La Fusée ne compte qu'au sprint et à l'individuel, la Gâchette (20/20 au tir) qu'à la
+poursuite et à la mass start (`src/lib/scoring/fuseeGachette.ts`). La règle est appliquée à la saisie
+(colonnes masquées dans le back-office, cases ignorées à l'enregistrement et à l'import IBU) et à la
+lecture des résultats (calcul des points, affichage), pour que d'anciennes cases cochées sur un autre
+format ne rapportent rien. Les courses déjà notées gardent leurs points tant qu'elles ne sont pas
+renotées.
+
+**Accueil, 2e passe.** Compte à rebours de « À suivre » en bas à droite, sous la date. « Derniers
+résultats » (demande de Guillaume) : la dernière course notée de chaque sexe reste affichée 48 h
+après son départ, un nouveau résultat du même sexe remplaçant le précédent ; une carte par course,
+dans l'ordre des départs (`pickLastResultRaces`). Relais mixtes : catégorie à part, gardée 48 h elle
+aussi (à confirmer). Sans aucun résultat dans les 48 h, la dernière course notée reste affichée seule
+(à confirmer). La légende Fusée/Gâchette est masquée
+sur l'accueil (gardée sur la page d'une course).
+La barre d'onglets du bas (`BottomNav`) est figée en bas de l'écran pendant le défilement
+(`sticky bottom-0`), sur toutes les pages qui l'affichent.

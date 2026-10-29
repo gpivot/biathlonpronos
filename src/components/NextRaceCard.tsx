@@ -48,10 +48,12 @@ export async function NextRaceCard({ race, nowMs, locale }: { race: NextRace; no
               {t("toPlayButton")}
             </span>
           )}
-          <Countdown target={race.locks_at} serverNow={nowMs} />
         </div>
-        <div className="whitespace-nowrap text-xs text-text-dim">
-          {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
+        <div className="flex flex-col items-end gap-1 self-stretch justify-between">
+          <div className="whitespace-nowrap text-xs text-text-dim">
+            {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
+          </div>
+          <Countdown target={race.locks_at} serverNow={nowMs} />
         </div>
       </Link>
     </div>

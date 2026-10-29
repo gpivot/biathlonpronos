@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { computeIndividualPickPoints, computeIndividualExtras, computeResultRowPoints } from "../lastResult";
+import { applyFuseeGachetteRules, fuseeGachetteEligibility } from "../scoring/fuseeGachette";
+import { computeIndividualPickPoints, computeIndividualExtras, computeResultRowPoints, pickLastResultRaces } from "../lastResult";
 import { computeIndividualRaceScore } from "../scoring";
 import type { IndividualRaceScoringInput } from "../scoring";
 
@@ -78,5 +79,49 @@ describe("points du barème dans le classement d'une course", () => {
   it("relais : barème réduit, Top 5 seulement", () => {
     expect(computeResultRowPoints({ rank: 1, odds: 3, relay: true, isFusee: false, isGachette: false })).toBe(30);
     expect(computeResultRowPoints({ rank: 6, odds: 3, relay: true, isFusee: false, isGachette: false })).toBeNull();
+  });
+});
+
+describe("Fusée et Gâchette selon le format (§15)", () => {
+  it("Fusée au sprint et à l'individuel, Gâchette en poursuite et mass start", () => {
+    expect(fuseeGachetteEligibility("sprint")).toEqual({ fusee: true, gachette: false });
+    expect(fuseeGachetteEligibility("individuel")).toEqual({ fusee: true, gachette: false });
+    expect(fuseeGachetteEligibility("poursuite")).toEqual({ fusee: false, gachette: true });
+    expect(fuseeGachetteEligibility("mass_start")).toEqual({ fusee: false, gachette: true });
+    expect(fuseeGachetteEligibility("relais_h")).toEqual({ fusee: false, gachette: false });
+  });
+
+  it("une case cochée sur un format non prévu ne compte pas", () => {
+    expect(applyFuseeGachetteRules("sprint", { is_fusee: true, is_gachette: true })).toEqual({ is_fusee: true, is_gachette: false });
+    expect(applyFuseeGachetteRules("poursuite", { is_fusee: true, is_gachette: true })).toEqual({ is_fusee: false, is_gachette: true });
+  });
+});
+
+describe("Derniers résultats de l'accueil : dernier Hommes et dernier Femmes gardés 48 h", () => {
+  const now = new Date("2026-12-07T18:00:00Z");
+  const race = (id: string, sex: string | null, locks_at: string) => ({ id, sex, locks_at });
+
+  it("garde le dernier de chaque sexe dans les 48 h, le plus récent chasse l'ancien", () => {
+    const races = [
+      race("poursuite-h", "H", "2026-12-07T13:00:00Z"),
+      race("sprint-h", "H", "2026-12-06T13:00:00Z"),
+      race("sprint-f", "F", "2026-12-06T10:00:00Z"),
+    ];
+    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["sprint-f", "poursuite-h"]);
+  });
+
+  it("un résultat de plus de 48 h disparaît", () => {
+    const races = [race("poursuite-h", "H", "2026-12-07T13:00:00Z"), race("sprint-f", "F", "2026-12-05T10:00:00Z")];
+    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["poursuite-h"]);
+  });
+
+  it("relais mixte : sa propre catégorie", () => {
+    const races = [race("mixte", null, "2026-12-07T13:00:00Z"), race("sprint-h", "H", "2026-12-06T13:00:00Z")];
+    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["sprint-h", "mixte"]);
+  });
+
+  it("rien dans les 48 h : la dernière course notée reste affichée", () => {
+    const races = [race("sprint-f", "F", "2026-11-29T10:00:00Z"), race("sprint-h", "H", "2026-11-28T10:00:00Z")];
+    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["sprint-f"]);
   });
 });

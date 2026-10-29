@@ -211,11 +211,11 @@ Biathlonpronos récompense aussi les performances qui font l'essence du biathlon
 
 **Fusée** : le biathlète ayant réalisé le meilleur temps de ski de la course. Si la Fusée faisait partie de tes trois pronostics, tu remportes un bonus de 50 points. Un seul bonus possible.
 
-**Gâchette** : les biathlètes ayant réalisé un sans-faute au tir sur les courses éligibles. Si l'un de tes trois biathlètes en fait partie, tu remportes un bonus de 20 points. Bonus cumulables sur les 3 biathlètes.
+**Gâchette** : les biathlètes ayant réalisé un sans-faute au tir (20/20) sur les courses éligibles. Si l'un de tes trois biathlètes en fait partie, tu remportes un bonus de 20 points. Bonus cumulables sur les 3 biathlètes.
 
-Afin de conserver un équilibre entre les disciplines, les bonus peuvent différer selon le format de course. Principe recommandé :
-- Sprint et Individuel → Bonus Fusée
-- Poursuite et Mass Start → Bonus Gâchette
+Afin de conserver un équilibre entre les disciplines, chaque bonus ne s'applique qu'à certains formats de course :
+- Sprint et Individuel → Bonus Fusée uniquement
+- Poursuite et Mass Start → Bonus Gâchette uniquement (20/20 au tir)
 
 ## 16. Le classement général
 

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { COMBINATION_BONUS, FUSEE_BONUS, GACHETTE_BONUS, RANK_MULTIPLIERS, RELAY_RANK_MULTIPLIERS } from "./scoring/constants";
 import { RELAY_FORMATS } from "./grilling";
+import { applyFuseeGachetteRules } from "./scoring/fuseeGachette";
 
 /**
  * Encart « Dernier résultat » de l'accueil (inspiré de VéloPronos) : la
@@ -158,26 +159,45 @@ export function computeResultRowPoints(params: {
 
 const RACE_SELECT = "id, format, sex, locks_at, stages!inner(location, country_code, coefficient, season_id)";
 
+/** Durée pendant laquelle le dernier résultat de chaque catégorie reste affiché sur l'accueil. */
+export const LAST_RESULTS_WINDOW_MS = 48 * 3600 * 1000;
+
 /**
- * Charge la dernière course notée (statut « finished ») dont l'heure de
- * verrouillage est passée selon l'horloge `now` (horloge simulée de l'admin).
+ * Partie pure (testée) de « Derniers résultats » : la dernière course notée de
+ * chaque catégorie (Hommes, Femmes, mixte) partie dans les 48 dernières heures,
+ * un nouveau résultat d'une catégorie remplaçant le précédent. Sans résultat
+ * dans les 48 h, la dernière course notée reste affichée seule.
  */
-export async function getLastResult(
+export function pickLastResultRaces<T extends { sex: string | null; locks_at: string }>(racesNewestFirst: T[], now: Date): T[] {
+  const since = now.getTime() - LAST_RESULTS_WINDOW_MS;
+  const byCategory = new Map<string, T>();
+  for (const race of racesNewestFirst) {
+    if (new Date(race.locks_at).getTime() < since) break;
+    const category = race.sex ?? "mixte";
+    if (!byCategory.has(category)) byCategory.set(category, race);
+  }
+  const picked = byCategory.size > 0 ? Array.from(byCategory.values()) : racesNewestFirst.slice(0, 1);
+  return picked.sort((x, y) => x.locks_at.localeCompare(y.locks_at));
+}
+
+/** « Derniers résultats » de l'accueil (voir pickLastResultRaces). */
+export async function getLastResults(
   supabase: SupabaseClient,
   seasonId: string,
   userId: string,
   now: Date
-): Promise<LastResult | null> {
-  const { data: race } = await supabase
+): Promise<LastResult[]> {
+  // Quelques courses suffisent : au plus une par catégorie dans les 48 h.
+  const { data: races } = await supabase
     .from("races")
     .select(RACE_SELECT)
     .eq("stages.season_id", seasonId)
     .eq("status", "finished")
     .lte("locks_at", now.toISOString())
     .order("locks_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-  return race ? buildRaceResult(supabase, race, userId) : null;
+    .limit(12);
+  const picked = pickLastResultRaces((races ?? []) as any[], now);
+  return Promise.all(picked.map((race) => buildRaceResult(supabase, race, userId)));
 }
 
 /** Même détail pour une course donnée (page d'une course terminée). */
@@ -216,7 +236,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
       .is("valid_until", null),
   ]);
 
-  const resultRows = (results ?? []) as any[];
+  const resultRows = ((results ?? []) as any[]).map((r) => applyFuseeGachetteRules(race.format, r));
   const shortName = (a: { first_name?: string; last_name?: string } | null | undefined) =>
     a ? `${a.first_name ? `${a.first_name[0]}. ` : ""}${a.last_name ?? ""}` : "";
   const rowName = (r: any) => (r.athlete_id ? shortName(r.athletes) : r.nations?.name ?? r.nation_code);

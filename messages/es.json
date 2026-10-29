@@ -34,6 +34,7 @@
     "emptyState": "Todavía no hay ninguna etapa programada. Añade una temporada, etapas y carreras desde Supabase (ver supabase/seed.sql) para rellenar esta pantalla.",
     "coefficientBadge": "Coef. ×2",
     "lastResultTitle": "Último resultado",
+    "lastResultsTitle": "Últimos resultados",
     "lastResultSeeRace": "Ver la carrera",
     "lastResultPlayerRank": "{rank}.º de {count} jugadores",
     "lastResultWinner": "¡1.º de la carrera!",
@@ -123,7 +124,7 @@
     "s_pepite_title": "11. El Diamante en bruto",
     "s_pepite_body": "Una apuesta hecha al inicio de la temporada por un outsider de cada sexo (cuota ≥ 30). Un pronóstico oculto: en su primer Top 10 de la temporada, su puntuación de la carrera se suma como bonus y luego vuelve a ser un atleta como los demás.",
     "s_fuseegachette_title": "12. Cohete y Gatillo",
-    "s_fuseegachette_body": "Cohete: +50 pts si uno de tus elegidos ha hecho el mejor tiempo de esquí de la carrera (una vez). Gatillo: +20 pts por cada elegido con pleno en el tiro (acumulable).",
+    "s_fuseegachette_body": "Cohete (solo sprint e individual): +50 pts si uno de tus elegidos ha hecho el mejor tiempo de esquí de la carrera (una vez). Gatillo (solo persecución y salida en masa): +20 pts por cada elegido con un 20/20 en el tiro (acumulable).",
     "s_classement_title": "13. La clasificación general",
     "s_classement_body": "Suma todos los puntos conseguidos durante la temporada. El líder lleva el Dorsal amarillo. También hay clasificaciones secundarias (Dorsal rojo) y ligas privadas entre amigos."
   },
@@ -280,7 +281,8 @@
     "unsavedHint": "Cambio aún no guardado: valida para aplicarlo.",
     "chooseFour": "Elige 4 biatletas",
     "sortByStart": "Orden de salida",
-    "sortByOdds": "Por cuota"
+    "sortByOdds": "Por cuota",
+    "startPosition": "sale {position}º"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",

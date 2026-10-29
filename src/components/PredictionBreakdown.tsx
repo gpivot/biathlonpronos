@@ -33,9 +33,18 @@ export async function FuseeGachetteBadges({ fusee, gachette }: { fusee: boolean;
  * Fusée/Gâchette et ses points (dans l'ordre d'arrivée), puis les bonus et
  * malus de course (Top 3/5/10, Prono parfait…). Accueil et page d'une course.
  */
-export async function PredictionBreakdown({ picks, extras }: { picks: LastResultPick[]; extras: LastResultExtra[] }) {
+export async function PredictionBreakdown({
+  picks,
+  extras,
+  showLegend = true,
+}: {
+  picks: LastResultPick[];
+  extras: LastResultExtra[];
+  /** Légende Fusée/Gâchette sous les choix (masquée sur l'accueil). */
+  showLegend?: boolean;
+}) {
   const t = await getTranslations("Home");
-  const hasFuseeGachette = picks.some((p) => p.fusee || p.gachette);
+  const hasFuseeGachette = showLegend && picks.some((p) => p.fusee || p.gachette);
 
   return (
     <>
