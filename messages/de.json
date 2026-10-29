@@ -41,7 +41,6 @@
     "lastResultPodium": "Podium",
     "lastResultUnranked": "–",
     "lastResultNotCounted": "nicht gewertet",
-    "lastResultBonusX2": "×2-Bonus",
     "lastResultExtra_top3": "Top-3-Bonus",
     "lastResultExtra_top5": "Top-5-Bonus",
     "lastResultExtra_top10": "Top-10-Bonus",
@@ -51,7 +50,9 @@
     "lastResultExtra_pepite": "Rohdiamant-Bonus",
     "fuseeLabel": "Rakete: schnellste Laufzeit",
     "gachetteLabel": "Abzug: fehlerfreies Schießen",
-    "fuseeGachetteLegend": "🚀 Rakete +50 Pkt. · 🎯 Abzug +20 Pkt., bereits in den Punkten enthalten"
+    "fuseeGachetteLegend": "🚀 Rakete +50 Pkt. · 🎯 Abzug +20 Pkt., bereits in den Punkten enthalten",
+    "lastResultMultiplier_bonusX2": "×2-Bonus · {points}",
+    "lastResultMultiplier_coefficient": "Koeff. ×2 · {points}"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
@@ -261,7 +262,12 @@
     "pointsEarnedLabel": "Deine Punkte für dieses Rennen",
     "resultsTitle": "Ergebnisse",
     "noResultsMessage": "Ergebnisse noch nicht eingetragen.",
-    "predicted": "Tipp bestätigt"
+    "predicted": "Tipp bestätigt",
+    "bonusX2Gain": "×2-Bonus aktiv · {points}",
+    "coefficientGain": "×2-Koeffizient der Etappe · {points}",
+    "showFullRanking": "Ganze Wertung anzeigen",
+    "pronoParfaitLegend": "⭐ Die 3 besten Punktzahlen des Rennens: das Trio des perfekten Tipps.",
+    "playersTitle": "Spielerwertung für dieses Rennen"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",

@@ -61,7 +61,7 @@ export async function PredictionBreakdown({
               {pick.rank != null ? `${pick.rank}.` : t("lastResultUnranked")}
             </div>
             <div className="text-sm">{nationFlagEmoji(pick.nationCode)}</div>
-            <div className="flex flex-1 items-center gap-1 truncate font-semibold">
+            <div className="flex min-w-0 flex-1 items-center gap-1 truncate font-semibold">
               <span className="truncate">{pick.name}</span>
               {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
               <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />

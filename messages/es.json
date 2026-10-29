@@ -41,7 +41,6 @@
     "lastResultPodium": "Podio",
     "lastResultUnranked": "–",
     "lastResultNotCounted": "no cuenta",
-    "lastResultBonusX2": "Bonus ×2",
     "lastResultExtra_top3": "Bonus Top 3",
     "lastResultExtra_top5": "Bonus Top 5",
     "lastResultExtra_top10": "Bonus Top 10",
@@ -51,7 +50,9 @@
     "lastResultExtra_pepite": "Bonus Diamante",
     "fuseeLabel": "Cohete: mejor tiempo de esquí",
     "gachetteLabel": "Gatillo: tiro sin fallos",
-    "fuseeGachetteLegend": "🚀 Cohete +50 pts · 🎯 Gatillo +20 pts, ya incluidos en los puntos"
+    "fuseeGachetteLegend": "🚀 Cohete +50 pts · 🎯 Gatillo +20 pts, ya incluidos en los puntos",
+    "lastResultMultiplier_bonusX2": "Bonus ×2 · {points}",
+    "lastResultMultiplier_coefficient": "Coef. ×2 · {points}"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -261,7 +262,12 @@
     "pointsEarnedLabel": "Tus puntos en esta carrera",
     "resultsTitle": "Resultados",
     "noResultsMessage": "Resultados aún no introducidos.",
-    "predicted": "Pronóstico confirmado"
+    "predicted": "Pronóstico confirmado",
+    "bonusX2Gain": "Bonus ×2 activo · {points}",
+    "coefficientGain": "Coef. ×2 de la etapa · {points}",
+    "showFullRanking": "Ver toda la clasificación",
+    "pronoParfaitLegend": "⭐ Las 3 mejores puntuaciones de la carrera: el trío del Pronóstico perfecto.",
+    "playersTitle": "Clasificación de jugadores en esta carrera"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",

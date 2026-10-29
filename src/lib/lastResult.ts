@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { COMBINATION_BONUS, FUSEE_BONUS, GACHETTE_BONUS, RANK_MULTIPLIERS, RELAY_RANK_MULTIPLIERS } from "./scoring/constants";
 import { RELAY_FORMATS } from "./grilling";
 import { applyFuseeGachetteRules } from "./scoring/fuseeGachette";
+import { shortAthleteName } from "./athleteName";
 
 /**
  * Encart « Dernier résultat » de l'accueil (inspiré de VéloPronos) : la
@@ -35,6 +36,8 @@ export interface RaceResultRow {
   gachette: boolean;
   /** Ligne pronostiquée par le joueur. */
   mine: boolean;
+  /** L'un des 3 meilleurs scores du barème : le trio du Prono parfait (courses individuelles). */
+  perfect: boolean;
 }
 
 export interface LastResultExtra {
@@ -57,7 +60,10 @@ export interface LastResult {
   /** null : le joueur n'avait pas pronostiqué cette course. */
   prediction: {
     points: number;
+    /** Points de chaque choix, sans le bonus ×2 ni le coefficient Mondiaux/JO (affichés à part, cf. multiplier). */
     picks: LastResultPick[];
+    /** Bonus ×2 perso ou coefficient ×2 de l'étape, et ce qu'il a rapporté en plus. */
+    multiplier: { kind: "bonusX2" | "coefficient"; gain: number } | null;
     extras: LastResultExtra[];
     bonusX2: boolean;
     card: string | null;
@@ -140,6 +146,20 @@ export function computeIndividualExtras(breakdown: IndividualBreakdown): LastRes
     { kind: "pepite", points: breakdown.pepiteBonus ?? 0 },
   ];
   return extras.filter((e) => e.points !== 0);
+}
+
+/**
+ * Les 3 lignes au plus fort score du barème (Top 10, Fusée/Gâchette comprises) : le trio du
+ * Prono parfait, comme computeBestPossibleTrio du moteur (même tri, ordre d'arrivée en cas d'égalité).
+ */
+export function markPronoParfait<T extends { rank: number; points: number | null }>(rows: T[]): (T & { perfect: boolean })[] {
+  const best = new Set(
+    rows
+      .filter((r) => r.rank <= 10 && r.points != null)
+      .sort((a, b) => b.points! - a.points! || a.rank - b.rank)
+      .slice(0, 3)
+  );
+  return rows.map((r) => ({ ...r, perfect: best.size === 3 && best.has(r) }));
 }
 
 /** Points du barème pour une ligne de résultat, sans les multiplicateurs propres à chaque joueur. */
@@ -238,7 +258,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
 
   const resultRows = ((results ?? []) as any[]).map((r) => applyFuseeGachetteRules(race.format, r));
   const shortName = (a: { first_name?: string; last_name?: string } | null | undefined) =>
-    a ? `${a.first_name ? `${a.first_name[0]}. ` : ""}${a.last_name ?? ""}` : "";
+    shortAthleteName(a, "");
   const rowName = (r: any) => (r.athlete_id ? shortName(r.athletes) : r.nations?.name ?? r.nation_code);
   const rowNation = (r: any) => (r.athlete_id ? r.athletes?.nation_code ?? "" : r.nation_code);
 
@@ -248,7 +268,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
 
   const oddsByKey = new Map(((odds ?? []) as any[]).map((o) => [(relay ? o.nation_code : o.athlete_id) as string, o.value as number]));
   const predictedKeys = new Set<string>(prediction?.nation_code ? [prediction.nation_code] : prediction?.athlete_ids ?? []);
-  const fullResults: RaceResultRow[] = resultRows.map((r) => ({
+  const scoredRows = resultRows.map((r) => ({
     rank: r.rank,
     name: rowName(r),
     nationCode: rowNation(r),
@@ -263,6 +283,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     gachette: r.is_gachette,
     mine: predictedKeys.has(r.athlete_id ?? r.nation_code),
   }));
+  const fullResults: RaceResultRow[] = relay ? scoredRows.map((r) => ({ ...r, perfect: false })) : markPronoParfait(scoredRows);
 
   const base: Omit<LastResult, "prediction"> = {
     raceId: race.id,
@@ -290,6 +311,10 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
 
   let picks: LastResultPick[];
   let extras: LastResultExtra[] = [];
+  // Bonus ×2 perso ou coefficient Mondiaux/JO (non cumulables) : sorti du détail par choix.
+  const multiplierKind: "bonusX2" | "coefficient" | null =
+    stage.coefficient === 2 ? "coefficient" : prediction.bonus_x2_used ? "bonusX2" : null;
+  let multiplierGain = 0;
 
   if (prediction.nation_code) {
     const row = resultRows.find((r) => r.nation_code === prediction.nation_code);
@@ -298,13 +323,14 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
       const { data: nation } = await supabase.from("nations").select("name").eq("code", prediction.nation_code).maybeSingle();
       name = nation?.name ?? prediction.nation_code;
     }
+    multiplierGain = multiplierKind ? points / 2 : 0;
     picks = [
       {
         key: prediction.nation_code,
         name,
         nationCode: prediction.nation_code,
         rank: row?.rank ?? null,
-        points,
+        points: multiplierKind ? points / 2 : points,
         caFarte: false,
         fusee: false,
         gachette: false,
@@ -314,14 +340,15 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     const athleteIds: string[] = prediction.athlete_ids ?? [];
     const caFarteTargetId =
       prediction.bonus_card_used === "ca_farte" ? prediction.bonus_card_target_athlete_id ?? null : null;
-    const pickPoints = computeIndividualPickPoints({
-      athleteIds,
-      breakdown,
-      results: resultRows,
+    const pickPointsParams = { athleteIds, breakdown, results: resultRows, caFarteTargetId };
+    const pickPoints = computeIndividualPickPoints({ ...pickPointsParams, stageCoefficient: 1, bonusX2: false });
+    const multipliedPoints = computeIndividualPickPoints({
+      ...pickPointsParams,
       stageCoefficient: stage.coefficient,
       bonusX2: prediction.bonus_x2_used,
-      caFarteTargetId,
     });
+    const sum = (byId: Record<string, number | null>) => Object.values(byId).reduce<number>((total, v) => total + (v ?? 0), 0);
+    multiplierGain = sum(multipliedPoints) - sum(pickPoints);
 
     // Athlètes pronostiqués absents du classement saisi : nom chargé à part.
     const missingIds = athleteIds.filter((id) => !resultRows.some((r) => r.athlete_id === id));
@@ -353,6 +380,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     prediction: {
       points,
       picks,
+      multiplier: multiplierKind && multiplierGain !== 0 ? { kind: multiplierKind, gain: multiplierGain } : null,
       extras,
       bonusX2: prediction.bonus_x2_used,
       card: prediction.bonus_card_used ?? null,

@@ -674,3 +674,24 @@ d'un autre joueur n'apparaissent qu'une fois la course partie, ses globes une fo
 commencée, et sa Pépite seulement une fois révélée (bonus obtenu), puisque c'est un pronostic caché.
 Migration **0018** (règles de lecture Supabase correspondantes) à coller par Guillaume ; tant
 qu'elle n'est pas appliquée, le pop-up d'un autre joueur s'affiche sans ses pronostics.
+
+## Page d'une course terminée et noms abrégés (fin octobre 2026)
+
+- **Points par ligne sans le ×2.** Dans « Mon pronostic », chaque choix affiche ses points sans le
+  bonus ×2 perso ni le coefficient ×2 Mondiaux/JO (ex. Horn 140, Wright 51). Ce que le ×2 a
+  rapporté est affiché à part, sous « Tes points sur cette course » (« Bonus ×2 actif · +191 pts ») ;
+  le total (382) ne change pas. Même chose dans « Derniers résultats » de l'accueil. Ça farte ×3 et
+  Team Nation ×2 restent comptés sur la ligne concernée. (`prediction.multiplier` dans `lastResult.ts`.)
+- **Prono parfait.** Les 3 lignes au plus fort score du barème (Top 10, Fusée/Gâchette comprises,
+  même calcul que `computeBestPossibleTrio`) ont une étoile ⭐ et un contour doré (`markPronoParfait`).
+  Pas d'étoile sur les relais (pas de Prono parfait).
+- **Résultats repliés.** Top 10 + les choix du joueur classés plus loin, puis « Voir tout le
+  classement ».
+- **Classement des joueurs.** Sous les résultats, les 10 meilleurs joueurs sur cette course (+ la
+  place du joueur s'il est plus loin), déroulant pour la suite, ex æquo à la même place
+  (`racePlayers.ts`). À confirmer : « classement de l'étape » interprété comme les points sur cette
+  course, pas le cumul de toutes les courses de l'étape.
+- **Noms abrégés.** `shortAthleteName` (`src/lib/athleteName.ts`) : initiale du prénom + nom ; un
+  nom composé garde son premier nom entier et l'initiale des suivants (« J. Dale-S. »,
+  « Q. Fillon M. »). Utilisé partout où les noms courts s'affichent ; les lignes étroites tronquent
+  aussi proprement au lieu de déborder.

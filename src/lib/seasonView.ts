@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { getRaceDisplayStatus } from "./raceStatus";
 import type { CalendarStage } from "../app/[locale]/courses/CalendarAccordion";
 import type { SeasonPick } from "../app/[locale]/courses/SeasonPredictionsAccordion";
+import { shortAthleteName } from "./athleteName";
 
 /**
  * Contenu de « Ma saison » (`/courses`) pour un joueur : courses de chaque étape avec son
@@ -21,8 +22,7 @@ const SEASON_CATEGORIES = [
   "meilleure_nation_h",
 ] as const;
 
-const shortName = (a: { first_name?: string; last_name?: string } | null | undefined) =>
-  a ? `${a.first_name ? `${a.first_name[0]}. ` : ""}${a.last_name ?? ""}` : "?";
+const shortName = (a: { first_name?: string; last_name?: string } | null | undefined) => shortAthleteName(a);
 
 export interface SeasonView {
   stages: CalendarStage[];

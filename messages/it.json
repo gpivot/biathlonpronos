@@ -41,7 +41,6 @@
     "lastResultPodium": "Podio",
     "lastResultUnranked": "–",
     "lastResultNotCounted": "non conteggiato",
-    "lastResultBonusX2": "Bonus ×2",
     "lastResultExtra_top3": "Bonus Top 3",
     "lastResultExtra_top5": "Bonus Top 5",
     "lastResultExtra_top10": "Bonus Top 10",
@@ -51,7 +50,9 @@
     "lastResultExtra_pepite": "Bonus Pepita",
     "fuseeLabel": "Razzo: miglior tempo sugli sci",
     "gachetteLabel": "Grilletto: tiro senza errori",
-    "fuseeGachetteLegend": "🚀 Razzo +50 pt · 🎯 Grilletto +20 pt, già inclusi nei punti"
+    "fuseeGachetteLegend": "🚀 Razzo +50 pt · 🎯 Grilletto +20 pt, già inclusi nei punti",
+    "lastResultMultiplier_bonusX2": "Bonus ×2 · {points}",
+    "lastResultMultiplier_coefficient": "Coeff. ×2 · {points}"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",
@@ -261,7 +262,12 @@
     "pointsEarnedLabel": "I tuoi punti in questa gara",
     "resultsTitle": "Risultati",
     "noResultsMessage": "Risultati non ancora inseriti.",
-    "predicted": "Pronostico confermato"
+    "predicted": "Pronostico confermato",
+    "bonusX2Gain": "Bonus ×2 attivo · {points}",
+    "coefficientGain": "Coeff. ×2 della tappa · {points}",
+    "showFullRanking": "Vedi tutta la classifica",
+    "pronoParfaitLegend": "⭐ I 3 migliori punteggi della gara: il trio del Pronostico perfetto.",
+    "playersTitle": "Classifica dei giocatori in questa gara"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",
