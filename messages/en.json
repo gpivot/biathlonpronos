@@ -206,7 +206,7 @@
     "inviteCodeLabel": "Invite code"
   },
   "Classement": {
-    "title": "Overall standings",
+    "title": "Standings",
     "emptyState": "No points scored yet. The standings fill in as soon as the first race is scored.",
     "streakTitle": "Best current streaks",
     "streakCardTitle": "Current streak",
@@ -216,7 +216,17 @@
     "playerLoading": "Loading…",
     "playerError": "This player can't be displayed.",
     "playerHiddenHint": "Their picks appear when each race starts.",
-    "playerFavoriteTeam": "Favourite team"
+    "playerFavoriteTeam": "Favourite team",
+    "filterGeneral": "Overall",
+    "filterLeague": "League",
+    "filterSeason": "Season",
+    "filterStages": "By stage",
+    "filterAllRaces": "Whole stage",
+    "noLeague": "You are not in any league this season. Create your own or join your friends' with their code.",
+    "noLeagueButton": "See leagues",
+    "emptyStage": "No points on this stage yet.",
+    "noStages": "No stage scheduled yet.",
+    "noPicks": "No prediction"
   },
   "Courses": {
     "title": "My season",

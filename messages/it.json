@@ -206,7 +206,7 @@
     "inviteCodeLabel": "Codice di invito"
   },
   "Classement": {
-    "title": "Classifica generale",
+    "title": "Classifica",
     "emptyState": "Nessun punto ancora assegnato. La classifica si riempie non appena viene calcolato il punteggio della prima gara.",
     "streakTitle": "Migliori serie in corso",
     "streakCardTitle": "Serie in corso",
@@ -216,7 +216,17 @@
     "playerLoading": "Caricamento…",
     "playerError": "Impossibile mostrare questo giocatore.",
     "playerHiddenHint": "I suoi pronostici compaiono alla partenza di ogni gara.",
-    "playerFavoriteTeam": "Squadra preferita"
+    "playerFavoriteTeam": "Squadra preferita",
+    "filterGeneral": "Generale",
+    "filterLeague": "Lega",
+    "filterSeason": "Stagione",
+    "filterStages": "Per tappe",
+    "filterAllRaces": "Tutta la tappa",
+    "noLeague": "Non fai parte di nessuna lega in questa stagione. Crea la tua o unisciti a quella dei tuoi amici con il loro codice.",
+    "noLeagueButton": "Vedi le leghe",
+    "emptyStage": "Ancora nessun punto su questa tappa.",
+    "noStages": "Nessuna tappa ancora in programma.",
+    "noPicks": "Nessun pronostico"
   },
   "Courses": {
     "title": "La mia stagione",
