@@ -215,7 +215,7 @@
     "playerFavoriteTeam": "Favourite team"
   },
   "Courses": {
-    "title": "Calendar",
+    "title": "My season",
     "emptyState": "No stage scheduled. Add a season, stages and races for this season.",
     "noRacesInStage": "No race for this stage.",
     "coefficientBadge": "×2 coeff.",
@@ -231,7 +231,8 @@
     "seasonPredictionsNone": "Not chosen yet",
     "seasonPredictionsLink": "See or edit my season predictions",
     "pepite_F": "My women's Diamond in the Rough",
-    "pepite_H": "My men's Diamond in the Rough"
+    "pepite_H": "My men's Diamond in the Rough",
+    "specialRaceBanner": "Malus race · {name}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -241,7 +242,10 @@
     "relais_h": "Men's Relay",
     "relais_f": "Women's Relay",
     "relais_mixte": "Mixed Relay",
-    "relais_mixte_simple": "Single Mixed Relay"
+    "relais_mixte_simple": "Single Mixed Relay",
+    "specialRule_tour_de_pena": "Penalty loop",
+    "specialRule_brouillard": "Fog",
+    "specialRule_tes_colle": "Detention"
   },
   "Sex": {
     "F": "Women",

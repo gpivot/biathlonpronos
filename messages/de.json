@@ -215,7 +215,7 @@
     "playerFavoriteTeam": "Lieblingsteam"
   },
   "Courses": {
-    "title": "Kalender",
+    "title": "Meine Saison",
     "emptyState": "Keine Station geplant. Lege eine Saison, Stationen und Rennen für diese Saison an.",
     "noRacesInStage": "Kein Rennen für diese Station.",
     "coefficientBadge": "Koeff. ×2",
@@ -231,7 +231,8 @@
     "seasonPredictionsNone": "Noch nicht gewählt",
     "seasonPredictionsLink": "Saisontipps ansehen oder ändern",
     "pepite_F": "Mein Rohdiamant Frauen",
-    "pepite_H": "Mein Rohdiamant Männer"
+    "pepite_H": "Mein Rohdiamant Männer",
+    "specialRaceBanner": "Malus-Rennen · {name}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -241,7 +242,10 @@
     "relais_h": "Staffel Männer",
     "relais_f": "Staffel Frauen",
     "relais_mixte": "Mixed-Staffel",
-    "relais_mixte_simple": "Single-Mixed-Staffel"
+    "relais_mixte_simple": "Single-Mixed-Staffel",
+    "specialRule_tour_de_pena": "Strafrunde",
+    "specialRule_brouillard": "Nebel",
+    "specialRule_tes_colle": "Nachsitzen"
   },
   "Sex": {
     "F": "Frauen",

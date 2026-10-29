@@ -215,7 +215,7 @@
     "playerFavoriteTeam": "Equipo favorito"
   },
   "Courses": {
-    "title": "Calendario",
+    "title": "Mi temporada",
     "emptyState": "No hay ninguna etapa programada. Añade una temporada, etapas y carreras para esta temporada.",
     "noRacesInStage": "No hay carreras en esta etapa.",
     "coefficientBadge": "Coef. ×2",
@@ -231,7 +231,8 @@
     "seasonPredictionsNone": "Aún sin elegir",
     "seasonPredictionsLink": "Ver o modificar mis pronósticos de temporada",
     "pepite_F": "Mi Diamante en bruto femenino",
-    "pepite_H": "Mi Diamante en bruto masculino"
+    "pepite_H": "Mi Diamante en bruto masculino",
+    "specialRaceBanner": "Carrera malus · {name}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -241,7 +242,10 @@
     "relais_h": "Relevo masculino",
     "relais_f": "Relevo femenino",
     "relais_mixte": "Relevo mixto",
-    "relais_mixte_simple": "Relevo mixto simple"
+    "relais_mixte_simple": "Relevo mixto simple",
+    "specialRule_tour_de_pena": "Vuelta de penalización",
+    "specialRule_brouillard": "Niebla",
+    "specialRule_tes_colle": "Castigado"
   },
   "Sex": {
     "F": "Mujeres",

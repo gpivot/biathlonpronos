@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/server";
 import { ResultsForm, type CandidateRow } from "./ResultsForm";
+import { SpecialRuleSelect } from "../../_components/SpecialRuleSelect";
 import {
   RACE_FORMATS,
   RACE_STATUS_LABELS,
@@ -147,13 +148,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
             title="Heure de départ (= verrouillage), en UTC"
             className={inputClass}
           />
-          <select name="special_rule" defaultValue={race.special_rule ?? ""} className={inputClass}>
-            {SPECIAL_RULES.map((r) => (
-              <option key={r.value} value={r.value}>
-                {r.label}
-              </option>
-            ))}
-          </select>
+          <SpecialRuleSelect defaultValue={race.special_rule ?? ""} defaultFormat={race.format} className={inputClass} />
           <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Enregistrer
           </button>

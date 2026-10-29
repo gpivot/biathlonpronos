@@ -107,7 +107,7 @@ describe("Derniers résultats de l'accueil : dernier Hommes et dernier Femmes ga
       race("sprint-h", "H", "2026-12-06T13:00:00Z"),
       race("sprint-f", "F", "2026-12-06T10:00:00Z"),
     ];
-    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["sprint-f", "poursuite-h"]);
+    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["poursuite-h", "sprint-f"]);
   });
 
   it("un résultat de plus de 48 h disparaît", () => {
@@ -117,7 +117,7 @@ describe("Derniers résultats de l'accueil : dernier Hommes et dernier Femmes ga
 
   it("relais mixte : sa propre catégorie", () => {
     const races = [race("mixte", null, "2026-12-07T13:00:00Z"), race("sprint-h", "H", "2026-12-06T13:00:00Z")];
-    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["sprint-h", "mixte"]);
+    expect(pickLastResultRaces(races, now).map((r) => r.id)).toEqual(["mixte", "sprint-h"]);
   });
 
   it("rien dans les 48 h : la dernière course notée reste affichée", () => {

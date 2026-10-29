@@ -703,3 +703,15 @@ saison » et les étapes (`StreakCard`, `getCurrentStreak`). Le pop-up d'un joue
 sa place et ses points au classement général et son équipe favorite, puis ses pronostics de
 saison, sa série en cours, et ses étapes. Migration **0019** : lecture des équipes favorites
 ouverte à tous (rien à copier), à coller par Guillaume.
+
+## Courses malus et titre « Ma saison » (fin octobre 2026)
+
+- **Admin** : « Brouillard » ne peut être choisi que pour un sprint ou une individuelle (option
+  grisée dans le formulaire selon le format, revérifié par les actions serveur ;
+  `SPECIAL_RULE_FORMATS` dans `admin/_components/labels.ts`).
+- **Ma saison** : une course malus a un bandeau et un contour rouges « Course malus · <nom> » avec
+  un picto par malus (modèle VéloPronos) : 🔁 Tour de péna, 🌫️ Brouillard, 📉 T'es collé(e)
+  (`src/lib/specialRules.ts`, pictos à confirmer). La page de la course reprend le picto et le nom
+  traduit, en rouge.
+- Le titre en haut de `/courses` devient « Ma saison » (comme l'onglet).
+- **Derniers résultats** (accueil) : le plus récent est toujours en haut.
