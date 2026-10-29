@@ -540,5 +540,18 @@
         "email": true
       }
     ]
+  },
+  "RuleInfo": {
+    "open": "Comment ça marche ?",
+    "title": "Comment ça marche ?",
+    "close": "Fermer",
+    "seeRules": "Voir le règlement complet",
+    "individual": "Choisis 3 biathlètes. Chacun marque des points s'il termine dans le Top 10 : sa cote × 25 pour une victoire, × 18 pour la 2e place… jusqu'à × 1 pour la 10e. Bonus si tes 3 choix finissent dans le Top 3, le Top 5 ou le Top 10.",
+    "fusee": "Bonus Fusée : +50 pts si l'un de tes biathlètes signe le meilleur temps de ski.",
+    "gachette": "Bonus Gâchette : +20 pts par biathlète qui fait 20/20 au tir.",
+    "pursuitStart": "Le départ se fait dans l'ordre d'arrivée du sprint, et les cotes sont réévaluées selon l'écart.",
+    "grilled": "Les biathlètes choisis sur la course précédente de l'étape sont grillés : tu ne peux pas les reprendre.",
+    "relay": "Pour les relais, valide une seule équipe : elle marque des points si elle termine dans le Top 5 (sa cote × 10 pour la victoire, puis × 6, × 4, × 2 et × 1).",
+    "x2": "Jusqu'au départ, tu peux modifier ton pronostic et activer un bonus ×2 (3 par saison)."
   }
 }

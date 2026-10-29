@@ -540,5 +540,18 @@
         "email": true
       }
     ]
+  },
+  "RuleInfo": {
+    "open": "¿Cómo funciona?",
+    "title": "¿Cómo funciona?",
+    "close": "Cerrar",
+    "seeRules": "Ver el reglamento completo",
+    "individual": "Elige 3 biatletas. Cada uno suma puntos si termina en el Top 10: su cuota × 25 por una victoria, × 18 por el 2.º puesto… hasta × 1 por el 10.º. Bonus si tus 3 elegidos terminan en el Top 3, el Top 5 o el Top 10.",
+    "fusee": "Bonus Cohete: +50 pts si uno de tus biatletas hace el mejor tiempo de esquí.",
+    "gachette": "Bonus Gatillo: +20 pts por cada biatleta que hace 20/20 en el tiro.",
+    "pursuitStart": "La salida se da en el orden de llegada del sprint y las cuotas se reevalúan según la diferencia.",
+    "grilled": "Los biatletas elegidos en la carrera anterior de la etapa están quemados: no puedes volver a elegirlos.",
+    "relay": "En los relevos, elige un solo equipo: suma puntos si termina en el Top 5 (su cuota × 10 por la victoria, luego × 6, × 4, × 2 y × 1).",
+    "x2": "Hasta la salida, puedes cambiar tu pronóstico y activar un bonus ×2 (3 por temporada)."
   }
 }

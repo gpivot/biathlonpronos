@@ -540,5 +540,18 @@
         "email": true
       }
     ]
+  },
+  "RuleInfo": {
+    "open": "Come funziona?",
+    "title": "Come funziona?",
+    "close": "Chiudi",
+    "seeRules": "Vedi il regolamento completo",
+    "individual": "Scegli 3 biatleti. Ognuno fa punti se chiude nella Top 10: la sua quota × 25 per una vittoria, × 18 per il 2° posto… fino a × 1 per il 10°. Bonus se i tuoi 3 scelti chiudono tutti nella Top 3, Top 5 o Top 10.",
+    "fusee": "Bonus Razzo: +50 pt se uno dei tuoi biatleti fa il miglior tempo sugli sci.",
+    "gachette": "Bonus Grilletto: +20 pt per ogni biatleta che fa 20/20 al poligono.",
+    "pursuitStart": "La partenza segue l'ordine d'arrivo della sprint e le quote vengono rivalutate in base al distacco.",
+    "grilled": "I biatleti scelti nella gara precedente della tappa sono bruciati: non puoi sceglierli di nuovo.",
+    "relay": "Nelle staffette, scegli una sola squadra: fa punti se chiude nella Top 5 (la sua quota × 10 per la vittoria, poi × 6, × 4, × 2 e × 1).",
+    "x2": "Fino alla partenza puoi modificare il tuo pronostico e attivare un bonus ×2 (3 a stagione)."
   }
 }

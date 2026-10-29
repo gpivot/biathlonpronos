@@ -10,6 +10,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
 import { FondueButton } from "./FondueButton";
+import { RuleInfoButton } from "./RuleInfoButton";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
@@ -199,8 +200,7 @@ export default async function RacePage({
             {tFormat(race.format)}
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
-          {/* Équilibre la flèche pour garder le titre centré. */}
-          <div className="h-8 w-8 flex-shrink-0" />
+          <RuleInfoButton format={race.format} />
         </div>
 
         <div className="flex flex-col gap-3 rounded-[18px] border border-border bg-gradient-to-br from-card2 to-card px-4 py-4">
