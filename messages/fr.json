@@ -261,6 +261,8 @@
     "specialRulePrefix": "Course spéciale :",
     "specialRuleHint": "— consulte le règlement pour le bonus/malus applicable.",
     "noOddsMessage": "Aucune cote saisie pour cette course. Ajoute des lignes dans la table odds (format « {format} ») pour ce format et cette saison.",
+    "startListPendingPursuit": "La liste de départ n'est pas encore connue : seuls les 60 premiers du sprint prennent le départ de la poursuite. Les pronostics ouvriront dès que les résultats du sprint seront saisis.",
+    "startListPendingMassStart": "La liste de départ n'est pas encore connue : seuls 30 biathlètes prennent le départ de la mass start, qualifiés d'après le classement général et les courses précédentes. Les pronostics ouvriront dès qu'elle sera publiée.",
     "status_upcoming": "À venir",
     "status_ongoing": "En cours",
     "status_finished": "Terminée",

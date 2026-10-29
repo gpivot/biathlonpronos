@@ -261,6 +261,8 @@
     "specialRulePrefix": "Special race:",
     "specialRuleHint": "— check the rules for the applicable bonus/malus.",
     "noOddsMessage": "No odds entered for this race. Add rows to the odds table (format \"{format}\") for this format and season.",
+    "startListPendingPursuit": "The start list is not known yet: only the top 60 of the sprint start the pursuit. Predictions will open as soon as the sprint results are entered.",
+    "startListPendingMassStart": "The start list is not known yet: only 30 biathletes start the mass start, qualified on the overall standings and the previous races. Predictions will open as soon as it is published.",
     "status_upcoming": "Upcoming",
     "status_ongoing": "Ongoing",
     "status_finished": "Finished",

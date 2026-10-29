@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { isSpecialRuleAllowed } from "../../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
-import { fetchIbuResults } from "@/lib/admin/ibuResults";
+import { fetchIbuResults, fetchIbuStartList } from "@/lib/admin/ibuResults";
+import { matchStartList, saveStartList } from "@/lib/admin/startListImport";
 import { redirect } from "next/navigation";
 import {
   deleteRace,
@@ -75,6 +76,66 @@ export async function loadIbuResults(raceId: string, forcedIbuRaceId?: string): 
   } catch (err) {
     return { ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", warnings: [] };
   }
+}
+
+export interface StartListImportState {
+  ok: boolean;
+  message: string;
+  unmatched: string[];
+}
+
+/**
+ * Liste de départ officielle IBU (poursuite, mass start) : enregistrée directement, la course
+ * n'affiche ensuite que ces biathlètes, avec les cotes déjà validées. Ré-exécutable.
+ */
+export async function loadIbuStartList(raceId: string, forcedIbuRaceId?: string): Promise<StartListImportState> {
+  await requireAdmin();
+  const admin = createAdminClient();
+
+  const { data: race } = await admin
+    .from("races")
+    .select("format, sex, locks_at, stages(season_id, location, starts_on, ends_on, seasons(label))")
+    .eq("id", raceId)
+    .single();
+  if (!race) return { ok: false, message: "Course introuvable.", unmatched: [] };
+  const stage = race.stages as any;
+
+  try {
+    const ibu = await fetchIbuStartList({ seasonLabel: stage.seasons?.label ?? "", stage, race, forcedRaceId: forcedIbuRaceId });
+    const { data: odds } = await admin
+      .from("odds")
+      .select("athlete_id, athletes(first_name, last_name, nation_code, sex)")
+      .eq("season_id", stage.season_id)
+      .eq("format", race.format)
+      .is("valid_until", null);
+    const candidates = (odds ?? [])
+      .filter((o: any) => o.athlete_id && (!race.sex || o.athletes?.sex === race.sex))
+      .map((o: any) => ({
+        id: o.athlete_id as string,
+        firstName: o.athletes?.first_name ?? "",
+        lastName: o.athletes?.last_name ?? "",
+        nationCode: o.athletes?.nation_code ?? "",
+      }));
+    const matched = matchStartList(ibu.entries, candidates);
+    if (matched.rows.length === 0) {
+      return { ok: false, message: `Aucun biathlète de la liste IBU (${ibu.entries.length}) n'a de cote pour ce format : rien enregistré.`, unmatched: matched.unmatched };
+    }
+    await saveStartList(admin, raceId, matched.rows);
+    revalidatePath("/admin", "layout");
+    return {
+      ok: true,
+      message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} biathlète(s) sur ${ibu.entries.length} avec leur cote.`,
+      unmatched: matched.unmatched,
+    };
+  } catch (err) {
+    return { ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", unmatched: [] };
+  }
+}
+
+export async function clearStartList(formData: FormData) {
+  await requireAdmin();
+  await saveStartList(createAdminClient(), String(formData.get("race_id")), []);
+  revalidatePath("/admin", "layout");
 }
 
 /** Modifie format, sexe, heure de départ (UTC) et course spéciale. */

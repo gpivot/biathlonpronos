@@ -17,6 +17,8 @@ import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { removeRace, resetResults, updateRace } from "./actions";
 import { ArrowLeftIcon } from "@/components/icons";
+import { START_LIST_FORMATS, getStartList } from "@/lib/startList";
+import { StartListPanel } from "./StartListPanel";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
@@ -111,6 +113,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
   const { now } = await getClock();
   const displayStatus = getRaceDisplayStatus(race, now);
   const hasResults = (existingResults ?? []).length > 0 || race.status === "finished";
+  const startList = START_LIST_FORMATS.includes(race.format) ? await getStartList(admin, race) : null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -155,6 +158,8 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         </div>
         <p className="text-xs text-text-dim">Heure de départ en UTC : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
       </form>
+
+      {startList && <StartListPanel raceId={race.id} format={race.format} startList={startList} />}
 
       {candidates.length === 0 ? (
         <p className="text-sm text-text-dim">

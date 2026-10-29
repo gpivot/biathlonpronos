@@ -15,6 +15,7 @@ import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
+import { getStartList } from "@/lib/startList";
 import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
 import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
@@ -163,27 +164,16 @@ export default async function RacePage({
     }
   }
 
-  // Poursuite : ordre de départ = classement du sprint de l'étape (même sexe).
-  let startOrder: Record<string, number> = {};
-  if (race.format === "poursuite" && displayStatus === "upcoming") {
-    const { data: sprint } = await supabase
-      .from("races")
-      .select("id")
-      .eq("stage_id", stage.id)
-      .eq("format", "sprint")
-      .eq("sex", race.sex)
-      .lt("locks_at", race.locks_at)
-      .order("locks_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (sprint) {
-      const { data: sprintResults } = await supabase.from("race_results").select("athlete_id, rank").eq("race_id", sprint.id);
-      startOrder = Object.fromEntries((sprintResults ?? []).filter((r) => r.athlete_id).map((r) => [r.athlete_id, r.rank]));
-    }
-  }
+  // Poursuite / mass start : seuls les qualifiés prennent le départ, dans l'ordre de la liste.
+  const startList = displayStatus === "upcoming" ? await getStartList(supabase, race) : { status: "open" as const };
+  const startOrder: Record<string, number> = startList.status === "known" ? startList.order : {};
+  const startListPending = startList.status === "pending";
+  // Filtre seulement la liste du formulaire : l'affichage « en cours » garde toutes les cotes.
+  const selectableAthletes =
+    startList.status === "known" ? athletesWithOdds.filter((a) => startOrder[a.athlete_id] != null) : athletesWithOdds;
 
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
-  const showForm = displayStatus === "upcoming" && hasOdds;
+  const showForm = displayStatus === "upcoming" && hasOdds && !startListPending;
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
   // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
@@ -267,6 +257,10 @@ export default async function RacePage({
             <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
               {t("noOddsMessage", { format: race.format })}
             </div>
+          ) : startListPending ? (
+            <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] leading-relaxed text-text-dim">
+              {t(race.format === "poursuite" ? "startListPendingPursuit" : "startListPendingMassStart")}
+            </div>
           ) : (
             <>
               {!isRelay && grilledAthleteIds.length > 0 && availableCards.some((c) => c.card_type === "fondue") && (
@@ -287,7 +281,7 @@ export default async function RacePage({
                 <PredictionForm
                   raceId={race.id}
                   format={race.format}
-                  athletes={athletesWithOdds}
+                  athletes={selectableAthletes}
                   initialSelection={initialAthleteSelection}
                   grilledAthleteIds={grilledAthleteIds}
                   availableCards={availableCards}

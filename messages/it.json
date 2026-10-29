@@ -261,6 +261,8 @@
     "specialRulePrefix": "Gara speciale:",
     "specialRuleHint": "— consulta il regolamento per i bonus/malus previsti.",
     "noOddsMessage": "Nessuna quota inserita per questa gara. Aggiungi delle righe alla tabella delle quote (formato \"{format}\") per questo formato e questa stagione.",
+    "startListPendingPursuit": "La lista di partenza non è ancora nota: solo i primi 60 della sprint partono nell'inseguimento. I pronostici si apriranno appena inseriti i risultati della sprint.",
+    "startListPendingMassStart": "La lista di partenza non è ancora nota: solo 30 biathleti partono nella mass start, qualificati in base alla classifica generale e alle gare precedenti. I pronostici si apriranno appena sarà pubblicata.",
     "status_upcoming": "In arrivo",
     "status_ongoing": "In corso",
     "status_finished": "Conclusa",
