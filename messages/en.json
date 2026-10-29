@@ -52,7 +52,11 @@
     "gachetteLabel": "Trigger: clean shooting",
     "fuseeGachetteLegend": "🚀 Rocket +50 pts · 🎯 Trigger +20 pts, already included in the points",
     "lastResultMultiplier_bonusX2": "×2 bonus · {points}",
-    "lastResultMultiplier_coefficient": "×2 coeff. · {points}"
+    "lastResultMultiplier_coefficient": "×2 coeff. · {points}",
+    "comboBonusLabel": "Bonus",
+    "comboTier_top3": "Top 3",
+    "comboTier_top5": "Top 5",
+    "comboTier_top10": "Top 10"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -272,7 +276,11 @@
     "coefficientGain": "Stage ×2 coefficient · {points}",
     "showFullRanking": "See full ranking",
     "pronoParfaitLegend": "⭐ The race's 3 best scores: the Perfect pick trio.",
-    "playersTitle": "Player ranking for this race"
+    "playersTitle": "Player ranking for this race",
+    "ongoingBoardTitle": "Overall ranking · picks for this race",
+    "ongoingNoPrediction": "No pick",
+    "previousRace": "Prev. race",
+    "nextRace": "Next race"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

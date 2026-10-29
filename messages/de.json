@@ -52,7 +52,11 @@
     "gachetteLabel": "Abzug: fehlerfreies Schießen",
     "fuseeGachetteLegend": "🚀 Rakete +50 Pkt. · 🎯 Abzug +20 Pkt., bereits in den Punkten enthalten",
     "lastResultMultiplier_bonusX2": "×2-Bonus · {points}",
-    "lastResultMultiplier_coefficient": "Koeff. ×2 · {points}"
+    "lastResultMultiplier_coefficient": "Koeff. ×2 · {points}",
+    "comboBonusLabel": "Bonus",
+    "comboTier_top3": "Top 3",
+    "comboTier_top5": "Top 5",
+    "comboTier_top10": "Top 10"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
@@ -272,7 +276,11 @@
     "coefficientGain": "×2-Koeffizient der Etappe · {points}",
     "showFullRanking": "Ganze Wertung anzeigen",
     "pronoParfaitLegend": "⭐ Die 3 besten Punktzahlen des Rennens: das Trio des perfekten Tipps.",
-    "playersTitle": "Spielerwertung für dieses Rennen"
+    "playersTitle": "Spielerwertung für dieses Rennen",
+    "ongoingBoardTitle": "Gesamtwertung · Tipps für dieses Rennen",
+    "ongoingNoPrediction": "Kein Tipp",
+    "previousRace": "Vorh. Rennen",
+    "nextRace": "Nächstes"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",
