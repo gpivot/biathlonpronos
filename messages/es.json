@@ -203,7 +203,14 @@
   "Classement": {
     "title": "Clasificación general",
     "emptyState": "Todavía no se ha sumado ningún punto. La clasificación se completará en cuanto se puntúe la primera carrera.",
-    "streakTitle": "Dorsal rojo — mejor racha actual"
+    "streakTitle": "Mejores rachas en curso",
+    "streakCardTitle": "Racha en curso",
+    "streakCardRemaining": "{count, plural, one {Solo una carrera para una carta bonus} other {Solo # carreras para una carta bonus}}",
+    "playerTitle": "Jugador",
+    "close": "Cerrar",
+    "playerLoading": "Cargando…",
+    "playerError": "No se puede mostrar este jugador.",
+    "playerHiddenHint": "Sus pronósticos aparecen al inicio de cada carrera."
   },
   "Courses": {
     "title": "Calendario",
@@ -217,6 +224,7 @@
     "toPlayCount": "{count} por jugar",
     "toPlayButton": "Por jugar",
     "seasonPredictionsTitle": "Mis pronósticos de temporada",
+    "seasonPredictionsTitleOther": "Pronósticos de temporada",
     "seasonPredictionsCount": "{chosen} de {total} elegidos",
     "seasonPredictionsNone": "Aún sin elegir",
     "seasonPredictionsLink": "Ver o modificar mis pronósticos de temporada",

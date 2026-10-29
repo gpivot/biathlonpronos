@@ -203,7 +203,14 @@
   "Classement": {
     "title": "Classifica generale",
     "emptyState": "Nessun punto ancora assegnato. La classifica si riempie non appena viene calcolato il punteggio della prima gara.",
-    "streakTitle": "Pettorale rosso — miglior serie in corso"
+    "streakTitle": "Migliori serie in corso",
+    "streakCardTitle": "Serie in corso",
+    "streakCardRemaining": "{count, plural, one {Ancora una gara per una carta bonus} other {Ancora # gare per una carta bonus}}",
+    "playerTitle": "Giocatore",
+    "close": "Chiudi",
+    "playerLoading": "Caricamento…",
+    "playerError": "Impossibile mostrare questo giocatore.",
+    "playerHiddenHint": "I suoi pronostici compaiono alla partenza di ogni gara."
   },
   "Courses": {
     "title": "Calendario",
@@ -217,6 +224,7 @@
     "toPlayCount": "{count} da giocare",
     "toPlayButton": "Da giocare",
     "seasonPredictionsTitle": "I miei pronostici di stagione",
+    "seasonPredictionsTitleOther": "Pronostici di stagione",
     "seasonPredictionsCount": "{chosen} su {total} scelti",
     "seasonPredictionsNone": "Non ancora scelto",
     "seasonPredictionsLink": "Vedi o modifica i miei pronostici di stagione",

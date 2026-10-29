@@ -46,12 +46,15 @@ export function CalendarAccordion({
   defaultOpenStageId,
   scrollToStageId = null,
   locale,
+  readOnly = false,
 }: {
   stages: CalendarStage[];
   defaultOpenStageId: string | null;
   /** Étape demandée par l'accueil : la page défile jusqu'à elle. */
   scrollToStageId?: string | null;
   locale: string;
+  /** Saison d'un autre joueur (pop-up du Classement) : pas de « À jouer ». */
+  readOnly?: boolean;
 }) {
   const [openStageId, setOpenStageId] = useState<string | null>(defaultOpenStageId);
   const t = useTranslations("Courses");
@@ -65,7 +68,7 @@ export function CalendarAccordion({
         const isOpen = stage.id === openStageId;
         // Coefficient 2 = Mondiaux (ou JO) : encart doré pour le distinguer des étapes de Coupe du monde.
         const isChampionship = stage.coefficient === 2;
-        const toPlayCount = stage.races.filter((r) => r.displayStatus === "upcoming" && !r.predicted).length;
+        const toPlayCount = readOnly ? 0 : stage.races.filter((r) => r.displayStatus === "upcoming" && !r.predicted).length;
         return (
           <div
             key={stage.id}
@@ -143,7 +146,7 @@ export function CalendarAccordion({
                             {tRace("bonusX2Badge")}
                           </div>
                         )}
-                        {race.displayStatus === "upcoming" && !race.predicted && (
+                        {!readOnly && race.displayStatus === "upcoming" && !race.predicted && (
                           // Toute la ligne mène à la page de pronostic : simple pastille, pas un second lien.
                           <span className="mt-1 w-fit rounded-full bg-ice px-3 py-1 font-display text-[12px] font-bold text-on-ice">
                             {t("toPlayButton")}

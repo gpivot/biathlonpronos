@@ -15,8 +15,11 @@ export interface SeasonPick {
   nationCode: string | null;
 }
 
-/** « Mes pronostics de saison » (globes et Pépites), replié par défaut en haut du Calendrier. */
-export function SeasonPredictionsAccordion({ picks }: { picks: SeasonPick[] }) {
+/**
+ * « Mes pronostics de saison » (globes et Pépites), replié par défaut en haut du Calendrier.
+ * `readOnly` : ceux d'un autre joueur (pop-up du Classement), sans lien de modification.
+ */
+export function SeasonPredictionsAccordion({ picks, readOnly = false }: { picks: SeasonPick[]; readOnly?: boolean }) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("Courses");
   const tGlobes = useTranslations("Globes");
@@ -27,7 +30,7 @@ export function SeasonPredictionsAccordion({ picks }: { picks: SeasonPick[] }) {
       <button onClick={() => setOpen(!open)} className="flex w-full items-center gap-3.5 px-4 py-3.5 text-left">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">🏆</div>
         <div className="flex flex-1 flex-col gap-0.5">
-          <div className="text-sm font-semibold">{t("seasonPredictionsTitle")}</div>
+          <div className="text-sm font-semibold">{readOnly ? t("seasonPredictionsTitleOther") : t("seasonPredictionsTitle")}</div>
           <div className="text-xs text-text-dim">{t("seasonPredictionsCount", { chosen, total: picks.length })}</div>
         </div>
         <ChevronDownIcon className={`h-4 w-4 flex-shrink-0 text-text-dim transition-transform ${open ? "rotate-180" : ""}`} />
@@ -50,12 +53,14 @@ export function SeasonPredictionsAccordion({ picks }: { picks: SeasonPick[] }) {
               )}
             </div>
           ))}
-          <Link
-            href="/globes"
-            className="rounded-full border border-border bg-card py-2.5 text-center font-display text-[13px] font-bold text-ice"
-          >
-            {t("seasonPredictionsLink")}
-          </Link>
+          {!readOnly && (
+            <Link
+              href="/globes"
+              className="rounded-full border border-border bg-card py-2.5 text-center font-display text-[13px] font-bold text-ice"
+            >
+              {t("seasonPredictionsLink")}
+            </Link>
+          )}
         </div>
       )}
     </div>

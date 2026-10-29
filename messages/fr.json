@@ -203,7 +203,14 @@
   "Classement": {
     "title": "Classement général",
     "emptyState": "Aucun point marqué pour le moment. Le classement se remplit dès la première course notée.",
-    "streakTitle": "Dossard Rouge — meilleure série en cours"
+    "streakTitle": "Meilleures séries en cours",
+    "streakCardTitle": "Série en cours",
+    "streakCardRemaining": "{count, plural, one {Plus qu'une course pour une carte bonus} other {Plus que # courses pour une carte bonus}}",
+    "playerTitle": "Joueur",
+    "close": "Fermer",
+    "playerLoading": "Chargement…",
+    "playerError": "Impossible d'afficher ce joueur.",
+    "playerHiddenHint": "Ses pronostics apparaissent au départ de chaque course."
   },
   "Courses": {
     "title": "Calendrier",
@@ -217,6 +224,7 @@
     "toPlayCount": "{count} à jouer",
     "toPlayButton": "À jouer",
     "seasonPredictionsTitle": "Mes pronostics de saison",
+    "seasonPredictionsTitleOther": "Pronostics de saison",
     "seasonPredictionsCount": "{chosen} sur {total} choisis",
     "seasonPredictionsNone": "Pas encore choisi",
     "seasonPredictionsLink": "Voir ou modifier mes pronostics de saison",

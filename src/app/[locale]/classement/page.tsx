@@ -5,6 +5,8 @@ import { Link } from "@/i18n/navigation";
 import { HeaderActions } from "@/components/HeaderActions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getLeaderboard as getLeaderboardRows } from "@/lib/leaderboard";
+import { PlayerSeasonButton } from "./PlayerSeasonButton";
+import { StreakCard } from "./StreakCard";
 
 export const dynamic = "force-dynamic";
 
@@ -21,11 +23,20 @@ interface StreakRow {
   currentStreak: number;
 }
 
-async function getStreakLeaderboard(): Promise<StreakRow[]> {
+async function getStreakLeaderboard(): Promise<{ rows: StreakRow[]; myStreak: number | null }> {
   const supabase = createClient();
 
-  const { data: season } = await supabase.from("seasons").select("id").eq("status", "active").maybeSingle();
-  if (!season) return [];
+  const [{ data: season }, { data: userResult }] = await Promise.all([
+    supabase.from("seasons").select("id").eq("status", "active").maybeSingle(),
+    supabase.auth.getUser(),
+  ]);
+  if (!season) return { rows: [], myStreak: null };
+
+  const user = userResult.user;
+  const { data: mine } = user
+    ? await supabase.from("streak_counters").select("current_streak").eq("season_id", season.id).eq("user_id", user.id).maybeSingle()
+    : { data: null };
+  const myStreak = user ? mine?.current_streak ?? 0 : null;
 
   const { data: streaks } = await supabase
     .from("streak_counters")
@@ -35,15 +46,16 @@ async function getStreakLeaderboard(): Promise<StreakRow[]> {
     .order("current_streak", { ascending: false })
     .limit(10);
 
-  return (streaks ?? []).map((s) => ({
+  const rows = (streaks ?? []).map((s) => ({
     userId: s.user_id,
     pseudo: (s.profiles as any)?.pseudo ?? "?",
     currentStreak: s.current_streak,
   }));
+  return { rows, myStreak };
 }
 
 export default async function ClassementPage() {
-  const [leaderboard, streakLeaderboard] = await Promise.all([getLeaderboard(), getStreakLeaderboard()]);
+  const [leaderboard, { rows: streakLeaderboard, myStreak }] = await Promise.all([getLeaderboard(), getStreakLeaderboard()]);
   const t = await getTranslations("Classement");
 
   return (
@@ -67,8 +79,9 @@ export default async function ClassementPage() {
         ) : (
           <div className="flex flex-col gap-2">
             {leaderboard.map((row, index) => (
-              <div
+              <PlayerSeasonButton
                 key={row.userId}
+                userId={row.userId}
                 className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5"
               >
                 <div
@@ -80,27 +93,28 @@ export default async function ClassementPage() {
                 </div>
                 <div className="flex-1 text-sm font-semibold">{row.pseudo}</div>
                 <div className="font-display text-sm font-bold text-ice">{row.points} pts</div>
-              </div>
+              </PlayerSeasonButton>
             ))}
           </div>
         )}
 
+        {myStreak != null && <StreakCard current={myStreak} />}
+
         {streakLeaderboard.length > 0 && (
           <div className="flex flex-col gap-2">
-            <div className="font-display text-xs font-bold uppercase tracking-wider text-red">
-              {t("streakTitle")}
-            </div>
+            <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("streakTitle")}</div>
             {streakLeaderboard.map((row, index) => (
-              <div
+              <PlayerSeasonButton
                 key={row.userId}
-                className="flex items-center gap-3.5 rounded-2xl border border-red/30 bg-card px-4 py-3"
+                userId={row.userId}
+                className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3"
               >
-                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-red/20 font-display text-xs font-bold text-red">
+                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-ice-soft font-display text-xs font-bold text-ice">
                   {index + 1}
                 </div>
                 <div className="flex-1 text-sm font-semibold">{row.pseudo}</div>
-                <div className="font-display text-sm font-bold text-red">{row.currentStreak}/10</div>
-              </div>
+                <div className="font-display text-sm font-bold text-ice">🔥 {row.currentStreak}/10</div>
+              </PlayerSeasonButton>
             ))}
           </div>
         )}
