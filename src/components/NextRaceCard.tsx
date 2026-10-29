@@ -1,0 +1,53 @@
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { Countdown } from "@/components/Countdown";
+import { PredictedBadge } from "@/components/PredictedBadge";
+import { nationFlagEmoji } from "@/lib/nationFlags";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
+import { displayedSex } from "@/lib/raceLabel";
+
+export interface NextRace {
+  id: string;
+  format: string;
+  sex: string | null;
+  locks_at: string;
+  stages: { location: string; country_code: string };
+  /** Le joueur connecté a déjà déposé un pronostic sur cette course. */
+  predicted: boolean;
+}
+
+/** Encart « À suivre » de l'accueil : la prochaine course, avec compte à rebours jusqu'au départ. */
+export async function NextRaceCard({ race, nowMs, locale }: { race: NextRace; nowMs: number; locale: string }) {
+  const [t, tFormat, tSex, tRace] = await Promise.all([
+    getTranslations("Home"),
+    getTranslations("RaceFormat"),
+    getTranslations("Sex"),
+    getTranslations("Race"),
+  ]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("nextRaceTitle")}</div>
+      <Link
+        href={`/courses/${race.id}`}
+        className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5"
+      >
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-lg">
+          {nationFlagEmoji(race.stages.country_code)}
+        </div>
+        <div className="flex flex-1 flex-col gap-0.5">
+          <div className="text-sm font-semibold">{race.stages.location}</div>
+          <div className="text-xs text-text-dim">
+            {tFormat(race.format)}
+            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+          </div>
+          {race.predicted && <PredictedBadge label={tRace("predicted")} />}
+          <Countdown target={race.locks_at} serverNow={nowMs} />
+        </div>
+        <div className="whitespace-nowrap text-xs text-text-dim">
+          {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
+        </div>
+      </Link>
+    </div>
+  );
+}

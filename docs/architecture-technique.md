@@ -575,3 +575,24 @@ Guillaume, ex. disqualification après le premier classement IBU).**
 recalculées), puis l'étape (`deleteStage`). Saison : suppression en base, la cascade efface tout ce
 qui en dépend (étapes, courses, athlètes, cotes, pronostics, résultats, points, ligues, cartes,
 Pépites) ; il faut retaper le label de la saison pour confirmer.
+
+## Accueil et page de pronostic — lot « page par page » (fin octobre 2026)
+
+**Accueil.** L'encart « En ce moment » devient « L'étape de la semaine » (`WeekStageCard`,
+`src/lib/weekStage.ts`) :
+- étape affichée : celle en cours (dates de l'étape, jour de Paris), sinon celle qui commence dans
+  les 7 jours (à confirmer) ;
+- le badge « En ce moment » n'apparaît que si une course de l'étape part aujourd'hui (heure de Paris) ;
+- une ligne par course « en cours » (départ passé, pas encore notée) avec les biathlètes ou la nation
+  pronostiqués, ou « Pas de pronostic sur cette course » ;
+- bouton « À jouer » vers la prochaine course de l'étape encore ouverte et sans pronostic (à
+  confirmer : lecture retenue de « si pas de pronostic, bouton à jouer », une course en cours ne
+  pouvant plus être jouée).
+« Prochainement » devient « À suivre » (`NextRaceCard`) avec un compte à rebours jusqu'au départ
+(= verrouillage), qui part de l'horloge du serveur (horloge simulée de l'admin comprise).
+
+**Page de pronostic d'une course.** Encart « Mon pronostic » en haut (`PredictionSummary`) : les choix
+en cours avec une croix rouge pour retirer chacun, le bouton « Activer mon bonus ×2 » (nombre restant
+sur la saison, mis à jour en direct) et « Valider mon pronostic ». Retirer un choix ne supprime rien en
+base : le pronostic enregistré reste valable tant que le joueur n'a pas revalidé (un message le
+rappelle). Le choix de carte bonus (Balle de pioche, Ça farte) reste sous la liste.

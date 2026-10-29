@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { CheckIcon } from "@/components/icons";
-import { SaveFeedback } from "./SaveFeedback";
+import { PredictionSummary } from "./PredictionSummary";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -49,6 +49,12 @@ export function PredictionForm({
   const [error, setError] = useState<string | null>(null);
   // Encart « pronostic validé », masqué dès que le joueur modifie son choix.
   const [saved, setSaved] = useState(false);
+  // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
+  const [savedState, setSavedState] = useState(() => ({
+    key: [...initialSelection].sort().join(","),
+    bonusX2: initialBonusX2,
+    card: initialCardUsed,
+  }));
   const supabase = createClient();
   const t = useTranslations("PredictionForm");
 
@@ -131,18 +137,43 @@ export function PredictionForm({
       setError(t("saveError"));
     } else {
       setSaved(true);
+      setSavedState({ key: [...selected].sort().join(","), bonusX2, card: cardChoice === "none" ? null : cardChoice });
     }
   }
 
+  const athleteById = new Map(athletes.map((a) => [a.athlete_id, a]));
+  const unsaved =
+    savedState.key !== "" &&
+    (savedState.key !== [...selected].sort().join(",") ||
+      savedState.bonusX2 !== bonusX2 ||
+      savedState.card !== (cardChoice === "none" ? null : cardChoice));
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-          {t("chooseThree")}
-        </div>
-        <div className="font-display text-sm font-bold text-ice">
-          {selected.length} / {requiredCount}
-        </div>
+      <PredictionSummary
+        picks={selected.map((id) => {
+          const a = athleteById.get(id);
+          return { key: id, label: a ? `${a.first_name ? `${a.first_name[0]}. ` : ""}${a.last_name}` : "?", nationCode: a?.nation_code ?? "" };
+        })}
+        requiredCount={requiredCount}
+        onRemove={toggle}
+        x2Available={canUseX2}
+        bonusX2={bonusX2}
+        x2Remaining={x2UsesRemaining + (initialBonusX2 ? 1 : 0) - (bonusX2 ? 1 : 0)}
+        onToggleX2={() => {
+          setBonusX2((v) => !v);
+          setSaved(false);
+        }}
+        canSubmit={selected.length === requiredCount}
+        saving={saving}
+        onSubmit={submit}
+        unsaved={unsaved}
+        success={saved ? t("saved") : null}
+        error={error}
+      />
+
+      <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+        {requiredCount === 4 ? t("chooseFour") : t("chooseThree")}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -229,25 +260,6 @@ export function PredictionForm({
         </div>
       )}
 
-      {canUseX2 && (
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={bonusX2} onChange={(e) => {
-              setBonusX2(e.target.checked);
-              setSaved(false);
-            }} />
-          {t("bonusX2Label", { count: x2UsesRemaining })}
-        </label>
-      )}
-
-      <button
-        onClick={submit}
-        disabled={selected.length !== requiredCount || saving}
-        className="rounded-2xl bg-ice py-3.5 text-center font-display text-[15px] font-bold text-on-ice disabled:opacity-40"
-      >
-        {saving ? t("saving") : t("submit")}
-      </button>
-
-      <SaveFeedback success={saved ? t("saved") : null} error={error} />
     </div>
   );
 }
