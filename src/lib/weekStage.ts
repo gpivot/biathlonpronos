@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { toParisWallTime } from "./displayTimeZone";
 import { getRaceDisplayStatus } from "./raceStatus";
+import { shortAthleteName } from "./athleteName";
 
 /**
  * Encart « L'étape de la semaine » de l'accueil : l'étape en cours (ou, à
@@ -154,7 +155,7 @@ export async function getWeekStage(
             const a = (athletes ?? []).find((x: any) => x.id === id);
             return {
               key: id,
-              name: a ? `${a.first_name ? `${a.first_name[0]}. ` : ""}${a.last_name ?? ""}` : "?",
+              name: shortAthleteName(a),
               nationCode: a?.nation_code ?? "",
             };
           });

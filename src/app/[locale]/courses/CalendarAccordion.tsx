@@ -129,7 +129,7 @@ export function CalendarAccordion({
                       href={`/courses/${race.id}`}
                       className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-3"
                     >
-                      <div className="flex flex-1 flex-col gap-0.5">
+                      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                         <div className="text-sm font-semibold">
                           {tFormat(race.format)}
                           {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
@@ -153,7 +153,7 @@ export function CalendarAccordion({
                           </span>
                         )}
                       </div>
-                      <div className="flex flex-col items-end gap-1">
+                      <div className="flex flex-shrink-0 flex-col items-end gap-1">
                         <div
                           className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[race.displayStatus]}`}
                         >

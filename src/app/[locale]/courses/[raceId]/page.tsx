@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Link } from "@/i18n/navigation";
-import { ArrowLeftIcon, CheckIcon, ClockIcon } from "@/components/icons";
+import { ArrowLeftIcon, ClockIcon } from "@/components/icons";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -15,7 +15,10 @@ import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
-import { FuseeGachetteBadges, FuseeGachetteLegend, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
+import { getRacePlayers } from "@/lib/racePlayers";
+import { PlayerRow, ResultRow } from "./RaceRankingRows";
+import { ShowMore } from "@/components/ShowMore";
+import { FuseeGachetteLegend, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 
 export const dynamic = "force-dynamic";
 
@@ -185,6 +188,8 @@ export default async function RacePage({
   const raceResult = displayStatus === "finished" ? await getRaceResult(supabase, race.id, user?.id ?? null) : null;
   const results = raceResult?.results ?? [];
   const pointsEarned = raceResult?.prediction?.points ?? 0;
+  const multiplier = raceResult?.prediction?.multiplier ?? null;
+  const players = displayStatus === "finished" ? await getRacePlayers(supabase, race.id) : [];
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
@@ -313,8 +318,16 @@ export default async function RacePage({
             {user && (
               <div className="flex flex-col gap-3 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-5">
                 <div className="flex items-end justify-between gap-3">
-                  <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-                    {t("pointsEarnedLabel")}
+                  <div className="flex flex-col gap-1.5">
+                    <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+                      {t("pointsEarnedLabel")}
+                    </div>
+                    {/* Le ×2 (bonus perso ou coefficient Mondiaux/JO) est affiché ici, pas sur chaque ligne. */}
+                    {multiplier && (
+                      <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
+                        {t(multiplier.kind === "bonusX2" ? "bonusX2Gain" : "coefficientGain", { points: formatPoints(multiplier.gain) })}
+                      </div>
+                    )}
                   </div>
                   <div className="font-display text-2xl font-extrabold text-ice">{Math.round(pointsEarned * 10) / 10} pts</div>
                 </div>
@@ -328,11 +341,6 @@ export default async function RacePage({
                     <div className="text-[13px] text-text-dim">{t("noPredictionMessage")}</div>
                   ) : (
                     <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} />
-                  )}
-                  {initialBonusX2 && (
-                    <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
-                      {t("bonusX2Badge")}
-                    </div>
                   )}
                 </div>
               </div>
@@ -349,35 +357,38 @@ export default async function RacePage({
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  {results.map((row) => (
-                    <div
-                      key={`${row.rank}-${row.name}`}
-                      className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3 ${
-                        row.mine ? "border-ice/60 bg-ice-soft" : "border-border bg-card"
-                      }`}
-                    >
-                      <div
-                        className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-display text-xs font-bold ${
-                          row.rank === 1 ? "bg-gold-soft text-gold" : "bg-ice-soft text-ice"
-                        }`}
-                      >
-                        {row.rank}
-                      </div>
-                      <div className="text-base">{nationFlagEmoji(row.nationCode)}</div>
-                      <div className="flex flex-1 items-center gap-1 truncate text-sm font-semibold">
-                        <span className="truncate">{row.name}</span>
-                        <FuseeGachetteBadges fusee={row.fusee} gachette={row.gachette} />
-                      </div>
-                      {row.mine && <CheckIcon className="h-4 w-4 flex-shrink-0 text-ice" />}
-                      {row.points != null && (
-                        <div className="whitespace-nowrap font-display text-[13px] font-bold text-gold">{formatPoints(row.points)}</div>
-                      )}
-                    </div>
-                  ))}
+                  {/* Top 10 + les choix du joueur classés plus loin ; le reste dans le déroulant. */}
+                  {results.length > 10 ? (
+                    <ShowMore
+                      label={t("showFullRanking")}
+                      collapsed={results.filter((r) => r.rank <= 10 || r.mine).map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
+                      expanded={results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
+                    />
+                  ) : (
+                    results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)
+                  )}
+                  {results.some((r) => r.perfect) && <div className="px-3 text-[11px] text-text-dim">{t("pronoParfaitLegend")}</div>}
                   {results.some((r) => r.fusee || r.gachette) && <FuseeGachetteLegend />}
                 </div>
               )}
             </div>
+
+            {players.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("playersTitle")}</div>
+                {players.length > 10 ? (
+                  <ShowMore
+                    label={t("showFullRanking")}
+                    collapsed={players
+                      .filter((p, i) => i < 10 || p.userId === user?.id)
+                      .map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} />)}
+                    expanded={players.map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} />)}
+                  />
+                ) : (
+                  players.map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} />)
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -410,3 +421,4 @@ function NationPickRow({ nation }: { nation: NationWithOdds | undefined }) {
     </div>
   );
 }
+

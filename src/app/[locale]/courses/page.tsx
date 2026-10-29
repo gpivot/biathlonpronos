@@ -9,6 +9,7 @@ import { getClock } from "@/lib/clock";
 import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
 import { SeasonPredictionsAccordion, type SeasonPick } from "./SeasonPredictionsAccordion";
+import { StreakCard } from "@/components/StreakCard";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ interface CalendarData {
   isAdmin: boolean;
   /** null : visiteur non connecté. */
   seasonPicks: SeasonPick[] | null;
+  streak: number | null;
 }
 
 async function getCalendarData(): Promise<CalendarData> {
@@ -34,11 +36,11 @@ async function getCalendarData(): Promise<CalendarData> {
     isAdmin = profile?.is_admin ?? false;
   }
 
-  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null };
+  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, streak: null };
 
   const { now } = await getClock();
-  const { stages, seasonPicks } = await getSeasonView(supabase, season, userResult.user?.id ?? null, now);
-  return { seasonId: season.id, stages, isAdmin, seasonPicks };
+  const { stages, seasonPicks, streak } = await getSeasonView(supabase, season, userResult.user?.id ?? null, now);
+  return { seasonId: season.id, stages, isAdmin, seasonPicks, streak };
 }
 
 export default async function CoursesPage({
@@ -52,7 +54,7 @@ export default async function CoursesPage({
   // Arrivée depuis « L'étape de la semaine » de l'accueil : cette étape est dépliée d'office.
   const { etape } = await searchParams;
   const t = await getTranslations("Courses");
-  const { seasonId, stages, isAdmin, seasonPicks } = await getCalendarData();
+  const { seasonId, stages, isAdmin, seasonPicks, streak } = await getCalendarData();
   const requestedStageId = etape && stages.some((s) => s.id === etape) ? etape : null;
 
   return (
@@ -72,6 +74,8 @@ export default async function CoursesPage({
         {isAdmin && seasonId && <CalendarImportButton seasonId={seasonId} />}
 
         {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} />}
+
+        {streak != null && <StreakCard current={streak} />}
 
         {stages.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">

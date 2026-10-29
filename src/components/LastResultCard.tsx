@@ -82,11 +82,12 @@ async function SingleResultCard({ result, locale }: { result: LastResult; locale
               </div>
             )}
 
-            {(prediction.bonusX2 || prediction.card) && (
+            {(prediction.multiplier || prediction.card) && (
               <div className="flex flex-wrap justify-center gap-1.5">
-                {prediction.bonusX2 && (
+                {/* Le ×2 n'est pas compté dans les points de chaque ligne : ce qu'il rapporte est ici. */}
+                {prediction.multiplier && (
                   <div className="rounded-full bg-gold-soft px-2.5 py-0.5 font-display text-[11px] font-bold text-gold">
-                    {t("lastResultBonusX2")}
+                    {t(`lastResultMultiplier_${prediction.multiplier.kind}`, { points: formatPoints(prediction.multiplier.gain) })}
                   </div>
                 )}
                 {prediction.card && (

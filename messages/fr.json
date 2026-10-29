@@ -41,7 +41,6 @@
     "lastResultPodium": "Podium",
     "lastResultUnranked": "–",
     "lastResultNotCounted": "non compté",
-    "lastResultBonusX2": "Bonus ×2",
     "lastResultExtra_top3": "Bonus Top 3",
     "lastResultExtra_top5": "Bonus Top 5",
     "lastResultExtra_top10": "Bonus Top 10",
@@ -51,7 +50,9 @@
     "lastResultExtra_pepite": "Bonus Pépite",
     "fuseeLabel": "Fusée : meilleur temps de ski",
     "gachetteLabel": "Gâchette : sans-faute au tir",
-    "fuseeGachetteLegend": "🚀 Fusée +50 pts · 🎯 Gâchette +20 pts, déjà inclus dans les points"
+    "fuseeGachetteLegend": "🚀 Fusée +50 pts · 🎯 Gâchette +20 pts, déjà inclus dans les points",
+    "lastResultMultiplier_bonusX2": "Bonus ×2 · {points}",
+    "lastResultMultiplier_coefficient": "Coeff. ×2 · {points}"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
@@ -210,7 +211,8 @@
     "close": "Fermer",
     "playerLoading": "Chargement…",
     "playerError": "Impossible d'afficher ce joueur.",
-    "playerHiddenHint": "Ses pronostics apparaissent au départ de chaque course."
+    "playerHiddenHint": "Ses pronostics apparaissent au départ de chaque course.",
+    "playerFavoriteTeam": "Équipe favorite"
   },
   "Courses": {
     "title": "Calendrier",
@@ -261,7 +263,12 @@
     "pointsEarnedLabel": "Tes points sur cette course",
     "resultsTitle": "Résultats",
     "noResultsMessage": "Résultats pas encore saisis.",
-    "predicted": "Pronostic validé"
+    "predicted": "Pronostic validé",
+    "bonusX2Gain": "Bonus ×2 actif · {points}",
+    "coefficientGain": "Coeff. ×2 de l'étape · {points}",
+    "showFullRanking": "Voir tout le classement",
+    "pronoParfaitLegend": "⭐ Les 3 meilleurs scores de la course : le trio du Prono parfait.",
+    "playersTitle": "Classement des joueurs sur cette course"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

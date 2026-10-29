@@ -41,7 +41,6 @@
     "lastResultPodium": "Podium",
     "lastResultUnranked": "–",
     "lastResultNotCounted": "not counted",
-    "lastResultBonusX2": "×2 bonus",
     "lastResultExtra_top3": "Top 3 bonus",
     "lastResultExtra_top5": "Top 5 bonus",
     "lastResultExtra_top10": "Top 10 bonus",
@@ -51,7 +50,9 @@
     "lastResultExtra_pepite": "Diamond bonus",
     "fuseeLabel": "Rocket: fastest ski time",
     "gachetteLabel": "Trigger: clean shooting",
-    "fuseeGachetteLegend": "🚀 Rocket +50 pts · 🎯 Trigger +20 pts, already included in the points"
+    "fuseeGachetteLegend": "🚀 Rocket +50 pts · 🎯 Trigger +20 pts, already included in the points",
+    "lastResultMultiplier_bonusX2": "×2 bonus · {points}",
+    "lastResultMultiplier_coefficient": "×2 coeff. · {points}"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -210,7 +211,8 @@
     "close": "Close",
     "playerLoading": "Loading…",
     "playerError": "This player can't be displayed.",
-    "playerHiddenHint": "Their picks appear when each race starts."
+    "playerHiddenHint": "Their picks appear when each race starts.",
+    "playerFavoriteTeam": "Favourite team"
   },
   "Courses": {
     "title": "Calendar",
@@ -261,7 +263,12 @@
     "pointsEarnedLabel": "Your points for this race",
     "resultsTitle": "Results",
     "noResultsMessage": "Results not entered yet.",
-    "predicted": "Prediction confirmed"
+    "predicted": "Prediction confirmed",
+    "bonusX2Gain": "×2 bonus active · {points}",
+    "coefficientGain": "Stage ×2 coefficient · {points}",
+    "showFullRanking": "See full ranking",
+    "pronoParfaitLegend": "⭐ The race's 3 best scores: the Perfect pick trio.",
+    "playersTitle": "Player ranking for this race"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

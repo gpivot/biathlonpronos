@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { CheckIcon } from "@/components/icons";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
+import { shortAthleteName } from "@/lib/athleteName";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -171,7 +172,7 @@ export function PredictionForm({
       <PredictionSummary
         picks={selected.map((id) => {
           const a = athleteById.get(id);
-          return { key: id, label: a ? `${a.first_name ? `${a.first_name[0]}. ` : ""}${a.last_name}` : "?", nationCode: a?.nation_code ?? "" };
+          return { key: id, label: shortAthleteName(a), nationCode: a?.nation_code ?? "" };
         })}
         requiredCount={requiredCount}
         onRemove={toggle}
