@@ -622,8 +622,11 @@ format ne rapportent rien. Les courses déjà notées gardent leurs points tant 
 renotées.
 
 **Accueil, 2e passe.** Compte à rebours de « À suivre » en bas à droite, sous la date. « Derniers
-résultats » au pluriel quand plusieurs courses ont été notées le même jour (heure de Paris) : une
-carte par course, dans l'ordre des départs (`getLastResults`). La légende Fusée/Gâchette est masquée
+résultats » (demande de Guillaume) : la dernière course notée de chaque sexe reste affichée 48 h
+après son départ, un nouveau résultat du même sexe remplaçant le précédent ; une carte par course,
+dans l'ordre des départs (`pickLastResultRaces`). Relais mixtes : catégorie à part, gardée 48 h elle
+aussi (à confirmer). Sans aucun résultat dans les 48 h, la dernière course notée reste affichée seule
+(à confirmer). La légende Fusée/Gâchette est masquée
 sur l'accueil (gardée sur la page d'une course).
 La barre d'onglets du bas (`BottomNav`) est figée en bas de l'écran pendant le défilement
 (`sticky bottom-0`), sur toutes les pages qui l'affichent.
