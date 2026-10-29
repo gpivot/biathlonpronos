@@ -272,7 +272,9 @@
     "coefficientGain": "Coeff. ×2 della tappa · {points}",
     "showFullRanking": "Vedi tutta la classifica",
     "pronoParfaitLegend": "⭐ I 3 migliori punteggi della gara: il trio del Pronostico perfetto.",
-    "playersTitle": "Classifica dei giocatori in questa gara"
+    "playersTitle": "Classifica dei giocatori in questa gara",
+    "ongoingBoardTitle": "Classifica generale · pronostici su questa gara",
+    "ongoingNoPrediction": "Nessun pronostico"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",

@@ -272,7 +272,9 @@
     "coefficientGain": "Coef. ×2 de la etapa · {points}",
     "showFullRanking": "Ver toda la clasificación",
     "pronoParfaitLegend": "⭐ Las 3 mejores puntuaciones de la carrera: el trío del Pronóstico perfecto.",
-    "playersTitle": "Clasificación de jugadores en esta carrera"
+    "playersTitle": "Clasificación de jugadores en esta carrera",
+    "ongoingBoardTitle": "Clasificación general · pronósticos de esta carrera",
+    "ongoingNoPrediction": "Sin pronóstico"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",

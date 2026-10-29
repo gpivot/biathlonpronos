@@ -272,7 +272,9 @@
     "coefficientGain": "×2-Koeffizient der Etappe · {points}",
     "showFullRanking": "Ganze Wertung anzeigen",
     "pronoParfaitLegend": "⭐ Die 3 besten Punktzahlen des Rennens: das Trio des perfekten Tipps.",
-    "playersTitle": "Spielerwertung für dieses Rennen"
+    "playersTitle": "Spielerwertung für dieses Rennen",
+    "ongoingBoardTitle": "Gesamtwertung · Tipps für dieses Rennen",
+    "ongoingNoPrediction": "Kein Tipp"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",

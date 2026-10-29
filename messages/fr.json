@@ -272,7 +272,9 @@
     "coefficientGain": "Coeff. ×2 de l'étape · {points}",
     "showFullRanking": "Voir tout le classement",
     "pronoParfaitLegend": "⭐ Les 3 meilleurs scores de la course : le trio du Prono parfait.",
-    "playersTitle": "Classement des joueurs sur cette course"
+    "playersTitle": "Classement des joueurs sur cette course",
+    "ongoingBoardTitle": "Classement général · pronostics sur cette course",
+    "ongoingNoPrediction": "Pas de pronostic"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

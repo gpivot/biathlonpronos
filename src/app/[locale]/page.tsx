@@ -127,7 +127,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
 
         {loggedInWithSeason ? (
-          <>
           <div className="flex flex-col gap-3 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-5">
             <div className="font-display text-[11px] font-bold uppercase tracking-wider text-gold">
               {t("seasonBadge", { label: season!.label })}
@@ -168,9 +167,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 {t("mySeasonButton")}
               </Link>
             </div>
+
+            {streak != null && <StreakCard current={streak} compact />}
           </div>
-          {streak != null && <StreakCard current={streak} />}
-          </>
         ) : (
           <div className="flex gap-2.5">
             <Link

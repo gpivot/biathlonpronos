@@ -272,7 +272,9 @@
     "coefficientGain": "Stage ×2 coefficient · {points}",
     "showFullRanking": "See full ranking",
     "pronoParfaitLegend": "⭐ The race's 3 best scores: the Perfect pick trio.",
-    "playersTitle": "Player ranking for this race"
+    "playersTitle": "Player ranking for this race",
+    "ongoingBoardTitle": "Overall ranking · picks for this race",
+    "ongoingNoPrediction": "No pick"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

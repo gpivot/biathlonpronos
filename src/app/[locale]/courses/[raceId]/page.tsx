@@ -2,8 +2,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
-import { Link } from "@/i18n/navigation";
-import { ArrowLeftIcon, ClockIcon } from "@/components/icons";
+import { ClockIcon } from "@/components/icons";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -15,8 +14,9 @@ import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
-import { getRacePlayers } from "@/lib/racePlayers";
-import { PlayerRow, ResultRow } from "./RaceRankingRows";
+import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
+import { BackButton } from "@/components/BackButton";
+import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
 import { SPECIAL_RULE_ICONS } from "@/lib/specialRules";
 import { FuseeGachetteLegend, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
@@ -191,22 +191,15 @@ export default async function RacePage({
   const pointsEarned = raceResult?.prediction?.points ?? 0;
   const multiplier = raceResult?.prediction?.multiplier ?? null;
   const players = displayStatus === "finished" ? await getRacePlayers(supabase, race.id) : [];
+  const ongoingBoard = displayStatus === "ongoing" ? await getOngoingBoard(supabase, stage.season_id, race.id) : [];
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-5 overflow-auto px-5 pb-3 pt-5">
         <div className="flex items-center gap-3">
-          <Link
-            href="/courses"
-            aria-label={t("backToCalendar")}
-            className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border bg-card text-text-dim"
-          >
-            <ArrowLeftIcon className="h-4 w-4" />
-          </Link>
-          <div className="flex-1 text-center font-display text-[15px] font-bold">
-            {tFormat(race.format)}
-            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
-          </div>
+          <BackButton fallback="/courses" label={t("backToCalendar")} />
+          {/* Le nom de la course est dans l'encadré ci-dessous, avec le drapeau de l'étape. */}
+          <div className="flex-1" />
           {/* Avec un formulaire, le « ? » est à côté de « Choisis… » ; sinon il reste ici. */}
           {showForm ? <div className="h-8 w-8 flex-shrink-0" /> : <RuleInfoButton format={race.format} />}
         </div>
@@ -225,7 +218,14 @@ export default async function RacePage({
                 })
               : t(`status_${displayStatus}`)}
           </div>
-          <div className="font-display text-base font-bold">{stage.location}</div>
+          <div className="flex items-center gap-2 font-display text-base font-bold">
+            <span>{nationFlagEmoji(stage.country_code)}</span>
+            <span>{stage.location}</span>
+          </div>
+          <div className="text-sm font-semibold text-frost">
+            {tFormat(race.format)}
+            {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+          </div>
         </div>
 
         {race.special_rule && (
@@ -303,6 +303,15 @@ export default async function RacePage({
                 </div>
               )}
             </div>
+
+            {ongoingBoard.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("ongoingBoardTitle")}</div>
+                {ongoingBoard.map((row) => (
+                  <OngoingBoardRowView key={row.userId} row={row} mine={row.userId === user?.id} noPredictionLabel={t("ongoingNoPrediction")} />
+                ))}
+              </div>
+            )}
 
             {isAdmin && (
               <a

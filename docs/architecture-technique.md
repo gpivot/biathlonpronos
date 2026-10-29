@@ -715,3 +715,16 @@ ouverte à tous (rien à copier), à coller par Guillaume.
   traduit, en rouge.
 - Le titre en haut de `/courses` devient « Ma saison » (comme l'onglet).
 - **Derniers résultats** (accueil) : le plus récent est toujours en haut.
+
+## Course en cours, flèche retour, série dans l'encadré Saison (fin octobre 2026)
+
+- **Accueil** : la série en cours passe en version réduite en bas de l'encadré « Saison »
+  (`StreakCard compact`), plus de carte séparée.
+- **Flèche retour d'une course** : revient à la page consultée juste avant (`BackButton` +
+  `NavigationTracker`, qui compte les pages vues dans l'onglet), sinon à Ma saison.
+- **En-tête d'une course** : le nom de la course quitte la barre du haut ; l'encadré affiche le
+  drapeau de l'étape, le lieu et le nom de la course.
+- **Course en cours** : sous « Mon pronostic », le classement général de tous les joueurs avec,
+  sous chaque nom, son pronostic sur cette course (« Pas de pronostic » sinon) ; les joueurs sans
+  points mais qui ont pronostiqué suivent à 0 pt (`getOngoingBoard`). Repose sur la migration 0018
+  (pronostics lisibles une fois la course partie).
