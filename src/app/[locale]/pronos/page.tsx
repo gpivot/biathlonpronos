@@ -1,5 +1,7 @@
 import { redirect } from "@/i18n/navigation";
 
+export const dynamic = "force-dynamic";
+
 /**
  * L'onglet « Ma saison » a été fusionné dans le Calendrier (fin octobre 2026) : les anciens liens
  * (favoris, ?etape= de l'accueil) mènent désormais à /courses, avec la même étape dépliée.
