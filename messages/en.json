@@ -281,7 +281,8 @@
     "unsavedHint": "Change not saved yet: confirm to apply it.",
     "chooseFour": "Pick 4 biathletes",
     "sortByStart": "Start order",
-    "sortByOdds": "By odds"
+    "sortByOdds": "By odds",
+    "startPosition": "starts {position, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}"
   },
   "SignIn": {
     "prompt": "Sign in to continue",

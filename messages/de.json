@@ -281,7 +281,8 @@
     "unsavedHint": "Änderung noch nicht gespeichert: bestätige, um sie zu übernehmen.",
     "chooseFour": "Wähle 4 Biathleten",
     "sortByStart": "Startreihenfolge",
-    "sortByOdds": "Nach Quote"
+    "sortByOdds": "Nach Quote",
+    "startPosition": "Start Nr. {position}"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",

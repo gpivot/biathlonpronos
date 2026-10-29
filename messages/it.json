@@ -281,7 +281,8 @@
     "unsavedHint": "Modifica non ancora salvata: conferma per applicarla.",
     "chooseFour": "Scegli 4 biatleti",
     "sortByStart": "Ordine di partenza",
-    "sortByOdds": "Per quota"
+    "sortByOdds": "Per quota",
+    "startPosition": "parte {position}º"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",

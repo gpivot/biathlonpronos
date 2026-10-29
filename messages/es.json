@@ -281,7 +281,8 @@
     "unsavedHint": "Cambio aún no guardado: valida para aplicarlo.",
     "chooseFour": "Elige 4 biatletas",
     "sortByStart": "Orden de salida",
-    "sortByOdds": "Por cuota"
+    "sortByOdds": "Por cuota",
+    "startPosition": "sale {position}º"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",

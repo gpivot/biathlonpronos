@@ -237,6 +237,10 @@ export function PredictionForm({
                 </span>
                 <span className="text-[11px] text-text-dim">
                   {a.nation_code}
+                  {/* Tri par cote d'une poursuite : la position de départ reste visible. */}
+                  {sortBy === "odds" && startOrder[a.athlete_id] != null
+                    ? ` · ${t("startPosition", { position: startOrder[a.athlete_id] })}`
+                    : ""}
                   {isGrilled ? ` · ${t("grilled")}` : ""}
                 </span>
               </div>

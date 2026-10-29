@@ -281,7 +281,8 @@
     "unsavedHint": "Modification pas encore enregistrée : valide pour la prendre en compte.",
     "chooseFour": "Choisis 4 biathlètes",
     "sortByStart": "Ordre de départ",
-    "sortByOdds": "Par cote"
+    "sortByOdds": "Par cote",
+    "startPosition": "départ {position, selectordinal, one {#er} other {#e}}"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",

@@ -610,7 +610,8 @@ Top 10 (Top 5 en relais) et pour tout athlète Fusée/Gâchette. Pictos 🚀 Fus
 Les points du barème utilisent les cotes en vigueur, comme le calcul des scores.
 
 **Pronostic d'une poursuite.** Liste des biathlètes par ordre de départ (classement du sprint de
-l'étape, même sexe ; les non-classés ensuite, par cote), affichage par défaut, ou par cote. Les cotes
+l'étape, même sexe ; les non-classés ensuite, par cote), affichage par défaut, ou par cote ; en tri par
+cote, la position de départ reste affichée à côté de la nation. Les cotes
 affichées sont les cotes poursuite réévaluées après le sprint.
 
 **Fusée et Gâchette selon le format (fin octobre 2026, demande de Guillaume, conforme au §15 du
