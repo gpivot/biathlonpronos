@@ -34,6 +34,7 @@
     "emptyState": "Noch keine Station geplant. Lege in Supabase eine Saison, Stationen und Rennen an (siehe supabase/seed.sql), um diese Ansicht zu füllen.",
     "coefficientBadge": "Koeff. ×2",
     "lastResultTitle": "Letztes Ergebnis",
+    "lastResultsTitle": "Letzte Ergebnisse",
     "lastResultSeeRace": "Zum Rennen",
     "lastResultPlayerRank": "Platz {rank} von {count} Spielern",
     "lastResultWinner": "Platz 1 in diesem Rennen!",
@@ -123,7 +124,7 @@
     "s_pepite_title": "11. Der Rohdiamant",
     "s_pepite_body": "Eine Wette zu Saisonbeginn auf einen Außenseiter pro Geschlecht (Quote ≥ 30). Ein verdeckter Tipp: Bei seiner ersten Top-10-Platzierung der Saison wird seine Rennpunktzahl als Bonus gutgeschrieben, danach ist er wieder ein normaler Athlet.",
     "s_fuseegachette_title": "12. Rakete & Abzug",
-    "s_fuseegachette_body": "Rakete: +50 Pkt., wenn einer deiner Tipps die beste Laufzeit des Rennens hatte (einmalig). Abzug: +20 Pkt. pro Tipp mit fehlerfreiem Schießen (kumulierbar).",
+    "s_fuseegachette_body": "Rakete (nur Sprint und Einzel): +50 Pkt., wenn einer deiner Tipps die beste Laufzeit des Rennens hatte (einmalig). Abzug (nur Verfolgung und Massenstart): +20 Pkt. pro Tipp mit 20/20 am Schießstand (kumulierbar).",
     "s_classement_title": "13. Gesamtwertung",
     "s_classement_body": "Zählt alle in der Saison erzielten Punkte zusammen. Der Führende trägt das Gelbe Trikot. Es gibt außerdem Nebenwertungen (Rotes Trikot) und private Ligen unter Freunden."
   },

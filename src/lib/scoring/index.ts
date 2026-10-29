@@ -5,3 +5,4 @@ export * from "./individualRace";
 export * from "./relay";
 export * from "./seasonPredictions";
 export * from "./streak";
+export * from "./fuseeGachette";

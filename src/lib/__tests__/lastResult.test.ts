@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { applyFuseeGachetteRules, fuseeGachetteEligibility } from "../scoring/fuseeGachette";
 import { computeIndividualPickPoints, computeIndividualExtras, computeResultRowPoints } from "../lastResult";
 import { computeIndividualRaceScore } from "../scoring";
 import type { IndividualRaceScoringInput } from "../scoring";
@@ -78,5 +79,20 @@ describe("points du barème dans le classement d'une course", () => {
   it("relais : barème réduit, Top 5 seulement", () => {
     expect(computeResultRowPoints({ rank: 1, odds: 3, relay: true, isFusee: false, isGachette: false })).toBe(30);
     expect(computeResultRowPoints({ rank: 6, odds: 3, relay: true, isFusee: false, isGachette: false })).toBeNull();
+  });
+});
+
+describe("Fusée et Gâchette selon le format (§15)", () => {
+  it("Fusée au sprint et à l'individuel, Gâchette en poursuite et mass start", () => {
+    expect(fuseeGachetteEligibility("sprint")).toEqual({ fusee: true, gachette: false });
+    expect(fuseeGachetteEligibility("individuel")).toEqual({ fusee: true, gachette: false });
+    expect(fuseeGachetteEligibility("poursuite")).toEqual({ fusee: false, gachette: true });
+    expect(fuseeGachetteEligibility("mass_start")).toEqual({ fusee: false, gachette: true });
+    expect(fuseeGachetteEligibility("relais_h")).toEqual({ fusee: false, gachette: false });
+  });
+
+  it("une case cochée sur un format non prévu ne compte pas", () => {
+    expect(applyFuseeGachetteRules("sprint", { is_fusee: true, is_gachette: true })).toEqual({ is_fusee: true, is_gachette: false });
+    expect(applyFuseeGachetteRules("poursuite", { is_fusee: true, is_gachette: true })).toEqual({ is_fusee: false, is_gachette: true });
   });
 });

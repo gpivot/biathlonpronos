@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { loadIbuResults, submitResults, type SubmitResultsState } from "./actions";
 import type { ResultEntryInput } from "@/lib/admin/raceResults";
+import { fuseeGachetteEligibility } from "@/lib/scoring/fuseeGachette";
 import {
   ATHLETE_RESULTS_HEADERS,
   NATION_RESULTS_HEADERS,
@@ -69,6 +70,9 @@ export function ResultsForm({
   const isAthleteMode = mode === "athlete";
   const showTimeGap = isAthleteMode && format === "sprint";
   const showPenaltyLaps = isAthleteMode && specialRule === "tour_de_pena";
+  // §15 — Fusée au sprint/individuel, Gâchette en poursuite/mass start.
+  const showFusee = isAthleteMode && fuseeGachetteEligibility(format).fusee;
+  const showGachette = isAthleteMode && fuseeGachetteEligibility(format).gachette;
 
   function updateRow(id: string, patch: Partial<RowState>) {
     setRows((prev) => ({ ...prev, [id]: { ...prev[id], ...patch } }));
@@ -216,8 +220,8 @@ export function ResultsForm({
               <th className="px-3 py-2">Rang</th>
               {showTimeGap && <th className="px-3 py-2">Écart (s)</th>}
               {showPenaltyLaps && <th className="px-3 py-2">Tours de péna</th>}
-              {isAthleteMode && <th className="px-3 py-2">Fusée</th>}
-              {isAthleteMode && <th className="px-3 py-2">Gâchette</th>}
+              {showFusee && <th className="px-3 py-2">Fusée</th>}
+              {showGachette && <th className="px-3 py-2">Gâchette</th>}
             </tr>
           </thead>
           <tbody>
@@ -260,7 +264,7 @@ export function ResultsForm({
                       />
                     </td>
                   )}
-                  {isAthleteMode && (
+                  {showFusee && (
                     <td className="px-3 py-2 text-center">
                       <input
                         type="checkbox"
@@ -269,7 +273,7 @@ export function ResultsForm({
                       />
                     </td>
                   )}
-                  {isAthleteMode && (
+                  {showGachette && (
                     <td className="px-3 py-2 text-center">
                       <input
                         type="checkbox"

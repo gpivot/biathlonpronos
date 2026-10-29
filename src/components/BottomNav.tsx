@@ -26,7 +26,8 @@ export async function BottomNav({ active }: { active?: (typeof items)[number]["h
   const [t, isAdmin] = await Promise.all([getTranslations("Nav"), isCurrentUserAdmin()]);
 
   return (
-    <nav className="flex items-center justify-around border-t border-border bg-nav/95 px-1 py-3.5 pb-5">
+    // Figée en bas de l'écran pendant le défilement (sticky : reste dans le flux, rien à compenser).
+    <nav className="sticky bottom-0 z-40 flex items-center justify-around border-t border-border bg-nav/95 px-1 py-3.5 pb-[max(1.25rem,env(safe-area-inset-bottom))] backdrop-blur">
       {items.map(({ href, labelKey, icon: Icon }) => {
         const isActive = href === active;
         return (

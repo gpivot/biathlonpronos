@@ -612,3 +612,18 @@ Les points du barème utilisent les cotes en vigueur, comme le calcul des scores
 **Pronostic d'une poursuite.** Liste des biathlètes par ordre de départ (classement du sprint de
 l'étape, même sexe ; les non-classés ensuite, par cote), affichage par défaut, ou par cote. Les cotes
 affichées sont les cotes poursuite réévaluées après le sprint.
+
+**Fusée et Gâchette selon le format (fin octobre 2026, demande de Guillaume, conforme au §15 du
+règlement).** La Fusée ne compte qu'au sprint et à l'individuel, la Gâchette (20/20 au tir) qu'à la
+poursuite et à la mass start (`src/lib/scoring/fuseeGachette.ts`). La règle est appliquée à la saisie
+(colonnes masquées dans le back-office, cases ignorées à l'enregistrement et à l'import IBU) et à la
+lecture des résultats (calcul des points, affichage), pour que d'anciennes cases cochées sur un autre
+format ne rapportent rien. Les courses déjà notées gardent leurs points tant qu'elles ne sont pas
+renotées.
+
+**Accueil, 2e passe.** Compte à rebours de « À suivre » en bas à droite, sous la date. « Derniers
+résultats » au pluriel quand plusieurs courses ont été notées le même jour (heure de Paris) : une
+carte par course, dans l'ordre des départs (`getLastResults`). La légende Fusée/Gâchette est masquée
+sur l'accueil (gardée sur la page d'une course).
+La barre d'onglets du bas (`BottomNav`) est figée en bas de l'écran pendant le défilement
+(`sticky bottom-0`), sur toutes les pages qui l'affichent.

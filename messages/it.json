@@ -34,6 +34,7 @@
     "emptyState": "Nessuna tappa ancora in programma. Aggiungi una stagione, delle tappe e delle gare da Supabase (vedi supabase/seed.sql) per popolare questa schermata.",
     "coefficientBadge": "Coeff. ×2",
     "lastResultTitle": "Ultimo risultato",
+    "lastResultsTitle": "Ultimi risultati",
     "lastResultSeeRace": "Vedi la gara",
     "lastResultPlayerRank": "{rank}º su {count} giocatori",
     "lastResultWinner": "1º in questa gara!",
@@ -123,7 +124,7 @@
     "s_pepite_title": "11. La Pepita",
     "s_pepite_body": "Una scommessa fatta a inizio stagione su un outsider per sesso (quota ≥ 30). Una scelta nascosta: alla sua prima Top 10 della stagione, il suo punteggio in quella gara ti viene aggiunto come bonus, poi torna a essere un atleta normale.",
     "s_fuseegachette_title": "12. Razzo e Grilletto",
-    "s_fuseegachette_body": "Razzo: +50 pt se uno dei tuoi scelti ha il miglior tempo sugli sci della gara (una volta). Grilletto: +20 pt per ogni scelto che fa percorso netto al poligono (cumulabile).",
+    "s_fuseegachette_body": "Razzo (solo sprint e individuale): +50 pt se uno dei tuoi scelti ha il miglior tempo sugli sci della gara (una volta). Grilletto (solo inseguimento e mass start): +20 pt per ogni scelto che fa 20/20 al poligono (cumulabile).",
     "s_classement_title": "13. Classifica generale",
     "s_classement_body": "Somma tutti i punti ottenuti nella stagione. Il leader indossa il Pettorale giallo. Esistono anche classifiche secondarie (Pettorale rosso) e leghe private tra amici."
   },

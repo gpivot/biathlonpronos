@@ -34,6 +34,7 @@
     "emptyState": "No stage scheduled yet. Add a season, stages and races from Supabase (see supabase/seed.sql) to populate this screen.",
     "coefficientBadge": "×2 coeff.",
     "lastResultTitle": "Latest result",
+    "lastResultsTitle": "Latest results",
     "lastResultSeeRace": "See the race",
     "lastResultPlayerRank": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} of {count} players",
     "lastResultWinner": "1st in this race!",
@@ -123,7 +124,7 @@
     "s_pepite_title": "11. The Diamond in the Rough",
     "s_pepite_body": "A bet placed at the start of the season on an outsider per sex (odds ≥ 30). A hidden pick: on their first Top 10 of the season, their race score is added as a bonus, then they become a regular athlete again.",
     "s_fuseegachette_title": "12. Rocket & Trigger",
-    "s_fuseegachette_body": "Rocket: +50 pts if one of your picks had the race's best ski time (once). Trigger: +20 pts per pick with a clean shooting round (stackable).",
+    "s_fuseegachette_body": "Rocket (sprint and individual only): +50 pts if one of your picks had the race's best ski time (once). Trigger (pursuit and mass start only): +20 pts per pick with a perfect 20/20 at the range (stackable).",
     "s_classement_title": "13. Overall standings",
     "s_classement_body": "Adds up every point scored over the season. The leader wears the Yellow Bib. Secondary standings (Red Bib) and private leagues between friends also exist."
   },

@@ -1,5 +1,6 @@
 import { normalizeLabel, toCsv } from "./csv";
 import { ATHLETE_RESULTS_HEADERS, NATION_RESULTS_HEADERS } from "./resultsCsv";
+import { fuseeGachetteEligibility } from "../scoring/fuseeGachette";
 
 /**
  * Résultats officiels lus dans le datacenter de l'IBU (biathlonresults.com, API JSON publique
@@ -192,7 +193,8 @@ export async function fetchIbuResults(params: {
   if (forcedRaceId) description = data.Competition?.ShortDescription ?? raceId;
 
   let fastestSkiIbuId: string | null = null;
-  if (mode === "athlete") {
+  // La Fusée ne compte qu'au sprint et à l'individuel (§15) : inutile de chercher le temps de ski sinon.
+  if (mode === "athlete" && fuseeGachetteEligibility(race.format).fusee) {
     try {
       const analysis = await getJson<{ Results?: IbuResultRow[] }>(
         `AnalyticResults?RaceId=${encodeURIComponent(raceId)}&TypeId=CRST`

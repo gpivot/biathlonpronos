@@ -1,11 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
+  applyFuseeGachetteRules,
   computeAspirationBonus,
   computeIndividualRaceScore,
   computePepiteBonus,
   computePursuitOdds,
   computeRelayScore,
   computeSeasonStreaks,
+  fuseeGachetteEligibility,
   type AthleteRaceResult,
   type BonusCardEffect,
   type FavoriteTeam,
@@ -55,13 +57,14 @@ export async function saveRaceResults(
     const { error } = await admin.from("race_results").insert(
       entries.map((e) => ({
         race_id: raceId,
+        // Fusée seulement au sprint/individuel, Gâchette seulement en poursuite/mass start (§15).
+        is_fusee: fuseeGachetteEligibility(race.format).fusee && (e.isFusee ?? false),
+        is_gachette: fuseeGachetteEligibility(race.format).gachette && (e.isGachette ?? false),
         athlete_id: e.athleteId ?? null,
         nation_code: e.nationCode ?? null,
         rank: e.rank,
         time_gap_seconds: e.timeGapSeconds ?? null,
         penalty_laps: e.penaltyLaps ?? 0,
-        is_fusee: e.isFusee ?? false,
-        is_gachette: e.isGachette ?? false,
       }))
     );
     if (error) throw new Error(error.message);
@@ -402,6 +405,7 @@ async function scoreIndividualPredictions(
 
   const scoringResults: AthleteRaceResult[] = results
     .filter((r) => r.athlete_id)
+    .map((r) => applyFuseeGachetteRules(race.format, r))
     .map((r) => ({
       athleteId: r.athlete_id as string,
       rank: r.rank,
