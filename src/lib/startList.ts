@@ -15,7 +15,15 @@ export type StartList =
   /** Liste pas encore connue (sprint non saisi, liste IBU non récupérée). */
   | { status: "pending" }
   /** Athlète → place dans l'ordre de départ. */
-  | { status: "known"; order: Record<string, number>; source: "ibu" | "sprint" };
+  | {
+      status: "known";
+      order: Record<string, number>;
+      source: "ibu" | "sprint";
+      /** Poursuite : retard au départ en secondes entières (écart du sprint, dixièmes ignorés). */
+      gaps: Record<string, number>;
+    };
+
+type SprintResult = { athlete_id: string | null; rank: number; time_gap_seconds?: number | null };
 
 /**
  * Partie pure (testée). La liste officielle IBU, si l'admin l'a récupérée, prime ; à défaut, la
@@ -25,16 +33,23 @@ export type StartList =
 export function resolveStartList(
   format: string,
   stored: { athlete_id: string; start_position: number }[],
-  sprintResults: { athlete_id: string | null; rank: number }[]
+  sprintResults: SprintResult[]
 ): StartList {
   if (!START_LIST_FORMATS.includes(format)) return { status: "open" };
+  // Écarts de départ de la poursuite : ceux du sprint, comme à l'IBU (12,8 s → départ à +12 s).
+  const gaps: Record<string, number> = {};
+  if (format === "poursuite") {
+    for (const r of sprintResults) {
+      if (r.athlete_id && r.time_gap_seconds != null) gaps[r.athlete_id] = Math.floor(Number(r.time_gap_seconds));
+    }
+  }
   if (stored.length > 0) {
-    return { status: "known", source: "ibu", order: Object.fromEntries(stored.map((s) => [s.athlete_id, s.start_position])) };
+    return { status: "known", source: "ibu", gaps, order: Object.fromEntries(stored.map((s) => [s.athlete_id, s.start_position])) };
   }
   if (format === "poursuite") {
     const qualified = sprintResults.filter((r) => r.athlete_id && r.rank <= PURSUIT_FIELD_SIZE);
     if (qualified.length > 0) {
-      return { status: "known", source: "sprint", order: Object.fromEntries(qualified.map((r) => [r.athlete_id!, r.rank])) };
+      return { status: "known", source: "sprint", gaps, order: Object.fromEntries(qualified.map((r) => [r.athlete_id!, r.rank])) };
     }
   }
   return { status: "pending" };
@@ -64,11 +79,11 @@ export async function getStartList(
 ): Promise<StartList> {
   if (!START_LIST_FORMATS.includes(race.format)) return { status: "open" };
   const { data: stored } = await supabase.from("race_start_lists").select("athlete_id, start_position").eq("race_id", race.id);
-  let sprintResults: { athlete_id: string | null; rank: number }[] = [];
-  if (race.format === "poursuite" && (stored ?? []).length === 0) {
+  let sprintResults: SprintResult[] = [];
+  if (race.format === "poursuite") {
     const sprint = await findQualifyingSprint(supabase, race);
     if (sprint) {
-      const { data } = await supabase.from("race_results").select("athlete_id, rank").eq("race_id", sprint.id);
+      const { data } = await supabase.from("race_results").select("athlete_id, rank, time_gap_seconds").eq("race_id", sprint.id);
       sprintResults = data ?? [];
     }
   }

@@ -167,6 +167,7 @@ export default async function RacePage({
   // Poursuite / mass start : seuls les qualifiés prennent le départ, dans l'ordre de la liste.
   const startList = displayStatus === "upcoming" ? await getStartList(supabase, race) : { status: "open" as const };
   const startOrder: Record<string, number> = startList.status === "known" ? startList.order : {};
+  const startGaps: Record<string, number> = startList.status === "known" ? startList.gaps : {};
   const startListPending = startList.status === "pending";
   // Filtre seulement la liste du formulaire : l'affichage « en cours » garde toutes les cotes.
   const selectableAthletes =
@@ -291,6 +292,7 @@ export default async function RacePage({
                   x2Eligible={x2Eligible}
                   x2UsesRemaining={x2UsesRemaining}
                   startOrder={startOrder}
+                  startGaps={startGaps}
                 />
               )}
             </>

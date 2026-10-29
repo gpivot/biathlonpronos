@@ -10,11 +10,16 @@ describe("resolveStartList", () => {
 
   it("poursuite : 60 premiers du sprint, dans l'ordre du sprint", () => {
     const sprint = [
-      { athlete_id: "a", rank: 1 },
-      { athlete_id: "b", rank: 60 },
-      { athlete_id: "c", rank: 61 },
+      { athlete_id: "a", rank: 1, time_gap_seconds: 0 },
+      { athlete_id: "b", rank: 60, time_gap_seconds: 152.9 },
+      { athlete_id: "c", rank: 61, time_gap_seconds: 155.2 },
     ];
-    expect(resolveStartList("poursuite", [], sprint)).toEqual({ status: "known", source: "sprint", order: { a: 1, b: 60 } });
+    expect(resolveStartList("poursuite", [], sprint)).toEqual({
+      status: "known",
+      source: "sprint",
+      order: { a: 1, b: 60 },
+      gaps: { a: 0, b: 152, c: 155 },
+    });
   });
 
   it("poursuite sans résultats du sprint : liste inconnue", () => {
@@ -27,7 +32,7 @@ describe("resolveStartList", () => {
 
   it("la liste IBU enregistrée prime sur le sprint", () => {
     const list = resolveStartList("poursuite", [{ athlete_id: "x", start_position: 2 }], [{ athlete_id: "a", rank: 1 }]);
-    expect(list).toEqual({ status: "known", source: "ibu", order: { x: 2 } });
+    expect(list).toEqual({ status: "known", source: "ibu", order: { x: 2 }, gaps: {} });
   });
 });
 
