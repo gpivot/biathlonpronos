@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
-import { ClockIcon } from "@/components/icons";
+import { ChevronLeftIcon, ChevronRightIcon, ClockIcon } from "@/components/icons";
+import { Link } from "@/i18n/navigation";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
@@ -193,13 +194,26 @@ export default async function RacePage({
   const players = displayStatus === "finished" ? await getRacePlayers(supabase, race.id) : [];
   const ongoingBoard = displayStatus === "ongoing" ? await getOngoingBoard(supabase, stage.season_id, race.id) : [];
 
+  // Courses précédente et suivante de la saison (ordre chronologique), boutons de l'en-tête.
+  const { data: seasonRaces } = await supabase
+    .from("races")
+    .select("id, locks_at, stages!inner(season_id)")
+    .eq("stages.season_id", stage.season_id)
+    .order("locks_at", { ascending: true });
+  const raceIndex = (seasonRaces ?? []).findIndex((r: any) => r.id === race.id);
+  const previousRaceId = raceIndex > 0 ? seasonRaces![raceIndex - 1].id : null;
+  const nextRaceId = raceIndex >= 0 && raceIndex < (seasonRaces ?? []).length - 1 ? seasonRaces![raceIndex + 1].id : null;
+
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-5 overflow-auto px-5 pb-3 pt-5">
         <div className="flex items-center gap-3">
           <BackButton fallback="/courses" label={t("backToCalendar")} />
-          {/* Le nom de la course est dans l'encadré ci-dessous, avec le drapeau de l'étape. */}
-          <div className="flex-1" />
+          {/* Le nom de la course est dans l'encadré ci-dessous ; au milieu, navigation entre les courses. */}
+          <div className="flex flex-1 justify-center gap-2">
+            <RaceNavLink raceId={previousRaceId} label={t("previousRace")} direction="previous" />
+            <RaceNavLink raceId={nextRaceId} label={t("nextRace")} direction="next" />
+          </div>
           {/* Avec un formulaire, le « ? » est à côté de « Choisis… » ; sinon il reste ici. */}
           {showForm ? <div className="h-8 w-8 flex-shrink-0" /> : <RuleInfoButton format={race.format} />}
         </div>
@@ -226,6 +240,18 @@ export default async function RacePage({
             {tFormat(race.format)}
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
+          {displayStatus !== "upcoming" && (
+            <div className="text-xs text-text-dim first-letter:uppercase">
+              {new Date(race.locks_at).toLocaleString(locale, {
+                timeZone: DISPLAY_TIME_ZONE,
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </div>
+          )}
         </div>
 
         {race.special_rule && (
@@ -433,3 +459,26 @@ function NationPickRow({ nation }: { nation: NationWithOdds | undefined }) {
   );
 }
 
+
+function RaceNavLink({ raceId, label, direction }: { raceId: string | null; label: string; direction: "previous" | "next" }) {
+  const className =
+    "flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 font-display text-[11px] font-bold";
+  const content =
+    direction === "previous" ? (
+      <>
+        <ChevronLeftIcon className="h-3.5 w-3.5" />
+        {label}
+      </>
+    ) : (
+      <>
+        {label}
+        <ChevronRightIcon className="h-3.5 w-3.5" />
+      </>
+    );
+  if (!raceId) return <span className={`${className} text-text-dim opacity-40`}>{content}</span>;
+  return (
+    <Link href={`/courses/${raceId}`} className={`${className} text-ice`}>
+      {content}
+    </Link>
+  );
+}

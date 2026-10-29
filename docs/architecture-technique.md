@@ -728,3 +728,7 @@ ouverte à tous (rien à copier), à coller par Guillaume.
   sous chaque nom, son pronostic sur cette course (« Pas de pronostic » sinon) ; les joueurs sans
   points mais qui ont pronostiqué suivent à 0 pt (`getOngoingBoard`). Repose sur la migration 0018
   (pronostics lisibles une fois la course partie).
+- **Page d'une course (suite)** : bonus Top 3/5/10 ou Prono parfait en bandeau vert au-dessus des
+  choix (token `green`, modèle « Bonus Musette » VéloPronos) ; encadré du haut avec drapeau, lieu,
+  nom de l'épreuve, date et heure ; boutons « Course préc. » / « Course suiv. » au milieu de la
+  barre du haut (ordre chronologique de la saison, grisés en début/fin de saison).

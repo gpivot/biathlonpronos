@@ -52,7 +52,11 @@
     "gachetteLabel": "Gâchette : sans-faute au tir",
     "fuseeGachetteLegend": "🚀 Fusée +50 pts · 🎯 Gâchette +20 pts, déjà inclus dans les points",
     "lastResultMultiplier_bonusX2": "Bonus ×2 · {points}",
-    "lastResultMultiplier_coefficient": "Coeff. ×2 · {points}"
+    "lastResultMultiplier_coefficient": "Coeff. ×2 · {points}",
+    "comboBonusLabel": "Bonus",
+    "comboTier_top3": "Top 3",
+    "comboTier_top5": "Top 5",
+    "comboTier_top10": "Top 10"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
@@ -274,7 +278,9 @@
     "pronoParfaitLegend": "⭐ Les 3 meilleurs scores de la course : le trio du Prono parfait.",
     "playersTitle": "Classement des joueurs sur cette course",
     "ongoingBoardTitle": "Classement général · pronostics sur cette course",
-    "ongoingNoPrediction": "Pas de pronostic"
+    "ongoingNoPrediction": "Pas de pronostic",
+    "previousRace": "Course préc.",
+    "nextRace": "Course suiv."
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

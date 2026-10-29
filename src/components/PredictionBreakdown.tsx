@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { LastResultExtra, LastResultPick } from "@/lib/lastResult";
 
+const COMBINATION_KINDS: LastResultExtra["kind"][] = ["top3", "top5", "top10", "pronoParfait"];
+
 export function formatPoints(points: number) {
   // Arrondi au dixième : les cotes décimales multipliées donnent des flottants (2.1 × 3 = 6.300000000000001).
   const rounded = Math.round(points * 10) / 10;
@@ -45,9 +47,27 @@ export async function PredictionBreakdown({
 }) {
   const t = await getTranslations("Home");
   const hasFuseeGachette = showLegend && picks.some((p) => p.fusee || p.gachette);
+  // Bonus de combinaison mis en avant en bandeau vert au-dessus des choix ; les autres restent en bas.
+  const combination = extras.find((e) => COMBINATION_KINDS.includes(e.kind) && e.points > 0);
+  const otherExtras = extras.filter((e) => e !== combination);
 
   return (
     <>
+      {combination && (
+        <div className="flex items-center gap-2 rounded-xl border border-green/40 bg-green/10 px-3 py-2.5 text-[13px]">
+          <span>{combination.kind === "pronoParfait" ? "⭐" : "🏅"}</span>
+          <span className="font-display font-bold text-green">
+            {combination.kind === "pronoParfait" ? t("lastResultExtra_pronoParfait") : t("comboBonusLabel")}
+          </span>
+          {combination.kind !== "pronoParfait" && (
+            <span className="rounded-full bg-green/15 px-2 py-0.5 font-display text-[11px] font-bold text-green">
+              {t(`comboTier_${combination.kind}`)}
+            </span>
+          )}
+          <span className="ml-auto whitespace-nowrap font-display font-bold text-green">{formatPoints(combination.points)}</span>
+        </div>
+      )}
+
       {picks.map((pick) => {
         const negative = pick.points != null && pick.points < 0;
         return (
@@ -83,7 +103,7 @@ export async function PredictionBreakdown({
         );
       })}
 
-      {extras.map((extra) => (
+      {otherExtras.map((extra) => (
         <div key={extra.kind} className="flex items-center gap-2 px-3 text-[12px] text-text-dim">
           <div className="flex-1">{t(`lastResultExtra_${extra.kind}`)}</div>
           <div className={`font-display font-bold ${extra.points < 0 ? "text-red" : "text-gold"}`}>{formatPoints(extra.points)}</div>
