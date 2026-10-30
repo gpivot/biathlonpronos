@@ -30,7 +30,7 @@ export function StreakCard({
         <ClaimCardPicker
           seasonId={seasonId}
           unclaimed={cards.unclaimed}
-          heldAvailableTypes={cards.cards.filter((c) => c.state === "available").map((c) => c.type)}
+          offers={cards.offers}
           autoOpen={autoOpenClaim}
         />
       )}

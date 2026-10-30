@@ -27,7 +27,15 @@ import type {
 export function computeIndividualRaceScore(
   input: IndividualRaceScoringInput
 ): IndividualRaceScoringResult {
-  const resultsByAthleteId = new Map(input.results.map((r) => [r.athleteId, r]));
+  // Carte Aspiration : chaque athlète pronostiqué remonte d'une place (le 1er reste 1er, un 11e
+  // devient 10e et marque). Les bonus de combinaison et le Prono parfait suivent ces places.
+  const results =
+    input.card.type === "aspiration"
+      ? input.results.map((r) =>
+          input.predictedAthleteIds.includes(r.athleteId) ? { ...r, rank: Math.max(1, r.rank - 1) } : r
+        )
+      : input.results;
+  const resultsByAthleteId = new Map(results.map((r) => [r.athleteId, r]));
 
   // 2. Points de base par athlète pronostiqué (cote × rang), + malus
   // "tour de péna" qui est propre à chacun des biathlètes choisis.
@@ -53,11 +61,20 @@ export function computeIndividualRaceScore(
     rawScore[athleteId] = base[athleteId] + fuseeGachetteByAthlete[athleteId];
   }
 
-  // 5b. Carte "Balle de pioche" — 4 choix, seuls les 3 meilleurs comptent.
-  const { counted, dropped } = selectCountedAthletes(input.predictedAthleteIds, rawScore, input.card);
-
   // 6. Coefficient ×2 Mondiaux/JO, non cumulable avec le bonus ×2 personnel.
   const globalMultiplier = input.stageCoefficient === 2 ? 2 : input.bonusX2Active ? 2 : 1;
+  const caFarteTargetId =
+    input.card.type === "ca_farte"
+      ? input.card.targetAthleteId
+      : input.card.type === "balle_de_pioche"
+        ? input.card.caFarteTargetAthleteId ?? null
+        : null;
+
+  // 5b. Carte "Balle de pioche" — 4 choix, seuls les 3 meilleurs comptent. Avec Ça farte posé sur
+  // un des 4, le ×3 est pris en compte pour désigner les 3 meilleurs (confirmé).
+  const { counted, dropped } = selectCountedAthletes(input.predictedAthleteIds, rawScore, input.card, (id) =>
+    id === caFarteTargetId ? 3 : globalMultiplier
+  );
 
   // 5a. Carte "Ça farte" (×3) et 7. Bonus Team Nation (×2). Confirmé par
   // Guillaume : le ×3 n'est jamais cumulable avec un ×2 — l'athlète ciblé
@@ -65,7 +82,7 @@ export function computeIndividualRaceScore(
   const perAthlete: Record<string, number> = {};
   const teamNationBoostedAthleteIds: string[] = [];
   for (const athleteId of counted) {
-    const isCaFarteTarget = input.card.type === "ca_farte" && input.card.targetAthleteId === athleteId;
+    const isCaFarteTarget = caFarteTargetId === athleteId;
 
     if (isCaFarteTarget) {
       perAthlete[athleteId] = rawScore[athleteId] * 3;
@@ -87,7 +104,7 @@ export function computeIndividualRaceScore(
   // Prono parfait : comparé aux 3 athlètes effectivement comptés (donc,
   // avec la Balle de pioche, aux 3 meilleurs des 4 choix — confirmé par
   // Guillaume, puisque ce seront de fait les 3 qui comptent pour l'étape).
-  const pronoParfaitBonus = computePronoParfaitBonus(counted, input.results, input.oddsByAthleteId);
+  const pronoParfaitBonus = computePronoParfaitBonus(counted, results, input.oddsByAthleteId);
   // Demande de Guillaume (octobre 2026) : le Prono parfait remplace le bonus
   // Top 3/Top 5/Top 10, il ne s'y ajoute pas.
   const combinationBonus = pronoParfaitBonus > 0 ? 0 : tierBonus;
@@ -153,13 +170,14 @@ function computeAthleteFuseeGachetteBonus(result: AthleteRaceResult | undefined)
 function selectCountedAthletes(
   predictedAthleteIds: string[],
   rawScore: Record<string, number>,
-  card: IndividualRaceScoringInput["card"]
+  card: IndividualRaceScoringInput["card"],
+  multiplierOf: (athleteId: string) => number
 ): { counted: string[]; dropped: string[] } {
   if (card.type !== "balle_de_pioche" || predictedAthleteIds.length <= 3) {
     return { counted: predictedAthleteIds, dropped: [] };
   }
 
-  const sorted = [...predictedAthleteIds].sort((a, b) => rawScore[b] - rawScore[a]);
+  const sorted = [...predictedAthleteIds].sort((a, b) => rawScore[b] * multiplierOf(b) - rawScore[a] * multiplierOf(a));
   return { counted: sorted.slice(0, 3), dropped: sorted.slice(3) };
 }
 

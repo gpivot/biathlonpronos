@@ -13,7 +13,14 @@ import {
 import { clearCurrentOdds, setCurrentOdds } from "./odds";
 import { totalMisses } from "@/lib/shootings";
 import { fetchAll } from "./fetchAll";
-import { getSeasonCardRaces, resolvePredictionCard, type CardRow } from "@/lib/bonusCards";
+import {
+  cardsOnRace,
+  computeEquipeBonus,
+  getSeasonCardRaces,
+  resolvePredictionCard,
+  type CardRace,
+  type CardRow,
+} from "@/lib/bonusCards";
 
 const RELAY_FORMATS = ["relais_h", "relais_f", "relais_mixte", "relais_mixte_simple"];
 
@@ -373,6 +380,38 @@ async function applyPepiteBonuses(
   }
 }
 
+/**
+ * Cartes jouées de la saison (elles font foi, pas le seul champ du pronostic), courses de la
+ * saison (fenêtres du 4e choix et de la carte Équipe) et équipes favorites (carte Équipe).
+ */
+async function loadPlayedCards(
+  admin: SupabaseClient,
+  seasonId: string
+): Promise<{
+  cardsByUserId: Map<string, CardRow[]>;
+  seasonRaces: CardRace[];
+  favoriteTeamByUserId: Map<string, { nationCode: string; sex: string }>;
+}> {
+  const [{ data: playedCards }, seasonRaces, { data: favoriteTeams }] = await Promise.all([
+    admin
+      .from("bonus_cards")
+      .select("id, user_id, card_type, status, used_on_race_id")
+      .eq("season_id", seasonId)
+      .eq("status", "used")
+      .in("card_type", ["ca_farte", "balle_de_pioche", "aspiration", "equipe"]),
+    getSeasonCardRaces(admin, seasonId),
+    admin.from("favorite_teams").select("user_id, nation_code, sex").eq("season_id", seasonId),
+  ]);
+  const cardsByUserId = new Map<string, CardRow[]>();
+  for (const c of (playedCards ?? []) as (CardRow & { user_id: string })[]) {
+    cardsByUserId.set(c.user_id, [...(cardsByUserId.get(c.user_id) ?? []), c]);
+  }
+  const favoriteTeamByUserId = new Map(
+    (favoriteTeams ?? []).map((f) => [f.user_id as string, { nationCode: f.nation_code as string, sex: f.sex as string }])
+  );
+  return { cardsByUserId, seasonRaces, favoriteTeamByUserId };
+}
+
 async function scoreIndividualPredictions(
   admin: SupabaseClient,
   race: any,
@@ -384,7 +423,7 @@ async function scoreIndividualPredictions(
   for (const r of results) if (r.athlete_id) athleteIds.add(r.athlete_id);
   for (const p of predictions) for (const id of p.athlete_ids ?? []) athleteIds.add(id);
 
-  const [{ data: athletes }, { data: odds }, { data: playedCards }, seasonRaces] = await Promise.all([
+  const [{ data: athletes }, { data: odds }, { cardsByUserId, seasonRaces, favoriteTeamByUserId }] = await Promise.all([
     admin.from("athletes").select("id, nation_code, sex").in("id", Array.from(athleteIds)),
     admin
       .from("odds")
@@ -393,20 +432,8 @@ async function scoreIndividualPredictions(
       .eq("format", race.format)
       .is("valid_until", null)
       .in("athlete_id", Array.from(athleteIds)),
-    // Cartes jouées (Ça farte, 4e choix) : elles font foi, pas le seul champ du pronostic.
-    admin
-      .from("bonus_cards")
-      .select("id, user_id, card_type, status, used_on_race_id")
-      .eq("season_id", stage.season_id)
-      .eq("status", "used")
-      .in("card_type", ["ca_farte", "balle_de_pioche"]),
-    getSeasonCardRaces(admin, stage.season_id),
+    loadPlayedCards(admin, stage.season_id),
   ]);
-
-  const cardsByUserId = new Map<string, CardRow[]>();
-  for (const c of (playedCards ?? []) as (CardRow & { user_id: string })[]) {
-    cardsByUserId.set(c.user_id, [...(cardsByUserId.get(c.user_id) ?? []), c]);
-  }
 
   const athleteTeamByAthleteId: Record<string, { nationCode: string; sex: "H" | "F" }> = {};
   for (const a of athletes ?? []) athleteTeamByAthleteId[a.id] = { nationCode: a.nation_code, sex: a.sex };
@@ -452,14 +479,28 @@ async function scoreIndividualPredictions(
       raceCountryCode: stage.country_code,
     });
 
-    const totalPoints = result.total;
+    // Carte Équipe : la cote de chaque biathlète de l'équipe favorite dans le Top 10, en plus.
+    const equipeBonus = cardsOnRace(race.id, cardsByUserId.get(prediction.user_id) ?? [], seasonRaces).equipe
+      ? computeEquipeBonus(
+          favoriteTeamByUserId.get(prediction.user_id) ?? null,
+          race,
+          scoringResults.map((r) => ({
+            rank: r.rank,
+            nationCode: athleteTeamByAthleteId[r.athleteId]?.nationCode ?? "",
+            sex: athleteTeamByAthleteId[r.athleteId]?.sex ?? "",
+            odds: oddsByAthleteId[r.athleteId] ?? 0,
+          })),
+          []
+        )
+      : 0;
+    const totalPoints = result.total + equipeBonus;
 
     scoreLedgerRows.push({
       user_id: prediction.user_id,
       season_id: stage.season_id,
       race_id: race.id,
       points: totalPoints,
-      breakdown: result.breakdown,
+      breakdown: { ...result.breakdown, ...(equipeBonus ? { equipeBonus } : {}) },
     });
     pointsByUserId.set(prediction.user_id, totalPoints);
   }
@@ -486,13 +527,16 @@ async function scoreRelayPredictions(
   for (const r of results) if (r.nation_code) nationCodes.add(r.nation_code);
   for (const p of predictions) if (p.nation_code) nationCodes.add(p.nation_code);
 
-  const { data: odds } = await admin
-    .from("odds")
-    .select("nation_code, value")
-    .eq("season_id", stage.season_id)
-    .eq("format", race.format)
-    .is("valid_until", null)
-    .in("nation_code", Array.from(nationCodes));
+  const [{ data: odds }, { cardsByUserId, seasonRaces, favoriteTeamByUserId }] = await Promise.all([
+    admin
+      .from("odds")
+      .select("nation_code, value")
+      .eq("season_id", stage.season_id)
+      .eq("format", race.format)
+      .is("valid_until", null)
+      .in("nation_code", Array.from(nationCodes)),
+    loadPlayedCards(admin, stage.season_id),
+  ]);
 
   const oddsByNationCode: Record<string, number> = {};
   for (const o of odds ?? []) if (o.nation_code) oddsByNationCode[o.nation_code] = o.value;
@@ -515,14 +559,25 @@ async function scoreRelayPredictions(
       bonusX2Active: prediction.bonus_x2_used,
     });
 
+    // Carte Équipe : la cote du relais si la nation favorite finit dans le Top 10 (relais de son sexe).
+    const equipeBonus = cardsOnRace(race.id, cardsByUserId.get(prediction.user_id) ?? [], seasonRaces).equipe
+      ? computeEquipeBonus(
+          favoriteTeamByUserId.get(prediction.user_id) ?? null,
+          race,
+          [],
+          relayResults.map((r) => ({ rank: r.rank, nationCode: r.nationCode, odds: oddsByNationCode[r.nationCode] ?? 0 }))
+        )
+      : 0;
+    const totalPoints = result.total + equipeBonus;
+
     scoreLedgerRows.push({
       user_id: prediction.user_id,
       season_id: stage.season_id,
       race_id: race.id,
-      points: result.total,
-      breakdown: result.breakdown,
+      points: totalPoints,
+      breakdown: { ...result.breakdown, ...(equipeBonus ? { equipeBonus } : {}) },
     });
-    pointsByUserId.set(prediction.user_id, result.total);
+    pointsByUserId.set(prediction.user_id, totalPoints);
   }
 
   if (scoreLedgerRows.length > 0) {

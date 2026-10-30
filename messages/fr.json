@@ -63,7 +63,8 @@
     "editPredictionButton": "Modifier",
     "favoriteTeamWins": "{count, plural, =0 {0 victoire} one {# victoire} other {# victoires}}",
     "favoriteTeamPodiums": "{count, plural, =0 {0 podium} one {# podium} other {# podiums}}",
-    "nextStageTitle": "Prochaine étape"
+    "nextStageTitle": "Prochaine étape",
+    "lastResultExtra_equipe": "Carte Équipe"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
@@ -129,7 +130,7 @@
     "s_special_title": "8. Les courses spéciales",
     "s_special_body": "Tour de péna : -20 pts par tour de pénalité de tes biathlètes. Brouillard : hors Top 10, malus égal à la place obtenue. T'es collé(e) : malus si un ou plusieurs de tes 3 choix terminent hors Top 10 (jusqu'à -300), et -200 si tu ne pronostiques pas du tout.",
     "s_streak_title": "9. Le 10/10 et les cartes bonus",
-    "s_streak_body": "10 courses consécutives où tu marques des points (relais compris) te rapportent une carte bonus, que tu choisis : 4e choix (4 biathlètes, les 3 meilleurs comptent, sur 2 courses hommes et 2 courses femmes hors relais) ou Ça farte (×3 sur un biathlète d'une course individuelle, jamais ×6 avec un ×2). Une seule carte active à la fois.",
+    "s_streak_body": "10 courses consécutives où tu marques des points (relais compris) te rapportent une carte bonus, que tu choisis. Une même carte ne se prend pas deux fois de suite. Fondue (dégriller une fois tes biathlètes), Ça farte (×3 sur un biathlète d'une course individuelle, jamais ×6 avec un ×2) et 4e choix (4 biathlètes, les 3 meilleurs comptent, sur 2 courses hommes et 2 courses femmes, activé tout de suite). À partir de la 4e étape, Aspiration (tes biathlètes comptent une place plus haut sur une course). Après les Mondiaux, Équipe (jusqu'à la fin de la saison, chaque biathlète de ton équipe favorite dans le Top 10 te rapporte sa cote). Ça farte peut se jouer pendant un 4e choix, pas Aspiration.",
     "s_pepite_title": "10. La Pépite",
     "s_pepite_body": "Mise en début de saison sur un outsider par sexe (cote ≥ 30). Pronostic caché : à son premier Top 10 de la saison, son score de la course s'ajoute en bonus, puis elle redevient une biathlète comme une autre.",
     "s_fuseegachette_title": "11. Fusée & Gâchette",
@@ -349,11 +350,14 @@
     "sortByOdds": "Par cote",
     "startPosition": "départ {position, selectordinal, one {#er} other {#e}}",
     "startPositionWithGap": "départ {position, selectordinal, one {#er} other {#e}} à +{gap}s",
-    "cardHint": "Une carte jouée est définitive, et une seule carte peut être active à la fois.",
+    "cardHint": "Une carte jouée est définitive. Ça farte et Aspiration ne se jouent pas sur la même course, et Aspiration ne se cumule pas avec un 4e choix.",
     "quatriemeChoixHint": "4e choix : jusqu'à 4 biathlètes, tes 3 meilleurs comptent. Valable sur cette course et les suivantes, jusqu'à 2 courses hommes et 2 courses femmes (hors relais).",
     "caFarteHint": "Ça farte : touche ×3 à côté d'un de tes biathlètes. Seuls ses points sont triplés (jamais ×6 avec un ×2).",
-    "quatriemeChoixActive": "carte active : tu peux choisir jusqu'à 4 biathlètes, tes 3 meilleurs comptent.",
-    "caFarteActive": "carte jouée sur cette course : touche ×3 à côté du biathlète dont les points seront triplés."
+    "quatriemeChoixActive": "carte active : tu peux choisir jusqu'à 4 biathlètes, tes 3 meilleurs comptent. Tu peux y ajouter Ça farte.",
+    "caFarteActive": "carte jouée sur cette course : touche ×3 à côté du biathlète dont les points seront triplés.",
+    "cardAspiration": "Aspiration",
+    "aspirationHint": "Aspiration : sur cette course, chacun de tes biathlètes compte une place plus haut.",
+    "aspirationActive": "carte jouée sur cette course : chacun de tes biathlètes compte une place plus haut."
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",
@@ -629,9 +633,8 @@
     "title": "Cartes bonus",
     "claimButton": "{count, plural, one {🎉 10/10 ! Choisis ta carte bonus} other {🎉 Choisis tes # cartes bonus}}",
     "claimTitle": "Bravo, 10/10 !",
-    "claimIntro": "{count, plural, one {Tu as marqué des points sur 10 courses d'affilée. Choisis ta carte bonus, tu la joueras quand tu veux.} other {Tu as # cartes bonus à choisir. Tu les joueras quand tu veux.}}",
+    "claimIntro": "{count, plural, one {Tu as marqué des points sur 10 courses d'affilée. Choisis ta carte bonus.} other {Tu as # cartes bonus à choisir.}}",
     "choose": "Choisir",
-    "alreadyHeld": "Déjà en main",
     "later": "Plus tard",
     "claimError": "La carte n'a pas pu être enregistrée. Réessaie.",
     "stateAvailable": "disponible",
@@ -643,7 +646,15 @@
     "name_fondue": "Fondue",
     "name_chat_noir": "Chat noir",
     "desc_ca_farte": "À garder en main : un ×3 sur un de tes biathlètes, sur la course individuelle de ton choix.",
-    "desc_balle_de_pioche": "S'active tout de suite, sur les 4 prochaines courses individuelles (2 hommes, 2 femmes) : 4 biathlètes au lieu de 3, tes 3 meilleurs comptent."
+    "desc_balle_de_pioche": "S'active tout de suite, sur les 4 prochaines courses individuelles (2 hommes, 2 femmes) : 4 biathlètes au lieu de 3, tes 3 meilleurs comptent.",
+    "name_aspiration": "Aspiration",
+    "name_equipe": "Équipe",
+    "desc_fondue": "À garder en main : dégrille une fois tes biathlètes, sur la course de ton choix.",
+    "desc_aspiration": "À garder en main : sur une course individuelle de ton choix, chacun de tes biathlètes compte une place plus haut (un 11e devient 10e et marque).",
+    "desc_equipe": "S'active tout de suite jusqu'à la fin de la saison : chaque biathlète de ton équipe favorite dans le Top 10 (ou ta nation dans le Top 10 du relais) te rapporte une fois sa cote en plus, que tu l'aies choisi ou non.",
+    "lockedUntil_aspiration": "Dès la 4e étape",
+    "lockedUntil_equipe": "Après les Mondiaux",
+    "justTaken": "Prise au dernier 10/10"
   },
   "Badges": {
     "leader": "Dossard jaune : leader du classement",

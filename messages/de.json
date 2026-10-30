@@ -63,7 +63,8 @@
     "editPredictionButton": "Ändern",
     "favoriteTeamWins": "{count, plural, one {# Sieg} other {# Siege}}",
     "favoriteTeamPodiums": "{count, plural, one {# Podest} other {# Podeste}}",
-    "nextStageTitle": "Nächste Etappe"
+    "nextStageTitle": "Nächste Etappe",
+    "lastResultExtra_equipe": "Team-Karte"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
@@ -129,7 +130,7 @@
     "s_special_title": "8. Spezialrennen",
     "s_special_body": "Strafrunde: -20 Pkt. pro Strafrunde deiner Biathleten. Nebel: außerhalb der Top 10 ein Malus in Höhe der Platzierung. Erwischt: ein Malus, wenn einer oder mehrere deiner 3 Tipps außerhalb der Top 10 landen (bis zu -300), und -200, wenn du gar nicht tippst.",
     "s_streak_title": "9. Die 10/10-Serie und Bonuskarten",
-    "s_streak_body": "10 Rennen in Folge mit Punkten (Staffeln eingeschlossen) bringen dir eine Bonuskarte deiner Wahl: 4. Tipp (4 Biathleten, die besten 3 zählen, auf 2 Herren- und 2 Damenrennen ohne Staffeln) oder Turbowachs (×3 auf einen Biathleten in einem Einzelrennen, nie ×6 mit einem ×2). Nur eine aktive Karte gleichzeitig.",
+    "s_streak_body": "10 Rennen in Folge mit Punkten (Staffeln eingeschlossen) bringen dir eine Bonuskarte deiner Wahl. Dieselbe Karte nicht zweimal hintereinander. Fondue (einmal die Sperre aufheben), Turbowachs (×3 auf einen Biathleten in einem Einzelrennen, nie ×6 mit einem ×2) und 4. Tipp (4 Biathleten, die besten 3 zählen, auf 2 Herren- und 2 Damenrennen, sofort aktiv). Ab der 4. Station Windschatten (deine Biathleten zählen in einem Rennen einen Platz besser). Nach der WM Team (bis Saisonende bringt dir jeder Biathlet deines Lieblingsteams in den Top 10 seine Quote). Ça farte kann während der 4. Wahl gespielt werden, Aspiration nicht.",
     "s_pepite_title": "10. Der Rohdiamant",
     "s_pepite_body": "Eine Wette zu Saisonbeginn auf einen Außenseiter pro Geschlecht (Quote ≥ 30). Ein verdeckter Tipp: Bei seiner ersten Top-10-Platzierung der Saison wird seine Rennpunktzahl als Bonus gutgeschrieben, danach ist er wieder ein normaler Athlet.",
     "s_fuseegachette_title": "11. Rakete & Abzug",
@@ -349,11 +350,14 @@
     "sortByOdds": "Nach Quote",
     "startPosition": "Start Nr. {position}",
     "startPositionWithGap": "Start Nr. {position} mit +{gap}s",
-    "cardHint": "Eine gespielte Karte ist endgültig, und es kann nur eine Karte gleichzeitig aktiv sein.",
+    "cardHint": "Eine gespielte Karte ist endgültig. Ça farte und Aspiration gehen nicht im selben Rennen, und Aspiration lässt sich nicht mit der 4. Wahl kombinieren.",
     "quatriemeChoixHint": "4. Tipp: bis zu 4 Biathleten, deine 3 besten zählen. Gilt für dieses Rennen und die folgenden, bis zu 2 Herren- und 2 Damenrennen (ohne Staffeln).",
     "caFarteHint": "Turbowachs: tippe auf ×3 neben einem deiner Biathleten. Nur seine Punkte werden verdreifacht (nie ×6 mit einem ×2).",
-    "quatriemeChoixActive": "Karte aktiv: du kannst bis zu 4 Biathleten wählen, deine 3 besten zählen.",
-    "caFarteActive": "Karte auf diesem Rennen gespielt: tippe auf ×3 neben dem Biathleten, dessen Punkte verdreifacht werden."
+    "quatriemeChoixActive": "Karte aktiv: Du kannst bis zu 4 Biathleten wählen, deine 3 besten zählen. Du kannst Ça farte dazuspielen.",
+    "caFarteActive": "Karte auf diesem Rennen gespielt: tippe auf ×3 neben dem Biathleten, dessen Punkte verdreifacht werden.",
+    "cardAspiration": "Windschatten",
+    "aspirationHint": "Windschatten: in diesem Rennen zählt jeder deiner Biathleten einen Platz besser.",
+    "aspirationActive": "Karte auf diesem Rennen gespielt: jeder deiner Biathleten zählt einen Platz besser."
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",
@@ -629,9 +633,8 @@
     "title": "Bonuskarten",
     "claimButton": "{count, plural, one {🎉 10/10! Wähle deine Bonuskarte} other {🎉 Wähle deine # Bonuskarten}}",
     "claimTitle": "Bravo, 10/10!",
-    "claimIntro": "{count, plural, one {Du hast in 10 Rennen in Folge gepunktet. Wähle deine Bonuskarte und spiele sie, wann du willst.} other {Du hast # Bonuskarten zu wählen. Spiele sie, wann du willst.}}",
+    "claimIntro": "{count, plural, one {Du hast in 10 Rennen in Folge gepunktet. Wähle deine Bonuskarte.} other {Du hast # Bonuskarten zu wählen.}}",
     "choose": "Wählen",
-    "alreadyHeld": "Schon vorhanden",
     "later": "Später",
     "claimError": "Die Karte konnte nicht gespeichert werden. Versuche es erneut.",
     "stateAvailable": "verfügbar",
@@ -643,7 +646,15 @@
     "name_fondue": "Fondue",
     "name_chat_noir": "Schwarze Katze",
     "desc_ca_farte": "Behalte sie auf der Hand: ein ×3 auf einen deiner Biathleten, im Einzelrennen deiner Wahl.",
-    "desc_balle_de_pioche": "Wird sofort aktiv, für die nächsten 4 Einzelrennen (2 Herren, 2 Damen): 4 statt 3 Biathleten, deine 3 besten zählen."
+    "desc_balle_de_pioche": "Wird sofort aktiv, für die nächsten 4 Einzelrennen (2 Herren, 2 Damen): 4 statt 3 Biathleten, deine 3 besten zählen.",
+    "name_aspiration": "Windschatten",
+    "name_equipe": "Team",
+    "desc_fondue": "Auf der Hand behalten: hebe einmal die Sperre deiner Biathleten auf, im Rennen deiner Wahl.",
+    "desc_aspiration": "Auf der Hand behalten: in einem Einzelrennen deiner Wahl zählt jeder deiner Biathleten einen Platz besser (ein 11. wird 10. und punktet).",
+    "desc_equipe": "Sofort aktiv bis Saisonende: jeder Biathlet deines Lieblingsteams in den Top 10 (oder deine Nation in den Top 10 der Staffel) bringt dir zusätzlich einmal seine Quote, ob du ihn gewählt hast oder nicht.",
+    "lockedUntil_aspiration": "Ab der 4. Station",
+    "lockedUntil_equipe": "Nach der WM",
+    "justTaken": "Beim letzten 10/10 gewählt"
   },
   "Badges": {
     "leader": "Gelbes Trikot: Führender der Wertung",
