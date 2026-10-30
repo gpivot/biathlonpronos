@@ -318,7 +318,8 @@
     "malusScale_tes_colle_3": "3 scelte fuori dalla Top 10 → -300 pti",
     "malusScale_tes_colle_4": "Nessun pronostico → -200 pti (una scelta mancante conta fuori dalla Top 10)",
     "calcDetail": "quota {odds} × {multiplier}",
-    "calcOddsOnly": "quota {odds}"
+    "calcOddsOnly": "quota {odds}",
+    "penaltyLapsMalus": "{count, plural, one {# giro di penalità} other {# giri di penalità}}: {points}"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",

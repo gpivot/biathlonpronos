@@ -318,7 +318,8 @@
     "malusScale_tes_colle_3": "3 elecciones fuera del Top 10 → -300 pts",
     "malusScale_tes_colle_4": "Sin pronóstico → -200 pts (una elección que falta cuenta fuera del Top 10)",
     "calcDetail": "cuota {odds} × {multiplier}",
-    "calcOddsOnly": "cuota {odds}"
+    "calcOddsOnly": "cuota {odds}",
+    "penaltyLapsMalus": "{count, plural, one {# vuelta de penalización} other {# vueltas de penalización}}: {points}"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",

@@ -807,6 +807,12 @@ reviennent les semaines sans étape, sous le message de repos.
 - **Détail du calcul** (page d'une course notée seulement, et pop-up d'un joueur) : sous chaque nom,
   en petit, « cote 8 × 25 » (cote en vigueur × multiplicateur de la place, `CalcDetail`), plus
   « 🚀 50 » / « 🎯 20 » le cas échéant ; « cote 6 » seule hors barème.
+- **Tour de péna séparé** (demande de Guillaume) : les points d'un athlète affichés à droite sont
+  ceux qu'il rapporte sans le malus ; le malus apparaît en rouge sur une 2e ligne plus petite sous
+  son nom (« 🔁 2 tours de péna : -40 pts », `PenaltyLine`), sur l'accueil comme sur la page de la
+  course. Calcul à l'affichage (`lastResult.ts`) : tours × malus par tour, ×3 sur la cible de
+  « Ça farte » ; comme les points par choix, il est montré hors ×2 Mondiaux/JO ou bonus perso
+  (affichés à part). Le total du pronostic, lui, ne change pas.
 
 ## Listes de départ poursuite et mass start (octobre 2026)
 

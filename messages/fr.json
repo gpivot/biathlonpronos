@@ -318,7 +318,8 @@
     "malusScale_tes_colle_3": "3 choix hors du Top 10 → -300 pts",
     "malusScale_tes_colle_4": "Pas de pronostic → -200 pts (un choix manquant compte hors Top 10)",
     "calcDetail": "cote {odds} × {multiplier}",
-    "calcOddsOnly": "cote {odds}"
+    "calcOddsOnly": "cote {odds}",
+    "penaltyLapsMalus": "{count, plural, one {# tour de péna} other {# tours de péna}} : {points}"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

@@ -1,5 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { COMBINATION_BONUS, FUSEE_BONUS, GACHETTE_BONUS, RANK_MULTIPLIERS, RELAY_RANK_MULTIPLIERS } from "./scoring/constants";
+import {
+  COMBINATION_BONUS,
+  FUSEE_BONUS,
+  GACHETTE_BONUS,
+  RANK_MULTIPLIERS,
+  RELAY_RANK_MULTIPLIERS,
+  TOUR_DE_PENA_MALUS_PER_LAP,
+} from "./scoring/constants";
+import { totalMisses } from "./shootings";
 import { RELAY_FORMATS } from "./grilling";
 import { applyFuseeGachetteRules } from "./scoring/fuseeGachette";
 import { shortAthleteName } from "./athleteName";
@@ -28,6 +36,8 @@ export interface LastResultPick {
   /** Détail du calcul (page de la course) : cote en vigueur et multiplicateur de la place (null hors barème). */
   odds: number | null;
   rankMultiplier: number | null;
+  /** Course « Tour de péna » : tours de pénalité et malus (déjà inclus dans `points`), affichés à part. */
+  penalty: { laps: number; points: number } | null;
 }
 
 /** Une ligne du classement de la course, avec les points du barème (cote × rang + Fusée/Gâchette). */
@@ -187,7 +197,7 @@ export function computeResultRowPoints(params: {
   return base + bonus > 0 ? base + bonus : null;
 }
 
-const RACE_SELECT = "id, format, sex, locks_at, stages!inner(location, country_code, coefficient, season_id)";
+const RACE_SELECT = "id, format, sex, locks_at, special_rule, stages!inner(location, country_code, coefficient, season_id)";
 
 /** Durée pendant laquelle le dernier résultat de chaque catégorie reste affiché sur l'accueil. */
 export const LAST_RESULTS_WINDOW_MS = 48 * 3600 * 1000;
@@ -246,7 +256,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const [{ data: results }, { data: prediction }, { data: ledger }, { data: odds }] = await Promise.all([
     supabase
       .from("race_results")
-      .select("rank, athlete_id, nation_code, is_fusee, is_gachette, shootings, athletes(first_name, last_name, nation_code), nations(name)")
+      .select("rank, athlete_id, nation_code, is_fusee, is_gachette, shootings, penalty_laps, athletes(first_name, last_name, nation_code), nations(name)")
       .eq("race_id", race.id)
       .order("rank", { ascending: true }),
     userId
@@ -354,6 +364,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
         shootings: row?.shootings ?? null,
         odds: oddsByKey.get(prediction.nation_code) ?? null,
         rankMultiplier: row ? rankMultipliers[row.rank] ?? null : null,
+        penalty: null,
       },
     ];
   } else {
@@ -379,18 +390,23 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     picks = athleteIds.map((id) => {
       const row = resultRows.find((r) => r.athlete_id === id);
       const athlete = row?.athletes ?? (missingAthletes ?? []).find((a: any) => a.id === id);
+      // Tour de péna : même nombre de tours que le moteur (saisi, sinon fautes au tir), ×3 avec Ça farte.
+      const laps = race.special_rule === "tour_de_pena" ? row?.penalty_laps || totalMisses(row?.shootings) || 0 : 0;
+      const penaltyPoints = laps * TOUR_DE_PENA_MALUS_PER_LAP * (id === caFarteTargetId ? 3 : 1);
+      const counted = pickPoints[id] != null;
       return {
         key: id,
         name: shortName(athlete),
         nationCode: athlete?.nation_code ?? "",
         rank: row?.rank ?? null,
-        points: pickPoints[id],
+        points: counted && laps > 0 ? pickPoints[id]! - penaltyPoints : pickPoints[id],
         caFarte: id === caFarteTargetId,
         fusee: row?.is_fusee ?? false,
         gachette: row?.is_gachette ?? false,
         shootings: row?.shootings ?? null,
         odds: oddsByKey.get(id) ?? null,
         rankMultiplier: row ? rankMultipliers[row.rank] ?? null : null,
+        penalty: counted && laps > 0 ? { laps, points: penaltyPoints } : null,
       };
     });
     // Ordre d'arrivée, les non classés à la fin (comme VéloPronos).

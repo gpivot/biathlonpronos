@@ -318,7 +318,8 @@
     "malusScale_tes_colle_3": "3 Tipps außerhalb der Top 10 → -300 Pkt.",
     "malusScale_tes_colle_4": "Kein Tipp → -200 Pkt. (ein fehlender Tipp zählt als außerhalb der Top 10)",
     "calcDetail": "Quote {odds} × {multiplier}",
-    "calcOddsOnly": "Quote {odds}"
+    "calcOddsOnly": "Quote {odds}",
+    "penaltyLapsMalus": "{count, plural, one {# Strafrunde} other {# Strafrunden}}: {points}"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",

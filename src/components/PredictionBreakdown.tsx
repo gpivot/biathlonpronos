@@ -94,6 +94,7 @@ export function PredictionBreakdown({
                 <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
               </div>
               {showCalc && <CalcDetail odds={pick.odds} rankMultiplier={pick.rankMultiplier} fusee={pick.fusee} gachette={pick.gachette} />}
+              {pick.penalty && <PenaltyLine penalty={pick.penalty} />}
             </div>
             <ShootingDots shootings={pick.shootings} />
             <div
@@ -148,4 +149,14 @@ export function CalcDetail({
   if (fusee) parts.push(`🚀 ${FUSEE_BONUS}`);
   if (gachette) parts.push(`🎯 ${GACHETTE_BONUS}`);
   return <div className="truncate text-[11px] font-normal text-text-dim">{parts.join(" + ")}</div>;
+}
+
+/** Tour de péna : malus de l'athlète, séparé de ses points, en rouge sur une 2e ligne. */
+export function PenaltyLine({ penalty }: { penalty: { laps: number; points: number } }) {
+  const t = useTranslations("Race");
+  return (
+    <div className="text-[11px] font-semibold text-red">
+      🔁 {t("penaltyLapsMalus", { count: penalty.laps, points: formatPoints(penalty.points) })}
+    </div>
+  );
 }

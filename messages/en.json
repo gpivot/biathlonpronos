@@ -318,7 +318,8 @@
     "malusScale_tes_colle_3": "3 picks outside the Top 10 → -300 pts",
     "malusScale_tes_colle_4": "No prediction → -200 pts (a missing pick counts as outside the Top 10)",
     "calcDetail": "odds {odds} × {multiplier}",
-    "calcOddsOnly": "odds {odds}"
+    "calcOddsOnly": "odds {odds}",
+    "penaltyLapsMalus": "{count, plural, one {# penalty lap} other {# penalty laps}}: {points}"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",
