@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   applyFuseeGachetteRules,
-  computeAspirationBonus,
   computeIndividualRaceScore,
   computePepiteBonus,
   computePursuitOdds,
@@ -9,7 +8,6 @@ import {
   computeSeasonStreaks,
   fuseeGachetteEligibility,
   type AthleteRaceResult,
-  type FavoriteTeam,
   type NationRaceResult,
 } from "@/lib/scoring";
 import { clearCurrentOdds, setCurrentOdds } from "./odds";
@@ -386,7 +384,7 @@ async function scoreIndividualPredictions(
   for (const r of results) if (r.athlete_id) athleteIds.add(r.athlete_id);
   for (const p of predictions) for (const id of p.athlete_ids ?? []) athleteIds.add(id);
 
-  const [{ data: athletes }, { data: odds }, { data: favoriteTeams }, { data: playedCards }, seasonRaces] = await Promise.all([
+  const [{ data: athletes }, { data: odds }, { data: playedCards }, seasonRaces] = await Promise.all([
     admin.from("athletes").select("id, nation_code, sex").in("id", Array.from(athleteIds)),
     admin
       .from("odds")
@@ -395,7 +393,6 @@ async function scoreIndividualPredictions(
       .eq("format", race.format)
       .is("valid_until", null)
       .in("athlete_id", Array.from(athleteIds)),
-    admin.from("favorite_teams").select("user_id, nation_code, sex").eq("season_id", stage.season_id),
     // Cartes jouées (Ça farte, 4e choix) : elles font foi, pas le seul champ du pronostic.
     admin
       .from("bonus_cards")
@@ -417,10 +414,6 @@ async function scoreIndividualPredictions(
   const oddsByAthleteId: Record<string, number> = {};
   for (const o of odds ?? []) oddsByAthleteId[o.athlete_id as string] = o.value;
 
-  const favoriteTeamByUserId = new Map<string, FavoriteTeam>(
-    (favoriteTeams ?? []).map((f) => [f.user_id as string, { nationCode: f.nation_code, sex: f.sex }])
-  );
-
   const scoringResults: AthleteRaceResult[] = results
     .filter((r) => r.athlete_id)
     .map((r) => applyFuseeGachetteRules(race.format, r))
@@ -437,8 +430,6 @@ async function scoreIndividualPredictions(
   const pointsByUserId = new Map<string, number>();
 
   for (const prediction of predictions) {
-    const favoriteTeam = favoriteTeamByUserId.get(prediction.user_id) ?? null;
-
     const { athleteIds: predictedAthleteIds, card } = resolvePredictionCard(
       race.id,
       prediction,
@@ -455,19 +446,20 @@ async function scoreIndividualPredictions(
       stageCoefficient: stage.coefficient,
       bonusX2Active: prediction.bonus_x2_used,
       card,
-      favoriteTeam,
+      // Team Nation et Aspiration retirées du règlement (Guillaume, 30/10/2026) : l'équipe favorite
+      // ne rapporte plus de points, elle reste une info ludique sur l'accueil.
+      favoriteTeam: null,
       raceCountryCode: stage.country_code,
     });
 
-    const aspirationBonus = computeAspirationBonus(scoringResults, athleteTeamByAthleteId, favoriteTeam);
-    const totalPoints = result.total + aspirationBonus;
+    const totalPoints = result.total;
 
     scoreLedgerRows.push({
       user_id: prediction.user_id,
       season_id: stage.season_id,
       race_id: race.id,
       points: totalPoints,
-      breakdown: { ...result.breakdown, aspirationBonus },
+      breakdown: result.breakdown,
     });
     pointsByUserId.set(prediction.user_id, totalPoints);
   }

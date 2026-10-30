@@ -14,7 +14,7 @@
     "rulesButton": "Discover the rules",
     "challengeButton": "Challenge your friends",
     "seasonBadge": "Season {label}",
-    "favoriteNationLabel": "My favorite nation",
+    "favoriteNationLabel": "My favourite team",
     "rankLabel": "overall rank",
     "pointsLabel": "points",
     "standingsButton": "Standings",
@@ -60,7 +60,10 @@
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Next race",
     "restWeek": "The biathletes are resting: time to wax your skis!",
-    "editPredictionButton": "Edit"
+    "editPredictionButton": "Edit",
+    "favoriteTeamWins": "{count, plural, one {# win} other {# wins}}",
+    "favoriteTeamPodiums": "{count, plural, one {# podium} other {# podiums}}",
+    "nextStageTitle": "Next stage"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -125,15 +128,13 @@
     "s_mondiaux_body": "Every race at these events counts double automatically, not stackable with the personal ×2 bonus.",
     "s_special_title": "8. Special races",
     "s_special_body": "Penalty loop: -20 pts per penalty loop by your biathletes. Fog: outside the Top 10, a malus equal to the finishing position. Busted: a malus if one or more of your 3 picks finish outside the Top 10 (up to -300), and -200 if you don't predict at all.",
-    "s_teamnation_title": "9. Team Nation & Draft bonus",
-    "s_teamnation_body": "Pick a favorite team (nation + sex) for the season. On the stage held in its country, points from that team's athlete you predicted are doubled (Team Nation bonus). Independently of your prediction, the more of that team's athletes finish Top 10 in a race, the more points you get (Draft bonus).",
-    "s_streak_title": "10. The 10/10 streak and bonus cards",
+    "s_streak_title": "9. The 10/10 streak and bonus cards",
     "s_streak_body": "10 consecutive races scoring points (relays included) earn you a bonus card of your choice: 4th pick (4 biathletes, best 3 count, over 2 men's and 2 women's races, relays excluded) or Boost (×3 on one biathlete in an individual race, never ×6 with a ×2). Only one card active at a time.",
-    "s_pepite_title": "11. The Diamond in the Rough",
+    "s_pepite_title": "10. The Diamond in the Rough",
     "s_pepite_body": "A bet placed at the start of the season on an outsider per sex (odds ≥ 30). A hidden pick: on their first Top 10 of the season, their race score is added as a bonus, then they become a regular athlete again.",
-    "s_fuseegachette_title": "12. Rocket & Trigger",
+    "s_fuseegachette_title": "11. Rocket & Trigger",
     "s_fuseegachette_body": "Rocket (sprint and individual only): +50 pts if one of your picks had the race's best ski time (once). Trigger (pursuit and mass start only): +20 pts per pick with a perfect 20/20 at the range (stackable).",
-    "s_classement_title": "13. Overall standings",
+    "s_classement_title": "12. Overall standings",
     "s_classement_body": "Adds up every point scored over the season. The leader wears the Yellow Bib. Secondary standings (Red Bib) and private leagues between friends also exist."
   },
   "Compte": {
@@ -144,7 +145,7 @@
     "back": "← Back",
     "loginRequired": "Log in to access your account.",
     "favoriteTeamTitle": "Favorite team",
-    "favoriteTeamHint": "A nation + a sex (e.g. France Women). Triggers the Team Nation bonus on the stage held in that country, and the Aspiration bonus based on its collective performance.",
+    "favoriteTeamHint": "A nation + a sex (e.g. France Women). Just for fun: you'll follow its wins and podiums of the season on the home page.",
     "women": "Women",
     "men": "Men",
     "save": "Save",
@@ -301,7 +302,10 @@
     "resultsHelpFusee": "Rocket: fastest ski time of the race, +50 pts for whoever picked them.",
     "resultsHelpGachette": "Trigger: clean shooting, +20 pts for whoever picked them.",
     "resultsHelpPerfect": "Perfect pick: the 3 athletes worth the most points. Finding all three earns +200 pts.",
-    "resultsHelpMine": "Your picks, highlighted in the ranking."
+    "resultsHelpMine": "Your picks, highlighted in the ranking.",
+    "specialRuleHelp_tour_de_pena": "Each penalty lap by one of your 3 biathletes costs you -20 pts. A good ranking is not enough: you also need to shoot straight.",
+    "specialRuleHelp_brouillard": "Outside the Top 10, your biathletes score negative points equal to their place: 13th → -13 pts, 48th → -48 pts.",
+    "specialRuleHelp_tes_colle": "Penalty if your picks finish outside the Top 10: 1 pick → -30 pts, 2 → -100 pts, 3 → -300 pts. Not predicting costs -200 pts, and a missing pick counts as outside the Top 10."
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

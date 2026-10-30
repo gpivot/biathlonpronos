@@ -14,7 +14,7 @@
     "rulesButton": "Découvre les règles",
     "challengeButton": "Défie tes amis",
     "seasonBadge": "Saison {label}",
-    "favoriteNationLabel": "Ma nation favorite",
+    "favoriteNationLabel": "Mon équipe favorite",
     "rankLabel": "au classement général",
     "pointsLabel": "points",
     "standingsButton": "Classement",
@@ -60,7 +60,10 @@
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Prochaine course",
     "restWeek": "Les biathlètes sont au repos, profites-en pour farter tes skis !",
-    "editPredictionButton": "Modifier"
+    "editPredictionButton": "Modifier",
+    "favoriteTeamWins": "{count, plural, =0 {0 victoire} one {# victoire} other {# victoires}}",
+    "favoriteTeamPodiums": "{count, plural, =0 {0 podium} one {# podium} other {# podiums}}",
+    "nextStageTitle": "Prochaine étape"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
@@ -125,15 +128,13 @@
     "s_mondiaux_body": "Toutes les courses de ces compétitions comptent double automatiquement, non cumulable avec le bonus ×2 personnel.",
     "s_special_title": "8. Les courses spéciales",
     "s_special_body": "Tour de péna : -20 pts par tour de pénalité de tes biathlètes. Brouillard : hors Top 10, malus égal à la place obtenue. T'es collé(e) : malus si un ou plusieurs de tes 3 choix terminent hors Top 10 (jusqu'à -300), et -200 si tu ne pronostiques pas du tout.",
-    "s_teamnation_title": "9. Team Nation & Aspiration",
-    "s_teamnation_body": "Choisis une équipe favorite (nation + sexe) sur la saison. Sur l'étape organisée dans son pays, les points de l'athlète de cette équipe que tu as pronostiqué sont doublés (bonus Team Nation). Indépendamment de ton pronostic, plus cette équipe place d'athlètes en Top 10 sur la course, plus tu gagnes de points (bonus Aspiration).",
-    "s_streak_title": "10. Le 10/10 et les cartes bonus",
+    "s_streak_title": "9. Le 10/10 et les cartes bonus",
     "s_streak_body": "10 courses consécutives où tu marques des points (relais compris) te rapportent une carte bonus, que tu choisis : 4e choix (4 biathlètes, les 3 meilleurs comptent, sur 2 courses hommes et 2 courses femmes hors relais) ou Ça farte (×3 sur un biathlète d'une course individuelle, jamais ×6 avec un ×2). Une seule carte active à la fois.",
-    "s_pepite_title": "11. La Pépite",
+    "s_pepite_title": "10. La Pépite",
     "s_pepite_body": "Mise en début de saison sur un outsider par sexe (cote ≥ 30). Pronostic caché : à son premier Top 10 de la saison, son score de la course s'ajoute en bonus, puis elle redevient une biathlète comme une autre.",
-    "s_fuseegachette_title": "12. Fusée & Gâchette",
+    "s_fuseegachette_title": "11. Fusée & Gâchette",
     "s_fuseegachette_body": "Fusée (sprint et individuel uniquement) : +50 pts si l'un de tes choix a le meilleur temps de ski de la course (une fois). Gâchette (poursuite et mass start uniquement) : +20 pts par choix ayant fait un 20/20 au tir (cumulable).",
-    "s_classement_title": "13. Le classement général",
+    "s_classement_title": "12. Le classement général",
     "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Des classements annexes (Dossard Rouge) et des ligues privées entre amis existent aussi."
   },
   "Compte": {
@@ -144,7 +145,7 @@
     "back": "← Retour",
     "loginRequired": "Connecte-toi pour accéder à ton compte.",
     "favoriteTeamTitle": "Équipe favorite",
-    "favoriteTeamHint": "Une nation + un sexe (ex. France Femmes). Déclenche le bonus Team Nation sur l'étape organisée dans ce pays, et le bonus Aspiration selon ses performances collectives.",
+    "favoriteTeamHint": "Une nation + un sexe (ex. France Femmes). Pour le plaisir : tu suivras ses victoires et ses podiums de la saison sur l'accueil.",
     "women": "Femmes",
     "men": "Hommes",
     "save": "Enregistrer",
@@ -301,7 +302,10 @@
     "resultsHelpFusee": "Fusée : meilleur temps de ski de la course, +50 pts pour qui l'a choisi.",
     "resultsHelpGachette": "Gâchette : sans-faute au tir, +20 pts pour qui l'a choisi.",
     "resultsHelpPerfect": "Prono parfait : les 3 biathlètes qui rapportent le plus. Les trouver tous les trois rapporte +200 pts.",
-    "resultsHelpMine": "Tes choix, surlignés dans le classement."
+    "resultsHelpMine": "Tes choix, surlignés dans le classement.",
+    "specialRuleHelp_tour_de_pena": "Chaque tour de pénalité d'un de tes 3 biathlètes te coûte -20 pts. Un bon classement ne suffit plus : il faut aussi viser juste.",
+    "specialRuleHelp_brouillard": "Hors du Top 10, tes biathlètes rapportent des points négatifs égaux à leur place : 13e → -13 pts, 48e → -48 pts.",
+    "specialRuleHelp_tes_colle": "Malus si tes choix terminent hors du Top 10 : 1 choix → -30 pts, 2 → -100 pts, 3 → -300 pts. Ne pas pronostiquer coûte -200 pts, et un choix manquant compte comme hors Top 10."
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

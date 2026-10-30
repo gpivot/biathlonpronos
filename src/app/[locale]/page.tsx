@@ -10,14 +10,15 @@ import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { getLastResults, type LastResult } from "@/lib/lastResult";
 import { LastResultCard } from "@/components/LastResultCard";
-import { getWeekStage, type WeekStage } from "@/lib/weekStage";
-import { RestWeekCard, WeekStageCard } from "@/components/WeekStageCard";
+import { getWeekStage, parisDay, type WeekStage } from "@/lib/weekStage";
+import { NextStageCard, RestWeekCard, WeekStageCard, type NextStage } from "@/components/WeekStageCard";
 import { getRaceResult } from "@/lib/lastResult";
 import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 import { StreakCard } from "@/components/StreakCard";
 import { getCurrentStreak } from "@/lib/streakCounter";
 import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
+import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,10 @@ interface HomeData {
   nextRace: NextRace | null;
   leaderboard: LeaderboardRow[];
   favoriteTeam: { nation_code: string; sex: string; nations: { name: string } | null } | null;
+  /** Étape suivant celle de la semaine (ou la prochaine à venir), encart « Prochaine étape ». */
+  nextStage: NextStage | null;
+  /** Victoires et podiums de l'équipe favorite cette saison. */
+  favoriteTeamStats: FavoriteTeamStats | null;
   lastResults: LastResult[];
   streak: number | null;
   cards: PlayerCards | null;
@@ -47,7 +52,7 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, lastResults: [], streak: null, cards: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, cards: null };
   }
 
   const { now } = await getClock();
@@ -84,6 +89,20 @@ async function getHomeData(): Promise<HomeData> {
   const weekResults = Object.fromEntries(weekResult.filter((r): r is LastResult => r != null).map((r) => [r.raceId, r]));
   const nextRace = weekStage ? null : ((upcomingRaces ?? []) as any[])[0] ?? null;
 
+  const { data: nextStage } = await supabase
+    .from("stages")
+    .select("id, location, country_code, starts_on, ends_on")
+    .eq("season_id", season.id)
+    .gt("starts_on", weekStage ? weekStage.endsOn : parisDay(now))
+    .order("starts_on", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  const favoriteTeam = favoriteTeamResult.data as HomeData["favoriteTeam"];
+  const favoriteTeamStats = favoriteTeam
+    ? await getFavoriteTeamStats(supabase, season.id, { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex })
+    : null;
+
   let predicted = false;
   if (user && nextRace) {
     const { count } = await supabase
@@ -108,7 +127,9 @@ async function getHomeData(): Promise<HomeData> {
         } as HomeData["nextRace"])
       : null,
     leaderboard,
-    favoriteTeam: favoriteTeamResult.data as any,
+    favoriteTeam,
+    favoriteTeamStats,
+    nextStage: nextStage as NextStage | null,
     lastResults,
     streak,
     cards,
@@ -117,7 +138,7 @@ async function getHomeData(): Promise<HomeData> {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, favoriteTeam, lastResults, streak, cards }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, cards }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -155,12 +176,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             </div>
 
             {favoriteTeam && (
-              <div className="flex items-center gap-2 text-[13px] text-text-dim">
-                <span className="text-base">{nationFlagEmoji(favoriteTeam.nation_code)}</span>
-                {t("favoriteNationLabel")}
-                <span className="font-semibold text-frost">
-                  {favoriteTeam.nations?.name ?? favoriteTeam.nation_code} {tSex(favoriteTeam.sex)}
-                </span>
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-[13px] text-text-dim">
+                  <span className="text-base">{nationFlagEmoji(favoriteTeam.nation_code)}</span>
+                  {t("favoriteNationLabel")}
+                  <span className="font-semibold text-frost">
+                    {favoriteTeam.nations?.name ?? favoriteTeam.nation_code} {tSex(favoriteTeam.sex)}
+                  </span>
+                </div>
+                {favoriteTeamStats && (
+                  <div className="flex items-center gap-3 pl-7 text-[12px] font-semibold text-frost">
+                    <span>🏆 {t("favoriteTeamWins", { count: favoriteTeamStats.wins })}</span>
+                    <span>🏅 {t("favoriteTeamPodiums", { count: favoriteTeamStats.podiums })}</span>
+                  </div>
+                )}
               </div>
             )}
 
@@ -216,6 +245,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         ) : (
           season && <RestWeekCard />
         )}
+
+        {nextStage && <NextStageCard stage={nextStage} locale={locale} />}
 
         {nextRace && <NextRaceCard race={nextRace} nowMs={nowMs} locale={locale} />}
 

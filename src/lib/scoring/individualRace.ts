@@ -250,7 +250,7 @@ function computeTesColleMalus(
 }
 
 /**
- * §11 — bonus Aspiration : indépendant du pronostic du joueur, à partir du
+ * §11 — bonus Aspiration (retiré du règlement le 30/10/2026, plus appelé par le calcul) : indépendant du pronostic du joueur, à partir du
  * nombre d'athlètes de sa nation/sexe favori(te) classés Top 10 sur la course.
  */
 export function computeAspirationBonus(

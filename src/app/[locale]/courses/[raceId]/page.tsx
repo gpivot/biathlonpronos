@@ -233,7 +233,12 @@ export default async function RacePage({
           {showForm ? <div className="h-8 w-8 flex-shrink-0" /> : <RuleInfoButton format={race.format} />}
         </div>
 
-        <div className="flex flex-col gap-3 rounded-[18px] border border-border bg-gradient-to-br from-card2 to-card px-4 py-4">
+        {/* Course malus : contour rouge autour de l'encadré, avec le nom du malus et son « ? ». */}
+        <div
+          className={`flex flex-col gap-3 rounded-[18px] border px-4 py-4 ${
+            race.special_rule ? "border-red/70 bg-gradient-to-br from-red/15 to-card" : "border-border bg-gradient-to-br from-card2 to-card"
+          }`}
+        >
           <div className="flex items-center gap-2 font-display text-[13px] font-bold text-ice">
             <ClockIcon className="h-4 w-4" />
             {displayStatus === "upcoming"
@@ -255,6 +260,19 @@ export default async function RacePage({
             {tFormat(race.format)}
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
+          {race.special_rule && (
+            <div className="flex items-center gap-2 text-[13px]">
+              <span>{SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}</span>
+              <span className="text-text-dim">{t("specialRulePrefix")}</span>
+              <span className="font-display font-bold text-red">{tFormat(`specialRule_${race.special_rule}`)}</span>
+              <HelpButton
+                title={tFormat(`specialRule_${race.special_rule}`)}
+                openLabel={t("specialRulePrefix")}
+                closeLabel={tClassement("close")}
+                items={[{ icon: SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️", text: t(`specialRuleHelp_${race.special_rule}`) }]}
+              />
+            </div>
+          )}
           {displayStatus !== "upcoming" && (
             <div className="text-xs text-text-dim first-letter:uppercase">
               {new Date(race.locks_at).toLocaleString(locale, {
@@ -268,14 +286,6 @@ export default async function RacePage({
             </div>
           )}
         </div>
-
-        {race.special_rule && (
-          <div className="rounded-2xl border border-red/50 bg-red/10 px-3.5 py-3 text-[12px] leading-relaxed text-frost">
-            {SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"} {t("specialRulePrefix")}{" "}
-            <span className="font-semibold text-red">{tFormat(`specialRule_${race.special_rule}`)}</span>{" "}
-            {t("specialRuleHint")}
-          </div>
-        )}
 
         {displayStatus === "upcoming" &&
           (!predictionsOpen ? (

@@ -162,6 +162,8 @@ Attention, si tu oublies volontairement de parier à cette étape → -200 pts, 
 
 ## 10. Le bonus Team Nation
 
+> **Retiré le 30/10/2026 (Guillaume)** : trop compliqué pour l'instant. L'équipe favorite reste une info ludique (victoires et podiums de la saison sur l'accueil), sans effet sur les points.
+
 Chaque joueur choisit en début de saison une équipe favorite, c'est-à-dire l'équipe masculine ou féminine d'une seule nation, par exemple France Femmes ou Norvège Hommes. Lors de l'étape de Coupe du monde organisée dans ce pays, les points marqués par les biathlètes de cette équipe sont doublés.
 
 Choisir une grande nation offre davantage de favoris potentiels. Choisir une nation moins dominante réduit tes possibilités… mais peut créer de belles opportunités grâce aux cotes. Le bonus s'applique donc soit aux hommes soit aux femmes.
@@ -169,6 +171,8 @@ Choisir une grande nation offre davantage de favoris potentiels. Choisir une nat
 > **Confirmé par Guillaume** : le doublement s'applique uniquement à l'athlète de la nation favorite que le joueur a *effectivement pronostiqué* ce jour-là (pas un score séparé indépendant du pronostic).
 
 ## 11. L'aspiration
+
+> **Retiré le 30/10/2026 (Guillaume)**, avec le bonus Team Nation.
 
 Ton équipe favorite peut également te rapporter grâce aux performances collectives de ses biathlètes. Lorsqu'elle place plusieurs biathlètes dans le Top 10 d'une même course, un bonus Aspiration est déclenché. Plus ils sont nombreux, plus le bonus augmente.
 

@@ -786,6 +786,24 @@ moment (`pickWeekFeature`) est dépliée d'office. **À confirmer** : quand une 
 semaine, « À suivre » et « Derniers résultats » disparaissent (l'encadré les remplace) ; ils
 reviennent les semaines sans étape, sous le message de repos.
 
+## Course malus, retrait de Team Nation / Aspiration, équipe favorite (fin octobre 2026)
+
+- **Course malus** : le contour rouge entoure l'encadré du haut de la page de la course (lieu, nom
+  de la course), avec le picto et le nom du malus et un bouton « ? » qui explique sa règle
+  (`Race.specialRuleHelp_*`). Le bandeau rouge séparé disparaît.
+- **Team Nation et Aspiration retirés** (point 9 du règlement affiché, §10-11 de
+  `docs/reglement.md`) : `scoreIndividualPredictions` (`lib/admin/raceResults.ts`) passe `favoriteTeam: null` au moteur et n'ajoute plus
+  le bonus Aspiration. Les fonctions du moteur restent (testées) mais ne sont plus appelées. Les
+  sections suivantes du règlement sont renumérotées (9 à 12). Une course déjà notée garde ses
+  anciens bonus jusqu'à ce que ses résultats soient réenregistrés dans l'admin.
+- **Équipe favorite** : reste choisie en début de saison, pour le plaisir. Sur l'accueil, sous
+  « Mon équipe favorite », ses victoires (🏆) et podiums (🏅, victoires comprises) de la saison
+  (`favoriteTeamStats.ts`, testé) : biathlètes de la nation et du sexe de l'équipe, et relais de ce
+  sexe (pas les relais mixtes, **à confirmer**).
+- **Prochaine étape** : sous l'étape de la semaine, petit encart (drapeau, lieu, dates) vers Ma
+  saison, étape dépliée (`/courses?etape=…`). C'est l'étape qui suit celle de la semaine, ou la
+  prochaine à venir les semaines sans étape.
+
 ## Listes de départ poursuite et mass start (octobre 2026)
 
 **Demande de Guillaume** : n'afficher dans le pronostic que les biathlètes qui prennent vraiment

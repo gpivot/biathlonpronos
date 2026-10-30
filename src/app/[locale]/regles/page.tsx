@@ -11,7 +11,6 @@ const SECTIONS = [
   "bonusx2",
   "mondiaux",
   "special",
-  "teamnation",
   "streak",
   "pepite",
   "fuseegachette",

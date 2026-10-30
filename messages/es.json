@@ -14,7 +14,7 @@
     "rulesButton": "Descubre las reglas",
     "challengeButton": "Reta a tus amigos",
     "seasonBadge": "Temporada {label}",
-    "favoriteNationLabel": "Mi nación favorita",
+    "favoriteNationLabel": "Mi equipo favorito",
     "rankLabel": "puesto general",
     "pointsLabel": "puntos",
     "standingsButton": "Clasificación",
@@ -60,7 +60,10 @@
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Próxima carrera",
     "restWeek": "Los biatletas descansan: ¡aprovecha para encerar tus esquís!",
-    "editPredictionButton": "Modificar"
+    "editPredictionButton": "Modificar",
+    "favoriteTeamWins": "{count, plural, one {# victoria} other {# victorias}}",
+    "favoriteTeamPodiums": "{count, plural, one {# podio} other {# podios}}",
+    "nextStageTitle": "Próxima etapa"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -125,15 +128,13 @@
     "s_mondiaux_body": "Todas las carreras de estas competiciones cuentan doble automáticamente, no acumulable con el bonus ×2 personal.",
     "s_special_title": "8. Las carreras especiales",
     "s_special_body": "Vuelta de penalización: -20 pts por cada vuelta de penalización de tus biatletas. Niebla: fuera del Top 10, un malus igual al puesto obtenido. Pillado: un malus si uno o varios de tus 3 elegidos terminan fuera del Top 10 (hasta -300), y -200 si no pronosticas nada.",
-    "s_teamnation_title": "9. Team Nation y bonus Rebufo",
-    "s_teamnation_body": "Elige un equipo favorito (nación + sexo) para la temporada. En la etapa que se celebra en su país, los puntos del atleta de ese equipo que hayas pronosticado se duplican (bonus Team Nation). Independientemente de tu pronóstico, cuantos más atletas de ese equipo terminen en el Top 10 de una carrera, más puntos ganas (bonus Rebufo).",
-    "s_streak_title": "10. La racha 10/10 y las cartas bonus",
+    "s_streak_title": "9. La racha 10/10 y las cartas bonus",
     "s_streak_body": "10 carreras consecutivas sumando puntos (relevos incluidos) te dan una carta bonus a elegir: 4.ª elección (4 biatletas, cuentan las 3 mejores, en 2 carreras masculinas y 2 femeninas sin relevos) o Turbo (×3 a un biatleta en una carrera individual, nunca ×6 con un ×2). Solo una carta activa a la vez.",
-    "s_pepite_title": "11. El Diamante en bruto",
+    "s_pepite_title": "10. El Diamante en bruto",
     "s_pepite_body": "Una apuesta hecha al inicio de la temporada por un outsider de cada sexo (cuota ≥ 30). Un pronóstico oculto: en su primer Top 10 de la temporada, su puntuación de la carrera se suma como bonus y luego vuelve a ser un atleta como los demás.",
-    "s_fuseegachette_title": "12. Cohete y Gatillo",
+    "s_fuseegachette_title": "11. Cohete y Gatillo",
     "s_fuseegachette_body": "Cohete (solo sprint e individual): +50 pts si uno de tus elegidos ha hecho el mejor tiempo de esquí de la carrera (una vez). Gatillo (solo persecución y salida en masa): +20 pts por cada elegido con un 20/20 en el tiro (acumulable).",
-    "s_classement_title": "13. La clasificación general",
+    "s_classement_title": "12. La clasificación general",
     "s_classement_body": "Suma todos los puntos conseguidos durante la temporada. El líder lleva el Dorsal amarillo. También hay clasificaciones secundarias (Dorsal rojo) y ligas privadas entre amigos."
   },
   "Compte": {
@@ -144,7 +145,7 @@
     "back": "← Volver",
     "loginRequired": "Inicia sesión para acceder a tu cuenta.",
     "favoriteTeamTitle": "Equipo favorito",
-    "favoriteTeamHint": "Una nación + un sexo (p. ej. Francia Mujeres). Activa el bonus Team Nation en la etapa que se celebra en ese país, y el bonus Rebufo según su rendimiento colectivo.",
+    "favoriteTeamHint": "Una nación + un sexo (p. ej. Francia Mujeres). Por diversión: seguirás sus victorias y podios de la temporada en la página de inicio.",
     "women": "Mujeres",
     "men": "Hombres",
     "save": "Guardar",
@@ -301,7 +302,10 @@
     "resultsHelpFusee": "Cohete: mejor tiempo de esquí de la carrera, +50 pts para quien lo eligió.",
     "resultsHelpGachette": "Gatillo: tiro perfecto, +20 pts para quien lo eligió.",
     "resultsHelpPerfect": "Pronóstico perfecto: los 3 biatletas que más puntos dan. Acertar los tres da +200 pts.",
-    "resultsHelpMine": "Tus elecciones, resaltadas en la clasificación."
+    "resultsHelpMine": "Tus elecciones, resaltadas en la clasificación.",
+    "specialRuleHelp_tour_de_pena": "Cada vuelta de penalización de uno de tus 3 biatletas te cuesta -20 pts. Una buena clasificación no basta: también hay que acertar.",
+    "specialRuleHelp_brouillard": "Fuera del Top 10, tus biatletas dan puntos negativos iguales a su puesto: 13.º → -13 pts, 48.º → -48 pts.",
+    "specialRuleHelp_tes_colle": "Penalización si tus elecciones terminan fuera del Top 10: 1 → -30 pts, 2 → -100 pts, 3 → -300 pts. No pronosticar cuesta -200 pts, y una elección que falta cuenta como fuera del Top 10."
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",
