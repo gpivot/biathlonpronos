@@ -976,6 +976,42 @@ carte de rang et le Top 5 de l'accueil. Mêmes pictos ailleurs : ⚡ devant les 
 classement des joueurs d'une course, ❄️ devant la Pépite (Globes, pronostics de saison, bonus).
 Pas de SQL : tout se lit avec les droits existants.
 
+## Cartes bonus au fil de la saison : Fondue, Aspiration, Équipe (30/10/2026)
+
+Demande de Guillaume, précisions validées le jour même :
+- **Cinq cartes au choix au 10/10** : Fondue, Ça farte, 4e choix, Aspiration, Équipe. **Une même
+  carte ne se prend pas sur deux 10/10 d'affilée** (grisée « Prise au dernier 10/10 », de nouveau
+  possible au suivant). La règle « déjà en main » (grisée tant qu'un exemplaire n'est pas utilisé)
+  disparaît.
+- **Fondue** : dès le début de la saison, gardée en main, jouée depuis la page de la course (bouton
+  existant). Se cumule avec les autres cartes.
+- **Aspiration** : débloquée quand la 1re course de la **4e étape** (ordre des dates) est partie.
+  Gardée en main, jouée sur une course individuelle comme Ça farte. Chaque biathlète pronostiqué
+  compte une place plus haut : le 1er reste 1er, un 11e devient 10e et marque, les bonus Top 3/5/10
+  et le Prono parfait suivent ces places (`computeIndividualRaceScore`, carte `aspiration`). Avec
+  Brouillard, le malus suit aussi la place remontée.
+- **Équipe** : débloquée quand la 1re course de **l'étape qui suit les Mondiaux/JO** (coefficient 2)
+  est partie ; la 7e étape si la saison n'en a pas. Active dès qu'elle est choisie, sur la prochaine
+  course pas encore partie et toutes les suivantes. Chaque biathlète de l'équipe favorite (nation +
+  sexe) dans le Top 10 ajoute **une fois sa cote**, sans coefficient ; sur le relais hommes ou
+  femmes de l'équipe, la nation dans le Top 10 ajoute une fois la cote du relais (`computeEquipeBonus`,
+  `breakdown.equipeBonus`). Ces points comptent pour la série (confirmé). La cote s'ajoute pour
+  chaque biathlète de l'équipe dans le Top 10, qu'il soit dans le pronostic (en plus de ses points
+  normaux) ou non (confirmé, exemple de Guillaume : Perrot pronostiqué 2e à 8 = 8 × 18 + 8,
+  Jacquelin et Claude non pronostiqués = 12 + 24). **À confirmer** : il faut avoir déposé un
+  pronostic sur la course pour toucher le bonus ; sans équipe favorite, la carte ne rapporte rien.
+- **Cumuls sur une course** (Guillaume, 30/10/2026) : **Ça farte se pose sur un des 4 choix d'un
+  4e choix** (effet `balle_de_pioche` avec `caFarteTargetAthleteId`) ; le ×3 compte pour désigner
+  les 3 meilleurs des 4 : un 4e triplé peut passer devant un 3e (confirmé). **Aspiration ne se cumule ni avec un 4e choix ni avec Ça
+  farte.** Si un 4e choix, activé tout seul au 10/10, couvre une course où Aspiration est déjà posée,
+  Aspiration l'emporte sur cette course (à confirmer). Fondue et Équipe se cumulent avec tout.
+  Migration **0027** : `play_bonus_card` applique ces règles.
+
+Migrations **0025** (nouvelles valeurs `aspiration`, `equipe` du type `bonus_card_type`, à exécuter
+seule d'abord) et **0026** (`claim_bonus_card` : règle des deux 10/10, déblocage par étape,
+activation automatique du 4e choix et d'Équipe ; `play_bonus_card` : Aspiration, Équipe non
+jouable ; `bonus_card_unlocked`, `next_race`). Aucune nouvelle table ni colonne.
+
 ## Invitation aux pronostics de saison sur l'accueil (octobre 2026)
 
 **Demande de Guillaume** : en début de saison, tant que la 1re course n'a pas eu lieu, le bas de

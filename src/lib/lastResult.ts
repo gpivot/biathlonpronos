@@ -62,7 +62,7 @@ export interface RaceResultRow {
 
 export interface LastResultExtra {
   /** Clé de traduction (Home.lastResultExtra_<kind>). */
-  kind: "top3" | "top5" | "top10" | "pronoParfait" | "specialMalus" | "aspiration" | "pepite";
+  kind: "top3" | "top5" | "top10" | "pronoParfait" | "specialMalus" | "aspiration" | "pepite" | "equipe";
   points: number;
 }
 
@@ -110,6 +110,8 @@ interface IndividualBreakdown {
   teamNationBoostedAthleteIds?: string[];
   aspirationBonus?: number;
   pepiteBonus?: number;
+  /** Carte Équipe : cotes des biathlètes de l'équipe favorite dans le Top 10. */
+  equipeBonus?: number;
 }
 
 /**
@@ -164,6 +166,7 @@ export function computeIndividualExtras(breakdown: IndividualBreakdown): LastRes
     { kind: "specialMalus", points: breakdown.specialMalus ?? 0 },
     { kind: "aspiration", points: breakdown.aspirationBonus ?? 0 },
     { kind: "pepite", points: breakdown.pepiteBonus ?? 0 },
+    { kind: "equipe", points: breakdown.equipeBonus ?? 0 },
   ];
   return extras.filter((e) => e.points !== 0);
 }

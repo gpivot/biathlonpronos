@@ -278,6 +278,26 @@ describe("computeIndividualRaceScore — coefficients et cartes", () => {
     expect(result.perAthlete.d).toBeUndefined();
     expect(result.breakdown.combinationBonus).toBe(100); // podium sur les 3 comptés
   });
+
+  it("4e choix + Ça farte : le ×3 sur un des 4 compte pour désigner les 3 meilleurs", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b", "c", "d"],
+        results: [
+          { athleteId: "a", rank: 1 },
+          { athleteId: "b", rank: 2 },
+          { athleteId: "c", rank: 3 },
+          { athleteId: "d", rank: 4 },
+          { athleteId: "z", rank: 5 },
+        ],
+        oddsByAthleteId: { a: 10, b: 10, c: 10, d: 5, z: 100 },
+        card: { type: "balle_de_pioche", caFarteTargetAthleteId: "d" },
+      })
+    );
+    // d : 4e (×10) à 5 = 50, triplé = 150, devant c (13 × 10 = 130).
+    expect(result.breakdown.droppedByBalleDePioche).toEqual(["c"]);
+    expect(result.perAthlete).toEqual({ a: 250, b: 180, d: 150 });
+  });
 });
 
 describe("computeIndividualRaceScore — bonus Team Nation", () => {
@@ -378,5 +398,28 @@ describe("computeAspirationBonus", () => {
 
     const threePlusOther: AthleteRaceResult[] = [...three, { athleteId: "d", rank: 4 }];
     expect(computeAspirationBonus(threePlusOther, athleteTeamByAthleteId, favoriteTeam)).toBe(50);
+  });
+});
+
+describe("computeIndividualRaceScore — carte Aspiration", () => {
+  it("chaque choix compte une place plus haut, le 1er reste 1er, un 11e marque", () => {
+    const input = baseInput({
+      predictedAthleteIds: ["a", "b", "c"],
+      results: [
+        { athleteId: "a", rank: 1 },
+        { athleteId: "b", rank: 5 },
+        { athleteId: "c", rank: 11 },
+      ],
+      oddsByAthleteId: { a: 10, b: 10, c: 10 },
+    });
+    const without = computeIndividualRaceScore(input);
+    const withCard = computeIndividualRaceScore({ ...input, card: { type: "aspiration" } });
+    expect(withCard.breakdown.base.a).toBe(without.breakdown.base.a);
+    expect(withCard.breakdown.base.b).toBeGreaterThan(without.breakdown.base.b);
+    expect(without.breakdown.base.c).toBe(0);
+    expect(withCard.breakdown.base.c).toBeGreaterThan(0);
+    // Les 3 dans le Top 10 grâce à la carte : bonus de combinaison (ici le Prono parfait, qui le remplace).
+    expect(without.breakdown.combinationBonus + without.breakdown.pronoParfaitBonus).toBe(0);
+    expect(withCard.breakdown.combinationBonus + withCard.breakdown.pronoParfaitBonus).toBeGreaterThan(0);
   });
 });
