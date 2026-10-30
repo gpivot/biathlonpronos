@@ -12,17 +12,15 @@ import type { BonusCardEffect } from "./scoring/types";
  * - « Équipe » (à partir de l'étape qui suit les Mondiaux/JO) : jusqu'à la fin de la saison, chaque
  *   biathlète de l'équipe favorite dans le Top 10 (ou sa nation dans le Top 10 du relais de son
  *   sexe) ajoute une fois sa cote aux points de la course.
- * Une même carte ne se prend pas sur deux 10/10 d'affilée. Une seule carte de course à la fois
- * (Ça farte, Aspiration, 4e choix) ; Fondue et Équipe se cumulent avec les autres.
+ * Une même carte ne se prend pas sur deux 10/10 d'affilée. Sur une même course, Ça farte et
+ * Aspiration s'excluent, Aspiration et 4e choix aussi ; Ça farte se pose sur un des 4 choix d'un
+ * 4e choix. Fondue et Équipe se cumulent avec tout.
  */
 
 export const CLAIMABLE_CARD_TYPES = ["fondue", "ca_farte", "balle_de_pioche", "aspiration", "equipe"] as const;
 export type ClaimableCardType = (typeof CLAIMABLE_CARD_TYPES)[number];
 /** Cartes jouées par le joueur sur une course de son choix depuis le formulaire de pronostic. */
 export type RaceCardType = "ca_farte" | "aspiration";
-/** Cartes qui ne se cumulent pas sur une même course. */
-const EXCLUSIVE_CARD_TYPES = ["ca_farte", "aspiration", "balle_de_pioche"];
-
 /** Nombre de courses individuelles couvertes par le 4e choix, par sexe. */
 export const QUATRIEME_CHOIX_RACES_PER_SEX = 2;
 
@@ -136,7 +134,10 @@ export function cardsOnRace(
   return found;
 }
 
-/** Une carte de course peut-elle être jouée sur cette course ? (une seule à la fois) */
+/**
+ * Une carte de course peut-elle être jouée sur cette course ? Ça farte et Aspiration s'excluent ;
+ * Aspiration ne se cumule pas avec un 4e choix, Ça farte si (demande de Guillaume, 30/10/2026).
+ */
 export function canPlayCard(
   type: RaceCardType | "balle_de_pioche",
   raceId: string,
@@ -147,16 +148,14 @@ export function canPlayCard(
   if (!race || isRelayFormat(race.format)) return false;
   if (!cards.some((c) => c.card_type === type && c.status === "available")) return false;
   const current = cardsOnRace(raceId, cards, seasonRaces);
-  if (current.quatriemeChoix || current.caFarte || current.aspiration) return false;
-  if (type === "balle_de_pioche") {
-    // Pas de Ça farte ni d'Aspiration déjà posés sur une des courses que couvrirait ce 4e choix.
-    const window = quatriemeChoixWindow(raceId, seasonRaces);
-    return !cards.some(
-      (c) =>
-        EXCLUSIVE_CARD_TYPES.includes(c.card_type) && c.status === "used" && c.used_on_race_id && window.includes(c.used_on_race_id)
-    );
-  }
-  return true;
+  if (type === "ca_farte") return !current.caFarte && !current.aspiration;
+  if (type === "aspiration") return !current.caFarte && !current.aspiration && !current.quatriemeChoix;
+  // 4e choix : pas d'Aspiration déjà posée sur une des courses qu'il couvrirait.
+  if (current.quatriemeChoix) return false;
+  const window = quatriemeChoixWindow(raceId, seasonRaces);
+  return !cards.some(
+    (c) => c.card_type === "aspiration" && c.status === "used" && !!c.used_on_race_id && window.includes(c.used_on_race_id)
+  );
 }
 
 /** Crédits de carte pas encore choisis : cartes gagnées au 10/10 moins cartes déjà prises. */
@@ -224,13 +223,21 @@ export function resolvePredictionCard(
   const { quatriemeChoix, caFarte, aspiration } = cardsOnRace(raceId, userCards, seasonRaces);
   const counted = athleteIds.slice(0, 3);
   const target = prediction.bonus_card_target_athlete_id;
-  // Un 4e choix activé automatiquement peut couvrir une course où Ça farte ou Aspiration était déjà
-  // posé : la carte jouée exprès par le joueur l'emporte sur cette course (à confirmer).
+  // Un 4e choix activé automatiquement peut couvrir une course où Aspiration était déjà posée :
+  // Aspiration, jouée exprès par le joueur, l'emporte sur cette course (à confirmer).
+  if (aspiration) return { athleteIds: counted, card: { type: "aspiration" } };
+  if (quatriemeChoix) {
+    // Ça farte se pose sur un des 4 choix (Guillaume, 30/10/2026).
+    const picks = athleteIds.slice(0, 4);
+    const caFarteTarget = caFarte && target && picks.includes(target) ? target : null;
+    return {
+      athleteIds: picks,
+      card: caFarteTarget ? { type: "balle_de_pioche", caFarteTargetAthleteId: caFarteTarget } : { type: "balle_de_pioche" },
+    };
+  }
   if (caFarte && target && counted.includes(target)) {
     return { athleteIds: counted, card: { type: "ca_farte", targetAthleteId: target } };
   }
-  if (aspiration) return { athleteIds: counted, card: { type: "aspiration" } };
-  if (quatriemeChoix) return { athleteIds: athleteIds.slice(0, 4), card: { type: "balle_de_pioche" } };
   return { athleteIds: counted, card: { type: "none" } };
 }
 

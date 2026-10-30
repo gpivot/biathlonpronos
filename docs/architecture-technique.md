@@ -995,12 +995,17 @@ Demande de Guillaume, précisions validées le jour même :
   course pas encore partie et toutes les suivantes. Chaque biathlète de l'équipe favorite (nation +
   sexe) dans le Top 10 ajoute **une fois sa cote**, sans coefficient ; sur le relais hommes ou
   femmes de l'équipe, la nation dans le Top 10 ajoute une fois la cote du relais (`computeEquipeBonus`,
-  `breakdown.equipeBonus`). Ces points comptent pour la série (confirmé). **À confirmer** : il faut
-  avoir pronostiqué la course pour toucher le bonus Équipe ; sans équipe favorite, la carte ne
-  rapporte rien.
-- **Une seule carte de course à la fois** (Ça farte, Aspiration, 4e choix) ; Fondue et Équipe se
-  cumulent. Si un 4e choix couvre une course où Ça farte ou Aspiration est posé, la carte jouée
-  exprès l'emporte (à confirmer).
+  `breakdown.equipeBonus`). Ces points comptent pour la série (confirmé). La cote s'ajoute pour
+  chaque biathlète de l'équipe dans le Top 10, qu'il soit dans le pronostic (en plus de ses points
+  normaux) ou non (confirmé, exemple de Guillaume : Perrot pronostiqué 2e à 8 = 8 × 18 + 8,
+  Jacquelin et Claude non pronostiqués = 12 + 24). **À confirmer** : il faut avoir déposé un
+  pronostic sur la course pour toucher le bonus ; sans équipe favorite, la carte ne rapporte rien.
+- **Cumuls sur une course** (Guillaume, 30/10/2026) : **Ça farte se pose sur un des 4 choix d'un
+  4e choix** (effet `balle_de_pioche` avec `caFarteTargetAthleteId`) ; le ×3 compte pour désigner
+  les 3 meilleurs des 4 (à confirmer). **Aspiration ne se cumule ni avec un 4e choix ni avec Ça
+  farte.** Si un 4e choix, activé tout seul au 10/10, couvre une course où Aspiration est déjà posée,
+  Aspiration l'emporte sur cette course (à confirmer). Fondue et Équipe se cumulent avec tout.
+  Migration **0027** : `play_bonus_card` applique ces règles.
 
 Migrations **0025** (nouvelles valeurs `aspiration`, `equipe` du type `bonus_card_type`, à exécuter
 seule d'abord) et **0026** (`claim_bonus_card` : règle des deux 10/10, déblocage par étape,

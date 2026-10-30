@@ -278,6 +278,26 @@ describe("computeIndividualRaceScore — coefficients et cartes", () => {
     expect(result.perAthlete.d).toBeUndefined();
     expect(result.breakdown.combinationBonus).toBe(100); // podium sur les 3 comptés
   });
+
+  it("4e choix + Ça farte : le ×3 sur un des 4 compte pour désigner les 3 meilleurs", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b", "c", "d"],
+        results: [
+          { athleteId: "a", rank: 1 },
+          { athleteId: "b", rank: 2 },
+          { athleteId: "c", rank: 3 },
+          { athleteId: "d", rank: 4 },
+          { athleteId: "z", rank: 5 },
+        ],
+        oddsByAthleteId: { a: 10, b: 10, c: 10, d: 5, z: 100 },
+        card: { type: "balle_de_pioche", caFarteTargetAthleteId: "d" },
+      })
+    );
+    // d : 4e (×10) à 5 = 50, triplé = 150, devant c (13 × 10 = 130).
+    expect(result.breakdown.droppedByBalleDePioche).toEqual(["c"]);
+    expect(result.perAthlete).toEqual({ a: 250, b: 180, d: 150 });
+  });
 });
 
 describe("computeIndividualRaceScore — bonus Team Nation", () => {

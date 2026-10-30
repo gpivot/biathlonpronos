@@ -59,16 +59,22 @@ describe("cartes jouées", () => {
     expect(cardsOnRace("sprintF2", played, races).quatriemeChoix).toBeNull();
   });
 
-  it("une seule carte à la fois", () => {
-    const cards = [...played, card({ id: "f", card_type: "ca_farte" })];
-    expect(canPlayCard("ca_farte", "poursuiteF", cards, races)).toBe(false);
-    expect(canPlayCard("ca_farte", "sprintF2", cards, races)).toBe(true);
+  it("Ça farte se pose pendant un 4e choix, pas Aspiration", () => {
+    const cards = [...played, card({ id: "f", card_type: "ca_farte" }), card({ id: "a", card_type: "aspiration" })];
+    expect(canPlayCard("ca_farte", "poursuiteF", cards, races)).toBe(true);
+    expect(canPlayCard("aspiration", "poursuiteF", cards, races)).toBe(false);
     expect(canPlayCard("ca_farte", "relaisMixte", cards, races)).toBe(false);
 
-    // Un Ça farte posé plus loin empêche un 4e choix dont la fenêtre le couvrirait.
+    // Ça farte et Aspiration ne vont pas sur la même course.
+    const farteOnSprint = [card({ id: "f", card_type: "ca_farte", status: "used", used_on_race_id: "sprintF2" }), card({ id: "a", card_type: "aspiration" })];
+    expect(canPlayCard("aspiration", "sprintF2", farteOnSprint, races)).toBe(false);
+
+    // Une Aspiration posée plus loin empêche un 4e choix dont la fenêtre la couvrirait, pas un Ça farte.
+    const withAspiration = [card({ id: "a", card_type: "aspiration", status: "used", used_on_race_id: "poursuiteH" }), card({ id: "q2" })];
+    expect(canPlayCard("balle_de_pioche", "sprintF", withAspiration, races)).toBe(false);
+    expect(canPlayCard("balle_de_pioche", "sprintF2", withAspiration, races)).toBe(true);
     const withFarte = [card({ id: "f", card_type: "ca_farte", status: "used", used_on_race_id: "poursuiteH" }), card({ id: "q2" })];
-    expect(canPlayCard("balle_de_pioche", "sprintF", withFarte, races)).toBe(false);
-    expect(canPlayCard("balle_de_pioche", "sprintF2", withFarte, races)).toBe(true);
+    expect(canPlayCard("balle_de_pioche", "sprintF", withFarte, races)).toBe(true);
   });
 
   it("refuse une carte qu'on n'a pas", () => {
@@ -117,17 +123,26 @@ describe("describeCard", () => {
 });
 
 describe("4e choix activé automatiquement", () => {
-  it("Ça farte déjà posé l'emporte sur la course qu'il couvre", () => {
+  it("Ça farte se cumule avec le 4e choix, sur un des 4 choix", () => {
     const cards = [
       card({ id: "q", status: "used", used_on_race_id: "sprintF" }),
       card({ id: "f", card_type: "ca_farte", status: "used", used_on_race_id: "sprintH" }),
     ];
-    const prediction = { athlete_ids: ["a", "b", "c", "d"], bonus_card_target_athlete_id: "b" };
+    const prediction = { athlete_ids: ["a", "b", "c", "d"], bonus_card_target_athlete_id: "d" };
     expect(resolvePredictionCard("sprintH", prediction, cards, races)).toEqual({
-      athleteIds: ["a", "b", "c"],
-      card: { type: "ca_farte", targetAthleteId: "b" },
+      athleteIds: ["a", "b", "c", "d"],
+      card: { type: "balle_de_pioche", caFarteTargetAthleteId: "d" },
     });
     expect(resolvePredictionCard("poursuiteF", prediction, cards, races).card).toEqual({ type: "balle_de_pioche" });
+  });
+
+  it("Aspiration déjà posée l'emporte sur la course que le 4e choix couvre", () => {
+    const cards = [
+      card({ id: "a", card_type: "aspiration", status: "used", used_on_race_id: "sprintH" }),
+      card({ id: "q", status: "used", used_on_race_id: "sprintF" }),
+    ];
+    const prediction = { athlete_ids: ["a", "b", "c", "d"], bonus_card_target_athlete_id: null };
+    expect(resolvePredictionCard("sprintH", prediction, cards, races)).toEqual({ athleteIds: ["a", "b", "c"], card: { type: "aspiration" } });
   });
 });
 
@@ -192,6 +207,19 @@ describe("cartes de la saison", () => {
 });
 
 describe("computeEquipeBonus", () => {
+  it("exemple de Guillaume : France Hommes, sprint d'Oslo", () => {
+    // Perrot (pronostiqué) 2e à 8, Jacquelin 4e à 12, Claude 8e à 24 : 8 + 12 + 24 en plus des
+    // points du pronostic, que les biathlètes aient été choisis ou non.
+    const results = [
+      { rank: 1, nationCode: "NOR", sex: "H", odds: 3 },
+      { rank: 2, nationCode: "FRA", sex: "H", odds: 8 },
+      { rank: 4, nationCode: "FRA", sex: "H", odds: 12 },
+      { rank: 8, nationCode: "FRA", sex: "H", odds: 24 },
+      { rank: 14, nationCode: "FRA", sex: "H", odds: 30 },
+    ];
+    expect(computeEquipeBonus({ nationCode: "FRA", sex: "H" }, { format: "sprint", sex: "H" }, results, [])).toBe(44);
+  });
+
   const team = { nationCode: "FRA", sex: "F" };
   const individual = [
     { rank: 2, nationCode: "FRA", sex: "F", odds: 5 },

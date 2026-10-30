@@ -74,7 +74,8 @@ export default async function RacePage({
   let availableCards: { id: string; card_type: string }[] = [];
   // Cartes jouables sur cette course (une seule à la fois) et carte déjà jouée qui la couvre.
   let playableCards: { id: string; card_type: string }[] = [];
-  let activeCard: "ca_farte" | "balle_de_pioche" | "aspiration" | null = null;
+  let activeCard: "ca_farte" | "aspiration" | null = null;
+  let quatriemeChoixActive = false;
   let initialBonusX2 = false;
   let initialCardTarget: string | null = null;
 
@@ -101,13 +102,9 @@ export default async function RacePage({
     const cardRows = (cards ?? []) as CardRow[];
     availableCards = cardRows.filter((c) => c.status === "available");
     const onRace = cardsOnRace(race.id, cardRows, seasonRaces);
-    activeCard = onRace.caFarte
-      ? "ca_farte"
-      : onRace.aspiration
-        ? "aspiration"
-        : onRace.quatriemeChoix
-          ? "balle_de_pioche"
-          : null;
+    activeCard = onRace.caFarte ? "ca_farte" : onRace.aspiration ? "aspiration" : null;
+    // Aspiration déjà posée l'emporte sur un 4e choix arrivé ensuite (voir resolvePredictionCard).
+    quatriemeChoixActive = !!onRace.quatriemeChoix && !onRace.aspiration;
     // Le 4e choix et Équipe s'activent tout seuls quand ils sont choisis : seuls Ça farte et
     // Aspiration se jouent ici.
     playableCards = availableCards.filter(
@@ -351,6 +348,7 @@ export default async function RacePage({
                   grilledAthleteIds={grilledAthleteIds}
                   playableCards={playableCards}
                   activeCard={activeCard}
+                  quatriemeChoixActive={quatriemeChoixActive}
                   initialBonusX2={initialBonusX2}
                   initialCardTarget={initialCardTarget}
                   x2Eligible={x2Eligible}

@@ -61,11 +61,20 @@ export function computeIndividualRaceScore(
     rawScore[athleteId] = base[athleteId] + fuseeGachetteByAthlete[athleteId];
   }
 
-  // 5b. Carte "Balle de pioche" — 4 choix, seuls les 3 meilleurs comptent.
-  const { counted, dropped } = selectCountedAthletes(input.predictedAthleteIds, rawScore, input.card);
-
   // 6. Coefficient ×2 Mondiaux/JO, non cumulable avec le bonus ×2 personnel.
   const globalMultiplier = input.stageCoefficient === 2 ? 2 : input.bonusX2Active ? 2 : 1;
+  const caFarteTargetId =
+    input.card.type === "ca_farte"
+      ? input.card.targetAthleteId
+      : input.card.type === "balle_de_pioche"
+        ? input.card.caFarteTargetAthleteId ?? null
+        : null;
+
+  // 5b. Carte "Balle de pioche" — 4 choix, seuls les 3 meilleurs comptent. Avec Ça farte posé sur
+  // un des 4, le ×3 est pris en compte pour désigner les 3 meilleurs (à confirmer).
+  const { counted, dropped } = selectCountedAthletes(input.predictedAthleteIds, rawScore, input.card, (id) =>
+    id === caFarteTargetId ? 3 : globalMultiplier
+  );
 
   // 5a. Carte "Ça farte" (×3) et 7. Bonus Team Nation (×2). Confirmé par
   // Guillaume : le ×3 n'est jamais cumulable avec un ×2 — l'athlète ciblé
@@ -73,7 +82,7 @@ export function computeIndividualRaceScore(
   const perAthlete: Record<string, number> = {};
   const teamNationBoostedAthleteIds: string[] = [];
   for (const athleteId of counted) {
-    const isCaFarteTarget = input.card.type === "ca_farte" && input.card.targetAthleteId === athleteId;
+    const isCaFarteTarget = caFarteTargetId === athleteId;
 
     if (isCaFarteTarget) {
       perAthlete[athleteId] = rawScore[athleteId] * 3;
@@ -161,13 +170,14 @@ function computeAthleteFuseeGachetteBonus(result: AthleteRaceResult | undefined)
 function selectCountedAthletes(
   predictedAthleteIds: string[],
   rawScore: Record<string, number>,
-  card: IndividualRaceScoringInput["card"]
+  card: IndividualRaceScoringInput["card"],
+  multiplierOf: (athleteId: string) => number
 ): { counted: string[]; dropped: string[] } {
   if (card.type !== "balle_de_pioche" || predictedAthleteIds.length <= 3) {
     return { counted: predictedAthleteIds, dropped: [] };
   }
 
-  const sorted = [...predictedAthleteIds].sort((a, b) => rawScore[b] - rawScore[a]);
+  const sorted = [...predictedAthleteIds].sort((a, b) => rawScore[b] * multiplierOf(b) - rawScore[a] * multiplierOf(a));
   return { counted: sorted.slice(0, 3), dropped: sorted.slice(3) };
 }
 
