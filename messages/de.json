@@ -63,7 +63,12 @@
     "editPredictionButton": "Ändern",
     "favoriteTeamWins": "{count, plural, one {# Sieg} other {# Siege}}",
     "favoriteTeamPodiums": "{count, plural, one {# Podest} other {# Podeste}}",
-    "nextStageTitle": "Nächste Etappe"
+    "nextStageTitle": "Nächste Etappe",
+    "seasonPicksTitle": "Saisontipps",
+    "seasonPicksHint": "Große Kugeln, beste Nachwuchsathleten, beste Nationen und deine Rohdiamanten: vor dem Saisonstart eintragen!",
+    "seasonPicksDone": "Alles eingetragen. Bis zum Saisonstart kannst du noch ändern.",
+    "seasonPicksButton": "Meine Saisontipps eingeben",
+    "seasonPicksEdit": "Meine Saisontipps ändern"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",

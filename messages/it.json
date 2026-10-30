@@ -63,7 +63,12 @@
     "editPredictionButton": "Modifica",
     "favoriteTeamWins": "{count, plural, one {# vittoria} other {# vittorie}}",
     "favoriteTeamPodiums": "{count, plural, one {# podio} other {# podi}}",
-    "nextStageTitle": "Prossima tappa"
+    "nextStageTitle": "Prossima tappa",
+    "seasonPicksTitle": "Pronostici stagionali",
+    "seasonPicksHint": "Grandi globi, migliori giovani, migliori nazioni e le tue Pepite: da inserire prima dell'inizio della stagione!",
+    "seasonPicksDone": "Tutto inserito. Puoi ancora cambiare idea fino all'inizio della stagione.",
+    "seasonPicksButton": "Inserisci i miei pronostici stagionali",
+    "seasonPicksEdit": "Modifica i miei pronostici stagionali"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",

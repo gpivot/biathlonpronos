@@ -63,7 +63,12 @@
     "editPredictionButton": "Edit",
     "favoriteTeamWins": "{count, plural, one {# win} other {# wins}}",
     "favoriteTeamPodiums": "{count, plural, one {# podium} other {# podiums}}",
-    "nextStageTitle": "Next stage"
+    "nextStageTitle": "Next stage",
+    "seasonPicksTitle": "Season predictions",
+    "seasonPicksHint": "Big globes, best young athletes, best nations and your Diamonds in the Rough: enter them before the season starts!",
+    "seasonPicksDone": "All set. You can still change your mind until the season starts.",
+    "seasonPicksButton": "Enter my season predictions",
+    "seasonPicksEdit": "Edit my season predictions"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",

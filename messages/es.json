@@ -63,7 +63,12 @@
     "editPredictionButton": "Modificar",
     "favoriteTeamWins": "{count, plural, one {# victoria} other {# victorias}}",
     "favoriteTeamPodiums": "{count, plural, one {# podio} other {# podios}}",
-    "nextStageTitle": "Próxima etapa"
+    "nextStageTitle": "Próxima etapa",
+    "seasonPicksTitle": "Pronósticos de temporada",
+    "seasonPicksHint": "Grandes globos, mejores jóvenes, mejores naciones y tus Diamantes en bruto: ¡introdúcelos antes del inicio de la temporada!",
+    "seasonPicksDone": "Todo listo. Puedes cambiar de opinión hasta el inicio de la temporada.",
+    "seasonPicksButton": "Introducir mis pronósticos de temporada",
+    "seasonPicksEdit": "Modificar mis pronósticos de temporada"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",

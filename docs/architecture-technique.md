@@ -975,3 +975,11 @@ carte de rang et le Top 5 de l'accueil. Mêmes pictos ailleurs : ⚡ devant les 
 (bouton, badges, gain), 🍾 pour « meilleur pronostiqueur » (dernier résultat) et le 1er du
 classement des joueurs d'une course, ❄️ devant la Pépite (Globes, pronostics de saison, bonus).
 Pas de SQL : tout se lit avec les droits existants.
+
+## Invitation aux pronostics de saison sur l'accueil (octobre 2026)
+
+**Demande de Guillaume** : en début de saison, tant que la 1re course n'a pas eu lieu, le bas de
+l'encadré « Saison » de l'accueil invite à saisir ses pronostics de saison (`SeasonPicksInvite`,
+compteur sur 8 = 6 globes + 2 Pépites, bouton vers `/globes`) à la place de la « Série en cours ».
+Masquée aussi dès que `/globes` se verrouille (`seasons.starts_on` passé), pour ne pas inviter
+vers une page fermée. La série reprend sa place ensuite.
