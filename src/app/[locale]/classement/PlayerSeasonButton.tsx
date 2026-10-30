@@ -4,6 +4,7 @@ import { useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { CloseIcon } from "@/components/icons";
 import { StreakCard } from "@/components/StreakCard";
+import { BonusCardsList } from "@/components/BonusCardsList";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CalendarAccordion } from "../courses/CalendarAccordion";
 import { SeasonPredictionsAccordion } from "../courses/SeasonPredictionsAccordion";
@@ -17,6 +18,7 @@ export function PlayerSeasonButton({ userId, className, children }: { userId: st
   const t = useTranslations("Classement");
   const tHome = useTranslations("Home");
   const tSex = useTranslations("Sex");
+  const tCards = useTranslations("BonusCards");
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<PlayerSeason | null>(null);
@@ -81,6 +83,14 @@ export function PlayerSeasonButton({ userId, className, children }: { userId: st
                         <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
                       </div>
                     </div>
+                    {data.cards && data.cards.cards.length > 0 && (
+                      <div className="flex flex-col gap-1.5 border-t border-border pt-2.5">
+                        <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">
+                          🃏 {tCards("title")}
+                        </div>
+                        <BonusCardsList cards={data.cards.cards} compact />
+                      </div>
+                    )}
                     {data.favoriteTeam && (
                       <div className="flex items-center gap-2 text-[13px] text-text-dim">
                         <span className="text-base">{nationFlagEmoji(data.favoriteTeam.nationCode)}</span>

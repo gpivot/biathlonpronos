@@ -18,10 +18,7 @@ export function FondueButton({ raceId, cardId }: { raceId: string; cardId: strin
 
     // La carte est rattachée à cette course : l'écran n'y affiche alors plus
     // aucun biathlète grillé (voir le calcul du grillage dans page.tsx).
-    const { error: cardError } = await supabase
-      .from("bonus_cards")
-      .update({ status: "used", used_at: new Date().toISOString(), used_on_race_id: raceId })
-      .eq("id", cardId);
+    const { error: cardError } = await supabase.rpc("play_bonus_card", { p_card_id: cardId, p_race_id: raceId });
 
     setLoading(false);
     if (cardError) {

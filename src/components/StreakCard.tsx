@@ -1,13 +1,42 @@
 import { useTranslations } from "next-intl";
 import { STREAK_TARGET } from "@/lib/scoring/constants";
+import type { PlayerCards } from "@/lib/bonusCards";
+import { BonusCardsList } from "./BonusCardsList";
+import { ClaimCardPicker } from "./ClaimCardPicker";
 
 /**
  * « Série en cours » d'un joueur : courses d'affilée avec des points, sur 10 pour une carte bonus.
- * Accueil, Ma saison et pop-up d'un joueur du Classement.
+ * Accueil, Ma saison et pop-up d'un joueur du Classement. Avec `cards` (le joueur connecté) :
+ * choix de la carte gagnée au 10/10 et rappel de ses cartes (disponibles, actives, utilisées).
  */
-export function StreakCard({ current, compact = false }: { current: number; compact?: boolean }) {
+export function StreakCard({
+  current,
+  compact = false,
+  cards,
+  seasonId,
+  autoOpenClaim = false,
+}: {
+  current: number;
+  compact?: boolean;
+  cards?: PlayerCards;
+  seasonId?: string;
+  autoOpenClaim?: boolean;
+}) {
   const t = useTranslations("Classement");
   const remaining = STREAK_TARGET - current;
+  const extras = cards && (
+    <>
+      {seasonId && cards.unclaimed > 0 && (
+        <ClaimCardPicker
+          seasonId={seasonId}
+          unclaimed={cards.unclaimed}
+          heldAvailableTypes={cards.cards.filter((c) => c.state === "available").map((c) => c.type)}
+          autoOpen={autoOpenClaim}
+        />
+      )}
+      <BonusCardsList cards={cards.cards} compact={compact} />
+    </>
+  );
 
   // Version réduite, en bas de l'encadré « Saison » de l'accueil.
   if (compact) {
@@ -26,6 +55,7 @@ export function StreakCard({ current, compact = false }: { current: number; comp
           ))}
         </div>
         <div className="text-[11px] text-text-dim">{t("streakCardRemaining", { count: remaining })}</div>
+        {extras}
       </div>
     );
   }
@@ -47,6 +77,7 @@ export function StreakCard({ current, compact = false }: { current: number; comp
       <div className="text-center font-display text-[12px] font-semibold uppercase tracking-wide text-text-dim">
         {t("streakCardRemaining", { count: remaining })}
       </div>
+      {extras}
     </div>
   );
 }

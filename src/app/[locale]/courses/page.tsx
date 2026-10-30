@@ -10,6 +10,7 @@ import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
 import { SeasonPredictionsAccordion, type SeasonPick } from "./SeasonPredictionsAccordion";
 import { StreakCard } from "@/components/StreakCard";
+import type { PlayerCards } from "@/lib/bonusCards";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,7 @@ interface CalendarData {
   /** null : visiteur non connecté. */
   seasonPicks: SeasonPick[] | null;
   streak: number | null;
+  cards: PlayerCards | null;
 }
 
 async function getCalendarData(): Promise<CalendarData> {
@@ -36,11 +38,11 @@ async function getCalendarData(): Promise<CalendarData> {
     isAdmin = profile?.is_admin ?? false;
   }
 
-  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, streak: null };
+  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, streak: null, cards: null };
 
   const { now } = await getClock();
-  const { stages, seasonPicks, streak } = await getSeasonView(supabase, season, userResult.user?.id ?? null, now);
-  return { seasonId: season.id, stages, isAdmin, seasonPicks, streak };
+  const { stages, seasonPicks, streak, cards } = await getSeasonView(supabase, season, userResult.user?.id ?? null, now);
+  return { seasonId: season.id, stages, isAdmin, seasonPicks, streak, cards };
 }
 
 export default async function CoursesPage({
@@ -54,7 +56,7 @@ export default async function CoursesPage({
   // Arrivée depuis « L'étape de la semaine » de l'accueil : cette étape est dépliée d'office.
   const { etape } = await searchParams;
   const t = await getTranslations("Courses");
-  const { seasonId, stages, isAdmin, seasonPicks, streak } = await getCalendarData();
+  const { seasonId, stages, isAdmin, seasonPicks, streak, cards } = await getCalendarData();
   const requestedStageId = etape && stages.some((s) => s.id === etape) ? etape : null;
 
   return (
@@ -75,7 +77,7 @@ export default async function CoursesPage({
 
         {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} />}
 
-        {streak != null && <StreakCard current={streak} />}
+        {streak != null && <StreakCard current={streak} cards={cards ?? undefined} seasonId={seasonId ?? undefined} />}
 
         {stages.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">

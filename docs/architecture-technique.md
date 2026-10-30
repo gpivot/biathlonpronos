@@ -759,3 +759,40 @@ le départ, et ne rien afficher tant que la liste n'est pas connue.
 - **À confirmer** : un biathlète de la liste IBU sans cote dans le jeu n'est pas pronostiquable
   (il est seulement signalé à l'admin). La restriction est faite par l'écran de pronostic, pas par
   une règle de la base (un pronostic écrit directement en base n'est pas vérifié).
+
+## Cartes bonus du 10/10 : choix, 4e choix, une carte à la fois (fin octobre 2026)
+
+**Constat de Guillaume** : Hugo a atteint 10/10, la série est repartie à 0 et rien ne s'est passé.
+Le crédit de carte était bien compté (`streak_counters.cards_earned`), mais le choix était caché en
+bas du Profil. Décisions de Guillaume (30/10/2026) :
+
+- **Choix de la carte** dans l'encadré « Série en cours » de l'accueil et de Ma saison (plus dans le
+  Profil) : bouton doré « 10/10 ! Choisis ta carte bonus » qui ouvre un pop-up ; sur l'accueil le
+  pop-up s'ouvre tout seul une fois par visite (« Plus tard » le referme). Seules deux cartes sont
+  proposées : **Ça farte** et **4e choix** (`balle_de_pioche` en base). Fondue et Chat noir restent
+  dans le code mais ne se choisissent plus.
+- **Rappel des cartes** sous la série : dorée « disponible », contour doré « active » (jouée, une
+  course couverte pas encore notée ; « active, 2/4 courses » pour le 4e choix), grisée et barrée
+  « utilisée ». Mêmes pastilles en haut du pop-up d'un joueur du Classement.
+- **4e choix** : jusqu'à 4 biathlètes (3 suffisent), les 3 meilleurs comptent, sur la course où il
+  est joué puis les suivantes de la saison, relais exclus, jusqu'à **2 courses par sexe** (4 au
+  total, moins en fin de saison). Une course oubliée compte dans les 4 (à confirmer). Les courses H et
+  F au même horaire : la course d'activation passe d'abord. (`quatriemeChoixWindow`, même règle en
+  SQL `quatrieme_choix_window`.)
+- **Ça farte** : courses individuelles seulement, ×3 jamais cumulé avec un ×2 (inchangé).
+- **Une seule carte à la fois** : pas de Ça farte sur une course couverte par un 4e choix, pas de
+  4e choix dont la fenêtre couvrirait un Ça farte déjà posé.
+- Une carte jouée est définitive (elle ne revient pas si le joueur change d'avis).
+
+**Sécurité / scoring** (migration **0021**, à coller par Guillaume) : les écritures directes dans
+`bonus_cards` (0012, 0013) sont retirées — un joueur pouvait s'attribuer n'importe quelle carte ou
+remettre une carte jouée à « disponible ». Choisir passe par `claim_bonus_card` (crédit restant
+obligatoire, Ça farte ou 4e choix seulement), jouer par `play_bonus_card` (course pas partie,
+individuelle, une carte à la fois ; sert aussi au bouton Fondue). Lecture des cartes ouverte à tous
+pour le pop-up du Classement. À la notation, ce sont les cartes jouées qui font foi
+(`resolvePredictionCard`) : sans 4e choix actif, seuls les 3 premiers biathlètes d'un pronostic
+comptent ; le ×3 ne s'applique que sur la course où Ça farte a été joué.
+
+Code : `src/lib/bonusCards.ts` (testé), `src/components/StreakCard.tsx`, `ClaimCardPicker.tsx`,
+`BonusCardsList.tsx`, formulaire de pronostic (`PredictionForm`, props `playableCards` /
+`activeCard`).
