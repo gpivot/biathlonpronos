@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Petite icône des notifications (Android l'affiche en blanc) : la cible du logo. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="3.2"
+        android:strokeLineCap="round"
+        android:pathData="M24,9a15,15 0,1 1,0 30a15,15 0,1 1,0 -30M24,2L24,9M24,39L24,46M2,24L9,24M39,24L46,24" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M24,20a4,4 0,1 1,0 8a4,4 0,1 1,0 -8z" />
+</vector>

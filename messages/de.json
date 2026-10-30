@@ -133,6 +133,10 @@
     "s_classement_body": "Zählt alle in der Saison erzielten Punkte zusammen. Der Führende trägt das Gelbe Trikot. Es gibt außerdem Nebenwertungen (Rotes Trikot) und private Ligen unter Freunden."
   },
   "Compte": {
+    "pushTitle": "📱 App-Benachrichtigungen",
+    "pushOn": "Auf diesem Telefon aktiviert",
+    "pushOff": "Deaktiviert. Erlaube sie in den Einstellungen deines Telefons, um sie zu erhalten.",
+    "pushEnable": "Benachrichtigungen aktivieren",
     "back": "← Zurück",
     "loginRequired": "Melde dich an, um auf dein Konto zuzugreifen.",
     "favoriteTeamTitle": "Lieblingsteam",

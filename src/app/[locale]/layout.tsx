@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { NavigationTracker } from "@/components/NavigationTracker";
+import { PushRegistrar } from "@/components/PushRegistrar";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
@@ -19,6 +20,9 @@ const poppins = Poppins({
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+// Plein écran sous l'encoche dans l'appli iOS / Android : les marges viennent de env(safe-area-inset-*).
+export const viewport: Viewport = { viewportFit: "cover" };
 
 export async function generateMetadata({
   params,
@@ -57,6 +61,7 @@ export default async function LocaleLayout({
         <SimulatedClockBanner />
         <NextIntlClientProvider messages={messages}>
           <NavigationTracker />
+          <PushRegistrar />
           {children}
         </NextIntlClientProvider>
       </body>
