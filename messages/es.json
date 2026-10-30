@@ -63,7 +63,8 @@
     "editPredictionButton": "Modificar",
     "favoriteTeamWins": "{count, plural, one {# victoria} other {# victorias}}",
     "favoriteTeamPodiums": "{count, plural, one {# podio} other {# podios}}",
-    "nextStageTitle": "Próxima etapa"
+    "nextStageTitle": "Próxima etapa",
+    "lastResultExtra_equipe": "Carta Equipo"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -129,7 +130,7 @@
     "s_special_title": "8. Las carreras especiales",
     "s_special_body": "Vuelta de penalización: -20 pts por cada vuelta de penalización de tus biatletas. Niebla: fuera del Top 10, un malus igual al puesto obtenido. Pillado: un malus si uno o varios de tus 3 elegidos terminan fuera del Top 10 (hasta -300), y -200 si no pronosticas nada.",
     "s_streak_title": "9. La racha 10/10 y las cartas bonus",
-    "s_streak_body": "10 carreras consecutivas sumando puntos (relevos incluidos) te dan una carta bonus a elegir: 4.ª elección (4 biatletas, cuentan las 3 mejores, en 2 carreras masculinas y 2 femeninas sin relevos) o Turbo (×3 a un biatleta en una carrera individual, nunca ×6 con un ×2). Solo una carta activa a la vez.",
+    "s_streak_body": "10 carreras consecutivas sumando puntos (relevos incluidos) te dan una carta bonus a elegir. La misma carta no se puede elegir dos veces seguidas. Deshielo (desquemar una vez a tus biatletas), Turbo (×3 a un biatleta en una carrera individual, nunca ×6 con un ×2) y 4.ª elección (4 biatletas, cuentan las 3 mejores, en 2 carreras masculinas y 2 femeninas, activa enseguida). Desde la 4.ª etapa, Rebufo (tus biatletas cuentan un puesto más arriba en una carrera). Tras el Mundial, Equipo (hasta el final de la temporada, cada biatleta de tu equipo favorito en el Top 10 te da su cuota). Solo una carta de carrera activa a la vez.",
     "s_pepite_title": "10. El Diamante en bruto",
     "s_pepite_body": "Una apuesta hecha al inicio de la temporada por un outsider de cada sexo (cuota ≥ 30). Un pronóstico oculto: en su primer Top 10 de la temporada, su puntuación de la carrera se suma como bonus y luego vuelve a ser un atleta como los demás.",
     "s_fuseegachette_title": "11. Cohete y Gatillo",
@@ -353,7 +354,10 @@
     "quatriemeChoixHint": "4.ª elección: hasta 4 biatletas, cuentan tus 3 mejores. Válida en esta carrera y las siguientes, hasta 2 carreras masculinas y 2 femeninas (sin relevos).",
     "caFarteHint": "Turbo: toca ×3 junto a uno de tus biatletas. Solo se triplican sus puntos (nunca ×6 con un ×2).",
     "quatriemeChoixActive": "carta activa: puedes elegir hasta 4 biatletas, cuentan tus 3 mejores.",
-    "caFarteActive": "carta jugada en esta carrera: toca ×3 junto al biatleta cuyos puntos se triplicarán."
+    "caFarteActive": "carta jugada en esta carrera: toca ×3 junto al biatleta cuyos puntos se triplicarán.",
+    "cardAspiration": "Rebufo",
+    "aspirationHint": "Rebufo: en esta carrera, cada uno de tus biatletas cuenta un puesto más arriba.",
+    "aspirationActive": "carta jugada en esta carrera: cada uno de tus biatletas cuenta un puesto más arriba."
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",
@@ -629,9 +633,8 @@
     "title": "Cartas bonus",
     "claimButton": "{count, plural, one {🎉 ¡10/10! Elige tu carta bonus} other {🎉 Elige tus # cartas bonus}}",
     "claimTitle": "¡Bravo, 10/10!",
-    "claimIntro": "{count, plural, one {Has sumado puntos en 10 carreras seguidas. Elige tu carta bonus y juégala cuando quieras.} other {Tienes # cartas bonus por elegir. Juégalas cuando quieras.}}",
+    "claimIntro": "{count, plural, one {Has sumado puntos en 10 carreras seguidas. Elige tu carta bonus.} other {Tienes # cartas bonus por elegir.}}",
     "choose": "Elegir",
-    "alreadyHeld": "Ya la tienes",
     "later": "Más tarde",
     "claimError": "No se pudo guardar la carta. Inténtalo de nuevo.",
     "stateAvailable": "disponible",
@@ -643,7 +646,15 @@
     "name_fondue": "Deshielo",
     "name_chat_noir": "Gato negro",
     "desc_ca_farte": "Guárdala en la mano: un ×3 a uno de tus biatletas, en la carrera individual que elijas.",
-    "desc_balle_de_pioche": "Se activa enseguida en las 4 próximas carreras individuales (2 masculinas, 2 femeninas): 4 biatletas en lugar de 3, cuentan tus 3 mejores."
+    "desc_balle_de_pioche": "Se activa enseguida en las 4 próximas carreras individuales (2 masculinas, 2 femeninas): 4 biatletas en lugar de 3, cuentan tus 3 mejores.",
+    "name_aspiration": "Rebufo",
+    "name_equipe": "Equipo",
+    "desc_fondue": "Guárdala en la mano: desquema una vez a tus biatletas, en la carrera que elijas.",
+    "desc_aspiration": "Guárdala en la mano: en una carrera individual que elijas, cada uno de tus biatletas cuenta un puesto más arriba (un 11.º pasa a 10.º y puntúa).",
+    "desc_equipe": "Se activa enseguida hasta el final de la temporada: cada biatleta de tu equipo favorito en el Top 10 (o tu nación en el Top 10 del relevo) te da una vez su cuota, aunque no lo hayas elegido.",
+    "lockedUntil_aspiration": "Desde la 4.ª etapa",
+    "lockedUntil_equipe": "Tras el Mundial",
+    "justTaken": "Elegida en tu último 10/10"
   },
   "Badges": {
     "leader": "Dorsal amarillo: líder de la clasificación",

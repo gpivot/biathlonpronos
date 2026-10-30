@@ -74,7 +74,7 @@ export default async function RacePage({
   let availableCards: { id: string; card_type: string }[] = [];
   // Cartes jouables sur cette course (une seule à la fois) et carte déjà jouée qui la couvre.
   let playableCards: { id: string; card_type: string }[] = [];
-  let activeCard: "ca_farte" | "balle_de_pioche" | null = null;
+  let activeCard: "ca_farte" | "balle_de_pioche" | "aspiration" | null = null;
   let initialBonusX2 = false;
   let initialCardTarget: string | null = null;
 
@@ -101,9 +101,18 @@ export default async function RacePage({
     const cardRows = (cards ?? []) as CardRow[];
     availableCards = cardRows.filter((c) => c.status === "available");
     const onRace = cardsOnRace(race.id, cardRows, seasonRaces);
-    activeCard = onRace.caFarte ? "ca_farte" : onRace.quatriemeChoix ? "balle_de_pioche" : null;
-    // Le 4e choix s'active tout seul quand il est choisi (0023) : seul Ça farte se joue ici.
-    playableCards = availableCards.filter((c) => c.card_type === "ca_farte" && canPlayCard("ca_farte", race.id, cardRows, seasonRaces));
+    activeCard = onRace.caFarte
+      ? "ca_farte"
+      : onRace.aspiration
+        ? "aspiration"
+        : onRace.quatriemeChoix
+          ? "balle_de_pioche"
+          : null;
+    // Le 4e choix et Équipe s'activent tout seuls quand ils sont choisis : seuls Ça farte et
+    // Aspiration se jouent ici.
+    playableCards = availableCards.filter(
+      (c) => (c.card_type === "ca_farte" || c.card_type === "aspiration") && canPlayCard(c.card_type, race.id, cardRows, seasonRaces)
+    );
     x2UsesRemaining = Math.max(0, 3 - (x2UsedCount ?? 0));
   }
 

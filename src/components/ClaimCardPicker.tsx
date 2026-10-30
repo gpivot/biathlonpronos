@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { CLAIMABLE_CARD_TYPES } from "@/lib/bonusCards";
+import type { PlayerCards } from "@/lib/bonusCards";
 import { CloseIcon } from "@/components/icons";
 
 const AUTO_OPEN_KEY = "bp-claim-card-shown";
@@ -16,12 +16,12 @@ const AUTO_OPEN_KEY = "bp-claim-card-shown";
 export function ClaimCardPicker({
   seasonId,
   unclaimed,
-  heldAvailableTypes,
+  offers,
   autoOpen = false,
 }: {
   seasonId: string;
   unclaimed: number;
-  heldAvailableTypes: string[];
+  offers: PlayerCards["offers"];
   autoOpen?: boolean;
 }) {
   const t = useTranslations("BonusCards");
@@ -29,7 +29,6 @@ export function ClaimCardPicker({
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const held = new Set(heldAvailableTypes);
 
   useEffect(() => {
     if (!autoOpen) return;
@@ -76,7 +75,7 @@ export function ClaimCardPicker({
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="flex w-full max-w-md flex-col gap-4 rounded-t-2xl border border-border bg-bg p-5 sm:rounded-2xl"
+            className="flex max-h-[90dvh] w-full max-w-md flex-col gap-4 overflow-y-auto rounded-t-2xl border border-border bg-bg p-5 sm:rounded-2xl"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex flex-col gap-1">
@@ -94,8 +93,8 @@ export function ClaimCardPicker({
             </div>
 
             <div className="flex flex-col gap-2.5">
-              {CLAIMABLE_CARD_TYPES.map((type) => {
-                const disabled = saving || held.has(type);
+              {offers.map(({ type, state }) => {
+                const disabled = saving || state !== "offered";
                 return (
                   <button
                     key={type}
@@ -110,7 +109,7 @@ export function ClaimCardPicker({
                       <span className="text-lg">🃏</span>
                       <span className="flex-1 font-display text-[15px] font-extrabold text-gold">{t(`name_${type}`)}</span>
                       <span className="font-display text-[12px] font-bold text-text-dim">
-                        {held.has(type) ? t("alreadyHeld") : t("choose")}
+                        {state === "locked" ? t(`lockedUntil_${type}`) : state === "justTaken" ? t("justTaken") : t("choose")}
                       </span>
                     </div>
                     <div className="text-[13px] leading-relaxed text-frost">{t(`desc_${type}`)}</div>

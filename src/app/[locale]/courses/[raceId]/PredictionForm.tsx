@@ -17,7 +17,7 @@ export type AthleteWithOdds = {
   value: number;
 };
 
-type CardChoice = "none" | "balle_de_pioche" | "ca_farte";
+type CardChoice = "none" | "balle_de_pioche" | "ca_farte" | "aspiration";
 
 export function PredictionForm({
   raceId,
@@ -42,7 +42,7 @@ export function PredictionForm({
   /** Cartes que le joueur peut encore jouer sur cette course (une seule carte à la fois). */
   playableCards: { id: string; card_type: string }[];
   /** Carte déjà jouée qui couvre cette course (4e choix sur sa fenêtre, ou Ça farte posé ici). */
-  activeCard: "ca_farte" | "balle_de_pioche" | null;
+  activeCard: "ca_farte" | "balle_de_pioche" | "aspiration" | null;
   initialBonusX2: boolean;
   initialCardTarget: string | null;
   x2Eligible: boolean;
@@ -75,6 +75,9 @@ export function PredictionForm({
   const grilledSet = new Set(grilledAthleteIds);
   const hasBalleDePioche = playableCards.some((c) => c.card_type === "balle_de_pioche");
   const hasCaFarte = playableCards.some((c) => c.card_type === "ca_farte");
+  const hasAspiration = playableCards.some((c) => c.card_type === "aspiration");
+  const cardLabel = (card: CardChoice) =>
+    card === "balle_de_pioche" ? t("cardBalleDePioche") : card === "aspiration" ? t("cardAspiration") : t("cardCaFarte");
   const canUseX2 = x2Eligible && (initialBonusX2 || x2UsesRemaining > 0);
   // 4e choix : jusqu'à 4 biathlètes (3 suffisent), les 3 meilleurs comptent.
   const requiredCount = cardChoice === "balle_de_pioche" ? 4 : 3;
@@ -178,11 +181,16 @@ export function PredictionForm({
       {activeCard ? (
         <div className="rounded-2xl border border-gold/40 bg-gold-soft p-3.5 text-[13px] leading-relaxed text-frost">
           <span className="font-display font-bold text-gold">
-            🃏 {activeCard === "balle_de_pioche" ? t("cardBalleDePioche") : t("cardCaFarte")}
+            🃏 {cardLabel(activeCard)}
           </span>{" "}
-          · {activeCard === "balle_de_pioche" ? t("quatriemeChoixActive") : t("caFarteActive")}
+          ·{" "}
+          {activeCard === "balle_de_pioche"
+            ? t("quatriemeChoixActive")
+            : activeCard === "aspiration"
+              ? t("aspirationActive")
+              : t("caFarteActive")}
         </div>
-      ) : (hasBalleDePioche || hasCaFarte) && (
+      ) : (hasBalleDePioche || hasCaFarte || hasAspiration) && (
         <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-3.5">
           <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
             {t("cardSectionTitle")}
@@ -192,7 +200,9 @@ export function PredictionForm({
               ? t("quatriemeChoixHint")
               : cardChoice === "ca_farte"
                 ? t("caFarteHint")
-                : t("cardHint")}
+                : cardChoice === "aspiration"
+                  ? t("aspirationHint")
+                  : t("cardHint")}
           </div>
           <div className="flex flex-wrap gap-2">
             <CardOption label={t("noCard")} active={cardChoice === "none"} onClick={() => changeCard("none")} />
@@ -208,6 +218,13 @@ export function PredictionForm({
                 label={t("cardCaFarte")}
                 active={cardChoice === "ca_farte"}
                 onClick={() => changeCard("ca_farte")}
+              />
+            )}
+            {hasAspiration && (
+              <CardOption
+                label={t("cardAspiration")}
+                active={cardChoice === "aspiration"}
+                onClick={() => changeCard("aspiration")}
               />
             )}
           </div>

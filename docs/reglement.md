@@ -191,19 +191,25 @@ Ta série continue tant qu'au moins l'un de tes trois biathlètes (ou nation) ma
 
 ## 13. Les cartes bonus
 
-Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi. Au 10/10, tu choisis toi-même ta carte. Pour l'instant, deux cartes sont proposées : le 4e choix et Ça farte. Une seule carte peut être active à la fois.
+Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi. Au 10/10, tu choisis toi-même ta carte. Une même carte ne peut pas être prise sur deux 10/10 d'affilée : si tu prends Ça farte à ton 1er 10/10, elle est grisée au 2e et redevient possible au 3e. De nouvelles cartes s'ajoutent au fil de la saison. Une seule carte de course (Ça farte, Aspiration, 4e choix) peut être active à la fois ; Fondue et Équipe se cumulent avec les autres.
 
-### 4e choix (Balle de pioche)
-Dès que tu la choisis, elle s'active automatiquement sur les 4 prochaines courses individuelles (2 hommes et 2 femmes, relais exclus) : tu peux sélectionner 4 biathlètes au lieu de 3. Mais seuls les résultats de tes 3 meilleurs biathlètes sont comptabilisés. Une sécurité précieuse lorsque tu hésites entre plusieurs favoris.
+### Fondue
+Tu peux exceptionnellement dégriller tes biathlètes. Les biathlètes utilisés sur la course précédente redeviennent immédiatement disponibles pour ton prochain pronostic. Idéal avant une poursuite. Valable une seule fois, sur la course de ton choix.
 
 ### Ça farte !
 Tu poses un ×3 sur un seul biathlète de ton choix avant une course individuelle (pas sur un relais). Seuls les points de ce biathlète sont triplés. Le reste de ton pronostic conserve son barème normal. Bonus valable une fois sur un biathlète uniquement. Tu peux la garder en main et la jouer sur la course de ton choix. Il ne se cumule pas avec un ×2 : le biathlète ciblé reste à ×3, jamais ×6.
 
-### Fondue
-Tu peux exceptionnellement dégriller tes biathlètes. Les biathlètes utilisés sur la course précédente redeviennent immédiatement disponibles pour ton prochain pronostic. Idéal avant une poursuite. Valable une seule fois.
+### 4e choix (Balle de pioche)
+Dès que tu la choisis, elle s'active automatiquement sur les 4 prochaines courses individuelles (2 hommes et 2 femmes, relais exclus) : tu peux sélectionner 4 biathlètes au lieu de 3. Mais seuls les résultats de tes 3 meilleurs biathlètes sont comptabilisés.
+
+### Aspiration (à partir de la 4e étape)
+Sur une course individuelle de ton choix, chacun de tes biathlètes compte une place plus haut : un 5e est compté 4e, un 11e devient 10e et marque, le 1er reste 1er. Les bonus Top 3 / Top 5 / Top 10 suivent ces places.
+
+### Équipe (à partir de l'étape qui suit les Mondiaux ou les JO)
+Dès que tu la choisis et jusqu'à la fin de la saison, chaque biathlète de ton équipe favorite qui termine dans le Top 10 ajoute une fois sa cote au score de la course, même si tu ne l'as pas choisi. Sur le relais hommes ou femmes de ton équipe, ta nation dans le Top 10 ajoute une fois la cote du relais. Ces points comptent pour ta série.
 
 ### Chat noir
-Une fois gagnée, cette carte permet de corriger l'un de tes pronostics de début de saison. Tu peux remplacer un seul choix Globe / Jeune par un autre biathlète. Elle permet notamment de réagir à une blessure, un forfait longue durée ou un début de saison totalement manqué. Le changement doit être effectué avant la fin de la 3e étape de la Coupe du Monde.
+Une fois gagnée, cette carte permet de corriger l'un de tes pronostics de début de saison. Tu peux remplacer un seul choix Globe / Jeune par un autre biathlète. Elle permet notamment de réagir à une blessure, un forfait longue durée ou un début de saison totalement manqué. Le changement doit être effectué avant la fin de la 3e étape de la Coupe du Monde. (Pas encore proposée.)
 
 ## 14. La pépite
 

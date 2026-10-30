@@ -14,7 +14,8 @@ export interface AthleteRaceResult {
 export type BonusCardEffect =
   | { type: "none" }
   | { type: "balle_de_pioche" } // 4 choix pronostiqués, seuls les 3 meilleurs comptent
-  | { type: "ca_farte"; targetAthleteId: string }; // ×3 sur un athlète choisi
+  | { type: "ca_farte"; targetAthleteId: string } // ×3 sur un athlète choisi
+  | { type: "aspiration" }; // chaque athlète pronostiqué compte une place plus haut
 // "fondue" (dégrillage) et "chat_noir" (correction des globes de saison)
 // n'affectent pas le calcul des points d'une course — traités ailleurs.
 

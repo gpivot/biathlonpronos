@@ -27,7 +27,15 @@ import type {
 export function computeIndividualRaceScore(
   input: IndividualRaceScoringInput
 ): IndividualRaceScoringResult {
-  const resultsByAthleteId = new Map(input.results.map((r) => [r.athleteId, r]));
+  // Carte Aspiration : chaque athlète pronostiqué remonte d'une place (le 1er reste 1er, un 11e
+  // devient 10e et marque). Les bonus de combinaison et le Prono parfait suivent ces places.
+  const results =
+    input.card.type === "aspiration"
+      ? input.results.map((r) =>
+          input.predictedAthleteIds.includes(r.athleteId) ? { ...r, rank: Math.max(1, r.rank - 1) } : r
+        )
+      : input.results;
+  const resultsByAthleteId = new Map(results.map((r) => [r.athleteId, r]));
 
   // 2. Points de base par athlète pronostiqué (cote × rang), + malus
   // "tour de péna" qui est propre à chacun des biathlètes choisis.
@@ -87,7 +95,7 @@ export function computeIndividualRaceScore(
   // Prono parfait : comparé aux 3 athlètes effectivement comptés (donc,
   // avec la Balle de pioche, aux 3 meilleurs des 4 choix — confirmé par
   // Guillaume, puisque ce seront de fait les 3 qui comptent pour l'étape).
-  const pronoParfaitBonus = computePronoParfaitBonus(counted, input.results, input.oddsByAthleteId);
+  const pronoParfaitBonus = computePronoParfaitBonus(counted, results, input.oddsByAthleteId);
   // Demande de Guillaume (octobre 2026) : le Prono parfait remplace le bonus
   // Top 3/Top 5/Top 10, il ne s'y ajoute pas.
   const combinationBonus = pronoParfaitBonus > 0 ? 0 : tierBonus;
