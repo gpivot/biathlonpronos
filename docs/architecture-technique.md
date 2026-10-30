@@ -775,6 +775,17 @@ testés). Aucun SQL : ligues, adhésions, score_ledger et pronostics verrouillé
   `getPlayerRaceResult`, course notée seulement). `PredictionBreakdown` est devenu synchrone pour
   servir aussi côté client.
 
+## Accueil : un seul encadré pour l'étape de la semaine (fin octobre 2026)
+
+À la demande de Guillaume, « L'étape de la semaine » devient un encadré unique : bandeau bleu clair
+(drapeau, lieu, dates de l'étape), puis toutes les courses de l'étape avec leur statut (À venir /
+En cours / Terminée) et, pour chacune, un déroulant (`<details>`) : le résultat détaillé
+(`ResultBody`, extrait de l'encart « Dernier résultat ») pour une course notée, sinon le pronostic
+du joueur (avec « À jouer » / « Modifier » et le compte à rebours avant le départ). La course du
+moment (`pickWeekFeature`) est dépliée d'office. **À confirmer** : quand une étape a lieu cette
+semaine, « À suivre » et « Derniers résultats » disparaissent (l'encadré les remplace) ; ils
+reviennent les semaines sans étape, sous le message de repos.
+
 ## Listes de départ poursuite et mass start (octobre 2026)
 
 **Demande de Guillaume** : n'afficher dans le pronostic que les biathlètes qui prennent vraiment

@@ -58,7 +58,8 @@
     "comboTier_top5": "Top 5",
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Nächstes Rennen",
-    "restWeek": "Die Biathleten ruhen sich aus – Zeit, deine Ski zu wachsen!"
+    "restWeek": "Die Biathleten ruhen sich aus – Zeit, deine Ski zu wachsen!",
+    "editPredictionButton": "Ändern"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",

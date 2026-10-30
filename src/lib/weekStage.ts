@@ -1,13 +1,14 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { toParisWallTime } from "./displayTimeZone";
-import { getRaceDisplayStatus } from "./raceStatus";
+import { getRaceDisplayStatus, type RaceDisplayStatus } from "./raceStatus";
 import { shortAthleteName } from "./athleteName";
 
 /**
  * Encart « L'étape de la semaine » de l'accueil : l'étape en cours (ou, à
- * défaut, celle qui commence dans les 7 prochains jours). Selon le moment, il
- * met en avant les courses en cours (avec le pronostic du joueur), le résultat
- * du jour (jusqu'à minuit) ou la prochaine course avec son compte à rebours.
+ * défaut, celle qui commence dans les 7 prochains jours) et toutes ses courses,
+ * chacune dépliable sur le pronostic du joueur ou son résultat. La course mise en
+ * avant (en cours, résultat du jour jusqu'à minuit, sinon la prochaine) est
+ * dépliée d'office.
  */
 
 export interface WeekStagePick {
@@ -21,6 +22,7 @@ export interface WeekStageRace {
   format: string;
   sex: string | null;
   locksAt: string;
+  displayStatus: RaceDisplayStatus;
   /** null : pas de pronostic enregistré. */
   picks: WeekStagePick[] | null;
 }
@@ -30,14 +32,12 @@ export interface WeekStage {
   location: string;
   countryCode: string;
   coefficient: number;
-  /** Badge : « En ce moment » (course en cours ou résultat du jour), « Prochaine course » avant le départ. */
-  badge: "now" | "next" | null;
-  /** Courses dont le départ est passé mais pas encore notées par l'admin. */
-  ongoing: WeekStageRace[];
-  /** Course notée aujourd'hui dont le résultat reste dans l'encadré jusqu'à minuit (heure de Paris). */
-  resultRaceId: string | null;
-  /** Prochaine course de l'étape, avec compte à rebours (quand rien n'est en cours ni noté aujourd'hui). */
-  nextRace: (WeekStageRace & { predicted: boolean }) | null;
+  startsOn: string;
+  endsOn: string;
+  /** Toutes les courses de l'étape, dans l'ordre chronologique. */
+  races: WeekStageRace[];
+  /** Course dépliée d'office (voir pickWeekFeature). */
+  openRaceId: string | null;
 }
 
 /** Jour de Paris ("2026-11-29") d'un instant. */
@@ -89,7 +89,7 @@ export async function getWeekStage(
   now: Date
 ): Promise<WeekStage | null> {
   const today = parisDay(now);
-  const select = "id, location, country_code, coefficient";
+  const select = "id, location, country_code, coefficient, starts_on, ends_on";
   const { data: current } = await supabase
     .from("stages")
     .select(select)
@@ -136,15 +136,12 @@ export async function getWeekStage(
       .map((p) => [p.race_id, p])
   );
 
-  const { badge, ongoingIds, resultRaceId, nextRaceId } = pickWeekFeature(races, now);
+  const { ongoingIds, resultRaceId, nextRaceId } = pickWeekFeature(races, now);
 
-  // Noms des athlètes et nations pronostiqués sur les courses en cours.
-  const ongoingPredictions = ongoingIds.map((id) => predictions.get(id)).filter(Boolean) as {
-    athlete_ids: string[] | null;
-    nation_code: string | null;
-  }[];
-  const athleteIds = ongoingPredictions.flatMap((p) => p.athlete_ids ?? []);
-  const nationCodes = ongoingPredictions.map((p) => p.nation_code).filter(Boolean) as string[];
+  // Noms des athlètes et nations pronostiqués sur les courses de l'étape.
+  const allPredictions = Array.from(predictions.values());
+  const athleteIds = allPredictions.flatMap((p) => p.athlete_ids ?? []);
+  const nationCodes = allPredictions.map((p) => p.nation_code).filter(Boolean) as string[];
   const [{ data: athletes }, { data: nations }] = await Promise.all([
     athleteIds.length
       ? supabase.from("athletes").select("id, first_name, last_name, nation_code").in("id", athleteIds)
@@ -154,10 +151,10 @@ export async function getWeekStage(
       : Promise.resolve({ data: [] as any[] }),
   ]);
 
-  const toRace = (r: RaceRow, withPicks: boolean): WeekStageRace => {
+  const toRace = (r: RaceRow): WeekStageRace => {
     const p = predictions.get(r.id);
     let picks: WeekStagePick[] | null = null;
-    if (withPicks && p) {
+    if (p) {
       picks = p.nation_code
         ? [
             {
@@ -175,7 +172,7 @@ export async function getWeekStage(
             };
           });
     }
-    return { id: r.id, format: r.format, sex: r.sex, locksAt: r.locks_at, picks };
+    return { id: r.id, format: r.format, sex: r.sex, locksAt: r.locks_at, displayStatus: getRaceDisplayStatus(r as any, now), picks };
   };
 
   return {
@@ -183,11 +180,9 @@ export async function getWeekStage(
     location: stage.location,
     countryCode: stage.country_code,
     coefficient: stage.coefficient,
-    badge,
-    ongoing: races.filter((r) => ongoingIds.includes(r.id)).map((r) => toRace(r, true)),
-    resultRaceId,
-    nextRace: nextRaceId
-      ? { ...toRace(races.find((r) => r.id === nextRaceId)!, false), predicted: predictions.has(nextRaceId) }
-      : null,
+    startsOn: stage.starts_on,
+    endsOn: stage.ends_on,
+    races: races.map(toRace),
+    openRaceId: ongoingIds[0] ?? resultRaceId ?? nextRaceId,
   };
 }
