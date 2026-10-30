@@ -644,5 +644,16 @@
     "name_chat_noir": "Gatto nero",
     "desc_ca_farte": "Tienila in mano: un ×3 su uno dei tuoi biatleti, nella gara individuale che preferisci.",
     "desc_balle_de_pioche": "Si attiva subito sulle prossime 4 gare individuali (2 maschili, 2 femminili): 4 biatleti invece di 3, contano i tuoi 3 migliori."
+  },
+  "Badges": {
+    "leader": "Pettorale giallo: leader della classifica",
+    "x2Used": "{used}/{max} bonus ×2 usati",
+    "raceWins": "{count, plural, one {# gara vinta} other {# gare vinte}} (miglior pronosticatore)",
+    "pepite": "{count, plural, one {Pepita rivelata} other {# Pepite rivelate}}",
+    "helpTitle": "Le icone dei giocatori",
+    "helpLeader": "Pettorale giallo: leader della classifica mostrata (generale o lega).",
+    "helpX2": "Bonus ×2 già usati, sui 3 della stagione.",
+    "helpWins": "Gare vinte da miglior pronosticatore.",
+    "helpPepite": "Pepita rivelata: primo Top 10 raggiunto, bonus incassato."
   }
 }

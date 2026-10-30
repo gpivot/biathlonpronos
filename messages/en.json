@@ -644,5 +644,16 @@
     "name_chat_noir": "Black Cat",
     "desc_ca_farte": "Keep it in hand: a ×3 on one of your biathletes, on the individual race of your choice.",
     "desc_balle_de_pioche": "Activates right away on the next 4 individual races (2 men's, 2 women's): 4 biathletes instead of 3, your best 3 count."
+  },
+  "Badges": {
+    "leader": "Yellow bib: standings leader",
+    "x2Used": "{used}/{max} ×2 bonuses used",
+    "raceWins": "{count, plural, one {# race won} other {# races won}} (best predictor)",
+    "pepite": "{count, plural, one {Diamond in the Rough revealed} other {# Diamonds in the Rough revealed}}",
+    "helpTitle": "Player icons",
+    "helpLeader": "Yellow bib: leader of the standings shown (overall or league).",
+    "helpX2": "×2 bonuses already used, out of 3 per season.",
+    "helpWins": "Races won as the best predictor.",
+    "helpPepite": "Diamond in the Rough revealed: it got its first Top 10 and paid its bonus."
   }
 }

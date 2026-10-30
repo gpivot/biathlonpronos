@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { CloseIcon } from "@/components/icons";
 import { StreakCard } from "@/components/StreakCard";
 import { BonusCardsList } from "@/components/BonusCardsList";
+import { PlayerBadgesRow } from "@/components/PlayerBadgesRow";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CalendarAccordion } from "../courses/CalendarAccordion";
 import { SeasonPredictionsAccordion } from "../courses/SeasonPredictionsAccordion";
@@ -56,7 +57,10 @@ export function PlayerSeasonButton({ userId, className, children }: { userId: st
             className="flex max-h-[90dvh] w-full max-w-md flex-col gap-3 overflow-hidden rounded-t-2xl border border-border bg-bg p-4 sm:rounded-2xl"
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="font-display text-base font-bold">{data?.pseudo ?? t("playerTitle")}</div>
+              <div className="flex min-w-0 items-center gap-2">
+                <div className="truncate font-display text-base font-bold">{data?.pseudo ?? t("playerTitle")}</div>
+                {data && <PlayerBadgesRow badges={data.badges} leader={data.leader} />}
+              </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}

@@ -7,6 +7,8 @@ import { HeaderActions } from "@/components/HeaderActions";
 import { LogoMark } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
+import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
+import { PlayerBadgesRow } from "@/components/PlayerBadgesRow";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { getLastResults, type LastResult } from "@/lib/lastResult";
 import { LastResultCard } from "@/components/LastResultCard";
@@ -32,6 +34,8 @@ interface HomeData {
   nowMs: number;
   nextRace: NextRace | null;
   leaderboard: LeaderboardRow[];
+  /** Pictos des joueurs (⚡ ×2, 🍾 victoires, ❄️ Pépite), par joueur. */
+  badges: Map<string, PlayerBadges>;
   favoriteTeam: { nation_code: string; sex: string; nations: { name: string } | null } | null;
   /** Étape suivant celle de la semaine (ou la prochaine à venir), encart « Prochaine étape ». */
   nextStage: NextStage | null;
@@ -52,13 +56,13 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, cards: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, cards: null };
   }
 
   const { now } = await getClock();
 
   const weekStage = user ? await getWeekStage(supabase, season.id, user.id, now) : null;
-  const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult] = await Promise.all([
+  const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges] = await Promise.all([
     supabase
       .from("races")
       .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id, starts_on)")
@@ -85,6 +89,7 @@ async function getHomeData(): Promise<HomeData> {
           weekStage.races.filter((r) => r.displayStatus === "finished").map((r) => getRaceResult(supabase, r.id, user.id))
         )
       : Promise.resolve([]),
+    getPlayerBadges(supabase, season.id),
   ]);
   const weekResults = Object.fromEntries(weekResult.filter((r): r is LastResult => r != null).map((r) => [r.raceId, r]));
   const nextRace = weekStage ? null : ((upcomingRaces ?? []) as any[])[0] ?? null;
@@ -127,6 +132,7 @@ async function getHomeData(): Promise<HomeData> {
         } as HomeData["nextRace"])
       : null,
     leaderboard,
+    badges,
     favoriteTeam,
     favoriteTeamStats,
     nextStage: nextStage as NextStage | null,
@@ -138,7 +144,7 @@ async function getHomeData(): Promise<HomeData> {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, cards }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, cards }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -195,7 +201,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
             <div className="flex items-end justify-between pt-1">
               <div>
-                <div className="font-display text-2xl font-extrabold text-frost">{rank ? `#${rank}` : "–"}</div>
+                <div className="flex items-center gap-2">
+                  <div className="font-display text-2xl font-extrabold text-frost">{rank ? `#${rank}` : "–"}</div>
+                  <PlayerBadgesRow badges={badges.get(userId)} leader={rank === 1 && points > 0} />
+                </div>
                 <div className="text-xs text-text-dim">{t("rankLabel")}</div>
               </div>
               <div className="text-right">
@@ -283,8 +292,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   >
                     {index + 1}
                   </div>
-                  <div className="flex-1 text-sm font-semibold">{row.pseudo}</div>
-                  <div className="font-display text-sm font-bold text-ice">{row.points} pts</div>
+                  <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                    <span className="max-w-full truncate text-sm font-semibold">{row.pseudo}</span>
+                    <PlayerBadgesRow badges={badges.get(row.userId)} leader={index === 0 && row.points > 0} />
+                  </div>
+                  <div className="whitespace-nowrap font-display text-sm font-bold text-ice">{row.points} pts</div>
                 </div>
               ))}
             </div>

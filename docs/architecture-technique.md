@@ -954,3 +954,24 @@ Code : `src/lib/bonusCards.ts` (testé), `src/components/StreakCard.tsx`, `Claim
   relais est « tours de péna + balles de pioche »). Le format exact renvoyé par l'IBU pour la ligne
   d'équipe n'a pas pu être vérifié (site injoignable depuis l'environnement de développement) :
   le code accepte la ligne d'équipe ou, à défaut, additionne les lignes des relayeurs.
+
+## Pictos des joueurs (octobre 2026)
+
+**Demande de Guillaume** (sur le modèle de VéloPronos) : voir d'un coup d'œil, à côté du pseudo,
+les bonus et victoires de chaque joueur. `src/lib/playerBadges.ts` + `PlayerBadgesRow` :
+
+- **Dossard jaune** (SVG `LeaderBib`, comme le leader de la Coupe du monde) : 1er du classement
+  affiché (général, ligue, étape ou course selon les filtres) avec des points. Dans la pop-up d'un
+  joueur et sur l'accueil : leader du général.
+- **⚡ 1/3** : bonus ×2 utilisés sur les 3 de la saison. Ceux joués sur une course pas encore
+  partie restent invisibles pour les autres joueurs (pronostics cachés, 0018).
+- **🍾 n** : courses gagnées, c'est-à-dire terminées meilleur pronostiqueur (plus de points sur la
+  course, depuis `score_ledger`). Ex æquo : chacun compte une victoire (à confirmer).
+- **❄️** : Pépite révélée (bonus obtenu), avec le nombre si les deux le sont. Remplace la goutte
+  du porteur d'eau de VéloPronos.
+
+Affichés dans le Classement (légende dans un « ? » à côté du titre), la pop-up d'un joueur, la
+carte de rang et le Top 5 de l'accueil. Mêmes pictos ailleurs : ⚡ devant les mentions du bonus ×2
+(bouton, badges, gain), 🍾 pour « meilleur pronostiqueur » (dernier résultat) et le 1er du
+classement des joueurs d'une course, ❄️ devant la Pépite (Globes, pronostics de saison, bonus).
+Pas de SQL : tout se lit avec les droits existants.

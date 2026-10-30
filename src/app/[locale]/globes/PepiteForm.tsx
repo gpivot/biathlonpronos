@@ -61,7 +61,7 @@ export function PepiteForm({
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4">
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-        {t("pepiteTitle")} — {sex === "F" ? tCompte("women") : tCompte("men")}
+        ❄️ {t("pepiteTitle")} — {sex === "F" ? tCompte("women") : tCompte("men")}
       </div>
       <p className="text-[12px] leading-relaxed text-text-dim">{t("pepiteHint")}</p>
 
