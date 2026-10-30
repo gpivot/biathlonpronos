@@ -158,7 +158,7 @@ export async function getSeasonCardRaces(supabase: SupabaseClient, seasonId: str
 
 /**
  * Cartes d'un joueur pour l'encadré « Série en cours » et le pop-up du Classement. Les cartes
- * d'un autre joueur sont lisibles grâce à la migration 0021.
+ * d'un autre joueur sont lisibles grâce à la migration 0022.
  */
 export async function getPlayerCards(supabase: SupabaseClient, seasonId: string, userId: string, now: Date): Promise<PlayerCards> {
   const [{ data: cards }, { data: streak }, races] = await Promise.all([

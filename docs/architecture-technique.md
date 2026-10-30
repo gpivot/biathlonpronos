@@ -784,7 +784,7 @@ bas du Profil. Décisions de Guillaume (30/10/2026) :
   4e choix dont la fenêtre couvrirait un Ça farte déjà posé.
 - Une carte jouée est définitive (elle ne revient pas si le joueur change d'avis).
 
-**Sécurité / scoring** (migration **0021**, à coller par Guillaume) : les écritures directes dans
+**Sécurité / scoring** (migration **0022**, à coller par Guillaume) : les écritures directes dans
 `bonus_cards` (0012, 0013) sont retirées — un joueur pouvait s'attribuer n'importe quelle carte ou
 remettre une carte jouée à « disponible ». Choisir passe par `claim_bonus_card` (crédit restant
 obligatoire, Ça farte ou 4e choix seulement), jouer par `play_bonus_card` (course pas partie,
