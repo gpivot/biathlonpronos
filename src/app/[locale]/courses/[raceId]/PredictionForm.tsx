@@ -174,6 +174,45 @@ export function PredictionForm({
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Carte bonus en haut du formulaire (demande de Guillaume). */}
+      {activeCard ? (
+        <div className="rounded-2xl border border-gold/40 bg-gold-soft p-3.5 text-[13px] leading-relaxed text-frost">
+          <span className="font-display font-bold text-gold">
+            🃏 {activeCard === "balle_de_pioche" ? t("cardBalleDePioche") : t("cardCaFarte")}
+          </span>{" "}
+          · {activeCard === "balle_de_pioche" ? t("quatriemeChoixActive") : t("caFarteActive")}
+        </div>
+      ) : (hasBalleDePioche || hasCaFarte) && (
+        <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-3.5">
+          <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+            {t("cardSectionTitle")}
+          </div>
+          <div className="text-[12px] leading-relaxed text-text-dim">
+            {cardChoice === "balle_de_pioche"
+              ? t("quatriemeChoixHint")
+              : cardChoice === "ca_farte"
+                ? t("caFarteHint")
+                : t("cardHint")}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <CardOption label={t("noCard")} active={cardChoice === "none"} onClick={() => changeCard("none")} />
+            {hasBalleDePioche && (
+              <CardOption
+                label={t("cardBalleDePioche")}
+                active={cardChoice === "balle_de_pioche"}
+                onClick={() => changeCard("balle_de_pioche")}
+              />
+            )}
+            {hasCaFarte && (
+              <CardOption
+                label={t("cardCaFarte")}
+                active={cardChoice === "ca_farte"}
+                onClick={() => changeCard("ca_farte")}
+              />
+            )}
+          </div>
+        </div>
+      )}
       <PredictionSummary
         picks={selected.map((id) => {
           const a = athleteById.get(id);
@@ -295,44 +334,6 @@ export function PredictionForm({
         })}
       </div>
 
-      {activeCard ? (
-        <div className="rounded-2xl border border-gold/40 bg-gold-soft p-3.5 text-[13px] leading-relaxed text-frost">
-          <span className="font-display font-bold text-gold">
-            🃏 {activeCard === "balle_de_pioche" ? t("cardBalleDePioche") : t("cardCaFarte")}
-          </span>{" "}
-          · {activeCard === "balle_de_pioche" ? t("quatriemeChoixActive") : t("caFarteActive")}
-        </div>
-      ) : (hasBalleDePioche || hasCaFarte) && (
-        <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-3.5">
-          <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-            {t("cardSectionTitle")}
-          </div>
-          <div className="text-[12px] leading-relaxed text-text-dim">
-            {cardChoice === "balle_de_pioche"
-              ? t("quatriemeChoixHint")
-              : cardChoice === "ca_farte"
-                ? t("caFarteHint")
-                : t("cardHint")}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <CardOption label={t("noCard")} active={cardChoice === "none"} onClick={() => changeCard("none")} />
-            {hasBalleDePioche && (
-              <CardOption
-                label={t("cardBalleDePioche")}
-                active={cardChoice === "balle_de_pioche"}
-                onClick={() => changeCard("balle_de_pioche")}
-              />
-            )}
-            {hasCaFarte && (
-              <CardOption
-                label={t("cardCaFarte")}
-                active={cardChoice === "ca_farte"}
-                onClick={() => changeCard("ca_farte")}
-              />
-            )}
-          </div>
-        </div>
-      )}
 
     </div>
   );
