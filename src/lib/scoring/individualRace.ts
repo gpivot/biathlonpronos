@@ -71,7 +71,7 @@ export function computeIndividualRaceScore(
         : null;
 
   // 5b. Carte "Balle de pioche" — 4 choix, seuls les 3 meilleurs comptent. Avec Ça farte posé sur
-  // un des 4, le ×3 est pris en compte pour désigner les 3 meilleurs (à confirmer).
+  // un des 4, le ×3 est pris en compte pour désigner les 3 meilleurs (confirmé).
   const { counted, dropped } = selectCountedAthletes(input.predictedAthleteIds, rawScore, input.card, (id) =>
     id === caFarteTargetId ? 3 : globalMultiplier
   );
