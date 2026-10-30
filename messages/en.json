@@ -58,7 +58,8 @@
     "comboTier_top5": "Top 5",
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Next race",
-    "restWeek": "The biathletes are resting: time to wax your skis!"
+    "restWeek": "The biathletes are resting: time to wax your skis!",
+    "editPredictionButton": "Edit"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",

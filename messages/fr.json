@@ -58,7 +58,8 @@
     "comboTier_top5": "Top 5",
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Prochaine course",
-    "restWeek": "Les biathlètes sont au repos, profites-en pour farter tes skis !"
+    "restWeek": "Les biathlètes sont au repos, profites-en pour farter tes skis !",
+    "editPredictionButton": "Modifier"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",

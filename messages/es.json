@@ -58,7 +58,8 @@
     "comboTier_top5": "Top 5",
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Próxima carrera",
-    "restWeek": "Los biatletas descansan: ¡aprovecha para encerar tus esquís!"
+    "restWeek": "Los biatletas descansan: ¡aprovecha para encerar tus esquís!",
+    "editPredictionButton": "Modificar"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",

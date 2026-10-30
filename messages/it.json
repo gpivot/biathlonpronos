@@ -58,7 +58,8 @@
     "comboTier_top5": "Top 5",
     "comboTier_top10": "Top 10",
     "nextRaceBadge": "Prossima gara",
-    "restWeek": "I biathleti riposano: approfittane per sciolinare gli sci!"
+    "restWeek": "I biathleti riposano: approfittane per sciolinare gli sci!",
+    "editPredictionButton": "Modifica"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",

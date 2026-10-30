@@ -1,117 +1,155 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { ChevronRightIcon } from "@/components/icons";
+import { ChevronDownIcon, ChevronRightIcon } from "@/components/icons";
 import { Countdown } from "@/components/Countdown";
-import { PredictedBadge } from "@/components/PredictedBadge";
-import { SingleResultCard } from "@/components/LastResultCard";
+import { ResultBody } from "@/components/LastResultCard";
+import { formatPoints } from "@/components/PredictionBreakdown";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
-import type { WeekStage } from "@/lib/weekStage";
+import type { WeekStage, WeekStageRace } from "@/lib/weekStage";
 import type { LastResult } from "@/lib/lastResult";
 
 /**
- * Encart « L'étape de la semaine » de l'accueil : courses en cours, résultat du jour (jusqu'à
- * minuit) ou prochaine course avec compte à rebours (voir pickWeekFeature).
+ * Encart « L'étape de la semaine » de l'accueil : bandeau de l'étape (drapeau, lieu, dates), puis
+ * toutes ses courses avec leur statut, chacune dépliable sur le résultat (course notée) ou le
+ * pronostic du joueur. La course du moment (cf. pickWeekFeature) est dépliée d'office.
  */
 export async function WeekStageCard({
   stage,
-  result,
+  results,
   nowMs,
   locale,
 }: {
   stage: WeekStage;
-  /** Détail du résultat du jour (stage.resultRaceId), affiché sous l'encadré. */
-  result: LastResult | null;
+  /** Résultats des courses notées, par course. */
+  results: Record<string, LastResult>;
   nowMs: number;
   locale: string;
 }) {
-  const [t, tFormat, tSex, tRace] = await Promise.all([
+  const [t, tFormat, tSex, tRace, tCourses] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
     getTranslations("Race"),
+    getTranslations("Courses"),
   ]);
-  const next = stage.nextRace;
+  const day = (date: string) =>
+    new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
 
   return (
     <div className="flex flex-col gap-2">
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("weekStageTitle")}</div>
-      <div className="overflow-hidden rounded-2xl border border-gold/30 bg-card">
-        <Link href={`/courses?etape=${stage.id}`} className="flex items-center gap-3.5 px-4 py-3.5">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">
-            {nationFlagEmoji(stage.countryCode)}
-          </div>
-          <div className="flex flex-1 flex-col gap-0.5">
-            {stage.badge && (
-              <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
-                {t(stage.badge === "now" ? "nowBadge" : "nextRaceBadge")}
-              </div>
-            )}
-            <div className="text-sm font-semibold">{stage.location}</div>
-          </div>
+      <div className="overflow-hidden rounded-2xl border border-ice/50 bg-card">
+        <Link
+          href={`/courses?etape=${stage.id}`}
+          className="flex items-center gap-2 bg-ice px-4 py-2.5 font-display text-[13px] font-bold uppercase tracking-wide text-on-ice"
+        >
+          <span className="text-base">{nationFlagEmoji(stage.countryCode)}</span>
+          <span className="flex-1 truncate">{stage.location}</span>
           {stage.coefficient === 2 && (
-            <div className="whitespace-nowrap rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
-              {t("coefficientBadge")}
-            </div>
+            <span className="whitespace-nowrap rounded-full bg-on-ice/15 px-2 py-0.5 text-[10px]">{t("coefficientBadge")}</span>
           )}
-          <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-text-dim" />
+          <span className="whitespace-nowrap font-semibold normal-case">
+            {stage.startsOn === stage.endsOn ? day(stage.startsOn) : `${day(stage.startsOn)} – ${day(stage.endsOn)}`}
+          </span>
         </Link>
 
-        {stage.ongoing.map((race) => (
-          <Link
-            key={race.id}
-            href={`/courses/${race.id}`}
-            className="flex flex-col gap-1 border-t border-border px-4 py-2.5"
-          >
-            <div className="flex items-center gap-2 text-[13px] font-semibold">
-              <span className="h-2 w-2 flex-shrink-0 animate-pulse rounded-full bg-red" />
-              <span className="font-display text-[10px] font-bold uppercase text-red">{tRace("status_ongoing")}</span>
-              <span className="flex-1 truncate">
-                {tFormat(race.format)}
-                {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
-              </span>
-            </div>
-            <div className="text-xs text-text-dim">
-              {race.picks
-                ? race.picks.map((pick) => `${nationFlagEmoji(pick.nationCode)} ${pick.name}`).join(" · ")
-                : t("weekStageNoPrediction")}
-            </div>
-          </Link>
-        ))}
+        {stage.races.length === 0 && <div className="px-4 py-3 text-[13px] text-text-dim">{tCourses("noRacesInStage")}</div>}
 
-        {next && (
-          <Link href={`/courses/${next.id}`} className="flex items-center gap-3 border-t border-border px-4 py-3">
-            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-              <div className="text-[13px] font-semibold">
-                {tFormat(next.format)}
-                {displayedSex(next) ? ` ${tSex(displayedSex(next)!)}` : ""}
-              </div>
-              <div className="text-xs text-text-dim first-letter:uppercase">
-                {new Date(next.locksAt).toLocaleString(locale, {
-                  timeZone: DISPLAY_TIME_ZONE,
-                  weekday: "long",
-                  day: "numeric",
-                  month: "short",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
-              </div>
-              {next.predicted ? (
-                <PredictedBadge label={tRace("predicted")} />
+        {stage.races.map((race) => {
+          const result = results[race.id] ?? null;
+          const points = result?.prediction?.points ?? null;
+          return (
+            <details key={race.id} open={race.id === stage.openRaceId} className="group border-t border-border first-of-type:border-t-0">
+              <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+                <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                  <div className="truncate text-sm font-semibold">
+                    {tFormat(race.format)}
+                    {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
+                  </div>
+                  <div className="text-xs text-text-dim first-letter:uppercase">
+                    {new Date(race.locksAt).toLocaleString(locale, {
+                      timeZone: DISPLAY_TIME_ZONE,
+                      weekday: "short",
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                </div>
+                {race.displayStatus === "finished" && points != null && (
+                  <div className={`whitespace-nowrap font-display text-sm font-extrabold ${points < 0 ? "text-red" : "text-gold"}`}>
+                    {formatPoints(points)}
+                  </div>
+                )}
+                <StatusPill status={race.displayStatus} label={tRace(`status_${race.displayStatus}`)} />
+                <ChevronDownIcon className="h-4 w-4 flex-shrink-0 text-text-dim transition-transform group-open:rotate-180" />
+              </summary>
+
+              {race.displayStatus === "finished" ? (
+                result ? (
+                  <div className="border-t border-border bg-bg/40">
+                    <ResultBody result={result} compact />
+                  </div>
+                ) : null
               ) : (
-                <span className="mt-1 w-fit rounded-full bg-ice px-3 py-1 font-display text-[12px] font-bold text-on-ice">
-                  {t("toPlayButton")}
-                </span>
+                <div className="flex flex-col gap-2 border-t border-border bg-bg/40 px-4 py-3">
+                  <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">{tRace("myPredictionTitle")}</div>
+                  {race.picks ? (
+                    <div className="flex flex-col gap-1">
+                      {race.picks.map((pick) => (
+                        <div key={pick.key} className="flex items-center gap-2 text-[13px]">
+                          <span>{nationFlagEmoji(pick.nationCode)}</span>
+                          <span className="truncate font-semibold">{pick.name}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-[13px] text-text-dim">{t("weekStageNoPrediction")}</div>
+                  )}
+                  <div className="flex items-center justify-between gap-3 pt-1">
+                    {race.displayStatus === "upcoming" ? (
+                      <>
+                        <Link
+                          href={`/courses/${race.id}`}
+                          className={`rounded-full px-3.5 py-1.5 font-display text-[12px] font-bold ${
+                            race.picks ? "border border-border text-ice" : "bg-ice text-on-ice"
+                          }`}
+                        >
+                          {race.picks ? t("editPredictionButton") : t("toPlayButton")}
+                        </Link>
+                        <Countdown target={race.locksAt} serverNow={nowMs} />
+                      </>
+                    ) : (
+                      <Link href={`/courses/${race.id}`} className="flex items-center gap-1 font-display text-[13px] font-bold text-ice">
+                        {t("lastResultSeeRace")}
+                        <ChevronRightIcon className="h-3.5 w-3.5" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
               )}
-            </div>
-            <div className="self-end">
-              <Countdown target={next.locksAt} serverNow={nowMs} />
-            </div>
-          </Link>
-        )}
+            </details>
+          );
+        })}
       </div>
-      {result && <SingleResultCard result={result} locale={locale} />}
+    </div>
+  );
+}
+
+const STATUS_STYLES: Record<WeekStageRace["displayStatus"], string> = {
+  upcoming: "border border-border text-text-dim",
+  ongoing: "bg-red/15 text-red",
+  finished: "bg-ice-soft text-ice",
+};
+
+function StatusPill({ status, label }: { status: WeekStageRace["displayStatus"]; label: string }) {
+  return (
+    <div className={`flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[status]}`}>
+      {status === "ongoing" && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-red" />}
+      {label}
     </div>
   );
 }

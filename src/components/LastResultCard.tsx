@@ -4,8 +4,8 @@ import { ChevronRightIcon } from "@/components/icons";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
-import type { LastResult } from "@/lib/lastResult";
-import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
+import type { LastResult, LastResultExtra, LastResultPick } from "@/lib/lastResult";
+import { FuseeGachetteBadges, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
@@ -28,15 +28,13 @@ export async function LastResultCard({ results, locale }: { results: LastResult[
 }
 
 export async function SingleResultCard({ result, locale }: { result: LastResult; locale: string }) {
-  const [t, tFormat, tSex, tCards] = await Promise.all([
+  const [t, tFormat, tSex] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
-    getTranslations("BonusCards"),
   ]);
   const sex = displayedSex(result);
   const prediction = result.prediction;
-  const isWinner = prediction?.playerRank === 1 && prediction.points > 0;
 
   return (
     <div className="overflow-hidden rounded-2xl border border-ice/50 bg-card">
@@ -65,58 +63,117 @@ export async function SingleResultCard({ result, locale }: { result: LastResult;
         )}
       </div>
 
-      <div className="flex flex-col gap-2 px-4 py-3">
-        <Link
-          href={`/courses/${result.raceId}`}
-          className="flex items-center justify-center gap-1 font-display text-[13px] font-bold text-ice"
-        >
-          {t("lastResultSeeRace")}
-          <ChevronRightIcon className="h-3.5 w-3.5" />
-        </Link>
+      <ResultBody result={result} />
+    </div>
+  );
+}
 
-        {prediction ? (
-          <>
-            {prediction.playerRank && prediction.playerCount > 0 && (
-              <div className="text-center font-display text-[14px] font-bold text-gold">
-                {isWinner ? `🏆 ${t("lastResultWinner")}` : t("lastResultPlayerRank", { rank: prediction.playerRank, count: prediction.playerCount })}
-              </div>
-            )}
+/** Détail d'un résultat (place du joueur, ×2/carte, choix, podium) : encart « Dernier résultat » et étape de la semaine. */
+export async function ResultBody({
+  result,
+  compact = false,
+}: {
+  result: LastResult;
+  /** Étape de la semaine : sans podium, choix en lignes serrées façon podium (pas d'encadrés). */
+  compact?: boolean;
+}) {
+  const [t, tCards] = await Promise.all([getTranslations("Home"), getTranslations("BonusCards")]);
+  const prediction = result.prediction;
+  const isWinner = prediction?.playerRank === 1 && prediction.points > 0;
+  return (
+    <div className="flex flex-col gap-2 px-4 py-3">
+      <Link
+        href={`/courses/${result.raceId}`}
+        className="flex items-center justify-center gap-1 font-display text-[13px] font-bold text-ice"
+      >
+        {t("lastResultSeeRace")}
+        <ChevronRightIcon className="h-3.5 w-3.5" />
+      </Link>
 
-            {(prediction.multiplier || prediction.card) && (
-              <div className="flex flex-wrap justify-center gap-1.5">
-                {/* Le ×2 n'est pas compté dans les points de chaque ligne : ce qu'il rapporte est ici. */}
-                {prediction.multiplier && (
-                  <div className="rounded-full bg-gold-soft px-2.5 py-0.5 font-display text-[11px] font-bold text-gold">
-                    {t(`lastResultMultiplier_${prediction.multiplier.kind}`, { points: formatPoints(prediction.multiplier.gain) })}
-                  </div>
-                )}
-                {prediction.card && (
-                  <div className="rounded-full bg-ice-soft px-2.5 py-0.5 font-display text-[11px] font-bold text-ice">
-                    🃏 {tCards(`name_${prediction.card}`)}
-                  </div>
-                )}
-              </div>
-            )}
+      {prediction ? (
+        <>
+          {prediction.playerRank && prediction.playerCount > 0 && (
+            <div className="text-center font-display text-[14px] font-bold text-gold">
+              {isWinner ? `🏆 ${t("lastResultWinner")}` : t("lastResultPlayerRank", { rank: prediction.playerRank, count: prediction.playerCount })}
+            </div>
+          )}
 
+          {(prediction.multiplier || prediction.card) && (
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {/* Le ×2 n'est pas compté dans les points de chaque ligne : ce qu'il rapporte est ici. */}
+              {prediction.multiplier && (
+                <div className="rounded-full bg-gold-soft px-2.5 py-0.5 font-display text-[11px] font-bold text-gold">
+                  {t(`lastResultMultiplier_${prediction.multiplier.kind}`, { points: formatPoints(prediction.multiplier.gain) })}
+                </div>
+              )}
+              {prediction.card && (
+                <div className="rounded-full bg-ice-soft px-2.5 py-0.5 font-display text-[11px] font-bold text-ice">
+                  🃏 {tCards(`name_${prediction.card}`)}
+                </div>
+              )}
+            </div>
+          )}
+
+          {compact ? (
+            <CompactPicks picks={prediction.picks} extras={prediction.extras} />
+          ) : (
             <PredictionBreakdown picks={prediction.picks} extras={prediction.extras} showLegend={false} />
-          </>
-        ) : (
-          <div className="text-center text-[13px] text-text-dim">{t("lastResultNoPrediction")}</div>
-        )}
+          )}
+        </>
+      ) : (
+        <div className="text-center text-[13px] text-text-dim">{t("lastResultNoPrediction")}</div>
+      )}
 
-        {result.podium.length > 0 && (
-          <div className="mt-1 flex flex-col gap-1 border-t border-border pt-2.5">
-            <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">{t("lastResultPodium")}</div>
-            {result.podium.map((row) => (
-              <div key={`${row.rank}-${row.name}`} className="flex items-center gap-2 text-[13px]">
-                <span>{MEDALS[row.rank - 1]}</span>
-                <span>{nationFlagEmoji(row.nationCode)}</span>
-                <span className="truncate font-semibold">{row.name}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {!compact && result.podium.length > 0 && (
+        <div className="mt-1 flex flex-col gap-1 border-t border-border pt-2.5">
+          <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">{t("lastResultPodium")}</div>
+          {result.podium.map((row) => (
+            <div key={`${row.rank}-${row.name}`} className="flex items-center gap-2 text-[13px]">
+              <span>{MEDALS[row.rank - 1]}</span>
+              <span>{nationFlagEmoji(row.nationCode)}</span>
+              <span className="truncate font-semibold">{row.name}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Choix du joueur en lignes serrées (place, drapeau, nom, pictos, points), comme le podium. */
+async function CompactPicks({ picks, extras }: { picks: LastResultPick[]; extras: LastResultExtra[] }) {
+  const t = await getTranslations("Home");
+  return (
+    <div className="flex flex-col gap-1">
+      {picks.map((pick) => (
+        <div key={pick.key} className={`flex items-center gap-2 text-[13px] ${pick.points == null ? "opacity-60" : ""}`}>
+          <span className="w-7 flex-shrink-0 font-display font-bold text-text-dim">
+            {pick.rank != null ? `${pick.rank}.` : t("lastResultUnranked")}
+          </span>
+          <span>{nationFlagEmoji(pick.nationCode)}</span>
+          <span className="flex min-w-0 flex-1 items-center gap-1 font-semibold">
+            <span className="truncate">{pick.name}</span>
+            {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
+            <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
+          </span>
+          <span
+            className={`whitespace-nowrap font-display text-[12px] font-bold ${
+              pick.points == null ? "font-semibold text-text-dim" : pick.points < 0 ? "text-red" : pick.points > 0 ? "text-gold" : "text-text-dim"
+            }`}
+          >
+            {pick.points == null ? t("lastResultNotCounted") : formatPoints(pick.points)}
+          </span>
+        </div>
+      ))}
+      {extras.map((extra) => (
+        <div key={extra.kind} className="flex items-center gap-2 text-[12px] text-text-dim">
+          <span className="w-7 flex-shrink-0 text-center">{extra.kind === "pronoParfait" ? "⭐" : extra.points < 0 ? "⚠️" : "🏅"}</span>
+          <span className="flex-1">{t(`lastResultExtra_${extra.kind}`)}</span>
+          <span className={`whitespace-nowrap font-display text-[12px] font-bold ${extra.points < 0 ? "text-red" : "text-green"}`}>
+            {formatPoints(extra.points)}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
