@@ -91,7 +91,7 @@ export async function WeekStageCard({
               {race.displayStatus === "finished" ? (
                 result ? (
                   <div className="border-t border-border bg-bg/40">
-                    <ResultBody result={result} />
+                    <ResultBody result={result} compact />
                   </div>
                 ) : null
               ) : (
