@@ -101,7 +101,7 @@ export function PlayerRaceButton({
                     </div>
                     <div className="font-display text-2xl font-extrabold text-ice">{Math.round(prediction.points * 10) / 10} pts</div>
                   </div>
-                  <PredictionBreakdown picks={prediction.picks} extras={prediction.extras} showLegend={false} />
+                  <PredictionBreakdown picks={prediction.picks} extras={prediction.extras} showLegend={false} showCalc />
                 </>
               )}
             </div>

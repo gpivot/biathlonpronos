@@ -5,7 +5,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import type { LastResult, LastResultExtra, LastResultPick } from "@/lib/lastResult";
-import { FuseeGachetteBadges, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
+import { FuseeGachetteBadges, PenaltyLine, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
 
@@ -151,10 +151,13 @@ async function CompactPicks({ picks, extras }: { picks: LastResultPick[]; extras
             {pick.rank != null ? `${pick.rank}.` : t("lastResultUnranked")}
           </span>
           <span>{nationFlagEmoji(pick.nationCode)}</span>
-          <span className="flex min-w-0 flex-1 items-center gap-1 font-semibold">
-            <span className="truncate">{pick.name}</span>
-            {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
-            <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
+          <span className="flex min-w-0 flex-1 flex-col">
+            <span className="flex min-w-0 items-center gap-1 font-semibold">
+              <span className="truncate">{pick.name}</span>
+              {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
+              <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
+            </span>
+            {pick.penalty && <PenaltyLine penalty={pick.penalty} />}
           </span>
           <span
             className={`whitespace-nowrap font-display text-[12px] font-bold ${

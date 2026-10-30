@@ -167,3 +167,34 @@ export async function RestWeekCard() {
     </div>
   );
 }
+
+export interface NextStage {
+  id: string;
+  location: string;
+  country_code: string;
+  starts_on: string;
+  ends_on: string;
+}
+
+/** Petit encart « Prochaine étape » : ouvre Ma saison sur la liste des courses de cette étape. */
+export async function NextStageCard({ stage, locale }: { stage: NextStage; locale: string }) {
+  const t = await getTranslations("Home");
+  const day = (date: string) =>
+    new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("nextStageTitle")}</div>
+      <Link
+        href={`/courses?etape=${stage.id}`}
+        className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3"
+      >
+        <span className="text-lg">{nationFlagEmoji(stage.country_code)}</span>
+        <span className="flex-1 truncate text-sm font-semibold">{stage.location}</span>
+        <span className="whitespace-nowrap text-xs text-text-dim">
+          {stage.starts_on === stage.ends_on ? day(stage.starts_on) : `${day(stage.starts_on)} – ${day(stage.ends_on)}`}
+        </span>
+        <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-text-dim" />
+      </Link>
+    </div>
+  );
+}

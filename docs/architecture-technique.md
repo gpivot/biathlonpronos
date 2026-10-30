@@ -786,6 +786,34 @@ moment (`pickWeekFeature`) est dépliée d'office. **À confirmer** : quand une 
 semaine, « À suivre » et « Derniers résultats » disparaissent (l'encadré les remplace) ; ils
 reviennent les semaines sans étape, sous le message de repos.
 
+## Course malus, retrait de Team Nation / Aspiration, équipe favorite (fin octobre 2026)
+
+- **Course malus** : le contour rouge entoure l'encadré du haut de la page de la course, avec un
+  bandeau rouge (gros picto, « Course malus · <nom> », phrase choc `Race.malusTagline_*`) et un
+  bouton « ? » qui ouvre le barème illustré de pictos (`MALUS_SCALE`, `Race.malusScale_*`). Le
+  bandeau rouge séparé disparaît.
+- **Team Nation et Aspiration retirés** (point 9 du règlement affiché, §10-11 de
+  `docs/reglement.md`) : `scoreIndividualPredictions` (`lib/admin/raceResults.ts`) passe `favoriteTeam: null` au moteur et n'ajoute plus
+  le bonus Aspiration. Les fonctions du moteur restent (testées) mais ne sont plus appelées. Les
+  sections suivantes du règlement sont renumérotées (9 à 12). Une course déjà notée garde ses
+  anciens bonus jusqu'à ce que ses résultats soient réenregistrés dans l'admin.
+- **Équipe favorite** : reste choisie en début de saison, pour le plaisir. Sur l'accueil, sous
+  « Mon équipe favorite », ses victoires (🏆) et podiums (🏅, victoires comprises) de la saison
+  (`favoriteTeamStats.ts`, testé) : biathlètes de la nation et du sexe de l'équipe, et relais de ce
+  sexe (pas les relais mixtes, **à confirmer**).
+- **Prochaine étape** : sous l'étape de la semaine, petit encart (drapeau, lieu, dates) vers Ma
+  saison, étape dépliée (`/courses?etape=…`). C'est l'étape qui suit celle de la semaine, ou la
+  prochaine à venir les semaines sans étape.
+- **Détail du calcul** (page d'une course notée seulement, et pop-up d'un joueur) : sous chaque nom,
+  en petit, « cote 8 × 25 » (cote en vigueur × multiplicateur de la place, `CalcDetail`), plus
+  « 🚀 50 » / « 🎯 20 » le cas échéant ; « cote 6 » seule hors barème.
+- **Tour de péna séparé** (demande de Guillaume) : les points d'un athlète affichés à droite sont
+  ceux qu'il rapporte sans le malus ; le malus apparaît en rouge sur une 2e ligne plus petite sous
+  son nom (« 🔁 2 tours de péna : -40 pts », `PenaltyLine`), sur l'accueil comme sur la page de la
+  course. Calcul à l'affichage (`lastResult.ts`) : tours × malus par tour, ×3 sur la cible de
+  « Ça farte » ; comme les points par choix, il est montré hors ×2 Mondiaux/JO ou bonus perso
+  (affichés à part). Le total du pronostic, lui, ne change pas.
+
 ## Listes de départ poursuite et mass start (octobre 2026)
 
 **Demande de Guillaume** : n'afficher dans le pronostic que les biathlètes qui prennent vraiment

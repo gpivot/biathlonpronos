@@ -21,7 +21,7 @@ import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
 import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
-import { SPECIAL_RULE_ICONS } from "@/lib/specialRules";
+import { MALUS_SCALE, SPECIAL_RULE_ICONS } from "@/lib/specialRules";
 import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
 import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 import { HelpButton } from "@/components/HelpButton";
@@ -233,7 +233,12 @@ export default async function RacePage({
           {showForm ? <div className="h-8 w-8 flex-shrink-0" /> : <RuleInfoButton format={race.format} />}
         </div>
 
-        <div className="flex flex-col gap-3 rounded-[18px] border border-border bg-gradient-to-br from-card2 to-card px-4 py-4">
+        {/* Course malus : contour rouge autour de l'encadré, avec le nom du malus et son « ? ». */}
+        <div
+          className={`flex flex-col gap-3 rounded-[18px] border px-4 py-4 ${
+            race.special_rule ? "border-red/70 bg-gradient-to-br from-red/15 to-card" : "border-border bg-gradient-to-br from-card2 to-card"
+          }`}
+        >
           <div className="flex items-center gap-2 font-display text-[13px] font-bold text-ice">
             <ClockIcon className="h-4 w-4" />
             {displayStatus === "upcoming"
@@ -255,6 +260,29 @@ export default async function RacePage({
             {tFormat(race.format)}
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
+          {race.special_rule && (
+            // Course malus : bandeau rouge avec gros picto, nom du malus, phrase choc et « ? » illustré.
+            <div className="flex items-center gap-3 rounded-2xl border border-red/40 bg-red/10 px-3 py-2.5">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red/20 text-xl">
+                {SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <div className="font-display text-[11px] font-bold uppercase tracking-wider text-red">
+                  {t("malusLabel")} · {tFormat(`specialRule_${race.special_rule}`)}
+                </div>
+                <div className="text-[13px] font-semibold leading-snug text-frost">{t(`malusTagline_${race.special_rule}`)}</div>
+              </div>
+              <HelpButton
+                title={`${SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"} ${tFormat(`specialRule_${race.special_rule}`)}`}
+                openLabel={t("specialRulePrefix")}
+                closeLabel={tClassement("close")}
+                items={(MALUS_SCALE[race.special_rule] ?? []).map((icon, i) => ({
+                  icon,
+                  text: t(`malusScale_${race.special_rule}_${i + 1}`),
+                }))}
+              />
+            </div>
+          )}
           {displayStatus !== "upcoming" && (
             <div className="text-xs text-text-dim first-letter:uppercase">
               {new Date(race.locks_at).toLocaleString(locale, {
@@ -268,14 +296,6 @@ export default async function RacePage({
             </div>
           )}
         </div>
-
-        {race.special_rule && (
-          <div className="rounded-2xl border border-red/50 bg-red/10 px-3.5 py-3 text-[12px] leading-relaxed text-frost">
-            {SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"} {t("specialRulePrefix")}{" "}
-            <span className="font-semibold text-red">{tFormat(`specialRule_${race.special_rule}`)}</span>{" "}
-            {t("specialRuleHint")}
-          </div>
-        )}
 
         {displayStatus === "upcoming" &&
           (!predictionsOpen ? (
@@ -409,7 +429,7 @@ export default async function RacePage({
                   {!raceResult?.prediction ? (
                     <div className="text-[13px] text-text-dim">{t("noPredictionMessage")}</div>
                   ) : (
-                    <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} showLegend={false} />
+                    <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} showLegend={false} showCalc />
                   )}
                 </div>
               </div>
