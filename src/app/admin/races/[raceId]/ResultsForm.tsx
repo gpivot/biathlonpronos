@@ -12,6 +12,7 @@ import {
   parseTimeGap,
   type ResultsCsvCandidate,
 } from "@/lib/admin/resultsCsv";
+import { formatShootings, parseShootings, shootingCount, totalMisses } from "@/lib/shootings";
 
 export interface CandidateRow extends ResultsCsvCandidate {
   id: string;
@@ -22,6 +23,7 @@ export interface CandidateRow extends ResultsCsvCandidate {
     rank: number | null;
     timeGapSeconds: number | null;
     penaltyLaps: number;
+    shootings: number[] | null;
     isFusee: boolean;
     isGachette: boolean;
   };
@@ -30,6 +32,7 @@ export interface CandidateRow extends ResultsCsvCandidate {
 interface RowState {
   rank: string;
   timeGapSeconds: string;
+  shootings: string;
   penaltyLaps: string;
   isFusee: boolean;
   isGachette: boolean;
@@ -40,6 +43,7 @@ function initialRowState(candidate: CandidateRow): RowState {
   return {
     rank: r?.rank != null ? String(r.rank) : "",
     timeGapSeconds: r?.timeGapSeconds != null ? String(r.timeGapSeconds) : "",
+    shootings: formatShootings(r?.shootings),
     penaltyLaps: r?.penaltyLaps ? String(r.penaltyLaps) : "",
     isFusee: r?.isFusee ?? false,
     isGachette: r?.isGachette ?? false,
@@ -85,7 +89,7 @@ export function ResultsForm({
   function applyCsv(csvText: string, source: string, extraWarnings: string[] = []) {
     try {
       const parsed = parseResultsCsv(csvText, mode, candidates);
-      const empty: RowState = { rank: "", timeGapSeconds: "", penaltyLaps: "", isFusee: false, isGachette: false };
+      const empty: RowState = { rank: "", timeGapSeconds: "", shootings: "", penaltyLaps: "", isFusee: false, isGachette: false };
       setRows(Object.fromEntries(candidates.map((c) => [c.id, parsed.rows[c.id] ?? empty])));
       setResult(null);
       setCsvReport({
@@ -141,6 +145,7 @@ export function ResultsForm({
         rank: Number(row.rank),
         // Virgule ou point acceptés (« 34,5 », « +1:02,3 »).
         timeGapSeconds: parseTimeGap(row.timeGapSeconds) ?? undefined,
+        shootings: parseShootings(row.shootings, shootingCount(format)) ?? undefined,
         penaltyLaps: row.penaltyLaps.trim() !== "" ? Number(row.penaltyLaps) : undefined,
         isFusee: row.isFusee,
         isGachette: row.isGachette,
@@ -177,8 +182,8 @@ export function ResultsForm({
         <div className="mt-2 border-t border-border/50 pt-3 text-xs font-semibold text-text-dim">ou importer un CSV</div>
         <p className="text-xs text-text-dim">
           {isAthleteMode
-            ? "Une ligne par athlète classé. Nom et Prénom (ou une colonne Athlète avec le nom complet) sont retrouvés sans tenir compte des accents ni de la casse ; Nation départage les homonymes. Écart en secondes ou m:ss.s (utile au sprint pour la cote poursuite), Fusée et Gâchette à « oui » (ou une colonne Fautes : 0 = Gâchette). DNF/DNS : laisser le rang vide."
-            : "Une ligne par nation classée, Nation en code à 3 lettres (NOR) ou en toutes lettres."}{" "}
+            ? "Une ligne par athlète classé. Nom et Prénom (ou une colonne Athlète avec le nom complet) sont retrouvés sans tenir compte des accents ni de la casse ; Nation départage les homonymes. Écart en secondes ou m:ss.s (utile au sprint pour la cote poursuite), Tirs = fautes tir par tir (« 0+1+0+2 », sert aussi de Tours de péna si cette colonne est vide), Fusée et Gâchette à « oui » (ou une colonne Fautes : 0 = Gâchette). DNF/DNS : laisser le rang vide."
+            : "Une ligne par nation classée, Nation en code à 3 lettres (NOR) ou en toutes lettres, Tirs = fautes de l'équipe au couché et au debout (« 2+5 »)."}{" "}
           Le CSV remplit le tableau ci-dessous : rien n&apos;est enregistré avant ta validation.
         </p>
         <code className="overflow-x-auto whitespace-nowrap rounded bg-bg px-2 py-1.5 text-[11px] text-text-dim">
@@ -219,7 +224,10 @@ export function ResultsForm({
               <th className="px-3 py-2">Cote</th>
               <th className="px-3 py-2">Rang</th>
               {showTimeGap && <th className="px-3 py-2">Écart (s)</th>}
-              {showPenaltyLaps && <th className="px-3 py-2">Tours de péna</th>}
+              <th className="px-3 py-2" title={`Fautes au tir, tir par tir (${shootingCount(format)} tirs), ex. ${shootingCount(format) === 2 ? "0+1" : "0+1+0+2"}`}>
+                Tirs
+              </th>
+              {showPenaltyLaps && <th className="px-3 py-2" title="Vide : nombre de fautes au tir">Tours de péna</th>}
               {showFusee && <th className="px-3 py-2">Fusée</th>}
               {showGachette && <th className="px-3 py-2">Gâchette</th>}
             </tr>
@@ -253,12 +261,24 @@ export function ResultsForm({
                       />
                     </td>
                   )}
+                  <td className="px-3 py-2">
+                    <input
+                      type="text"
+                      value={row.shootings}
+                      placeholder={shootingCount(format) === 2 ? "0+0" : "0+0+0+0"}
+                      onChange={(e) => updateRow(candidate.id, { shootings: e.target.value })}
+                      className={`w-24 rounded border bg-card px-2 py-1 ${
+                        row.shootings.trim() !== "" && !parseShootings(row.shootings) ? "border-red" : "border-border"
+                      }`}
+                    />
+                  </td>
                   {showPenaltyLaps && (
                     <td className="px-3 py-2">
                       <input
                         type="number"
                         min={0}
                         value={row.penaltyLaps}
+                        placeholder={String(totalMisses(parseShootings(row.shootings)) ?? "")}
                         onChange={(e) => updateRow(candidate.id, { penaltyLaps: e.target.value })}
                         className="w-16 rounded border border-border bg-card px-2 py-1"
                       />

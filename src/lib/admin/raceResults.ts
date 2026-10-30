@@ -13,6 +13,7 @@ import {
   type NationRaceResult,
 } from "@/lib/scoring";
 import { clearCurrentOdds, setCurrentOdds } from "./odds";
+import { totalMisses } from "@/lib/shootings";
 import { fetchAll } from "./fetchAll";
 import { getSeasonCardRaces, resolvePredictionCard, type CardRow } from "@/lib/bonusCards";
 
@@ -26,6 +27,8 @@ export interface ResultEntryInput {
   rank: number;
   timeGapSeconds?: number;
   penaltyLaps?: number;
+  /** Fautes au tir, une valeur par tir. */
+  shootings?: number[];
   isFusee?: boolean;
   isGachette?: boolean;
 }
@@ -64,7 +67,9 @@ export async function saveRaceResults(
         nation_code: e.nationCode ?? null,
         rank: e.rank,
         time_gap_seconds: e.timeGapSeconds ?? null,
-        penalty_laps: e.penaltyLaps ?? 0,
+        // Tours de péna = nombre de fautes au tir, repris des tirs s'ils n'ont pas été saisis à part.
+        penalty_laps: e.penaltyLaps ?? totalMisses(e.shootings) ?? 0,
+        shootings: e.shootings && e.shootings.length > 0 ? e.shootings : null,
       }))
     );
     if (error) throw new Error(error.message);
@@ -422,7 +427,8 @@ async function scoreIndividualPredictions(
     .map((r) => ({
       athleteId: r.athlete_id as string,
       rank: r.rank,
-      penaltyLaps: r.penalty_laps,
+      // Résultats où seuls les tirs ont été saisis : leurs fautes comptent comme tours de péna.
+      penaltyLaps: r.penalty_laps || totalMisses(r.shootings) || 0,
       isFusee: r.is_fusee,
       isGachette: r.is_gachette,
     }));

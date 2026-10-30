@@ -3,6 +3,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { FuseeGachetteBadges, formatPoints } from "@/components/PredictionBreakdown";
 import type { RaceResultRow } from "@/lib/lastResult";
 import type { OngoingBoardRow, RacePlayerRow } from "@/lib/racePlayers";
+import { ShootingDots } from "@/components/ShootingDots";
 import { PlayerRaceButton } from "./PlayerRaceButton";
 
 /** Ligne du classement de la course : étoile et contour doré pour le trio du Prono parfait. */
@@ -26,6 +27,7 @@ export function ResultRow({ row }: { row: RaceResultRow }) {
         {row.perfect && <span className="text-[13px]">⭐</span>}
         <FuseeGachetteBadges fusee={row.fusee} gachette={row.gachette} />
       </div>
+      <ShootingDots shootings={row.shootings} />
       {row.mine && <CheckIcon className="h-4 w-4 flex-shrink-0 text-ice" />}
       {row.points != null && (
         <div className="whitespace-nowrap font-display text-[13px] font-bold text-gold">{formatPoints(row.points)}</div>

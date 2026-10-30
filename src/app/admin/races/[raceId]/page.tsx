@@ -67,6 +67,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
                 rank: existing.rank,
                 timeGapSeconds: existing.time_gap_seconds,
                 penaltyLaps: existing.penalty_laps,
+                shootings: existing.shootings ?? null,
                 isFusee: existing.is_fusee,
                 isGachette: existing.is_gachette,
               }
@@ -101,6 +102,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
                 rank: existing.rank,
                 timeGapSeconds: existing.time_gap_seconds,
                 penaltyLaps: existing.penalty_laps,
+                shootings: existing.shootings ?? null,
                 isFusee: existing.is_fusee,
                 isGachette: existing.is_gachette,
               }

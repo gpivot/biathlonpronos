@@ -91,6 +91,8 @@ export interface RaceResult {
   rank: number;
   time_gap_seconds: number | null;
   penalty_laps: number;
+  /** Fautes au tir, une valeur par tir (null avant la migration 0024). */
+  shootings: number[] | null;
   is_fusee: boolean;
   is_gachette: boolean;
 }

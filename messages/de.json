@@ -50,6 +50,7 @@
     "lastResultExtra_pepite": "Rohdiamant-Bonus",
     "fuseeLabel": "Rakete: schnellste Laufzeit",
     "gachetteLabel": "Abzug: fehlerfreies Schießen",
+    "shootingsLabel": "Schießfehler: {shots}",
     "fuseeGachetteLegend": "🚀 Rakete +50 Pkt. · 🎯 Abzug +20 Pkt., bereits in den Punkten enthalten",
     "lastResultMultiplier_bonusX2": "×2-Bonus · {points}",
     "lastResultMultiplier_coefficient": "Koeff. ×2 · {points}",

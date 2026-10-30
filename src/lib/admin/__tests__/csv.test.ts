@@ -93,7 +93,7 @@ describe("parseResultsCsv", () => {
       candidates
     );
     expect(parsed.matched).toBe(2);
-    expect(parsed.rows.a1).toEqual({ rank: "1", timeGapSeconds: "0", penaltyLaps: "", isFusee: true, isGachette: true });
+    expect(parsed.rows.a1).toEqual({ rank: "1", timeGapSeconds: "0", shootings: "", penaltyLaps: "", isFusee: true, isGachette: true });
     expect(parsed.rows.a3.timeGapSeconds).toBe("62.5");
     expect(parsed.rows.a2).toBeUndefined();
     expect(parsed.warnings).toHaveLength(1);
@@ -116,11 +116,14 @@ describe("parseResultsCsv", () => {
 
   it("le modèle exporté se réimporte", () => {
     const csv = buildResultsCsv("athlete", candidates, {
-      a2: { rank: "1", timeGapSeconds: "0", penaltyLaps: "", isFusee: false, isGachette: true },
+      a2: { rank: "1", timeGapSeconds: "0", shootings: "0+1", penaltyLaps: "", isFusee: false, isGachette: true },
     });
     const parsed = parseResultsCsv(csv, "athlete", candidates);
     expect(parsed.matched).toBe(1);
     expect(parsed.rows.a2.isGachette).toBe(true);
+    expect(parsed.rows.a2.shootings).toBe("0+1");
+    // Tours de péna vide : repris du nombre de fautes au tir.
+    expect(parsed.rows.a2.penaltyLaps).toBe("1");
   });
 });
 

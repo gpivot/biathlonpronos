@@ -78,4 +78,42 @@ describe("ibuResultsToCsv", () => {
     expect(parsed.rows.FRA.rank).toBe("2");
     expect(parsed.warnings).toEqual([]);
   });
+
+  it("athlètes : fautes tir par tir et tours de péna (= nombre de fautes)", () => {
+    const csv = ibuResultsToCsv(
+      "athlete",
+      [
+        { Rank: "1", FamilyName: "SIMON", GivenName: "Julia", Nat: "FRA", Behind: "0.0", Shootings: "0+1+0+2", ShootingTotal: "3" },
+        { Rank: "2", FamilyName: "OEBERG", GivenName: "Elvira", Nat: "SWE", Behind: "+2.0", Shootings: "0+0+0+0" },
+      ],
+      null,
+      "poursuite"
+    );
+    const parsed = parseResultsCsv(csv, "athlete", [
+      { id: "a1", firstName: "Julia", lastName: "Simon", nationCode: "FRA" },
+      { id: "a2", firstName: "Elvira", lastName: "Öberg", nationCode: "SWE" },
+    ]);
+    expect(parsed.rows.a1).toMatchObject({ shootings: "0+1+0+2", penaltyLaps: "3", isGachette: false });
+    expect(parsed.rows.a2).toMatchObject({ shootings: "0+0+0+0", penaltyLaps: "0", isGachette: true });
+  });
+
+  it("relais : fautes de l'équipe en 2 tirs, à défaut additionnées depuis les relayeurs", () => {
+    const csv = ibuResultsToCsv(
+      "nation",
+      [
+        { Rank: "1", IsTeam: true, Nat: "NOR", Shootings: "0+1 0+2" },
+        { Rank: "2", IsTeam: true, Nat: "FRA" },
+        { Rank: "2", IsTeam: false, Leg: 1, Nat: "FRA", Shootings: "0+1 1+3" },
+        { Rank: "2", IsTeam: false, Leg: 2, Nat: "FRA", Shootings: "0+0 0+2" },
+      ],
+      null,
+      "relais_h"
+    );
+    const parsed = parseResultsCsv(csv, "nation", [
+      { id: "NOR", nationCode: "NOR" },
+      { id: "FRA", nationCode: "FRA" },
+    ]);
+    expect(parsed.rows.NOR.shootings).toBe("1+2");
+    expect(parsed.rows.FRA.shootings).toBe("1+6");
+  });
 });

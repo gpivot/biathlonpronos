@@ -23,6 +23,8 @@ export interface LastResultPick {
   /** Meilleur temps de ski (+50) / sans-faute au tir (+20), déjà inclus dans `points`. */
   fusee: boolean;
   gachette: boolean;
+  /** Fautes au tir, une valeur par tir (null : non saisies). */
+  shootings: number[] | null;
 }
 
 /** Une ligne du classement de la course, avec les points du barème (cote × rang + Fusée/Gâchette). */
@@ -34,6 +36,8 @@ export interface RaceResultRow {
   points: number | null;
   fusee: boolean;
   gachette: boolean;
+  /** Fautes au tir, une valeur par tir (null : non saisies). */
+  shootings: number[] | null;
   /** Ligne pronostiquée par le joueur. */
   mine: boolean;
   /** L'un des 3 meilleurs scores du barème : le trio du Prono parfait (courses individuelles). */
@@ -236,7 +240,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const [{ data: results }, { data: prediction }, { data: ledger }, { data: odds }] = await Promise.all([
     supabase
       .from("race_results")
-      .select("rank, athlete_id, nation_code, is_fusee, is_gachette, athletes(first_name, last_name, nation_code), nations(name)")
+      .select("rank, athlete_id, nation_code, is_fusee, is_gachette, shootings, athletes(first_name, last_name, nation_code), nations(name)")
       .eq("race_id", race.id)
       .order("rank", { ascending: true }),
     userId
@@ -284,6 +288,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     }),
     fusee: r.is_fusee,
     gachette: r.is_gachette,
+    shootings: r.shootings ?? null,
     mine: predictedKeys.has(r.athlete_id ?? r.nation_code),
   }));
   const fullResults: RaceResultRow[] = relay ? scoredRows.map((r) => ({ ...r, perfect: false })) : markPronoParfait(scoredRows);
@@ -337,6 +342,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
         caFarte: false,
         fusee: false,
         gachette: false,
+        shootings: row?.shootings ?? null,
       },
     ];
   } else {
@@ -371,6 +377,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
         caFarte: id === caFarteTargetId,
         fusee: row?.is_fusee ?? false,
         gachette: row?.is_gachette ?? false,
+        shootings: row?.shootings ?? null,
       };
     });
     // Ordre d'arrivée, les non classés à la fin (comme VéloPronos).

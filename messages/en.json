@@ -50,6 +50,7 @@
     "lastResultExtra_pepite": "Diamond bonus",
     "fuseeLabel": "Rocket: fastest ski time",
     "gachetteLabel": "Trigger: clean shooting",
+    "shootingsLabel": "Shooting misses: {shots}",
     "fuseeGachetteLegend": "🚀 Rocket +50 pts · 🎯 Trigger +20 pts, already included in the points",
     "lastResultMultiplier_bonusX2": "×2 bonus · {points}",
     "lastResultMultiplier_coefficient": "×2 coeff. · {points}",

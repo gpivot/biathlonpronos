@@ -50,6 +50,7 @@
     "lastResultExtra_pepite": "Bonus Pépite",
     "fuseeLabel": "Fusée : meilleur temps de ski",
     "gachetteLabel": "Gâchette : sans-faute au tir",
+    "shootingsLabel": "Fautes au tir : {shots}",
     "fuseeGachetteLegend": "🚀 Fusée +50 pts · 🎯 Gâchette +20 pts, déjà inclus dans les points",
     "lastResultMultiplier_bonusX2": "Bonus ×2 · {points}",
     "lastResultMultiplier_coefficient": "Coeff. ×2 · {points}",

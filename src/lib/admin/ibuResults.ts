@@ -1,6 +1,7 @@
 import { normalizeLabel, toCsv } from "./csv";
 import { ATHLETE_RESULTS_HEADERS, NATION_RESULTS_HEADERS } from "./resultsCsv";
 import { fuseeGachetteEligibility } from "../scoring/fuseeGachette";
+import { formatShootings, parseShootings, shootingCount, totalMisses } from "../shootings";
 
 /**
  * Résultats officiels lus dans le datacenter de l'IBU (biathlonresults.com, API JSON publique
@@ -36,6 +37,8 @@ export interface IbuResultRow {
   Name?: string;
   Behind?: string | null;
   ShootingTotal?: string | number | null;
+  /** Fautes tir par tir : « 0+1+0+2 » (individuel), « 0+1 1+3 » (relais : péna + pioche par tir). */
+  Shootings?: string | null;
   IBUId?: string;
   /** Liste de départ : place dans l'ordre de départ et dossard. */
   StartOrder?: string | number | null;
@@ -115,10 +118,18 @@ export function pickCompetition(
 }
 
 /**
- * Classement IBU → CSV de résultats. Gâchette = 0 faute au tir ; Fusée = meilleur temps de ski
- * (`fastestSkiIbuId`, lu dans l'analyse « temps de course » quand elle est disponible).
+ * Classement IBU → CSV de résultats. Tirs = fautes tir par tir, et leur somme en Tours de péna
+ * (nombre de fautes au tir, compté à la course « Tour de péna ») ; Gâchette = 0 faute au tir ;
+ * Fusée = meilleur temps de ski (`fastestSkiIbuId`, lu dans l'analyse « temps de course » quand
+ * elle est disponible). `format` : format de la course, pour le nombre de tirs (2 ou 4).
  */
-export function ibuResultsToCsv(mode: "athlete" | "nation", rows: IbuResultRow[], fastestSkiIbuId?: string | null): string {
+export function ibuResultsToCsv(
+  mode: "athlete" | "nation",
+  rows: IbuResultRow[],
+  fastestSkiIbuId?: string | null,
+  format?: string
+): string {
+  const count = format ? shootingCount(format) : undefined;
   const ranked = rows.filter((r) => {
     const rank = Number(r.Rank);
     if (!Number.isInteger(rank) || rank < 1 || r.IRM) return false;
@@ -127,19 +138,35 @@ export function ibuResultsToCsv(mode: "athlete" | "nation", rows: IbuResultRow[]
   });
 
   if (mode === "nation") {
-    return toCsv(NATION_RESULTS_HEADERS, ranked.map((r) => [Number(r.Rank), r.Nat]));
+    // Fautes de l'équipe : celles de sa ligne, à défaut la somme de ses relayeurs, tir par tir.
+    const legsByNation = new Map<string, number[][]>();
+    for (const r of rows) {
+      const shots = r.Leg ? parseShootings(r.Shootings, count) : null;
+      if (shots && r.Nat) legsByNation.set(r.Nat, [...(legsByNation.get(r.Nat) ?? []), shots]);
+    }
+    const teamShootings = (r: IbuResultRow) => {
+      const own = parseShootings(r.Shootings, count);
+      if (own) return own;
+      const legs = legsByNation.get(r.Nat ?? "") ?? [];
+      if (legs.length === 0 || legs.some((l) => l.length !== legs[0].length)) return null;
+      return legs[0].map((_, i) => legs.reduce((sum, l) => sum + l[i], 0));
+    };
+    return toCsv(NATION_RESULTS_HEADERS, ranked.map((r) => [Number(r.Rank), r.Nat, formatShootings(teamShootings(r))]));
   }
   return toCsv(
     ATHLETE_RESULTS_HEADERS,
     ranked.map((r) => {
-      const misses = r.ShootingTotal == null || r.ShootingTotal === "" ? null : Number(r.ShootingTotal);
+      const shots = parseShootings(r.Shootings, count);
+      const total = r.ShootingTotal == null || r.ShootingTotal === "" ? NaN : Number(r.ShootingTotal);
+      const misses = Number.isInteger(total) ? total : totalMisses(shots);
       return [
         Number(r.Rank),
         r.FamilyName ?? r.Name ?? "",
         r.GivenName ?? "",
         r.Nat,
         Number(r.Rank) === 1 ? "0" : (r.Behind ?? ""),
-        "",
+        formatShootings(shots),
+        misses ?? "",
         fastestSkiIbuId && r.IBUId === fastestSkiIbuId ? "oui" : "",
         misses === 0 ? "oui" : "",
       ];
@@ -216,7 +243,7 @@ export async function fetchIbuResults(params: IbuRaceLookup & { mode: "athlete" 
     if (!fastestSkiIbuId) warnings.push("Temps de ski indisponible : coche la Fusée à la main.");
   }
 
-  return { raceId, description, csv: ibuResultsToCsv(mode, rows, fastestSkiIbuId), warnings };
+  return { raceId, description, csv: ibuResultsToCsv(mode, rows, fastestSkiIbuId, race.format), warnings };
 }
 
 export interface IbuStartEntry {
