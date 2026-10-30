@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { CloseIcon } from "@/components/icons";
 
 /** Petit bouton « ? » qui ouvre une explication en pop-up (pictos et leur signification). */
@@ -11,7 +11,7 @@ export function HelpButton({
   closeLabel,
 }: {
   title: string;
-  items: { icon: string; text: string }[];
+  items: { icon: ReactNode; text: string }[];
   openLabel: string;
   closeLabel: string;
 }) {

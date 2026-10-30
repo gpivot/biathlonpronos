@@ -377,7 +377,7 @@ export default async function RacePage({
 
               {initialBonusX2 && (
                 <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
-                  {t("bonusX2Badge")}
+                  ⚡ {t("bonusX2Badge")}
                 </div>
               )}
             </div>
@@ -414,6 +414,7 @@ export default async function RacePage({
                     {/* Le ×2 (bonus perso ou coefficient Mondiaux/JO) est affiché ici, pas sur chaque ligne. */}
                     {multiplier && (
                       <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
+                        {multiplier.kind === "bonusX2" && "⚡ "}
                         {t(multiplier.kind === "bonusX2" ? "bonusX2Gain" : "coefficientGain", { points: formatPoints(multiplier.gain) })}
                       </div>
                     )}

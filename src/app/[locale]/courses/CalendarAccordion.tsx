@@ -148,7 +148,7 @@ export function CalendarAccordion({
                           {race.predicted && race.displayStatus === "upcoming" && <PredictedBadge label={tRace("predicted")} />}
                           {race.bonusX2 && (
                             <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
-                              {tRace("bonusX2Badge")}
+                              ⚡ {tRace("bonusX2Badge")}
                             </div>
                           )}
                           {!readOnly && race.displayStatus === "upcoming" && !race.predicted && stage.opensOn && (

@@ -116,7 +116,10 @@ export function PredictionBreakdown({
 
       {otherExtras.map((extra) => (
         <div key={extra.kind} className="flex items-center gap-2 px-3 text-[12px] text-text-dim">
-          <div className="flex-1">{t(`lastResultExtra_${extra.kind}`)}</div>
+          <div className="flex-1">
+            {extra.kind === "pepite" && "❄️ "}
+            {t(`lastResultExtra_${extra.kind}`)}
+          </div>
           <div className={`font-display font-bold ${extra.points < 0 ? "text-red" : "text-gold"}`}>{formatPoints(extra.points)}</div>
         </div>
       ))}

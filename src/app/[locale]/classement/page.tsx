@@ -6,6 +6,9 @@ import { HeaderActions } from "@/components/HeaderActions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard } from "@/lib/leaderboard";
+import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
+import { HelpButton } from "@/components/HelpButton";
+import { LeaderBib, PlayerBadgesRow } from "@/components/PlayerBadgesRow";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import {
   buildStandings,
@@ -47,10 +50,11 @@ type SearchParams = { portee?: string; ligue?: string; periode?: string; etape?:
 
 export default async function ClassementPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const query = await searchParams;
-  const [t, tFormat, tSex] = await Promise.all([
+  const [t, tFormat, tSex, tBadges] = await Promise.all([
     getTranslations("Classement"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
+    getTranslations("Badges"),
   ]);
   const raceLabel = (race: { format: string; sex: string }) =>
     race.format.startsWith("relais") ? tFormat(race.format) : `${tFormat(race.format)} ${tSex(race.sex)}`;
@@ -95,8 +99,13 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   let rows: StandingsRow[] = [];
   let showPicks = false;
   let streakLeaderboard: StreakRow[] = [];
+  let badges = new Map<string, PlayerBadges>();
   if (season && !noLeague) {
-    const members = leagueId ? await getLeagueMembers(supabase, leagueId) : null;
+    const [members, playerBadges] = await Promise.all([
+      leagueId ? getLeagueMembers(supabase, leagueId) : Promise.resolve(null),
+      getPlayerBadges(supabase, season.id),
+    ]);
+    badges = playerBadges;
     if (period === "season") {
       const [leaderboard, streaks] = await Promise.all([
         getLeaderboard(supabase, season.id),
@@ -124,6 +133,17 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
             <ArrowLeftIcon className="h-4 w-4" />
           </Link>
           <div className="font-display text-lg font-bold">{t("title")}</div>
+          <HelpButton
+            title={tBadges("helpTitle")}
+            openLabel={tBadges("helpTitle")}
+            closeLabel={t("close")}
+            items={[
+              { icon: <LeaderBib className="h-5 w-5" />, text: tBadges("helpLeader") },
+              { icon: "⚡", text: tBadges("helpX2") },
+              { icon: "🍾", text: tBadges("helpWins") },
+              { icon: "❄️", text: tBadges("helpPepite") },
+            ]}
+          />
           <HeaderActions />
         </div>
 
@@ -159,7 +179,10 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                   {row.rank}
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                  <div className="truncate text-sm font-semibold">{row.pseudo}</div>
+                  <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5">
+                    <span className="max-w-full truncate text-sm font-semibold">{row.pseudo}</span>
+                    <PlayerBadgesRow badges={badges.get(row.userId)} leader={row.rank === 1 && row.points > 0} />
+                  </div>
                   {showPicks &&
                     (row.picks && row.picks.length > 0 ? (
                       row.picks.map((pick) => (

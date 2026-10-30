@@ -94,7 +94,7 @@ export async function ResultBody({
         <>
           {prediction.playerRank && prediction.playerCount > 0 && (
             <div className="text-center font-display text-[14px] font-bold text-gold">
-              {isWinner ? `🏆 ${t("lastResultWinner")}` : t("lastResultPlayerRank", { rank: prediction.playerRank, count: prediction.playerCount })}
+              {isWinner ? `🍾 ${t("lastResultWinner")}` : t("lastResultPlayerRank", { rank: prediction.playerRank, count: prediction.playerCount })}
             </div>
           )}
 
@@ -103,6 +103,7 @@ export async function ResultBody({
               {/* Le ×2 n'est pas compté dans les points de chaque ligne : ce qu'il rapporte est ici. */}
               {prediction.multiplier && (
                 <div className="rounded-full bg-gold-soft px-2.5 py-0.5 font-display text-[11px] font-bold text-gold">
+                  {prediction.multiplier.kind === "bonusX2" && "⚡ "}
                   {t(`lastResultMultiplier_${prediction.multiplier.kind}`, { points: formatPoints(prediction.multiplier.gain) })}
                 </div>
               )}
@@ -170,7 +171,7 @@ async function CompactPicks({ picks, extras }: { picks: LastResultPick[]; extras
       ))}
       {extras.map((extra) => (
         <div key={extra.kind} className="flex items-center gap-2 text-[12px] text-text-dim">
-          <span className="w-7 flex-shrink-0 text-center">{extra.kind === "pronoParfait" ? "⭐" : extra.points < 0 ? "⚠️" : "🏅"}</span>
+          <span className="w-7 flex-shrink-0 text-center">{extra.kind === "pronoParfait" ? "⭐" : extra.kind === "pepite" ? "❄️" : extra.points < 0 ? "⚠️" : "🏅"}</span>
           <span className="flex-1">{t(`lastResultExtra_${extra.kind}`)}</span>
           <span className={`whitespace-nowrap font-display text-[12px] font-bold ${extra.points < 0 ? "text-red" : "text-green"}`}>
             {formatPoints(extra.points)}

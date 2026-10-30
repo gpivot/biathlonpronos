@@ -54,7 +54,11 @@ export function PlayerRow({ player, mine, raceId }: { player: RacePlayerRow; min
       >
         {player.rank}
       </div>
-      <div className="min-w-0 flex-1 truncate text-sm font-semibold">{player.pseudo}</div>
+      <div className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-semibold">
+        <span className="truncate">{player.pseudo}</span>
+        {/* Meilleur pronostiqueur de la course : la bouteille de champagne, comme dans le Classement. */}
+        {player.rank === 1 && player.points > 0 && <span className="text-[13px]">🍾</span>}
+      </div>
       <div className="whitespace-nowrap font-display text-[13px] font-bold text-ice">{Math.round(player.points * 10) / 10} pts</div>
     </PlayerRaceButton>
   );

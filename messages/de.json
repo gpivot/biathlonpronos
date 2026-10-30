@@ -644,5 +644,16 @@
     "name_chat_noir": "Schwarze Katze",
     "desc_ca_farte": "Behalte sie auf der Hand: ein ×3 auf einen deiner Biathleten, im Einzelrennen deiner Wahl.",
     "desc_balle_de_pioche": "Wird sofort aktiv, für die nächsten 4 Einzelrennen (2 Herren, 2 Damen): 4 statt 3 Biathleten, deine 3 besten zählen."
+  },
+  "Badges": {
+    "leader": "Gelbes Trikot: Führender der Wertung",
+    "x2Used": "{used}/{max} ×2-Boni genutzt",
+    "raceWins": "{count, plural, one {# Rennen gewonnen} other {# Rennen gewonnen}} (bester Tipper)",
+    "pepite": "{count, plural, one {Rohdiamant aufgedeckt} other {# Rohdiamanten aufgedeckt}}",
+    "helpTitle": "Die Spieler-Symbole",
+    "helpLeader": "Gelbes Trikot: Führender der angezeigten Wertung (gesamt oder Liga).",
+    "helpX2": "Bereits genutzte ×2-Boni, von 3 pro Saison.",
+    "helpWins": "Rennen, bei denen der Spieler bester Tipper war.",
+    "helpPepite": "Rohdiamant aufgedeckt: erste Top-10-Platzierung, Bonus kassiert."
   }
 }

@@ -644,5 +644,16 @@
     "name_chat_noir": "Chat noir",
     "desc_ca_farte": "À garder en main : un ×3 sur un de tes biathlètes, sur la course individuelle de ton choix.",
     "desc_balle_de_pioche": "S'active tout de suite, sur les 4 prochaines courses individuelles (2 hommes, 2 femmes) : 4 biathlètes au lieu de 3, tes 3 meilleurs comptent."
+  },
+  "Badges": {
+    "leader": "Dossard jaune : leader du classement",
+    "x2Used": "{used}/{max} bonus ×2 utilisés",
+    "raceWins": "{count, plural, one {# course gagnée} other {# courses gagnées}} (meilleur pronostiqueur)",
+    "pepite": "{count, plural, one {Pépite révélée} other {# Pépites révélées}}",
+    "helpTitle": "Les pictos des joueurs",
+    "helpLeader": "Dossard jaune : le leader du classement affiché (général ou ligue).",
+    "helpX2": "Bonus ×2 déjà utilisés sur les 3 de la saison.",
+    "helpWins": "Courses gagnées en terminant meilleur pronostiqueur.",
+    "helpPepite": "Pépite révélée : elle a fait son premier Top 10 et rapporté son bonus."
   }
 }

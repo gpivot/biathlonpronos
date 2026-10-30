@@ -41,7 +41,7 @@ export function SeasonPredictionsAccordion({ picks, readOnly = false }: { picks:
           {picks.map((pick) => (
             <div key={pick.key} className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-2.5">
               <div className="flex-1 text-[13px] text-text-dim">
-                {pick.labelKey.startsWith("category_") ? tGlobes(pick.labelKey) : t(pick.labelKey)}
+                {pick.labelKey.startsWith("category_") ? tGlobes(pick.labelKey) : `❄️ ${t(pick.labelKey)}`}
               </div>
               {pick.name ? (
                 <div className="flex items-center gap-1.5 text-[13px] font-semibold">

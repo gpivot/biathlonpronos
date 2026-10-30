@@ -644,5 +644,16 @@
     "name_chat_noir": "Gato negro",
     "desc_ca_farte": "Guárdala en la mano: un ×3 a uno de tus biatletas, en la carrera individual que elijas.",
     "desc_balle_de_pioche": "Se activa enseguida en las 4 próximas carreras individuales (2 masculinas, 2 femeninas): 4 biatletas en lugar de 3, cuentan tus 3 mejores."
+  },
+  "Badges": {
+    "leader": "Dorsal amarillo: líder de la clasificación",
+    "x2Used": "{used}/{max} bonus ×2 usados",
+    "raceWins": "{count, plural, one {# carrera ganada} other {# carreras ganadas}} (mejor pronosticador)",
+    "pepite": "{count, plural, one {Diamante en bruto revelado} other {# Diamantes en bruto revelados}}",
+    "helpTitle": "Los iconos de los jugadores",
+    "helpLeader": "Dorsal amarillo: líder de la clasificación mostrada (general o liga).",
+    "helpX2": "Bonus ×2 ya usados, de los 3 de la temporada.",
+    "helpWins": "Carreras ganadas como mejor pronosticador.",
+    "helpPepite": "Diamante en bruto revelado: logró su primer Top 10 y dio su bonus."
   }
 }

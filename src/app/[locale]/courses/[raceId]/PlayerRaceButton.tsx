@@ -87,6 +87,7 @@ export function PlayerRaceButton({
                       <div className="flex flex-wrap gap-1.5">
                         {prediction.multiplier && (
                           <div className="w-fit rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
+                            {prediction.multiplier.kind === "bonusX2" && "⚡ "}
                             {t(prediction.multiplier.kind === "bonusX2" ? "bonusX2Gain" : "coefficientGain", {
                               points: formatPoints(prediction.multiplier.gain),
                             })}

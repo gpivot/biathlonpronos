@@ -93,7 +93,7 @@ export function PredictionSummary({
           }`}
         >
           <span className="flex items-center gap-2.5">
-            <span className="font-display text-lg font-extrabold">×2</span>
+            <span className="font-display text-lg font-extrabold">⚡×2</span>
             <span className="flex flex-col">
               <span className="font-display text-[13px] font-bold">{bonusX2 ? t("bonusX2Active") : t("bonusX2Activate")}</span>
               <span className="text-[11px] opacity-80">{t("bonusX2Remaining", { count: x2Remaining })}</span>
