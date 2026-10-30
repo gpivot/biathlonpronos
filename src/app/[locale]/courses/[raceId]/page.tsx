@@ -21,7 +21,7 @@ import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
 import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
-import { SPECIAL_RULE_ICONS } from "@/lib/specialRules";
+import { MALUS_SCALE, SPECIAL_RULE_ICONS } from "@/lib/specialRules";
 import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
 import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 import { HelpButton } from "@/components/HelpButton";
@@ -261,15 +261,25 @@ export default async function RacePage({
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
           {race.special_rule && (
-            <div className="flex items-center gap-2 text-[13px]">
-              <span>{SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}</span>
-              <span className="text-text-dim">{t("specialRulePrefix")}</span>
-              <span className="font-display font-bold text-red">{tFormat(`specialRule_${race.special_rule}`)}</span>
+            // Course malus : bandeau rouge avec gros picto, nom du malus, phrase choc et « ? » illustré.
+            <div className="flex items-center gap-3 rounded-2xl border border-red/40 bg-red/10 px-3 py-2.5">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red/20 text-xl">
+                {SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <div className="font-display text-[11px] font-bold uppercase tracking-wider text-red">
+                  {t("malusLabel")} · {tFormat(`specialRule_${race.special_rule}`)}
+                </div>
+                <div className="text-[13px] font-semibold leading-snug text-frost">{t(`malusTagline_${race.special_rule}`)}</div>
+              </div>
               <HelpButton
-                title={tFormat(`specialRule_${race.special_rule}`)}
+                title={`${SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"} ${tFormat(`specialRule_${race.special_rule}`)}`}
                 openLabel={t("specialRulePrefix")}
                 closeLabel={tClassement("close")}
-                items={[{ icon: SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️", text: t(`specialRuleHelp_${race.special_rule}`) }]}
+                items={(MALUS_SCALE[race.special_rule] ?? []).map((icon, i) => ({
+                  icon,
+                  text: t(`malusScale_${race.special_rule}_${i + 1}`),
+                }))}
               />
             </div>
           )}

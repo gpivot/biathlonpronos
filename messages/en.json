@@ -303,9 +303,20 @@
     "resultsHelpGachette": "Trigger: clean shooting, +20 pts for whoever picked them.",
     "resultsHelpPerfect": "Perfect pick: the 3 athletes worth the most points. Finding all three earns +200 pts.",
     "resultsHelpMine": "Your picks, highlighted in the ranking.",
-    "specialRuleHelp_tour_de_pena": "Each penalty lap by one of your 3 biathletes costs you -20 pts. A good ranking is not enough: you also need to shoot straight.",
-    "specialRuleHelp_brouillard": "Outside the Top 10, your biathletes score negative points equal to their place: 13th → -13 pts, 48th → -48 pts.",
-    "specialRuleHelp_tes_colle": "Penalty if your picks finish outside the Top 10: 1 pick → -30 pts, 2 → -100 pts, 3 → -300 pts. Not predicting costs -200 pts, and a missing pick counts as outside the Top 10."
+    "malusLabel": "Penalty race",
+    "malusTagline_tour_de_pena": "Every penalty lap costs you points!",
+    "malusTagline_brouillard": "Outside the Top 10, the place turns into negative points!",
+    "malusTagline_tes_colle": "Outside the Top 10, you're in detention!",
+    "malusScale_tour_de_pena_1": "Clean shooting: no penalty",
+    "malusScale_tour_de_pena_2": "1 penalty lap by one of your biathletes → -20 pts",
+    "malusScale_tour_de_pena_3": "3 penalty laps → -60 pts",
+    "malusScale_brouillard_1": "In the Top 10: normal scoring",
+    "malusScale_brouillard_2": "13th → -13 pts",
+    "malusScale_brouillard_3": "48th → -48 pts",
+    "malusScale_tes_colle_1": "1 pick outside the Top 10 → -30 pts",
+    "malusScale_tes_colle_2": "2 picks outside the Top 10 → -100 pts",
+    "malusScale_tes_colle_3": "3 picks outside the Top 10 → -300 pts",
+    "malusScale_tes_colle_4": "No prediction → -200 pts (a missing pick counts as outside the Top 10)"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

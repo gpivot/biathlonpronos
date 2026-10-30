@@ -303,9 +303,20 @@
     "resultsHelpGachette": "Gâchette : sans-faute au tir, +20 pts pour qui l'a choisi.",
     "resultsHelpPerfect": "Prono parfait : les 3 biathlètes qui rapportent le plus. Les trouver tous les trois rapporte +200 pts.",
     "resultsHelpMine": "Tes choix, surlignés dans le classement.",
-    "specialRuleHelp_tour_de_pena": "Chaque tour de pénalité d'un de tes 3 biathlètes te coûte -20 pts. Un bon classement ne suffit plus : il faut aussi viser juste.",
-    "specialRuleHelp_brouillard": "Hors du Top 10, tes biathlètes rapportent des points négatifs égaux à leur place : 13e → -13 pts, 48e → -48 pts.",
-    "specialRuleHelp_tes_colle": "Malus si tes choix terminent hors du Top 10 : 1 choix → -30 pts, 2 → -100 pts, 3 → -300 pts. Ne pas pronostiquer coûte -200 pts, et un choix manquant compte comme hors Top 10."
+    "malusLabel": "Course malus",
+    "malusTagline_tour_de_pena": "Chaque tour de péna te coûte des points !",
+    "malusTagline_brouillard": "Hors du Top 10, ta place devient des points négatifs !",
+    "malusTagline_tes_colle": "Hors du Top 10, tu es collé(e) !",
+    "malusScale_tour_de_pena_1": "Sans-faute : aucun malus",
+    "malusScale_tour_de_pena_2": "1 tour de péna d'un de tes biathlètes → -20 pts",
+    "malusScale_tour_de_pena_3": "3 tours de péna → -60 pts",
+    "malusScale_brouillard_1": "Dans le Top 10 : barème normal",
+    "malusScale_brouillard_2": "13e → -13 pts",
+    "malusScale_brouillard_3": "48e → -48 pts",
+    "malusScale_tes_colle_1": "1 choix hors du Top 10 → -30 pts",
+    "malusScale_tes_colle_2": "2 choix hors du Top 10 → -100 pts",
+    "malusScale_tes_colle_3": "3 choix hors du Top 10 → -300 pts",
+    "malusScale_tes_colle_4": "Pas de pronostic → -200 pts (un choix manquant compte hors Top 10)"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

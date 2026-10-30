@@ -303,9 +303,20 @@
     "resultsHelpGachette": "Gatillo: tiro perfecto, +20 pts para quien lo eligió.",
     "resultsHelpPerfect": "Pronóstico perfecto: los 3 biatletas que más puntos dan. Acertar los tres da +200 pts.",
     "resultsHelpMine": "Tus elecciones, resaltadas en la clasificación.",
-    "specialRuleHelp_tour_de_pena": "Cada vuelta de penalización de uno de tus 3 biatletas te cuesta -20 pts. Una buena clasificación no basta: también hay que acertar.",
-    "specialRuleHelp_brouillard": "Fuera del Top 10, tus biatletas dan puntos negativos iguales a su puesto: 13.º → -13 pts, 48.º → -48 pts.",
-    "specialRuleHelp_tes_colle": "Penalización si tus elecciones terminan fuera del Top 10: 1 → -30 pts, 2 → -100 pts, 3 → -300 pts. No pronosticar cuesta -200 pts, y una elección que falta cuenta como fuera del Top 10."
+    "malusLabel": "Carrera con penalización",
+    "malusTagline_tour_de_pena": "¡Cada vuelta de penalización te cuesta puntos!",
+    "malusTagline_brouillard": "¡Fuera del Top 10, el puesto se convierte en puntos negativos!",
+    "malusTagline_tes_colle": "¡Fuera del Top 10, estás castigado!",
+    "malusScale_tour_de_pena_1": "Tiro perfecto: sin penalización",
+    "malusScale_tour_de_pena_2": "1 vuelta de penalización de uno de tus biatletas → -20 pts",
+    "malusScale_tour_de_pena_3": "3 vueltas de penalización → -60 pts",
+    "malusScale_brouillard_1": "En el Top 10: puntuación normal",
+    "malusScale_brouillard_2": "13.º → -13 pts",
+    "malusScale_brouillard_3": "48.º → -48 pts",
+    "malusScale_tes_colle_1": "1 elección fuera del Top 10 → -30 pts",
+    "malusScale_tes_colle_2": "2 elecciones fuera del Top 10 → -100 pts",
+    "malusScale_tes_colle_3": "3 elecciones fuera del Top 10 → -300 pts",
+    "malusScale_tes_colle_4": "Sin pronóstico → -200 pts (una elección que falta cuenta fuera del Top 10)"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",

@@ -51,9 +51,9 @@ export function HelpButton({
               </button>
             </div>
             <ul className="flex flex-col gap-2.5 text-[13px] font-normal normal-case leading-relaxed tracking-normal text-frost">
-              {items.map((item) => (
-                <li key={item.icon} className="flex gap-2.5">
-                  <span className="w-5 flex-shrink-0 text-center">{item.icon}</span>
+              {items.map((item, index) => (
+                <li key={`${index}-${item.icon}`} className="flex gap-2.5">
+                  <span className="min-w-5 flex-shrink-0 text-center">{item.icon}</span>
                   <span>{item.text}</span>
                 </li>
               ))}

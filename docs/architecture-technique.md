@@ -788,9 +788,10 @@ reviennent les semaines sans étape, sous le message de repos.
 
 ## Course malus, retrait de Team Nation / Aspiration, équipe favorite (fin octobre 2026)
 
-- **Course malus** : le contour rouge entoure l'encadré du haut de la page de la course (lieu, nom
-  de la course), avec le picto et le nom du malus et un bouton « ? » qui explique sa règle
-  (`Race.specialRuleHelp_*`). Le bandeau rouge séparé disparaît.
+- **Course malus** : le contour rouge entoure l'encadré du haut de la page de la course, avec un
+  bandeau rouge (gros picto, « Course malus · <nom> », phrase choc `Race.malusTagline_*`) et un
+  bouton « ? » qui ouvre le barème illustré de pictos (`MALUS_SCALE`, `Race.malusScale_*`). Le
+  bandeau rouge séparé disparaît.
 - **Team Nation et Aspiration retirés** (point 9 du règlement affiché, §10-11 de
   `docs/reglement.md`) : `scoreIndividualPredictions` (`lib/admin/raceResults.ts`) passe `favoriteTeam: null` au moteur et n'ajoute plus
   le bonus Aspiration. Les fonctions du moteur restent (testées) mais ne sont plus appelées. Les

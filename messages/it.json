@@ -303,9 +303,20 @@
     "resultsHelpGachette": "Grilletto: zero errori al tiro, +20 pti per chi l'ha scelto.",
     "resultsHelpPerfect": "Pronostico perfetto: i 3 atleti che valgono di più. Trovarli tutti e tre vale +200 pti.",
     "resultsHelpMine": "Le tue scelte, evidenziate in classifica.",
-    "specialRuleHelp_tour_de_pena": "Ogni giro di penalità di uno dei tuoi 3 biatleti ti costa -20 pti. Una buona posizione non basta: bisogna anche centrare i bersagli.",
-    "specialRuleHelp_brouillard": "Fuori dalla Top 10, i tuoi biatleti danno punti negativi pari alla loro posizione: 13° → -13 pti, 48° → -48 pti.",
-    "specialRuleHelp_tes_colle": "Malus se le tue scelte finiscono fuori dalla Top 10: 1 → -30 pti, 2 → -100 pti, 3 → -300 pti. Non pronosticare costa -200 pti e una scelta mancante conta come fuori dalla Top 10."
+    "malusLabel": "Gara malus",
+    "malusTagline_tour_de_pena": "Ogni giro di penalità ti costa punti!",
+    "malusTagline_brouillard": "Fuori dalla Top 10, la posizione diventa punti negativi!",
+    "malusTagline_tes_colle": "Fuori dalla Top 10, sei in castigo!",
+    "malusScale_tour_de_pena_1": "Zero errori: nessun malus",
+    "malusScale_tour_de_pena_2": "1 giro di penalità di uno dei tuoi biatleti → -20 pti",
+    "malusScale_tour_de_pena_3": "3 giri di penalità → -60 pti",
+    "malusScale_brouillard_1": "Nella Top 10: punteggio normale",
+    "malusScale_brouillard_2": "13° → -13 pti",
+    "malusScale_brouillard_3": "48° → -48 pti",
+    "malusScale_tes_colle_1": "1 scelta fuori dalla Top 10 → -30 pti",
+    "malusScale_tes_colle_2": "2 scelte fuori dalla Top 10 → -100 pti",
+    "malusScale_tes_colle_3": "3 scelte fuori dalla Top 10 → -300 pti",
+    "malusScale_tes_colle_4": "Nessun pronostico → -200 pti (una scelta mancante conta fuori dalla Top 10)"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",
