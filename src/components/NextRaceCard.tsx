@@ -14,15 +14,18 @@ export interface NextRace {
   stages: { location: string; country_code: string };
   /** Le joueur connecté a déjà déposé un pronostic sur cette course. */
   predicted: boolean;
+  /** Jour d'ouverture des pronostics de l'étape ("2027-01-02") s'ils sont encore fermés. */
+  opensOn: string | null;
 }
 
 /** Encart « À suivre » de l'accueil : la prochaine course, avec compte à rebours jusqu'au départ. */
 export async function NextRaceCard({ race, nowMs, locale }: { race: NextRace; nowMs: number; locale: string }) {
-  const [t, tFormat, tSex, tRace] = await Promise.all([
+  const [t, tFormat, tSex, tRace, tCourses] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
     getTranslations("Race"),
+    getTranslations("Courses"),
   ]);
 
   return (
@@ -43,6 +46,12 @@ export async function NextRaceCard({ race, nowMs, locale }: { race: NextRace; no
           </div>
           {race.predicted ? (
             <PredictedBadge label={tRace("predicted")} />
+          ) : race.opensOn ? (
+            <span className="mt-1 w-fit whitespace-nowrap rounded-full border border-border px-3 py-1 font-display text-[11px] font-bold text-text-dim">
+              {tCourses("opensOn", {
+                date: new Date(`${race.opensOn}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" }),
+              })}
+            </span>
           ) : (
             <span className="mt-1 w-fit rounded-full bg-ice px-3 py-1 font-display text-[12px] font-bold text-on-ice">
               {t("toPlayButton")}

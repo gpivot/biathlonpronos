@@ -56,7 +56,9 @@
     "comboBonusLabel": "Bonus",
     "comboTier_top3": "Top 3",
     "comboTier_top5": "Top 5",
-    "comboTier_top10": "Top 10"
+    "comboTier_top10": "Top 10",
+    "nextRaceBadge": "Próxima carrera",
+    "restWeek": "Los biatletas descansan: ¡aprovecha para encerar tus esquís!"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -243,7 +245,8 @@
     "seasonPredictionsLink": "Ver o modificar mis pronósticos de temporada",
     "pepite_F": "Mi Diamante en bruto femenino",
     "pepite_H": "Mi Diamante en bruto masculino",
-    "specialRaceBanner": "Carrera malus · {name}"
+    "specialRaceBanner": "Carrera malus · {name}",
+    "opensOn": "Abre el {date}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -289,7 +292,14 @@
     "ongoingBoardTitle": "Clasificación general · pronósticos de esta carrera",
     "ongoingNoPrediction": "Sin pronóstico",
     "previousRace": "Anterior",
-    "nextRace": "Siguiente"
+    "nextRace": "Siguiente",
+    "predictionsOpenOn": "La lista de biatletas estará disponible el {date}, 7 días antes de la etapa.",
+    "playerNoPrediction": "Sin pronóstico en esta carrera.",
+    "resultsHelpTitle": "Iconos de la clasificación",
+    "resultsHelpFusee": "Cohete: mejor tiempo de esquí de la carrera, +50 pts para quien lo eligió.",
+    "resultsHelpGachette": "Gatillo: tiro perfecto, +20 pts para quien lo eligió.",
+    "resultsHelpPerfect": "Pronóstico perfecto: los 3 biatletas que más puntos dan. Acertar los tres da +200 pts.",
+    "resultsHelpMine": "Tus elecciones, resaltadas en la clasificación."
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",

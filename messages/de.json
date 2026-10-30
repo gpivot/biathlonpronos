@@ -56,7 +56,9 @@
     "comboBonusLabel": "Bonus",
     "comboTier_top3": "Top 3",
     "comboTier_top5": "Top 5",
-    "comboTier_top10": "Top 10"
+    "comboTier_top10": "Top 10",
+    "nextRaceBadge": "Nächstes Rennen",
+    "restWeek": "Die Biathleten ruhen sich aus – Zeit, deine Ski zu wachsen!"
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
@@ -243,7 +245,8 @@
     "seasonPredictionsLink": "Saisontipps ansehen oder ändern",
     "pepite_F": "Mein Rohdiamant Frauen",
     "pepite_H": "Mein Rohdiamant Männer",
-    "specialRaceBanner": "Malus-Rennen · {name}"
+    "specialRaceBanner": "Malus-Rennen · {name}",
+    "opensOn": "Ab {date}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -289,7 +292,14 @@
     "ongoingBoardTitle": "Gesamtwertung · Tipps für dieses Rennen",
     "ongoingNoPrediction": "Kein Tipp",
     "previousRace": "Vorh. Rennen",
-    "nextRace": "Nächstes"
+    "nextRace": "Nächstes",
+    "predictionsOpenOn": "Die Athletenliste ist ab {date} verfügbar, 7 Tage vor der Etappe.",
+    "playerNoPrediction": "Kein Tipp für dieses Rennen.",
+    "resultsHelpTitle": "Symbole der Rangliste",
+    "resultsHelpFusee": "Rakete: schnellste Laufzeit des Rennens, +50 Pkt. für alle, die sie gewählt haben.",
+    "resultsHelpGachette": "Abzug: fehlerfrei am Schießstand, +20 Pkt. für alle, die sie gewählt haben.",
+    "resultsHelpPerfect": "Perfekter Tipp: die 3 Athleten mit den meisten Punkten. Alle drei zu finden bringt +200 Pkt.",
+    "resultsHelpMine": "Deine Wahl, in der Rangliste hervorgehoben."
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",

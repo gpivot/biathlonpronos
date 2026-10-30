@@ -56,7 +56,9 @@
     "comboBonusLabel": "Bonus",
     "comboTier_top3": "Top 3",
     "comboTier_top5": "Top 5",
-    "comboTier_top10": "Top 10"
+    "comboTier_top10": "Top 10",
+    "nextRaceBadge": "Prochaine course",
+    "restWeek": "Les biathlètes sont au repos, profites-en pour farter tes skis !"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
@@ -243,7 +245,8 @@
     "seasonPredictionsLink": "Voir ou modifier mes pronostics de saison",
     "pepite_F": "Ma Pépite Femmes",
     "pepite_H": "Ma Pépite Hommes",
-    "specialRaceBanner": "Course malus · {name}"
+    "specialRaceBanner": "Course malus · {name}",
+    "opensOn": "Ouvre le {date}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -289,7 +292,14 @@
     "ongoingBoardTitle": "Classement général · pronostics sur cette course",
     "ongoingNoPrediction": "Pas de pronostic",
     "previousRace": "Course préc.",
-    "nextRace": "Course suiv."
+    "nextRace": "Course suiv.",
+    "predictionsOpenOn": "La liste des biathlètes sera disponible le {date}, 7 jours avant l'étape.",
+    "playerNoPrediction": "Pas de pronostic sur cette course.",
+    "resultsHelpTitle": "Les pictos du classement",
+    "resultsHelpFusee": "Fusée : meilleur temps de ski de la course, +50 pts pour qui l'a choisi.",
+    "resultsHelpGachette": "Gâchette : sans-faute au tir, +20 pts pour qui l'a choisi.",
+    "resultsHelpPerfect": "Prono parfait : les 3 biathlètes qui rapportent le plus. Les trouver tous les trois rapporte +200 pts.",
+    "resultsHelpMine": "Tes choix, surlignés dans le classement."
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

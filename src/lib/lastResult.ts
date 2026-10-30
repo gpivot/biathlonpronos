@@ -206,7 +206,9 @@ export async function getLastResults(
   supabase: SupabaseClient,
   seasonId: string,
   userId: string,
-  now: Date
+  now: Date,
+  /** Résultat du jour déjà affiché dans « L'étape de la semaine » : il ne bascule ici qu'à minuit. */
+  excludeRaceId: string | null = null
 ): Promise<LastResult[]> {
   // Quelques courses suffisent : au plus une par catégorie dans les 48 h.
   const { data: races } = await supabase
@@ -217,7 +219,7 @@ export async function getLastResults(
     .lte("locks_at", now.toISOString())
     .order("locks_at", { ascending: false })
     .limit(12);
-  const picked = pickLastResultRaces((races ?? []) as any[], now);
+  const picked = pickLastResultRaces(((races ?? []) as any[]).filter((r) => r.id !== excludeRaceId), now);
   return Promise.all(picked.map((race) => buildRaceResult(supabase, race, userId)));
 }
 

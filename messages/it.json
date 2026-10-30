@@ -56,7 +56,9 @@
     "comboBonusLabel": "Bonus",
     "comboTier_top3": "Top 3",
     "comboTier_top5": "Top 5",
-    "comboTier_top10": "Top 10"
+    "comboTier_top10": "Top 10",
+    "nextRaceBadge": "Prossima gara",
+    "restWeek": "I biathleti riposano: approfittane per sciolinare gli sci!"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",
@@ -243,7 +245,8 @@
     "seasonPredictionsLink": "Vedi o modifica i miei pronostici di stagione",
     "pepite_F": "La mia Pepita donne",
     "pepite_H": "La mia Pepita uomini",
-    "specialRaceBanner": "Gara malus · {name}"
+    "specialRaceBanner": "Gara malus · {name}",
+    "opensOn": "Apre il {date}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -289,7 +292,14 @@
     "ongoingBoardTitle": "Classifica generale · pronostici su questa gara",
     "ongoingNoPrediction": "Nessun pronostico",
     "previousRace": "Precedente",
-    "nextRace": "Successiva"
+    "nextRace": "Successiva",
+    "predictionsOpenOn": "La lista degli atleti sarà disponibile il {date}, 7 giorni prima della tappa.",
+    "playerNoPrediction": "Nessun pronostico su questa gara.",
+    "resultsHelpTitle": "Le icone della classifica",
+    "resultsHelpFusee": "Razzo: miglior tempo sugli sci della gara, +50 pti per chi l'ha scelto.",
+    "resultsHelpGachette": "Grilletto: zero errori al tiro, +20 pti per chi l'ha scelto.",
+    "resultsHelpPerfect": "Pronostico perfetto: i 3 atleti che valgono di più. Trovarli tutti e tre vale +200 pti.",
+    "resultsHelpMine": "Le tue scelte, evidenziate in classifica."
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",

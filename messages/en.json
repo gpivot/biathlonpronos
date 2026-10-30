@@ -56,7 +56,9 @@
     "comboBonusLabel": "Bonus",
     "comboTier_top3": "Top 3",
     "comboTier_top5": "Top 5",
-    "comboTier_top10": "Top 10"
+    "comboTier_top10": "Top 10",
+    "nextRaceBadge": "Next race",
+    "restWeek": "The biathletes are resting: time to wax your skis!"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -243,7 +245,8 @@
     "seasonPredictionsLink": "See or edit my season predictions",
     "pepite_F": "My women's Diamond in the Rough",
     "pepite_H": "My men's Diamond in the Rough",
-    "specialRaceBanner": "Malus race · {name}"
+    "specialRaceBanner": "Malus race · {name}",
+    "opensOn": "Opens {date}"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -289,7 +292,14 @@
     "ongoingBoardTitle": "Overall ranking · picks for this race",
     "ongoingNoPrediction": "No pick",
     "previousRace": "Prev. race",
-    "nextRace": "Next race"
+    "nextRace": "Next race",
+    "predictionsOpenOn": "The athlete list will be available on {date}, 7 days before the stage.",
+    "playerNoPrediction": "No prediction on this race.",
+    "resultsHelpTitle": "Ranking icons",
+    "resultsHelpFusee": "Rocket: fastest ski time of the race, +50 pts for whoever picked them.",
+    "resultsHelpGachette": "Trigger: clean shooting, +20 pts for whoever picked them.",
+    "resultsHelpPerfect": "Perfect pick: the 3 athletes worth the most points. Finding all three earns +200 pts.",
+    "resultsHelpMine": "Your picks, highlighted in the ranking."
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

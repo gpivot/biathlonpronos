@@ -35,6 +35,8 @@ export interface CalendarStage {
   starts_on: string;
   ends_on: string;
   coefficient: 1 | 2;
+  /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
+  opensOn: string | null;
   races: CalendarRace[];
 }
 
@@ -71,7 +73,7 @@ export function CalendarAccordion({
         const isOpen = stage.id === openStageId;
         // Coefficient 2 = Mondiaux (ou JO) : encart doré pour le distinguer des étapes de Coupe du monde.
         const isChampionship = stage.coefficient === 2;
-        const toPlayCount = readOnly ? 0 : stage.races.filter((r) => r.displayStatus === "upcoming" && !r.predicted).length;
+        const toPlayCount = readOnly || stage.opensOn ? 0 : stage.races.filter((r) => r.displayStatus === "upcoming" && !r.predicted).length;
         return (
           <div
             key={stage.id}
@@ -149,7 +151,18 @@ export function CalendarAccordion({
                               {tRace("bonusX2Badge")}
                             </div>
                           )}
-                          {!readOnly && race.displayStatus === "upcoming" && !race.predicted && (
+                          {!readOnly && race.displayStatus === "upcoming" && !race.predicted && stage.opensOn && (
+                            <span className="mt-1 w-fit whitespace-nowrap rounded-full border border-border px-3 py-1 font-display text-[11px] font-bold text-text-dim">
+                              {t("opensOn", {
+                                date: new Date(`${stage.opensOn}T12:00:00Z`).toLocaleDateString(locale, {
+                                  timeZone: DISPLAY_TIME_ZONE,
+                                  day: "numeric",
+                                  month: "short",
+                                }),
+                              })}
+                            </span>
+                          )}
+                          {!readOnly && race.displayStatus === "upcoming" && !race.predicted && !stage.opensOn && (
                             // Toute la ligne mène à la page de pronostic : simple pastille, pas un second lien.
                             <span className="mt-1 w-fit rounded-full bg-ice px-3 py-1 font-display text-[12px] font-bold text-on-ice">
                               {t("toPlayButton")}
