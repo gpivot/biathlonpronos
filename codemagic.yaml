@@ -1,0 +1,68 @@
+# Compilation des applis Android et iOS de Biathlonpronos sur Codemagic (codemagic.io), qui
+# fournit les Mac nécessaires à iOS. Builds lancés à la main depuis Codemagic (« Start new build »).
+# Le code de l'appli est dans mobile/ (Capacitor) ; elle affiche le site en ligne, donc seules les
+# évolutions natives (notifications, icône…) demandent un nouveau build.
+#
+# À régler une fois dans Codemagic (Team settings / Code signing identities) :
+#   - Android : la clé de signature (keystore) nommée « biathlonpronos_upload » ;
+#   - iOS : la clé API App Store Connect nommée « Biathlonpronos » (Integrations), puis un
+#     certificat de distribution iOS généré par Codemagic.
+
+workflows:
+  android:
+    name: Android (Google Play)
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      android_signing:
+        - biathlonpronos_upload
+      node: 22
+      java: 21
+    scripts:
+      - name: Installer Capacitor
+        script: cd mobile && npm ci
+      - name: Préparer le projet Android
+        script: cd mobile && npx cap sync android
+      - name: Construire l'appli (AAB signé)
+        script: |
+          cd mobile/android
+          ./gradlew bundleRelease -PversionCode=$BUILD_NUMBER -PversionName=1.0.$BUILD_NUMBER
+    artifacts:
+      - mobile/android/app/build/outputs/bundle/release/*.aab
+    # Envoi automatique sur Google Play : à activer après le tout premier envoi, que Google
+    # impose de faire à la main dans la Play Console (fichier .aab téléchargé depuis Codemagic).
+    # publishing:
+    #   google_play:
+    #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+    #     track: internal
+    #     submit_as_draft: true
+
+  ios:
+    name: iOS (App Store)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      app_store_connect: Biathlonpronos
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: fr.biathlonpronos.app
+      node: 22
+      xcode: latest
+    scripts:
+      - name: Installer Capacitor
+        script: cd mobile && npm ci
+      - name: Préparer le projet iOS
+        script: cd mobile && npx cap sync ios
+      - name: Numéro de build
+        script: sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = $BUILD_NUMBER;/" mobile/ios/App/App.xcodeproj/project.pbxproj
+      - name: Signature
+        script: xcode-project use-profiles
+      - name: Construire l'appli (IPA)
+        script: xcode-project build-ipa --project mobile/ios/App/App.xcodeproj --scheme App
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

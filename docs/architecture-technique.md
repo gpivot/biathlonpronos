@@ -733,6 +733,27 @@ ouverte à tous (rien à copier), à coller par Guillaume.
   nom de l'épreuve, date et heure ; boutons « Course préc. » / « Course suiv. » au milieu de la
   barre du haut (ordre chronologique de la saison, grisés en début/fin de saison).
 
+## Classement : filtres Général / Ligue et Saison / Par étapes (fin octobre 2026)
+
+En haut du Classement, deux paires de boutons (`classement/StandingsFilters.tsx`), portées par
+l'URL (`?portee=ligue&ligue=…&periode=etapes&etape=…&course=…`) pour qu'un lien garde le filtre :
+
+- **Général / Ligue.** « Ligue » ouvre un menu déroulant des ligues du joueur pour la saison active
+  (première par ordre alphabétique par défaut). Les membres sans point y figurent à 0. Sans ligue,
+  un encadré renvoie vers l'onglet Ligues.
+- **Saison / Par étapes.** « Saison » : classement général (globes compris), comme avant ; la liste
+  « Meilleures séries en cours » n'apparaît qu'en Général + Saison. « Par étapes » : un menu des
+  étapes (par défaut la dernière étape commencée) et un menu des courses (« Toute l'étape » par
+  défaut, ou une seule course). Les points sont ceux des courses de l'étape seulement.
+- **Pronostics des joueurs.** Étape en cours (une course partie et une pas encore notée) : sous
+  chaque joueur, ses pronostics sur les courses déjà verrouillées de l'étape. Une course choisie
+  seule : ses pronostics dès qu'elle est verrouillée, même si l'étape est finie. Jamais sur une
+  course pas encore partie (migration 0018). **À confirmer** : menus déroulants plutôt qu'une liste
+  dépliée des étapes ; pronostics masqués sur une étape entièrement terminée.
+
+Code : `src/lib/standings.ts` (`buildStandings`, `isStageOngoing`, `pickDefaultStandingsStageId`,
+testés). Aucun SQL : ligues, adhésions, score_ledger et pronostics verrouillés sont déjà lisibles.
+
 ## Listes de départ poursuite et mass start (octobre 2026)
 
 **Demande de Guillaume** : n'afficher dans le pronostic que les biathlètes qui prennent vraiment
@@ -759,6 +780,48 @@ le départ, et ne rien afficher tant que la liste n'est pas connue.
 - **À confirmer** : un biathlète de la liste IBU sans cote dans le jeu n'est pas pronostiquable
   (il est seulement signalé à l'admin). La restriction est faite par l'écran de pronostic, pas par
   une règle de la base (un pronostic écrit directement en base n'est pas vérifié).
+
+## Applis Android / iOS et notifications (fin octobre 2026)
+
+Guillaume veut de vraies applis sur Google Play et l'App Store (pas une PWA comme VéloPronos), avec
+des notifications : elles serviront aux questions bonus posées pendant les courses.
+
+- **Capacitor 8, dossier `mobile/`** (son propre `package.json`, hors build Vercel et hors
+  `tsconfig`). L'appli ouvre `https://www.biathlonpronos.fr/` dans une vue web native
+  (`server.url`) : toute mise à jour du site arrive dans l'appli sans repasser par les stores.
+  Seuls les changements natifs (plugins, icône, écran de démarrage) demandent un nouveau build.
+  Identifiant : `fr.biathlonpronos.app`. Hors connexion, l'appli affiche `mobile/www/offline.html`.
+- **Notifications : Firebase Cloud Messaging**, plugin natif `@capacitor-firebase/messaging`
+  (Android + iOS ; Firebase relaie vers Apple avec la clé APNs déposée dans la console Firebase).
+  Le site n'embarque que `@capacitor/core` et déclare lui-même la partie du plugin utilisée
+  (`src/lib/native/firebaseMessaging.ts`) : dans un navigateur ordinaire, rien ne se passe.
+- **Inscription du téléphone** (`PushRegistrar`, dans le layout) : au lancement de l'appli,
+  demande d'autorisation puis envoi du jeton par Server Action (`src/lib/push/actions.ts`).
+  Tant que personne n'est connecté, le serveur refuse et on réessaie à chaque changement de page.
+  À la déconnexion, le jeton est retiré puis l'appli recharge la page de connexion.
+  Profil : encadré « Notifications de l'appli » (seulement dans l'appli) pour les activer ou
+  expliquer comment les réautoriser dans les réglages du téléphone.
+- **Table `push_tokens`** (migration 0021) : jeton (clé), joueur, plateforme, langue, dates.
+  Accès réservé au serveur (RLS sans policy, comme 0020). Un jeton passe au dernier joueur
+  connecté sur le téléphone.
+- **Envoi** (`src/lib/push/fcm.ts`, `send.ts`) : API FCM HTTP v1, jeton d'accès Google signé avec
+  le compte de service Firebase (variable `FIREBASE_SERVICE_ACCOUNT` sur Vercel, JSON complet),
+  sans dépendance supplémentaire. Les jetons périmés (appli désinstallée) sont supprimés.
+  Back-office `/admin/notifications` : envoi « moi seulement » (test) ou à tous les joueurs ; le
+  lien est une page sans langue (`/courses`), ouverte dans la langue du joueur.
+- **Connexion dans l'appli** : les boutons Google / Apple / Facebook sont masqués (Google refuse
+  les vues web intégrées, et ils ne sont pas encore branchés) ; email + mot de passe seulement.
+- **Builds : Codemagic** (`codemagic.yaml` à la racine), lancés à la main. Android : AAB signé
+  (clé « biathlonpronos_upload » dans Codemagic) ; le premier envoi sur Google Play se fait à la
+  main, l'envoi automatique est ensuite à décommenter. iOS : signature automatique via la clé API
+  App Store Connect, envoi sur TestFlight. Les numéros de version suivent le numéro de build.
+- **Fichiers Firebase** à ajouter quand Guillaume les fournit : `mobile/android/app/google-services.json`
+  et `mobile/ios/App/App/GoogleService-Info.plist` (déjà référencé dans le projet Xcode).
+- **Icône et écran de démarrage provisoires** générés depuis le logo (cible) : sources dans
+  `mobile/assets/`, regénérés par `npm run assets` dans `mobile/`.
+- **À confirmer / à faire** : questions bonus (le contenu des notifications, envoi automatique),
+  textes de notification par langue (la langue de chaque téléphone est déjà stockée), suppression
+  de compte depuis l'appli (Apple l'exige ; aujourd'hui c'est un email au support).
 
 ## Cartes bonus du 10/10 : choix, 4e choix, une carte à la fois (fin octobre 2026)
 

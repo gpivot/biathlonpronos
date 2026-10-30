@@ -133,6 +133,10 @@
     "s_classement_body": "Zählt alle in der Saison erzielten Punkte zusammen. Der Führende trägt das Gelbe Trikot. Es gibt außerdem Nebenwertungen (Rotes Trikot) und private Ligen unter Freunden."
   },
   "Compte": {
+    "pushTitle": "📱 App-Benachrichtigungen",
+    "pushOn": "Auf diesem Telefon aktiviert",
+    "pushOff": "Deaktiviert. Erlaube sie in den Einstellungen deines Telefons, um sie zu erhalten.",
+    "pushEnable": "Benachrichtigungen aktivieren",
     "back": "← Zurück",
     "loginRequired": "Melde dich an, um auf dein Konto zuzugreifen.",
     "favoriteTeamTitle": "Lieblingsteam",
@@ -199,7 +203,7 @@
     "inviteCodeLabel": "Einladungscode"
   },
   "Classement": {
-    "title": "Gesamtwertung",
+    "title": "Rangliste",
     "emptyState": "Noch keine Punkte vergeben. Die Wertung füllt sich, sobald das erste Rennen ausgewertet ist.",
     "streakTitle": "Beste laufende Serien",
     "streakCardTitle": "Laufende Serie",
@@ -209,7 +213,17 @@
     "playerLoading": "Wird geladen…",
     "playerError": "Dieser Spieler kann nicht angezeigt werden.",
     "playerHiddenHint": "Die Tipps erscheinen beim Start jedes Rennens.",
-    "playerFavoriteTeam": "Lieblingsteam"
+    "playerFavoriteTeam": "Lieblingsteam",
+    "filterGeneral": "Gesamt",
+    "filterLeague": "Liga",
+    "filterSeason": "Saison",
+    "filterStages": "Nach Etappe",
+    "filterAllRaces": "Ganze Etappe",
+    "noLeague": "Du bist diese Saison in keiner Liga. Gründe deine eigene oder tritt der deiner Freunde mit ihrem Code bei.",
+    "noLeagueButton": "Ligen ansehen",
+    "emptyStage": "Noch keine Punkte auf dieser Etappe.",
+    "noStages": "Noch keine Etappe geplant.",
+    "noPicks": "Kein Tipp"
   },
   "Courses": {
     "title": "Meine Saison",

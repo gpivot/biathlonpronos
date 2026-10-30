@@ -6,6 +6,7 @@ import { ArrowLeftIcon, ChevronRightIcon, HelpIcon, MessageIcon } from "@/compon
 import { LanguagePills } from "./LanguagePills";
 import { PseudoEditor } from "./PseudoEditor";
 import { ThemeToggle } from "./ThemeToggle";
+import { PushStatusCard } from "./PushStatusCard";
 import { FavoriteTeamForm } from "./FavoriteTeamForm";
 import { SignOutButton } from "./SignOutButton";
 
@@ -65,6 +66,8 @@ export default async function ComptePage() {
           <PseudoEditor userId={user.id} initialPseudo={pseudo} />
           <div className="text-[13px] text-text-dim">{user.email}</div>
         </div>
+
+        <PushStatusCard />
 
         <Card>
           <SectionLabel>📧 {t("emailNotificationsTitle")}</SectionLabel>

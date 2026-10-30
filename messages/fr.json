@@ -133,6 +133,10 @@
     "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Des classements annexes (Dossard Rouge) et des ligues privées entre amis existent aussi."
   },
   "Compte": {
+    "pushTitle": "📱 Notifications de l'appli",
+    "pushOn": "Activées sur ce téléphone",
+    "pushOff": "Désactivées. Pour les recevoir, autorise-les dans les réglages du téléphone.",
+    "pushEnable": "Activer les notifications",
     "back": "← Retour",
     "loginRequired": "Connecte-toi pour accéder à ton compte.",
     "favoriteTeamTitle": "Équipe favorite",
@@ -199,7 +203,7 @@
     "inviteCodeLabel": "Code d'invitation"
   },
   "Classement": {
-    "title": "Classement général",
+    "title": "Classement",
     "emptyState": "Aucun point marqué pour le moment. Le classement se remplit dès la première course notée.",
     "streakTitle": "Meilleures séries en cours",
     "streakCardTitle": "Série en cours",
@@ -209,7 +213,17 @@
     "playerLoading": "Chargement…",
     "playerError": "Impossible d'afficher ce joueur.",
     "playerHiddenHint": "Ses pronostics apparaissent au départ de chaque course.",
-    "playerFavoriteTeam": "Équipe favorite"
+    "playerFavoriteTeam": "Équipe favorite",
+    "filterGeneral": "Général",
+    "filterLeague": "Ligue",
+    "filterSeason": "Saison",
+    "filterStages": "Par étapes",
+    "filterAllRaces": "Toute l'étape",
+    "noLeague": "Tu ne fais partie d'aucune ligue cette saison. Crée la tienne ou rejoins celle de tes amis avec leur code.",
+    "noLeagueButton": "Voir les ligues",
+    "emptyStage": "Aucun point sur cette étape pour le moment.",
+    "noStages": "Aucune étape programmée pour le moment.",
+    "noPicks": "Pas de pronostic"
   },
   "Courses": {
     "title": "Ma saison",

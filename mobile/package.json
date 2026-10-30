@@ -1,0 +1,22 @@
+{
+  "name": "biathlonpronos-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Appli Android et iOS de Biathlonpronos (Capacitor) : elle affiche le site en ligne et ajoute les notifications.",
+  "scripts": {
+    "sync": "cap sync",
+    "assets": "capacitor-assets generate --iconBackgroundColor '#0a0f1c' --splashBackgroundColor '#0a0f1c'"
+  },
+  "dependencies": {
+    "@capacitor-firebase/messaging": "^8.5.2",
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/ios": "^8.6.0",
+    "@capacitor/splash-screen": "^8.0.2",
+    "firebase": "^12.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.6.0"
+  }
+}
