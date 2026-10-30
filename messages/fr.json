@@ -316,7 +316,9 @@
     "malusScale_tes_colle_1": "1 choix hors du Top 10 → -30 pts",
     "malusScale_tes_colle_2": "2 choix hors du Top 10 → -100 pts",
     "malusScale_tes_colle_3": "3 choix hors du Top 10 → -300 pts",
-    "malusScale_tes_colle_4": "Pas de pronostic → -200 pts (un choix manquant compte hors Top 10)"
+    "malusScale_tes_colle_4": "Pas de pronostic → -200 pts (un choix manquant compte hors Top 10)",
+    "calcDetail": "cote {odds} × {multiplier}",
+    "calcOddsOnly": "cote {odds}"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

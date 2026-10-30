@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { LastResultExtra, LastResultPick } from "@/lib/lastResult";
+import { FUSEE_BONUS, GACHETTE_BONUS } from "@/lib/scoring/constants";
 import { ShootingDots } from "./ShootingDots";
 
 const COMBINATION_KINDS: LastResultExtra["kind"][] = ["top3", "top5", "top10", "pronoParfait"];
@@ -41,9 +42,12 @@ export function PredictionBreakdown({
   picks,
   extras,
   showLegend = true,
+  showCalc = false,
 }: {
   picks: LastResultPick[];
   extras: LastResultExtra[];
+  /** Détail du calcul sous chaque nom (« cote 8 × 25 ») : page de la course seulement. */
+  showCalc?: boolean;
   /** Légende Fusée/Gâchette sous les choix (masquée sur l'accueil). */
   showLegend?: boolean;
 }) {
@@ -83,10 +87,13 @@ export function PredictionBreakdown({
               {pick.rank != null ? `${pick.rank}.` : t("lastResultUnranked")}
             </div>
             <div className="text-sm">{nationFlagEmoji(pick.nationCode)}</div>
-            <div className="flex min-w-0 flex-1 items-center gap-1 truncate font-semibold">
-              <span className="truncate">{pick.name}</span>
-              {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
-              <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
+            <div className="flex min-w-0 flex-1 flex-col">
+              <div className="flex min-w-0 items-center gap-1 truncate font-semibold">
+                <span className="truncate">{pick.name}</span>
+                {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
+                <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
+              </div>
+              {showCalc && <CalcDetail odds={pick.odds} rankMultiplier={pick.rankMultiplier} fusee={pick.fusee} gachette={pick.gachette} />}
             </div>
             <ShootingDots shootings={pick.shootings} />
             <div
@@ -121,4 +128,24 @@ export function PredictionBreakdown({
 export function FuseeGachetteLegend() {
   const t = useTranslations("Home");
   return <div className="px-3 text-[11px] text-text-dim">{t("fuseeGachetteLegend")}</div>;
+}
+
+/** Détail du calcul d'une ligne : « cote 8 × 25 », plus Fusée/Gâchette (page de la course). */
+export function CalcDetail({
+  odds,
+  rankMultiplier,
+  fusee,
+  gachette,
+}: {
+  odds: number | null;
+  rankMultiplier: number | null;
+  fusee: boolean;
+  gachette: boolean;
+}) {
+  const t = useTranslations("Race");
+  if (odds == null) return null;
+  const parts = [rankMultiplier != null ? t("calcDetail", { odds, multiplier: rankMultiplier }) : t("calcOddsOnly", { odds })];
+  if (fusee) parts.push(`🚀 ${FUSEE_BONUS}`);
+  if (gachette) parts.push(`🎯 ${GACHETTE_BONUS}`);
+  return <div className="truncate text-[11px] font-normal text-text-dim">{parts.join(" + ")}</div>;
 }

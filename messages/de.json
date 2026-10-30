@@ -316,7 +316,9 @@
     "malusScale_tes_colle_1": "1 Tipp außerhalb der Top 10 → -30 Pkt.",
     "malusScale_tes_colle_2": "2 Tipps außerhalb der Top 10 → -100 Pkt.",
     "malusScale_tes_colle_3": "3 Tipps außerhalb der Top 10 → -300 Pkt.",
-    "malusScale_tes_colle_4": "Kein Tipp → -200 Pkt. (ein fehlender Tipp zählt als außerhalb der Top 10)"
+    "malusScale_tes_colle_4": "Kein Tipp → -200 Pkt. (ein fehlender Tipp zählt als außerhalb der Top 10)",
+    "calcDetail": "Quote {odds} × {multiplier}",
+    "calcOddsOnly": "Quote {odds}"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",

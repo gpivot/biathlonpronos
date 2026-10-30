@@ -429,7 +429,7 @@ export default async function RacePage({
                   {!raceResult?.prediction ? (
                     <div className="text-[13px] text-text-dim">{t("noPredictionMessage")}</div>
                   ) : (
-                    <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} showLegend={false} />
+                    <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} showLegend={false} showCalc />
                   )}
                 </div>
               </div>

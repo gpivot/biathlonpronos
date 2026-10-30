@@ -1,6 +1,6 @@
 import { CheckIcon } from "@/components/icons";
 import { nationFlagEmoji } from "@/lib/nationFlags";
-import { FuseeGachetteBadges, formatPoints } from "@/components/PredictionBreakdown";
+import { CalcDetail, FuseeGachetteBadges, formatPoints } from "@/components/PredictionBreakdown";
 import type { RaceResultRow } from "@/lib/lastResult";
 import type { OngoingBoardRow, RacePlayerRow } from "@/lib/racePlayers";
 import { ShootingDots } from "@/components/ShootingDots";
@@ -22,10 +22,13 @@ export function ResultRow({ row }: { row: RaceResultRow }) {
         {row.rank}
       </div>
       <div className="text-base">{nationFlagEmoji(row.nationCode)}</div>
-      <div className="flex min-w-0 flex-1 items-center gap-1 truncate text-sm font-semibold">
-        <span className="truncate">{row.name}</span>
-        {row.perfect && <span className="text-[13px]">⭐</span>}
-        <FuseeGachetteBadges fusee={row.fusee} gachette={row.gachette} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <div className="flex min-w-0 items-center gap-1 truncate text-sm font-semibold">
+          <span className="truncate">{row.name}</span>
+          {row.perfect && <span className="text-[13px]">⭐</span>}
+          <FuseeGachetteBadges fusee={row.fusee} gachette={row.gachette} />
+        </div>
+        {row.points != null && <CalcDetail odds={row.odds} rankMultiplier={row.rankMultiplier} fusee={row.fusee} gachette={row.gachette} />}
       </div>
       <ShootingDots shootings={row.shootings} />
       {row.mine && <CheckIcon className="h-4 w-4 flex-shrink-0 text-ice" />}

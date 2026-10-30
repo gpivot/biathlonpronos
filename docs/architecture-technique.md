@@ -804,6 +804,9 @@ reviennent les semaines sans étape, sous le message de repos.
 - **Prochaine étape** : sous l'étape de la semaine, petit encart (drapeau, lieu, dates) vers Ma
   saison, étape dépliée (`/courses?etape=…`). C'est l'étape qui suit celle de la semaine, ou la
   prochaine à venir les semaines sans étape.
+- **Détail du calcul** (page d'une course notée seulement, et pop-up d'un joueur) : sous chaque nom,
+  en petit, « cote 8 × 25 » (cote en vigueur × multiplicateur de la place, `CalcDetail`), plus
+  « 🚀 50 » / « 🎯 20 » le cas échéant ; « cote 6 » seule hors barème.
 
 ## Listes de départ poursuite et mass start (octobre 2026)
 

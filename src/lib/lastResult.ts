@@ -25,6 +25,9 @@ export interface LastResultPick {
   gachette: boolean;
   /** Fautes au tir, une valeur par tir (null : non saisies). */
   shootings: number[] | null;
+  /** Détail du calcul (page de la course) : cote en vigueur et multiplicateur de la place (null hors barème). */
+  odds: number | null;
+  rankMultiplier: number | null;
 }
 
 /** Une ligne du classement de la course, avec les points du barème (cote × rang + Fusée/Gâchette). */
@@ -42,6 +45,9 @@ export interface RaceResultRow {
   mine: boolean;
   /** L'un des 3 meilleurs scores du barème : le trio du Prono parfait (courses individuelles). */
   perfect: boolean;
+  /** Détail du calcul : cote en vigueur et multiplicateur de la place (null hors barème). */
+  odds: number | null;
+  rankMultiplier: number | null;
 }
 
 export interface LastResultExtra {
@@ -274,6 +280,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     .map((r) => ({ rank: r.rank as number, name: rowName(r), nationCode: rowNation(r) }));
 
   const oddsByKey = new Map(((odds ?? []) as any[]).map((o) => [(relay ? o.nation_code : o.athlete_id) as string, o.value as number]));
+  const rankMultipliers = relay ? RELAY_RANK_MULTIPLIERS : RANK_MULTIPLIERS;
   const predictedKeys = new Set<string>(prediction?.nation_code ? [prediction.nation_code] : prediction?.athlete_ids ?? []);
   const scoredRows = resultRows.map((r) => ({
     rank: r.rank,
@@ -290,6 +297,8 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     gachette: r.is_gachette,
     shootings: r.shootings ?? null,
     mine: predictedKeys.has(r.athlete_id ?? r.nation_code),
+    odds: oddsByKey.get(r.athlete_id ?? r.nation_code) ?? null,
+    rankMultiplier: rankMultipliers[r.rank] ?? null,
   }));
   const fullResults: RaceResultRow[] = relay ? scoredRows.map((r) => ({ ...r, perfect: false })) : markPronoParfait(scoredRows);
 
@@ -343,6 +352,8 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
         fusee: false,
         gachette: false,
         shootings: row?.shootings ?? null,
+        odds: oddsByKey.get(prediction.nation_code) ?? null,
+        rankMultiplier: row ? rankMultipliers[row.rank] ?? null : null,
       },
     ];
   } else {
@@ -378,6 +389,8 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
         fusee: row?.is_fusee ?? false,
         gachette: row?.is_gachette ?? false,
         shootings: row?.shootings ?? null,
+        odds: oddsByKey.get(id) ?? null,
+        rankMultiplier: row ? rankMultipliers[row.rank] ?? null : null,
       };
     });
     // Ordre d'arrivée, les non classés à la fin (comme VéloPronos).
