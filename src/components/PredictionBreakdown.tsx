@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { LastResultExtra, LastResultPick } from "@/lib/lastResult";
 
@@ -11,9 +11,9 @@ export function formatPoints(points: number) {
 }
 
 /** Pictos Fusée (meilleur temps de ski) et Gâchette (sans-faute au tir). */
-export async function FuseeGachetteBadges({ fusee, gachette }: { fusee: boolean; gachette: boolean }) {
+export function FuseeGachetteBadges({ fusee, gachette }: { fusee: boolean; gachette: boolean }) {
+  const t = useTranslations("Home");
   if (!fusee && !gachette) return null;
-  const t = await getTranslations("Home");
   return (
     <>
       {fusee && (
@@ -33,9 +33,10 @@ export async function FuseeGachetteBadges({ fusee, gachette }: { fusee: boolean;
 /**
  * Détail d'un pronostic noté : chaque choix avec sa place, ses pictos
  * Fusée/Gâchette et ses points (dans l'ordre d'arrivée), puis les bonus et
- * malus de course (Top 3/5/10, Prono parfait…). Accueil et page d'une course.
+ * malus de course (Top 3/5/10, Prono parfait…). Accueil, page d'une course et pop-up d'un
+ * joueur (composant synchrone : utilisable côté serveur comme côté client).
  */
-export async function PredictionBreakdown({
+export function PredictionBreakdown({
   picks,
   extras,
   showLegend = true,
@@ -45,7 +46,7 @@ export async function PredictionBreakdown({
   /** Légende Fusée/Gâchette sous les choix (masquée sur l'accueil). */
   showLegend?: boolean;
 }) {
-  const t = await getTranslations("Home");
+  const t = useTranslations("Home");
   const hasFuseeGachette = showLegend && picks.some((p) => p.fusee || p.gachette);
   // Bonus de combinaison mis en avant en bandeau vert au-dessus des choix ; les autres restent en bas.
   const combination = extras.find((e) => COMBINATION_KINDS.includes(e.kind) && e.points > 0);
@@ -115,7 +116,7 @@ export async function PredictionBreakdown({
   );
 }
 
-export async function FuseeGachetteLegend() {
-  const t = await getTranslations("Home");
+export function FuseeGachetteLegend() {
+  const t = useTranslations("Home");
   return <div className="px-3 text-[11px] text-text-dim">{t("fuseeGachetteLegend")}</div>;
 }

@@ -11,7 +11,9 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { getLastResults, type LastResult } from "@/lib/lastResult";
 import { LastResultCard } from "@/components/LastResultCard";
 import { getWeekStage, type WeekStage } from "@/lib/weekStage";
-import { WeekStageCard } from "@/components/WeekStageCard";
+import { RestWeekCard, WeekStageCard } from "@/components/WeekStageCard";
+import { getRaceResult } from "@/lib/lastResult";
+import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 import { StreakCard } from "@/components/StreakCard";
 import { getCurrentStreak } from "@/lib/streakCounter";
@@ -23,6 +25,8 @@ interface HomeData {
   season: { id: string; label: string } | null;
   userId: string | null;
   weekStage: WeekStage | null;
+  /** Résultat du jour affiché dans « L'étape de la semaine ». */
+  weekResult: LastResult | null;
   /** « Maintenant » au rendu (horloge simulée comprise), point de départ du compte à rebours. */
   nowMs: number;
   nextRace: NextRace | null;
@@ -43,22 +47,21 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, lastResults: [], streak: null, cards: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, weekResult: null, nowMs: Date.now(), nextRace: null, leaderboard: [], favoriteTeam: null, lastResults: [], streak: null, cards: null };
   }
 
   const { now } = await getClock();
 
-  const [weekStage, { data: nextRace }, leaderboard, favoriteTeamResult, lastResults, streak, cards] = await Promise.all([
-    user ? getWeekStage(supabase, season.id, user.id, now) : Promise.resolve(null),
+  const weekStage = user ? await getWeekStage(supabase, season.id, user.id, now) : null;
+  const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult] = await Promise.all([
     supabase
       .from("races")
-      .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id)")
+      .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id, starts_on)")
       .eq("stages.season_id", season.id)
       .eq("status", "upcoming")
       .gt("locks_at", now.toISOString())
       .order("locks_at", { ascending: true })
-      .limit(1)
-      .maybeSingle(),
+      .limit(2),
     getLeaderboard(supabase, season.id),
     user
       ? supabase
@@ -68,10 +71,13 @@ async function getHomeData(): Promise<HomeData> {
           .eq("season_id", season.id)
           .maybeSingle()
       : Promise.resolve({ data: null }),
-    user ? getLastResults(supabase, season.id, user.id, now) : Promise.resolve([]),
+    user ? getLastResults(supabase, season.id, user.id, now, weekStage?.resultRaceId ?? null) : Promise.resolve([]),
     user ? getCurrentStreak(supabase, season.id, user.id) : Promise.resolve(null),
     user ? getPlayerCards(supabase, season.id, user.id, now) : Promise.resolve(null),
+    user && weekStage?.resultRaceId ? getRaceResult(supabase, weekStage.resultRaceId, user.id) : Promise.resolve(null),
   ]);
+  // « À suivre » : la course d'après celle que montre déjà « L'étape de la semaine ».
+  const nextRace = ((upcomingRaces ?? []) as any[]).find((r) => r.id !== weekStage?.nextRace?.id) ?? null;
 
   let predicted = false;
   if (user && nextRace) {
@@ -87,8 +93,15 @@ async function getHomeData(): Promise<HomeData> {
     season,
     userId: user?.id ?? null,
     weekStage,
+    weekResult,
     nowMs: now.getTime(),
-    nextRace: nextRace ? ({ ...(nextRace as any), predicted } as HomeData["nextRace"]) : null,
+    nextRace: nextRace
+      ? ({
+          ...nextRace,
+          predicted,
+          opensOn: isPredictionOpen(nextRace.stages.starts_on, now) ? null : predictionOpensOn(nextRace.stages.starts_on),
+        } as HomeData["nextRace"])
+      : null,
     leaderboard,
     favoriteTeam: favoriteTeamResult.data as any,
     lastResults,
@@ -99,7 +112,7 @@ async function getHomeData(): Promise<HomeData> {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, nowMs, nextRace, leaderboard, favoriteTeam, lastResults, streak, cards }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResult, nowMs, nextRace, leaderboard, favoriteTeam, lastResults, streak, cards }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -193,11 +206,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
         )}
 
-        {weekStage && <WeekStageCard stage={weekStage} />}
+        {weekStage ? (
+          <WeekStageCard stage={weekStage} result={weekResult} nowMs={nowMs} locale={locale} />
+        ) : (
+          season && <RestWeekCard />
+        )}
 
         {nextRace && <NextRaceCard race={nextRace} nowMs={nowMs} locale={locale} />}
 
-        {!weekStage && !nextRace && (
+        {!season && (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
             {t("emptyState")}
           </div>

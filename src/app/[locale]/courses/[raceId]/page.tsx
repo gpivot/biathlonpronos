@@ -16,13 +16,15 @@ import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
 import { getStartList } from "@/lib/startList";
+import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
 import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
 import { SPECIAL_RULE_ICONS } from "@/lib/specialRules";
 import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
-import { FuseeGachetteLegend, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
+import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
+import { HelpButton } from "@/components/HelpButton";
 
 export const dynamic = "force-dynamic";
 
@@ -36,12 +38,20 @@ export default async function RacePage({
   const t = await getTranslations("Race");
   const tFormat = await getTranslations("RaceFormat");
   const tSex = await getTranslations("Sex");
+  const tClassement = await getTranslations("Classement");
 
   const { data: race } = await supabase.from("races").select("*, stages(*)").eq("id", raceId).single();
 
   if (!race) notFound();
 
-  const stage = race.stages as { id: string; location: string; country_code: string; season_id: string; coefficient: 1 | 2 };
+  const stage = race.stages as {
+    id: string;
+    location: string;
+    country_code: string;
+    season_id: string;
+    coefficient: 1 | 2;
+    starts_on: string;
+  };
   const isRelay = RELAY_FORMATS.includes(race.format);
   const { now } = await getClock();
   const displayStatus = getRaceDisplayStatus(race, now);
@@ -187,7 +197,9 @@ export default async function RacePage({
     startList.status === "known" ? athletesWithOdds.filter((a) => startOrder[a.athlete_id] != null) : athletesWithOdds;
 
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
-  const showForm = displayStatus === "upcoming" && hasOdds && !startListPending;
+  // Liste des biathlètes visible 7 jours avant l'étape seulement (cotes mises à jour pendant les pauses).
+  const predictionsOpen = isPredictionOpen(stage.starts_on, now);
+  const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
   // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
@@ -267,7 +279,18 @@ export default async function RacePage({
         )}
 
         {displayStatus === "upcoming" &&
-          (!hasOdds ? (
+          (!predictionsOpen ? (
+            <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] leading-relaxed text-text-dim">
+              {t("predictionsOpenOn", {
+                date: new Date(`${predictionOpensOn(stage.starts_on)}T12:00:00Z`).toLocaleDateString(locale, {
+                  timeZone: DISPLAY_TIME_ZONE,
+                  weekday: "long",
+                  day: "numeric",
+                  month: "long",
+                }),
+              })}
+            </div>
+          ) : !hasOdds ? (
             <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
               {t("noOddsMessage", { format: race.format })}
             </div>
@@ -386,15 +409,27 @@ export default async function RacePage({
                   {!raceResult?.prediction ? (
                     <div className="text-[13px] text-text-dim">{t("noPredictionMessage")}</div>
                   ) : (
-                    <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} />
+                    <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} showLegend={false} />
                   )}
                 </div>
               </div>
             )}
 
             <div className="flex flex-col gap-2">
-              <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+              {/* Légende des pictos (Fusée, Gâchette, Prono parfait) dans un « ? » plutôt qu'en toutes lettres. */}
+              <div className="flex items-center gap-2 font-display text-xs font-bold uppercase tracking-wider text-text-dim">
                 {t("resultsTitle")}
+                <HelpButton
+                  title={t("resultsHelpTitle")}
+                  openLabel={t("resultsHelpTitle")}
+                  closeLabel={tClassement("close")}
+                  items={[
+                    { icon: "🚀", text: t("resultsHelpFusee") },
+                    { icon: "🎯", text: t("resultsHelpGachette") },
+                    { icon: "⭐", text: t("resultsHelpPerfect") },
+                    { icon: "✓", text: t("resultsHelpMine") },
+                  ]}
+                />
               </div>
 
               {results.length === 0 ? (
@@ -413,8 +448,6 @@ export default async function RacePage({
                   ) : (
                     results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)
                   )}
-                  {results.some((r) => r.perfect) && <div className="px-3 text-[11px] text-text-dim">{t("pronoParfaitLegend")}</div>}
-                  {results.some((r) => r.fusee || r.gachette) && <FuseeGachetteLegend />}
                 </div>
               )}
             </div>
@@ -427,11 +460,11 @@ export default async function RacePage({
                     label={t("showFullRanking")}
                     collapsed={players
                       .filter((p, i) => i < 10 || p.userId === user?.id)
-                      .map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} />)}
-                    expanded={players.map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} />)}
+                      .map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} raceId={race.id} />)}
+                    expanded={players.map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} raceId={race.id} />)}
                   />
                 ) : (
-                  players.map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} />)
+                  players.map((p) => <PlayerRow key={p.userId} player={p} mine={p.userId === user?.id} raceId={race.id} />)
                 )}
               </div>
             )}

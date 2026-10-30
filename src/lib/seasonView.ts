@@ -4,6 +4,7 @@ import type { CalendarStage } from "../app/[locale]/courses/CalendarAccordion";
 import type { SeasonPick } from "../app/[locale]/courses/SeasonPredictionsAccordion";
 import { shortAthleteName } from "./athleteName";
 import { getCurrentStreak } from "./streakCounter";
+import { isPredictionOpen, predictionOpensOn } from "./predictionWindow";
 import { getPlayerCards, type PlayerCards } from "./bonusCards";
 
 /**
@@ -142,6 +143,7 @@ export async function getSeasonView(
     starts_on: stage.starts_on,
     ends_on: stage.ends_on,
     coefficient: stage.coefficient,
+    opensOn: isPredictionOpen(stage.starts_on, now) ? null : predictionOpensOn(stage.starts_on),
     races: (stage.races ?? [])
       .map((race: any) => ({
         ...race,

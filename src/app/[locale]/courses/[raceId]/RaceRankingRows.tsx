@@ -3,6 +3,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { FuseeGachetteBadges, formatPoints } from "@/components/PredictionBreakdown";
 import type { RaceResultRow } from "@/lib/lastResult";
 import type { OngoingBoardRow, RacePlayerRow } from "@/lib/racePlayers";
+import { PlayerRaceButton } from "./PlayerRaceButton";
 
 /** Ligne du classement de la course : étoile et contour doré pour le trio du Prono parfait. */
 export function ResultRow({ row }: { row: RaceResultRow }) {
@@ -33,9 +34,12 @@ export function ResultRow({ row }: { row: RaceResultRow }) {
   );
 }
 
-export function PlayerRow({ player, mine }: { player: RacePlayerRow; mine: boolean }) {
+/** Ligne du classement des joueurs : cliquable, ouvre le pronostic détaillé du joueur. */
+export function PlayerRow({ player, mine, raceId }: { player: RacePlayerRow; mine: boolean; raceId: string }) {
   return (
-    <div
+    <PlayerRaceButton
+      raceId={raceId}
+      userId={player.userId}
       className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3 ${mine ? "border-ice/60 bg-ice-soft" : "border-border bg-card"}`}
     >
       <div
@@ -47,7 +51,7 @@ export function PlayerRow({ player, mine }: { player: RacePlayerRow; mine: boole
       </div>
       <div className="min-w-0 flex-1 truncate text-sm font-semibold">{player.pseudo}</div>
       <div className="whitespace-nowrap font-display text-[13px] font-bold text-ice">{Math.round(player.points * 10) / 10} pts</div>
-    </div>
+    </PlayerRaceButton>
   );
 }
 

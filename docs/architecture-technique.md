@@ -754,6 +754,27 @@ l'URL (`?portee=ligue&ligue=…&periode=etapes&etape=…&course=…`) pour qu'un
 Code : `src/lib/standings.ts` (`buildStandings`, `isStageOngoing`, `pickDefaultStandingsStageId`,
 testés). Aucun SQL : ligues, adhésions, score_ledger et pronostics verrouillés sont déjà lisibles.
 
+## Étape de la semaine, ouverture à J-7, légende et pop-up joueur des résultats (fin octobre 2026)
+
+- **« L'étape de la semaine »** (`pickWeekFeature`, testé), par ordre de priorité : courses en
+  cours (badge « En ce moment ») ; sinon le dernier résultat noté aujourd'hui, affiché sous
+  l'encadré jusqu'à 23h59 (heure de Paris), chassé par le départ d'une 2e course le même jour ;
+  sinon la prochaine course de l'étape avec compte à rebours (badge « Prochaine course »). Le
+  résultat du jour n'apparaît dans « Derniers résultats » qu'à partir de minuit. Sans étape dans la
+  semaine : « Les biathlètes sont au repos, profites-en pour farter tes skis ! » avec 🎿.
+- **« À suivre »** : la course d'après celle que montre déjà l'encadré (la 2e course à venir quand
+  l'encadré affiche la prochaine, sinon la prochaine).
+- **Pronostics ouverts 7 jours avant l'étape** (`predictionWindow.ts`, testé) : avant, la page de
+  la course affiche la date d'ouverture au lieu de la liste des biathlètes, et Ma saison / « À
+  suivre » montrent « Ouvre le … » à la place de « À jouer ». **À confirmer** : contrôle côté
+  interface seulement (le pronostic est enregistré par le navigateur) ; un verrou en base
+  demanderait une règle RLS.
+- **Page résultats** : la légende en toutes lettres (Fusée/Gâchette, Prono parfait) est remplacée
+  par un bouton « ? » à côté de « Résultats » (`HelpButton`). Dans le classement des joueurs, un
+  clic ouvre le pronostic détaillé du joueur sur la course (`PlayerRaceButton`, action
+  `getPlayerRaceResult`, course notée seulement). `PredictionBreakdown` est devenu synchrone pour
+  servir aussi côté client.
+
 ## Listes de départ poursuite et mass start (octobre 2026)
 
 **Demande de Guillaume** : n'afficher dans le pronostic que les biathlètes qui prennent vraiment

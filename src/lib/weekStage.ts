@@ -5,8 +5,9 @@ import { shortAthleteName } from "./athleteName";
 
 /**
  * Encart « L'étape de la semaine » de l'accueil : l'étape en cours (ou, à
- * défaut, celle qui commence dans les 7 prochains jours), avec les courses en
- * cours et le pronostic du joueur.
+ * défaut, celle qui commence dans les 7 prochains jours). Selon le moment, il
+ * met en avant les courses en cours (avec le pronostic du joueur), le résultat
+ * du jour (jusqu'à minuit) ou la prochaine course avec son compte à rebours.
  */
 
 export interface WeekStagePick {
@@ -29,10 +30,14 @@ export interface WeekStage {
   location: string;
   countryCode: string;
   coefficient: number;
-  /** Une course de l'étape a lieu aujourd'hui (heure de Paris) : badge « En ce moment ». */
-  raceToday: boolean;
+  /** Badge : « En ce moment » (course en cours ou résultat du jour), « Prochaine course » avant le départ. */
+  badge: "now" | "next" | null;
   /** Courses dont le départ est passé mais pas encore notées par l'admin. */
   ongoing: WeekStageRace[];
+  /** Course notée aujourd'hui dont le résultat reste dans l'encadré jusqu'à minuit (heure de Paris). */
+  resultRaceId: string | null;
+  /** Prochaine course de l'étape, avec compte à rebours (quand rien n'est en cours ni noté aujourd'hui). */
+  nextRace: (WeekStageRace & { predicted: boolean }) | null;
 }
 
 /** Jour de Paris ("2026-11-29") d'un instant. */
@@ -55,16 +60,26 @@ interface RaceRow {
   status: string;
 }
 
-/** Partie pure (testée) : badge du jour et courses en cours. */
-export function summarizeStageRaces(
+/**
+ * Partie pure (testée) : ce que l'encadré met en avant. Par ordre de priorité, les courses en
+ * cours ; sinon le dernier résultat noté aujourd'hui (jusqu'à 23h59, chassé par le départ d'une
+ * 2e course le même jour) ; sinon la prochaine course de l'étape.
+ */
+export function pickWeekFeature(
   races: RaceRow[],
   now: Date
-): { raceToday: boolean; ongoingIds: string[] } {
+): { badge: "now" | "next" | null; ongoingIds: string[]; resultRaceId: string | null; nextRaceId: string | null } {
   const today = parisDay(now);
   const sorted = [...races].sort((a, b) => a.locks_at.localeCompare(b.locks_at));
-  const raceToday = sorted.some((r) => parisDay(new Date(r.locks_at)) === today);
-  const ongoingIds = sorted.filter((r) => getRaceDisplayStatus(r as any, now) === "ongoing").map((r) => r.id);
-  return { raceToday, ongoingIds };
+  const status = (r: RaceRow) => getRaceDisplayStatus(r as any, now);
+  const ongoingIds = sorted.filter((r) => status(r) === "ongoing").map((r) => r.id);
+  if (ongoingIds.length > 0) return { badge: "now", ongoingIds, resultRaceId: null, nextRaceId: null };
+  const todayResults = sorted.filter((r) => status(r) === "finished" && parisDay(new Date(r.locks_at)) === today);
+  if (todayResults.length > 0) {
+    return { badge: "now", ongoingIds, resultRaceId: todayResults[todayResults.length - 1].id, nextRaceId: null };
+  }
+  const next = sorted.find((r) => status(r) === "upcoming");
+  return { badge: next ? "next" : null, ongoingIds, resultRaceId: null, nextRaceId: next?.id ?? null };
 }
 
 export async function getWeekStage(
@@ -121,7 +136,7 @@ export async function getWeekStage(
       .map((p) => [p.race_id, p])
   );
 
-  const { raceToday, ongoingIds } = summarizeStageRaces(races, now);
+  const { badge, ongoingIds, resultRaceId, nextRaceId } = pickWeekFeature(races, now);
 
   // Noms des athlètes et nations pronostiqués sur les courses en cours.
   const ongoingPredictions = ongoingIds.map((id) => predictions.get(id)).filter(Boolean) as {
@@ -168,7 +183,11 @@ export async function getWeekStage(
     location: stage.location,
     countryCode: stage.country_code,
     coefficient: stage.coefficient,
-    raceToday,
+    badge,
     ongoing: races.filter((r) => ongoingIds.includes(r.id)).map((r) => toRace(r, true)),
+    resultRaceId,
+    nextRace: nextRaceId
+      ? { ...toRace(races.find((r) => r.id === nextRaceId)!, false), predicted: predictions.has(nextRaceId) }
+      : null,
   };
 }

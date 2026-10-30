@@ -27,7 +27,7 @@ export async function LastResultCard({ results, locale }: { results: LastResult[
   );
 }
 
-async function SingleResultCard({ result, locale }: { result: LastResult; locale: string }) {
+export async function SingleResultCard({ result, locale }: { result: LastResult; locale: string }) {
   const [t, tFormat, tSex, tCards] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
