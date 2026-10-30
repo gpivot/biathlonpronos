@@ -187,13 +187,13 @@ Ta série continue tant qu'au moins l'un de tes trois biathlètes (ou nation) ma
 
 ## 13. Les cartes bonus
 
-Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi.
+Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi. Au 10/10, tu choisis toi-même ta carte. Pour l'instant, deux cartes sont proposées : le 4e choix et Ça farte. Une seule carte peut être active à la fois.
 
-### Balle de pioche
-Pendant tes 3 prochaines courses, tu peux sélectionner 4 biathlètes au lieu de 3. Mais seuls les résultats de tes 3 meilleurs biathlètes sont comptabilisés. Une sécurité précieuse lorsque tu hésites entre plusieurs favoris.
+### 4e choix (Balle de pioche)
+Sur 4 courses individuelles (2 hommes et 2 femmes, relais exclus) à partir de la course où tu joues la carte, tu peux sélectionner 4 biathlètes au lieu de 3. Mais seuls les résultats de tes 3 meilleurs biathlètes sont comptabilisés. Une sécurité précieuse lorsque tu hésites entre plusieurs favoris.
 
 ### Ça farte !
-Tu poses un ×3 sur un seul biathlète de ton choix avant une course. Seuls les points de ce biathlète sont triplés. Le reste de ton pronostic conserve son barème normal. Bonus valable une fois sur un biathlète uniquement.
+Tu poses un ×3 sur un seul biathlète de ton choix avant une course individuelle (pas sur un relais). Seuls les points de ce biathlète sont triplés. Le reste de ton pronostic conserve son barème normal. Bonus valable une fois sur un biathlète uniquement. Il ne se cumule pas avec un ×2 : le biathlète ciblé reste à ×3, jamais ×6.
 
 ### Fondue
 Tu peux exceptionnellement dégriller tes biathlètes. Les biathlètes utilisés sur la course précédente redeviennent immédiatement disponibles pour ton prochain pronostic. Idéal avant une poursuite. Valable une seule fois.

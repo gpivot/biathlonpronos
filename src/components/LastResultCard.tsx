@@ -28,11 +28,11 @@ export async function LastResultCard({ results, locale }: { results: LastResult[
 }
 
 async function SingleResultCard({ result, locale }: { result: LastResult; locale: string }) {
-  const [t, tFormat, tSex, tAccount] = await Promise.all([
+  const [t, tFormat, tSex, tCards] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
-    getTranslations("Compte"),
+    getTranslations("BonusCards"),
   ]);
   const sex = displayedSex(result);
   const prediction = result.prediction;
@@ -92,7 +92,7 @@ async function SingleResultCard({ result, locale }: { result: LastResult; locale
                 )}
                 {prediction.card && (
                   <div className="rounded-full bg-ice-soft px-2.5 py-0.5 font-display text-[11px] font-bold text-ice">
-                    🃏 {tAccount(`cardLabel_${prediction.card}`)}
+                    🃏 {tCards(`name_${prediction.card}`)}
                   </div>
                 )}
               </div>

@@ -9,12 +9,12 @@ import {
   computeSeasonStreaks,
   fuseeGachetteEligibility,
   type AthleteRaceResult,
-  type BonusCardEffect,
   type FavoriteTeam,
   type NationRaceResult,
 } from "@/lib/scoring";
 import { clearCurrentOdds, setCurrentOdds } from "./odds";
 import { fetchAll } from "./fetchAll";
+import { getSeasonCardRaces, resolvePredictionCard, type CardRow } from "@/lib/bonusCards";
 
 const RELAY_FORMATS = ["relais_h", "relais_f", "relais_mixte", "relais_mixte_simple"];
 
@@ -381,7 +381,7 @@ async function scoreIndividualPredictions(
   for (const r of results) if (r.athlete_id) athleteIds.add(r.athlete_id);
   for (const p of predictions) for (const id of p.athlete_ids ?? []) athleteIds.add(id);
 
-  const [{ data: athletes }, { data: odds }, { data: favoriteTeams }] = await Promise.all([
+  const [{ data: athletes }, { data: odds }, { data: favoriteTeams }, { data: playedCards }, seasonRaces] = await Promise.all([
     admin.from("athletes").select("id, nation_code, sex").in("id", Array.from(athleteIds)),
     admin
       .from("odds")
@@ -391,7 +391,20 @@ async function scoreIndividualPredictions(
       .is("valid_until", null)
       .in("athlete_id", Array.from(athleteIds)),
     admin.from("favorite_teams").select("user_id, nation_code, sex").eq("season_id", stage.season_id),
+    // Cartes jouées (Ça farte, 4e choix) : elles font foi, pas le seul champ du pronostic.
+    admin
+      .from("bonus_cards")
+      .select("id, user_id, card_type, status, used_on_race_id")
+      .eq("season_id", stage.season_id)
+      .eq("status", "used")
+      .in("card_type", ["ca_farte", "balle_de_pioche"]),
+    getSeasonCardRaces(admin, stage.season_id),
   ]);
+
+  const cardsByUserId = new Map<string, CardRow[]>();
+  for (const c of (playedCards ?? []) as (CardRow & { user_id: string })[]) {
+    cardsByUserId.set(c.user_id, [...(cardsByUserId.get(c.user_id) ?? []), c]);
+  }
 
   const athleteTeamByAthleteId: Record<string, { nationCode: string; sex: "H" | "F" }> = {};
   for (const a of athletes ?? []) athleteTeamByAthleteId[a.id] = { nationCode: a.nation_code, sex: a.sex };
@@ -420,15 +433,15 @@ async function scoreIndividualPredictions(
   for (const prediction of predictions) {
     const favoriteTeam = favoriteTeamByUserId.get(prediction.user_id) ?? null;
 
-    const card: BonusCardEffect =
-      prediction.bonus_card_used === "ca_farte" && prediction.bonus_card_target_athlete_id
-        ? { type: "ca_farte", targetAthleteId: prediction.bonus_card_target_athlete_id }
-        : prediction.bonus_card_used === "balle_de_pioche"
-          ? { type: "balle_de_pioche" }
-          : { type: "none" };
+    const { athleteIds: predictedAthleteIds, card } = resolvePredictionCard(
+      race.id,
+      prediction,
+      cardsByUserId.get(prediction.user_id) ?? [],
+      seasonRaces
+    );
 
     const result = computeIndividualRaceScore({
-      predictedAthleteIds: prediction.athlete_ids ?? [],
+      predictedAthleteIds,
       results: scoringResults,
       oddsByAthleteId,
       athleteTeamByAthleteId,

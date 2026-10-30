@@ -21,6 +21,7 @@ import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
 import { SPECIAL_RULE_ICONS } from "@/lib/specialRules";
+import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
 import { FuseeGachetteLegend, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 
 export const dynamic = "force-dynamic";
@@ -61,8 +62,10 @@ export default async function RacePage({
   let initialNationSelection: string | null = null;
   let grilledAthleteIds: string[] = [];
   let availableCards: { id: string; card_type: string }[] = [];
+  // Cartes jouables sur cette course (une seule à la fois) et carte déjà jouée qui la couvre.
+  let playableCards: { id: string; card_type: string }[] = [];
+  let activeCard: "ca_farte" | "balle_de_pioche" | null = null;
   let initialBonusX2 = false;
-  let initialCardUsed: string | null = null;
   let initialCardTarget: string | null = null;
 
   // §7 — bonus ×2 personnel : 3 fois par saison, jamais sur une course
@@ -71,16 +74,27 @@ export default async function RacePage({
   let x2UsesRemaining = 0;
 
   if (user) {
-    const [{ data: cards }, { count: x2UsedCount }] = await Promise.all([
-      supabase.from("bonus_cards").select("id, card_type").eq("user_id", user.id).eq("season_id", stage.season_id).eq("status", "available"),
+    const [{ data: cards }, { count: x2UsedCount }, seasonRaces] = await Promise.all([
+      supabase
+        .from("bonus_cards")
+        .select("id, card_type, status, used_on_race_id")
+        .eq("user_id", user.id)
+        .eq("season_id", stage.season_id),
       supabase
         .from("predictions")
         .select("id, races!inner(stages!inner(season_id))", { count: "exact", head: true })
         .eq("user_id", user.id)
         .eq("bonus_x2_used", true)
         .eq("races.stages.season_id", stage.season_id),
+      getSeasonCardRaces(supabase, stage.season_id),
     ]);
-    availableCards = cards ?? [];
+    const cardRows = (cards ?? []) as CardRow[];
+    availableCards = cardRows.filter((c) => c.status === "available");
+    const onRace = cardsOnRace(race.id, cardRows, seasonRaces);
+    activeCard = onRace.quatriemeChoix ? "balle_de_pioche" : onRace.caFarte ? "ca_farte" : null;
+    playableCards = availableCards.filter(
+      (c) => (c.card_type === "ca_farte" || c.card_type === "balle_de_pioche") && canPlayCard(c.card_type, race.id, cardRows, seasonRaces)
+    );
     x2UsesRemaining = Math.max(0, 3 - (x2UsedCount ?? 0));
   }
 
@@ -159,7 +173,6 @@ export default async function RacePage({
         grilledAthleteIds = previousPrediction?.athlete_ids ?? [];
       }
       initialBonusX2 = existing?.bonus_x2_used ?? false;
-      initialCardUsed = existing?.bonus_card_used ?? null;
       initialCardTarget = existing?.bonus_card_target_athlete_id ?? null;
     }
   }
@@ -285,9 +298,9 @@ export default async function RacePage({
                   athletes={selectableAthletes}
                   initialSelection={initialAthleteSelection}
                   grilledAthleteIds={grilledAthleteIds}
-                  availableCards={availableCards}
+                  playableCards={playableCards}
+                  activeCard={activeCard}
                   initialBonusX2={initialBonusX2}
-                  initialCardUsed={initialCardUsed}
                   initialCardTarget={initialCardTarget}
                   x2Eligible={x2Eligible}
                   x2UsesRemaining={x2UsesRemaining}

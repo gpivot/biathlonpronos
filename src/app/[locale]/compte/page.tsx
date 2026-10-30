@@ -9,7 +9,6 @@ import { ThemeToggle } from "./ThemeToggle";
 import { PushStatusCard } from "./PushStatusCard";
 import { FavoriteTeamForm } from "./FavoriteTeamForm";
 import { SignOutButton } from "./SignOutButton";
-import { ClaimCardPicker } from "./ClaimCardPicker";
 
 export const dynamic = "force-dynamic";
 
@@ -39,37 +38,14 @@ export default async function ComptePage() {
   ]);
 
   let favoriteTeam: { nation_code: string; sex: "H" | "F" } | null = null;
-  let availableCards: { card_type: string }[] = [];
-  let unclaimedCount = 0;
   if (season) {
-    const [{ data: favorite }, { data: cards }, { data: streak }, { count: claimedCount }] = await Promise.all([
-      supabase
-        .from("favorite_teams")
-        .select("nation_code, sex")
-        .eq("user_id", user.id)
-        .eq("season_id", season.id)
-        .maybeSingle(),
-      supabase
-        .from("bonus_cards")
-        .select("card_type")
-        .eq("user_id", user.id)
-        .eq("season_id", season.id)
-        .eq("status", "available"),
-      supabase
-        .from("streak_counters")
-        .select("cards_earned")
-        .eq("user_id", user.id)
-        .eq("season_id", season.id)
-        .maybeSingle(),
-      supabase
-        .from("bonus_cards")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .eq("season_id", season.id),
-    ]);
+    const { data: favorite } = await supabase
+      .from("favorite_teams")
+      .select("nation_code, sex")
+      .eq("user_id", user.id)
+      .eq("season_id", season.id)
+      .maybeSingle();
     favoriteTeam = favorite ?? null;
-    availableCards = cards ?? [];
-    unclaimedCount = Math.max(0, (streak?.cards_earned ?? 0) - (claimedCount ?? 0));
   }
 
   const [tSupport, tGlobal] = await Promise.all([getTranslations("Support"), getTranslations("Landing")]);
@@ -112,32 +88,6 @@ export default async function ComptePage() {
             initialSex={favoriteTeam?.sex ?? null}
           />
         )}
-
-        {season && unclaimedCount > 0 && (
-          <ClaimCardPicker
-            seasonId={season.id}
-            unclaimedCount={unclaimedCount}
-            heldAvailableTypes={availableCards.map((c) => c.card_type)}
-          />
-        )}
-
-        <Card>
-          <SectionLabel>🃏 {t("bonusCardsTitle")}</SectionLabel>
-          {availableCards.length === 0 ? (
-            <p className="text-[12px] text-text-dim">{t("bonusCardsEmpty")}</p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {availableCards.map((c, i) => (
-                <span
-                  key={i}
-                  className="rounded-full bg-gold-soft px-3 py-1 font-display text-[12px] font-bold text-gold"
-                >
-                  {t(`cardLabel_${c.card_type}`)}
-                </span>
-              ))}
-            </div>
-          )}
-        </Card>
 
         <Card>
           <SectionLabel>🌐 {t("languageTitle")}</SectionLabel>

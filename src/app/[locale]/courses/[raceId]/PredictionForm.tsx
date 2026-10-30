@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "@/i18n/navigation";
 import { CheckIcon } from "@/components/icons";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
@@ -24,9 +25,9 @@ export function PredictionForm({
   athletes,
   initialSelection,
   grilledAthleteIds,
-  availableCards,
+  playableCards,
+  activeCard,
   initialBonusX2,
-  initialCardUsed,
   initialCardTarget,
   x2Eligible,
   x2UsesRemaining,
@@ -38,9 +39,11 @@ export function PredictionForm({
   athletes: AthleteWithOdds[];
   initialSelection: string[];
   grilledAthleteIds: string[];
-  availableCards: { id: string; card_type: string }[];
+  /** Cartes que le joueur peut encore jouer sur cette course (une seule carte à la fois). */
+  playableCards: { id: string; card_type: string }[];
+  /** Carte déjà jouée qui couvre cette course (4e choix sur sa fenêtre, ou Ça farte posé ici). */
+  activeCard: "ca_farte" | "balle_de_pioche" | null;
   initialBonusX2: boolean;
-  initialCardUsed: string | null;
   initialCardTarget: string | null;
   x2Eligible: boolean;
   x2UsesRemaining: number;
@@ -50,9 +53,7 @@ export function PredictionForm({
   startGaps?: Record<string, number>;
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
-  const [cardChoice, setCardChoice] = useState<CardChoice>(
-    initialCardUsed === "balle_de_pioche" || initialCardUsed === "ca_farte" ? initialCardUsed : "none"
-  );
+  const [cardChoice, setCardChoice] = useState<CardChoice>(activeCard ?? "none");
   const [caFarteTarget, setCaFarteTarget] = useState<string | null>(initialCardTarget);
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
   const hasStartOrder = Object.keys(startOrder).length > 0;
@@ -64,17 +65,20 @@ export function PredictionForm({
   const [savedState, setSavedState] = useState(() => ({
     key: [...initialSelection].sort().join(","),
     bonusX2: initialBonusX2,
-    card: initialCardUsed,
+    card: activeCard as string | null,
     target: initialCardTarget,
   }));
   const supabase = createClient();
+  const router = useRouter();
   const t = useTranslations("PredictionForm");
 
   const grilledSet = new Set(grilledAthleteIds);
-  const hasBalleDePioche = availableCards.some((c) => c.card_type === "balle_de_pioche");
-  const hasCaFarte = availableCards.some((c) => c.card_type === "ca_farte");
+  const hasBalleDePioche = playableCards.some((c) => c.card_type === "balle_de_pioche");
+  const hasCaFarte = playableCards.some((c) => c.card_type === "ca_farte");
   const canUseX2 = x2Eligible && (initialBonusX2 || x2UsesRemaining > 0);
+  // 4e choix : jusqu'à 4 biathlètes (3 suffisent), les 3 meilleurs comptent.
   const requiredCount = cardChoice === "balle_de_pioche" ? 4 : 3;
+  const canSubmit = cardChoice === "balle_de_pioche" ? selected.length >= 3 && selected.length <= 4 : selected.length === 3;
 
   function toggle(athleteId: string) {
     setSelected((prev) => {
@@ -126,15 +130,11 @@ export function PredictionForm({
     let failure = predictionError;
 
     if (!failure) {
-      // Consomme la carte si elle vient d'être appliquée (pas déjà utilisée
-      // lors d'un enregistrement précédent de ce même pronostic).
-      if (cardChoice !== "none" && cardChoice !== initialCardUsed) {
-        const card = availableCards.find((c) => c.card_type === cardChoice);
+      // Joue la carte si elle vient d'être choisie (la base vérifie la règle « une carte à la fois »).
+      if (cardChoice !== "none" && cardChoice !== activeCard) {
+        const card = playableCards.find((c) => c.card_type === cardChoice);
         if (card) {
-          const { error: cardError } = await supabase
-            .from("bonus_cards")
-            .update({ status: "used", used_at: new Date().toISOString(), used_on_race_id: raceId })
-            .eq("id", card.id);
+          const { error: cardError } = await supabase.rpc("play_bonus_card", { p_card_id: card.id, p_race_id: raceId });
           failure = failure ?? cardError;
         }
       }
@@ -151,6 +151,8 @@ export function PredictionForm({
         card: cardChoice === "none" ? null : cardChoice,
         target: cardChoice === "ca_farte" ? caFarteTarget : null,
       });
+      // La carte jouée devient « active » : l'encadré des cartes et le formulaire se mettent à jour.
+      if (cardChoice !== "none" && cardChoice !== activeCard) router.refresh();
     }
   }
 
@@ -185,7 +187,7 @@ export function PredictionForm({
         onToggleX2={() => {
           setBonusX2((v) => !v);
         }}
-        canSubmit={selected.length === requiredCount}
+        canSubmit={canSubmit}
         saving={saving}
         onSubmit={submit}
         unsaved={unsaved}
@@ -293,10 +295,24 @@ export function PredictionForm({
         })}
       </div>
 
-      {(hasBalleDePioche || hasCaFarte) && (
+      {activeCard ? (
+        <div className="rounded-2xl border border-gold/40 bg-gold-soft p-3.5 text-[13px] leading-relaxed text-frost">
+          <span className="font-display font-bold text-gold">
+            🃏 {activeCard === "balle_de_pioche" ? t("cardBalleDePioche") : t("cardCaFarte")}
+          </span>{" "}
+          · {activeCard === "balle_de_pioche" ? t("quatriemeChoixActive") : t("caFarteActive")}
+        </div>
+      ) : (hasBalleDePioche || hasCaFarte) && (
         <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-3.5">
           <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
             {t("cardSectionTitle")}
+          </div>
+          <div className="text-[12px] leading-relaxed text-text-dim">
+            {cardChoice === "balle_de_pioche"
+              ? t("quatriemeChoixHint")
+              : cardChoice === "ca_farte"
+                ? t("caFarteHint")
+                : t("cardHint")}
           </div>
           <div className="flex flex-wrap gap-2">
             <CardOption label={t("noCard")} active={cardChoice === "none"} onClick={() => changeCard("none")} />
