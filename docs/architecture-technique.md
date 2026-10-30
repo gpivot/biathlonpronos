@@ -837,6 +837,11 @@ le départ, et ne rien afficher tant que la liste n'est pas connue.
   fiable (pas d'erreur de recopie), gratuit et instantané. Les biathlètes sont rapprochés par
   nom (`matchStartList`) des athlètes ayant une cote pour ce format ; **les cotes ne sont pas
   modifiées**. Ré-exécutable ; bouton « Effacer la liste IBU ».
+- **Automatique après la course précédente** : valider les résultats d'une course individuelle
+  (non relais) tente aussi de récupérer la liste IBU de la mass start suivante de l'étape, même
+  sexe, si elle n'en a pas encore. Si l'IBU ne l'a pas encore publiée, le message le signale et
+  le bouton manuel reste disponible. La liste n'est pas calculée par l'application (règle IBU
+  25 + 5, général de la Coupe du monde non stocké).
 - **À confirmer** : un biathlète de la liste IBU sans cote dans le jeu n'est pas pronostiquable
   (il est seulement signalé à l'admin). La restriction est faite par l'écran de pronostic, pas par
   une règle de la base (un pronostic écrit directement en base n'est pas vérifié).
