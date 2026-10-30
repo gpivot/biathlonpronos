@@ -32,16 +32,45 @@ export async function submitResults(
     await saveRaceResults(admin, raceId, entries);
     const summary = await scoreRace(admin, raceId);
     const pursuitRescored = await rescorePursuitAfterSprint(admin, raceId);
+    const massStartNote = await tryMassStartListAfter(admin, raceId);
     revalidatePath("/admin", "layout");
     return {
       status: "success",
       message:
         `Résultats enregistrés, ${summary.scoredPredictions} pronostic(s) noté(s), séries 10/10 recalculées.` +
-        (pursuitRescored ? " Poursuite de l'étape renotée avec ses nouvelles cotes." : ""),
+        (pursuitRescored ? " Poursuite de l'étape renotée avec ses nouvelles cotes." : "") +
+        massStartNote,
     };
   } catch (err) {
     return { status: "error", message: err instanceof Error ? err.message : "Erreur inconnue." };
   }
+}
+
+/**
+ * Après la saisie d'une course individuelle, tente de récupérer la liste de départ IBU de la mass
+ * start suivante de l'étape (même sexe), si elle n'en a pas encore. Sans liste publiée, rien ne
+ * change : le bouton de la page de la mass start reste disponible.
+ */
+async function tryMassStartListAfter(admin: ReturnType<typeof createAdminClient>, raceId: string): Promise<string> {
+  const { data: race } = await admin.from("races").select("stage_id, sex, format, locks_at").eq("id", raceId).single();
+  if (!race?.sex || race.format === "mass_start" || race.format.startsWith("relais_")) return "";
+  const { data: massStart } = await admin
+    .from("races")
+    .select("id")
+    .eq("stage_id", race.stage_id)
+    .eq("format", "mass_start")
+    .eq("sex", race.sex)
+    .gt("locks_at", race.locks_at)
+    .order("locks_at", { ascending: true })
+    .limit(1)
+    .maybeSingle();
+  if (!massStart) return "";
+  const { count } = await admin.from("race_start_lists").select("athlete_id", { count: "exact", head: true }).eq("race_id", massStart.id);
+  if ((count ?? 0) > 0) return "";
+  const outcome = await importIbuStartList(admin, massStart.id);
+  return outcome.ok
+    ? ` Mass start : ${outcome.message}`
+    : " Mass start : liste de départ pas encore publiée par l'IBU, réessaie depuis la page de la mass start.";
 }
 
 export interface IbuImportState {
@@ -90,8 +119,10 @@ export interface StartListImportState {
  */
 export async function loadIbuStartList(raceId: string, forcedIbuRaceId?: string): Promise<StartListImportState> {
   await requireAdmin();
-  const admin = createAdminClient();
+  return importIbuStartList(createAdminClient(), raceId, forcedIbuRaceId);
+}
 
+async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, raceId: string, forcedIbuRaceId?: string): Promise<StartListImportState> {
   const { data: race } = await admin
     .from("races")
     .select("format, sex, locks_at, stages(season_id, location, starts_on, ends_on, seasons(label))")
