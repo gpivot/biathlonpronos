@@ -133,6 +133,10 @@
     "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Des classements annexes (Dossard Rouge) et des ligues privées entre amis existent aussi."
   },
   "Compte": {
+    "pushTitle": "📱 Notifications de l'appli",
+    "pushOn": "Activées sur ce téléphone",
+    "pushOff": "Désactivées. Pour les recevoir, autorise-les dans les réglages du téléphone.",
+    "pushEnable": "Activer les notifications",
     "back": "← Retour",
     "loginRequired": "Connecte-toi pour accéder à ton compte.",
     "favoriteTeamTitle": "Équipe favorite",

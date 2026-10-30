@@ -133,6 +133,10 @@
     "s_classement_body": "Suma todos los puntos conseguidos durante la temporada. El líder lleva el Dorsal amarillo. También hay clasificaciones secundarias (Dorsal rojo) y ligas privadas entre amigos."
   },
   "Compte": {
+    "pushTitle": "📱 Notificaciones de la app",
+    "pushOn": "Activadas en este teléfono",
+    "pushOff": "Desactivadas. Para recibirlas, permítelas en los ajustes del teléfono.",
+    "pushEnable": "Activar las notificaciones",
     "back": "← Volver",
     "loginRequired": "Inicia sesión para acceder a tu cuenta.",
     "favoriteTeamTitle": "Equipo favorito",

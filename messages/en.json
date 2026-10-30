@@ -133,6 +133,10 @@
     "s_classement_body": "Adds up every point scored over the season. The leader wears the Yellow Bib. Secondary standings (Red Bib) and private leagues between friends also exist."
   },
   "Compte": {
+    "pushTitle": "📱 App notifications",
+    "pushOn": "On for this phone",
+    "pushOff": "Off. To receive them, allow them in your phone's settings.",
+    "pushEnable": "Turn on notifications",
     "back": "← Back",
     "loginRequired": "Log in to access your account.",
     "favoriteTeamTitle": "Favorite team",

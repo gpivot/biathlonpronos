@@ -133,6 +133,10 @@
     "s_classement_body": "Somma tutti i punti ottenuti nella stagione. Il leader indossa il Pettorale giallo. Esistono anche classifiche secondarie (Pettorale rosso) e leghe private tra amici."
   },
   "Compte": {
+    "pushTitle": "📱 Notifiche dell'app",
+    "pushOn": "Attive su questo telefono",
+    "pushOff": "Disattivate. Per riceverle, consentile nelle impostazioni del telefono.",
+    "pushEnable": "Attiva le notifiche",
     "back": "← Indietro",
     "loginRequired": "Accedi per entrare nel tuo account.",
     "favoriteTeamTitle": "Squadra preferita",

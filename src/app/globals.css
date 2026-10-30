@@ -8,6 +8,21 @@ body {
   margin: 0;
 }
 
+/* Appli iOS / Android (et iPhone en paysage) : le contenu ne passe pas sous l'encoche ni la barre
+   d'état. Vaut 0 dans un navigateur ordinaire. */
+body {
+  padding-top: env(safe-area-inset-top);
+}
+/* Bandeau opaque derrière la barre d'état, pour que la page ne défile pas visiblement dessous. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: env(safe-area-inset-top);
+  background: rgb(var(--c-bg));
+  z-index: 60;
+}
+
 /* Palette : thème sombre par défaut (planche d'identité), thème clair via la classe `light` sur
    <html>, choisie dans Profil > Apparence et mémorisée dans le navigateur (localStorage "theme"). */
 :root {

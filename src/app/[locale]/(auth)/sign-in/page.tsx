@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AppleIcon, FacebookIcon, GoogleIcon, LogoMark } from "@/components/icons";
+import { isNativeApp } from "@/lib/native/firebaseMessaging";
 
 export default function SignInPage() {
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
@@ -12,6 +13,10 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  // Dans l'appli Android / iOS, Google refuse la connexion depuis une vue web intégrée : on n'y
+  // propose que l'email (à revoir quand la connexion Google / Apple sera branchée en natif).
+  const [inApp, setInApp] = useState(false);
+  useEffect(() => setInApp(isNativeApp()), []);
 
   const supabase = createClient();
   const router = useRouter();
@@ -57,30 +62,34 @@ export default function SignInPage() {
         <p className="text-sm text-text-dim">{t("prompt")}</p>
       </div>
 
-      <div className="flex w-full flex-col gap-3">
-        {(
-          [
-            { provider: "google", label: t("continueGoogle"), icon: <GoogleIcon className="h-5 w-5" /> },
-            { provider: "apple", label: t("continueApple"), icon: <AppleIcon className="h-5 w-5" /> },
-            { provider: "facebook", label: t("continueFacebook"), icon: <FacebookIcon className="h-5 w-5" /> },
-          ] as const
-        ).map(({ provider, label, icon }) => (
-          <button
-            key={provider}
-            onClick={() => handleOAuth(provider)}
-            className="flex items-center justify-center gap-3 rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
-          >
-            {icon}
-            {label}
-          </button>
-        ))}
-      </div>
+      {!inApp && (
+        <>
+          <div className="flex w-full flex-col gap-3">
+            {(
+              [
+                { provider: "google", label: t("continueGoogle"), icon: <GoogleIcon className="h-5 w-5" /> },
+                { provider: "apple", label: t("continueApple"), icon: <AppleIcon className="h-5 w-5" /> },
+                { provider: "facebook", label: t("continueFacebook"), icon: <FacebookIcon className="h-5 w-5" /> },
+              ] as const
+            ).map(({ provider, label, icon }) => (
+              <button
+                key={provider}
+                onClick={() => handleOAuth(provider)}
+                className="flex items-center justify-center gap-3 rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
+              >
+                {icon}
+                {label}
+              </button>
+            ))}
+          </div>
 
-      <div className="flex w-full items-center gap-3 text-xs text-text-dim">
-        <div className="h-px flex-1 bg-border" />
-        {t("or")}
-        <div className="h-px flex-1 bg-border" />
-      </div>
+          <div className="flex w-full items-center gap-3 text-xs text-text-dim">
+            <div className="h-px flex-1 bg-border" />
+            {t("or")}
+            <div className="h-px flex-1 bg-border" />
+          </div>
+        </>
+      )}
 
       <form onSubmit={handleEmailSubmit} className="flex w-full flex-col gap-3">
         <input
@@ -105,11 +114,7 @@ export default function SignInPage() {
           disabled={loading}
           className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice disabled:opacity-60"
         >
-          {loading
-            ? t("connecting")
-            : mode === "sign-up"
-              ? t("signUpSubmit")
-              : t("submit")}
+          {loading ? t("connecting") : mode === "sign-up" ? t("signUpSubmit") : t("submit")}
         </button>
       </form>
 

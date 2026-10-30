@@ -38,7 +38,7 @@ export function SimulatedClockBanner() {
   const simulatedNow = new Date(Date.now() + offset);
 
   return (
-    <div className="sticky top-0 z-50 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-gold px-4 py-1.5 text-center text-xs font-semibold text-bg">
+    <div className="sticky top-[env(safe-area-inset-top)] z-50 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-gold px-4 py-1.5 text-center text-xs font-semibold text-bg">
       <span>
         Horloge simulée :{" "}
         {simulatedNow.toLocaleString("fr-FR", { timeZone: DISPLAY_TIME_ZONE, weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
