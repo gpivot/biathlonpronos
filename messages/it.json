@@ -64,7 +64,14 @@
     "favoriteTeamWins": "{count, plural, one {# vittoria} other {# vittorie}}",
     "favoriteTeamPodiums": "{count, plural, one {# podio} other {# podi}}",
     "nextStageTitle": "Prossima tappa",
-    "lastResultExtra_equipe": "Carta Squadra"
+    "seasonPicksTitle": "Pronostici stagionali",
+    "seasonPicksHint": "Grandi globi, migliori giovani, migliori nazioni e le tue Pepite: da inserire prima dell'inizio della stagione!",
+    "seasonPicksDone": "Tutto inserito. Puoi ancora cambiare idea fino all'inizio della stagione.",
+    "seasonPicksButton": "Inserisci i miei pronostici stagionali",
+    "seasonPicksEdit": "Modifica i miei pronostici stagionali",
+    "lastResultExtra_equipe": "Carta Squadra",
+    "favoriteTeamInvite": "Scegli la tua squadra preferita",
+    "favoriteTeamInviteHint": "Segui le sue vittorie e i suoi podi, e prepara la carta bonus Squadra."
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",
@@ -146,7 +153,7 @@
     "back": "← Indietro",
     "loginRequired": "Accedi per entrare nel tuo account.",
     "favoriteTeamTitle": "Squadra preferita",
-    "favoriteTeamHint": "Una nazione + un sesso (es. Francia Donne). Per divertimento: seguirai le sue vittorie e i suoi podi della stagione nella home.",
+    "favoriteTeamHint": "Una nazione + un sesso (es. Francia Donne). Seguirai le sue vittorie e i suoi podi in home, e varrà con la carta bonus Squadra. Scelta definitiva per la stagione.",
     "women": "Donne",
     "men": "Uomini",
     "save": "Salva",
@@ -169,7 +176,13 @@
     "editPseudo": "Modifica il nickname",
     "cancel": "Annulla",
     "pseudoLengthError": "Il nickname deve contenere tra {min} e {max} caratteri.",
-    "lightTheme": "Tema chiaro"
+    "lightTheme": "Tema chiaro",
+    "favoriteTeamChoose": "Scegli questa squadra",
+    "favoriteTeamWarning": "Scegli {team}. Questa scelta è definitiva per tutta la stagione e varrà con la carta bonus Squadra. Confermi?",
+    "favoriteTeamConfirm": "Confermo",
+    "favoriteTeamCancel": "Annulla",
+    "favoriteTeamChosen": "Scelta definitiva per la stagione. È la squadra che conta con la carta bonus Squadra.",
+    "favoriteTeamLocked": "La tua carta Squadra è già attiva: la squadra preferita non può più essere scelta in questa stagione."
   },
   "Globes": {
     "back": "← Indietro",
@@ -250,7 +263,8 @@
     "pepite_F": "La mia Pepita donne",
     "pepite_H": "La mia Pepita uomini",
     "specialRaceBanner": "Gara malus · {name}",
-    "opensOn": "Apre il {date}"
+    "opensOn": "Apre il {date}",
+    "seasonPredictionsComplete": "Completa"
   },
   "RaceFormat": {
     "sprint": "Sprint",

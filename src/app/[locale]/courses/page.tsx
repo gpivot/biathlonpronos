@@ -20,6 +20,8 @@ interface CalendarData {
   isAdmin: boolean;
   /** null : visiteur non connecté. */
   seasonPicks: SeasonPick[] | null;
+  /** Pronostics de saison encore modifiables (avant le début de saison, comme /globes). */
+  seasonPicksOpen: boolean;
   streak: number | null;
   cards: PlayerCards | null;
 }
@@ -38,11 +40,11 @@ async function getCalendarData(): Promise<CalendarData> {
     isAdmin = profile?.is_admin ?? false;
   }
 
-  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, streak: null, cards: null };
+  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, seasonPicksOpen: false, streak: null, cards: null };
 
   const { now } = await getClock();
   const { stages, seasonPicks, streak, cards } = await getSeasonView(supabase, season, userResult.user?.id ?? null, now);
-  return { seasonId: season.id, stages, isAdmin, seasonPicks, streak, cards };
+  return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, streak, cards };
 }
 
 export default async function CoursesPage({
@@ -56,7 +58,7 @@ export default async function CoursesPage({
   // Arrivée depuis « L'étape de la semaine » de l'accueil : cette étape est dépliée d'office.
   const { etape } = await searchParams;
   const t = await getTranslations("Courses");
-  const { seasonId, stages, isAdmin, seasonPicks, streak, cards } = await getCalendarData();
+  const { seasonId, stages, isAdmin, seasonPicks, seasonPicksOpen, streak, cards } = await getCalendarData();
   const requestedStageId = etape && stages.some((s) => s.id === etape) ? etape : null;
 
   return (
@@ -75,7 +77,7 @@ export default async function CoursesPage({
 
         {isAdmin && seasonId && <CalendarImportButton seasonId={seasonId} />}
 
-        {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} />}
+        {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} open={seasonPicksOpen} />}
 
         {streak != null && <StreakCard current={streak} cards={cards ?? undefined} seasonId={seasonId ?? undefined} />}
 

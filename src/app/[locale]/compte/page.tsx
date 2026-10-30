@@ -8,6 +8,7 @@ import { PseudoEditor } from "./PseudoEditor";
 import { ThemeToggle } from "./ThemeToggle";
 import { PushStatusCard } from "./PushStatusCard";
 import { FavoriteTeamForm } from "./FavoriteTeamForm";
+import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { SignOutButton } from "./SignOutButton";
 
 export const dynamic = "force-dynamic";
@@ -38,14 +39,14 @@ export default async function ComptePage() {
   ]);
 
   let favoriteTeam: { nation_code: string; sex: "H" | "F" } | null = null;
+  let equipeActive = false;
   if (season) {
-    const { data: favorite } = await supabase
-      .from("favorite_teams")
-      .select("nation_code, sex")
-      .eq("user_id", user.id)
-      .eq("season_id", season.id)
-      .maybeSingle();
+    const [{ data: favorite }, active] = await Promise.all([
+      supabase.from("favorite_teams").select("nation_code, sex").eq("user_id", user.id).eq("season_id", season.id).maybeSingle(),
+      isEquipeCardActive(supabase, user.id, season.id),
+    ]);
     favoriteTeam = favorite ?? null;
+    equipeActive = active;
   }
 
   const [tSupport, tGlobal] = await Promise.all([getTranslations("Support"), getTranslations("Landing")]);
@@ -84,8 +85,8 @@ export default async function ComptePage() {
           <FavoriteTeamForm
             seasonId={season.id}
             nations={nations!}
-            initialNationCode={favoriteTeam?.nation_code ?? null}
-            initialSex={favoriteTeam?.sex ?? null}
+            initial={favoriteTeam ? { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex } : null}
+            locked={equipeActive}
           />
         )}
 

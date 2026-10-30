@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
-import { LogoMark } from "@/components/icons";
+import { ChevronRightIcon, LogoMark } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
@@ -18,6 +18,8 @@ import { getRaceResult } from "@/lib/lastResult";
 import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 import { StreakCard } from "@/components/StreakCard";
+import { SeasonPicksInvite } from "@/components/SeasonPicksInvite";
+import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { getCurrentStreak } from "@/lib/streakCounter";
 import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
 import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
@@ -43,6 +45,10 @@ interface HomeData {
   favoriteTeamStats: FavoriteTeamStats | null;
   lastResults: LastResult[];
   streak: number | null;
+  /** Avant la 1re course de la saison : nombre de pronostics de saison faits (6 globes + 2 Pépites), null ensuite. */
+  seasonPicksBeforeStart: number | null;
+  /** Pas encore d'équipe favorite et carte Équipe pas active : invitation à la choisir. */
+  canChooseFavoriteTeam: boolean;
   cards: PlayerCards | null;
 }
 
@@ -50,19 +56,19 @@ async function getHomeData(): Promise<HomeData> {
   const supabase = createClient();
 
   const [{ data: season }, { data: userResult }] = await Promise.all([
-    supabase.from("seasons").select("id, label").eq("status", "active").maybeSingle(),
+    supabase.from("seasons").select("id, label, starts_on").eq("status", "active").maybeSingle(),
     supabase.auth.getUser(),
   ]);
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, cards: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, seasonPicksBeforeStart: null, canChooseFavoriteTeam: false, cards: null };
   }
 
   const { now } = await getClock();
 
   const weekStage = user ? await getWeekStage(supabase, season.id, user.id, now) : null;
-  const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges] = await Promise.all([
+  const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges, { count: startedRaces }] = await Promise.all([
     supabase
       .from("races")
       .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id, starts_on)")
@@ -90,7 +96,22 @@ async function getHomeData(): Promise<HomeData> {
         )
       : Promise.resolve([]),
     getPlayerBadges(supabase, season.id),
+    // La saison a commencé dès qu'une course est partie : la « Série en cours » remplace alors l'invitation aux pronostics de saison.
+    supabase
+      .from("races")
+      .select("id, stages!inner(season_id)", { count: "exact", head: true })
+      .eq("stages.season_id", season.id)
+      .lte("locks_at", now.toISOString()),
   ]);
+  let seasonPicksBeforeStart: number | null = null;
+  // Aussi masquée dès le verrouillage des pronostics de saison (début de saison, cf. /globes), pour ne pas inviter vers une page fermée.
+  if (user && (startedRaces ?? 0) === 0 && new Date(season.starts_on) > now) {
+    const [{ count: globes }, { count: pepites }] = await Promise.all([
+      supabase.from("season_predictions").select("category", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
+      supabase.from("pepites").select("sex", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
+    ]);
+    seasonPicksBeforeStart = (globes ?? 0) + (pepites ?? 0);
+  }
   const weekResults = Object.fromEntries(weekResult.filter((r): r is LastResult => r != null).map((r) => [r.raceId, r]));
   const nextRace = weekStage ? null : ((upcomingRaces ?? []) as any[])[0] ?? null;
 
@@ -104,6 +125,7 @@ async function getHomeData(): Promise<HomeData> {
     .maybeSingle();
 
   const favoriteTeam = favoriteTeamResult.data as HomeData["favoriteTeam"];
+  const canChooseFavoriteTeam = Boolean(user && !favoriteTeam && !(await isEquipeCardActive(supabase, user.id, season.id)));
   const favoriteTeamStats = favoriteTeam
     ? await getFavoriteTeamStats(supabase, season.id, { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex })
     : null;
@@ -138,13 +160,15 @@ async function getHomeData(): Promise<HomeData> {
     nextStage: nextStage as NextStage | null,
     lastResults,
     streak,
+    seasonPicksBeforeStart,
+    canChooseFavoriteTeam,
     cards,
   };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, cards }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, seasonPicksBeforeStart, canChooseFavoriteTeam, cards }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -180,6 +204,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="font-display text-[11px] font-bold uppercase tracking-wider text-gold">
               {t("seasonBadge", { label: season!.label })}
             </div>
+
+            {canChooseFavoriteTeam && (
+              <Link
+                href="/compte#equipe-favorite"
+                className="flex items-center gap-3 rounded-xl border border-ice/40 bg-ice-soft px-3 py-2.5"
+              >
+                <span className="text-lg">❤️</span>
+                <span className="flex flex-1 flex-col">
+                  <span className="font-display text-[13px] font-bold text-ice">{t("favoriteTeamInvite")}</span>
+                  <span className="text-[11px] text-text-dim">{t("favoriteTeamInviteHint")}</span>
+                </span>
+                <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-ice" />
+              </Link>
+            )}
 
             {favoriteTeam && (
               <div className="flex flex-col gap-1">
@@ -228,7 +266,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               </Link>
             </div>
 
-            {streak != null && (
+            {seasonPicksBeforeStart != null ? (
+              <SeasonPicksInvite chosen={seasonPicksBeforeStart} />
+            ) : streak != null && (
               <StreakCard current={streak} compact cards={cards ?? undefined} seasonId={season?.id} autoOpenClaim />
             )}
           </div>
