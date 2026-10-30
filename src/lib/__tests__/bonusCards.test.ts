@@ -112,3 +112,18 @@ describe("describeCard", () => {
     expect(unclaimedCredits(0, 1)).toBe(0);
   });
 });
+
+describe("4e choix activé automatiquement", () => {
+  it("Ça farte déjà posé l'emporte sur la course qu'il couvre", () => {
+    const cards = [
+      card({ id: "q", status: "used", used_on_race_id: "sprintF" }),
+      card({ id: "f", card_type: "ca_farte", status: "used", used_on_race_id: "sprintH" }),
+    ];
+    const prediction = { athlete_ids: ["a", "b", "c", "d"], bonus_card_target_athlete_id: "b" };
+    expect(resolvePredictionCard("sprintH", prediction, cards, races)).toEqual({
+      athleteIds: ["a", "b", "c"],
+      card: { type: "ca_farte", targetAthleteId: "b" },
+    });
+    expect(resolvePredictionCard("poursuiteF", prediction, cards, races).card).toEqual({ type: "balle_de_pioche" });
+  });
+});
