@@ -191,11 +191,13 @@ export function resolvePredictionCard(
 ): { athleteIds: string[]; card: BonusCardEffect } {
   const athleteIds = prediction.athlete_ids ?? [];
   const { quatriemeChoix, caFarte } = cardsOnRace(raceId, userCards, seasonRaces);
-  if (quatriemeChoix) return { athleteIds: athleteIds.slice(0, 4), card: { type: "balle_de_pioche" } };
   const counted = athleteIds.slice(0, 3);
   const target = prediction.bonus_card_target_athlete_id;
+  // Un 4e choix activé automatiquement peut couvrir une course où Ça farte était déjà posé :
+  // Ça farte, joué exprès par le joueur, l'emporte sur cette course (à confirmer).
   if (caFarte && target && counted.includes(target)) {
     return { athleteIds: counted, card: { type: "ca_farte", targetAthleteId: target } };
   }
+  if (quatriemeChoix) return { athleteIds: athleteIds.slice(0, 4), card: { type: "balle_de_pioche" } };
   return { athleteIds: counted, card: { type: "none" } };
 }

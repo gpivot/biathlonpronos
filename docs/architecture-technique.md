@@ -880,3 +880,13 @@ comptent ; le ×3 ne s'applique que sur la course où Ça farte a été joué.
 Code : `src/lib/bonusCards.ts` (testé), `src/components/StreakCard.tsx`, `ClaimCardPicker.tsx`,
 `BonusCardsList.tsx`, formulaire de pronostic (`PredictionForm`, props `playableCards` /
 `activeCard`).
+
+**Précisions de Guillaume (30/10/2026, après mise en ligne).**
+- Le choix de la carte bonus est en haut du formulaire de pronostic (au-dessus de « Mon pronostic »).
+- **Le 4e choix s'active tout seul** dès qu'il est choisi au 10/10 : sur la prochaine course
+  individuelle pas encore partie et les suivantes (2 par sexe). Il ne se joue plus depuis le
+  formulaire. Ça farte reste en main et se joue quand le joueur veut. Migration **0023**
+  (`claim_bonus_card` modifiée, `next_individual_race`, et activation des 4e choix déjà pris mais pas
+  joués), à coller par Guillaume.
+- Si le 4e choix couvre une course où Ça farte avait déjà été posé, Ça farte l'emporte sur cette
+  course (choix pragmatique, à confirmer).

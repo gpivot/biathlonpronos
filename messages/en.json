@@ -622,7 +622,7 @@
     "name_balle_de_pioche": "4th pick",
     "name_fondue": "Meltdown",
     "name_chat_noir": "Black Cat",
-    "desc_ca_farte": "A ×3 on one of your biathletes, for one individual race.",
-    "desc_balle_de_pioche": "4 biathletes instead of 3 over 4 individual races (2 men's, 2 women's): your best 3 count."
+    "desc_ca_farte": "Keep it in hand: a ×3 on one of your biathletes, on the individual race of your choice.",
+    "desc_balle_de_pioche": "Activates right away on the next 4 individual races (2 men's, 2 women's): 4 biathletes instead of 3, your best 3 count."
   }
 }

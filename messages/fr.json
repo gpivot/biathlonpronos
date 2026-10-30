@@ -622,7 +622,7 @@
     "name_balle_de_pioche": "4e choix",
     "name_fondue": "Fondue",
     "name_chat_noir": "Chat noir",
-    "desc_ca_farte": "Un ×3 sur un de tes biathlètes, le temps d'une course individuelle.",
-    "desc_balle_de_pioche": "4 biathlètes au lieu de 3 sur 4 courses individuelles (2 hommes, 2 femmes) : tes 3 meilleurs comptent."
+    "desc_ca_farte": "À garder en main : un ×3 sur un de tes biathlètes, sur la course individuelle de ton choix.",
+    "desc_balle_de_pioche": "S'active tout de suite, sur les 4 prochaines courses individuelles (2 hommes, 2 femmes) : 4 biathlètes au lieu de 3, tes 3 meilleurs comptent."
   }
 }

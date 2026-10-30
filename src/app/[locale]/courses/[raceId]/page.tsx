@@ -101,10 +101,9 @@ export default async function RacePage({
     const cardRows = (cards ?? []) as CardRow[];
     availableCards = cardRows.filter((c) => c.status === "available");
     const onRace = cardsOnRace(race.id, cardRows, seasonRaces);
-    activeCard = onRace.quatriemeChoix ? "balle_de_pioche" : onRace.caFarte ? "ca_farte" : null;
-    playableCards = availableCards.filter(
-      (c) => (c.card_type === "ca_farte" || c.card_type === "balle_de_pioche") && canPlayCard(c.card_type, race.id, cardRows, seasonRaces)
-    );
+    activeCard = onRace.caFarte ? "ca_farte" : onRace.quatriemeChoix ? "balle_de_pioche" : null;
+    // Le 4e choix s'active tout seul quand il est choisi (0023) : seul Ça farte se joue ici.
+    playableCards = availableCards.filter((c) => c.card_type === "ca_farte" && canPlayCard("ca_farte", race.id, cardRows, seasonRaces));
     x2UsesRemaining = Math.max(0, 3 - (x2UsedCount ?? 0));
   }
 
