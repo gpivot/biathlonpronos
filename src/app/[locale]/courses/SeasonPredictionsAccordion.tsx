@@ -19,7 +19,16 @@ export interface SeasonPick {
  * « Mes pronostics de saison » (globes et Pépites), replié par défaut en haut du Calendrier.
  * `readOnly` : ceux d'un autre joueur (pop-up du Classement), sans lien de modification.
  */
-export function SeasonPredictionsAccordion({ picks, readOnly = false }: { picks: SeasonPick[]; readOnly?: boolean }) {
+export function SeasonPredictionsAccordion({
+  picks,
+  readOnly = false,
+  open: picksOpen = false,
+}: {
+  picks: SeasonPick[];
+  readOnly?: boolean;
+  /** Encore modifiables : un bouton « Compléter » remplace « Pas encore choisi » sur les lignes vides. */
+  open?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("Courses");
   const tGlobes = useTranslations("Globes");
@@ -48,6 +57,13 @@ export function SeasonPredictionsAccordion({ picks, readOnly = false }: { picks:
                   {pick.nationCode && <span>{nationFlagEmoji(pick.nationCode)}</span>}
                   {pick.name}
                 </div>
+              ) : !readOnly && picksOpen ? (
+                <Link
+                  href="/globes"
+                  className="whitespace-nowrap rounded-full bg-gold px-3 py-1 font-display text-[12px] font-bold text-[#2a1900]"
+                >
+                  {t("seasonPredictionsComplete")}
+                </Link>
               ) : (
                 <div className="text-[12px] text-text-dim">{t("seasonPredictionsNone")}</div>
               )}

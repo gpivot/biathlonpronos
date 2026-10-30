@@ -69,7 +69,9 @@
     "seasonPicksDone": "All set. You can still change your mind until the season starts.",
     "seasonPicksButton": "Enter my season predictions",
     "seasonPicksEdit": "Edit my season predictions",
-    "lastResultExtra_equipe": "Team card"
+    "lastResultExtra_equipe": "Team card",
+    "favoriteTeamInvite": "Choose your favourite team",
+    "favoriteTeamInviteHint": "Follow its wins and podiums, and get ready for the Team bonus card."
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -151,7 +153,7 @@
     "back": "← Back",
     "loginRequired": "Log in to access your account.",
     "favoriteTeamTitle": "Favorite team",
-    "favoriteTeamHint": "A nation + a sex (e.g. France Women). Just for fun: you'll follow its wins and podiums of the season on the home page.",
+    "favoriteTeamHint": "A nation + a gender (e.g. France Women). You'll follow its wins and podiums on the home page, and it will count with the Team bonus card. Final choice for the season.",
     "women": "Women",
     "men": "Men",
     "save": "Save",
@@ -174,7 +176,13 @@
     "editPseudo": "Edit username",
     "cancel": "Cancel",
     "pseudoLengthError": "Your username must be between {min} and {max} characters.",
-    "lightTheme": "Light theme"
+    "lightTheme": "Light theme",
+    "favoriteTeamChoose": "Choose this team",
+    "favoriteTeamWarning": "You're choosing {team}. This choice is final for the whole season and will count with the Team bonus card. Confirm?",
+    "favoriteTeamConfirm": "Confirm",
+    "favoriteTeamCancel": "Cancel",
+    "favoriteTeamChosen": "Final choice for the season. This is the team that counts with the Team bonus card.",
+    "favoriteTeamLocked": "Your Team card is already active: the favourite team can no longer be chosen this season."
   },
   "Globes": {
     "back": "← Back",
@@ -255,7 +263,8 @@
     "pepite_F": "My women's Diamond in the Rough",
     "pepite_H": "My men's Diamond in the Rough",
     "specialRaceBanner": "Malus race · {name}",
-    "opensOn": "Opens {date}"
+    "opensOn": "Opens {date}",
+    "seasonPredictionsComplete": "Complete"
   },
   "RaceFormat": {
     "sprint": "Sprint",

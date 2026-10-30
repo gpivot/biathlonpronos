@@ -69,7 +69,9 @@
     "seasonPicksDone": "Alles eingetragen. Bis zum Saisonstart kannst du noch ändern.",
     "seasonPicksButton": "Meine Saisontipps eingeben",
     "seasonPicksEdit": "Meine Saisontipps ändern",
-    "lastResultExtra_equipe": "Team-Karte"
+    "lastResultExtra_equipe": "Team-Karte",
+    "favoriteTeamInvite": "Wähle dein Lieblingsteam",
+    "favoriteTeamInviteHint": "Verfolge seine Siege und Podestplätze und bereite die Bonuskarte Team vor."
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
@@ -151,7 +153,7 @@
     "back": "← Zurück",
     "loginRequired": "Melde dich an, um auf dein Konto zuzugreifen.",
     "favoriteTeamTitle": "Lieblingsteam",
-    "favoriteTeamHint": "Eine Nation + ein Geschlecht (z. B. Frankreich Frauen). Just for fun: Du verfolgst ihre Siege und Podestplätze der Saison auf der Startseite.",
+    "favoriteTeamHint": "Eine Nation + ein Geschlecht (z. B. Frankreich Frauen). Du verfolgst ihre Siege und Podestplätze auf der Startseite, und sie zählt für die Bonuskarte Team. Endgültige Wahl für die Saison.",
     "women": "Frauen",
     "men": "Männer",
     "save": "Speichern",
@@ -174,7 +176,13 @@
     "editPseudo": "Benutzernamen ändern",
     "cancel": "Abbrechen",
     "pseudoLengthError": "Der Benutzername muss zwischen {min} und {max} Zeichen lang sein.",
-    "lightTheme": "Helles Design"
+    "lightTheme": "Helles Design",
+    "favoriteTeamChoose": "Dieses Team wählen",
+    "favoriteTeamWarning": "Du wählst {team}. Diese Wahl gilt endgültig für die ganze Saison und zählt für die Bonuskarte Team. Bestätigen?",
+    "favoriteTeamConfirm": "Bestätigen",
+    "favoriteTeamCancel": "Abbrechen",
+    "favoriteTeamChosen": "Endgültige Wahl für die Saison. Dieses Team zählt für die Bonuskarte Team.",
+    "favoriteTeamLocked": "Deine Team-Karte ist bereits aktiv: Das Lieblingsteam kann in dieser Saison nicht mehr gewählt werden."
   },
   "Globes": {
     "back": "← Zurück",
@@ -255,7 +263,8 @@
     "pepite_F": "Mein Rohdiamant Frauen",
     "pepite_H": "Mein Rohdiamant Männer",
     "specialRaceBanner": "Malus-Rennen · {name}",
-    "opensOn": "Ab {date}"
+    "opensOn": "Ab {date}",
+    "seasonPredictionsComplete": "Ausfüllen"
   },
   "RaceFormat": {
     "sprint": "Sprint",

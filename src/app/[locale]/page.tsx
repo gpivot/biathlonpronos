@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
-import { LogoMark } from "@/components/icons";
+import { ChevronRightIcon, LogoMark } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard, type LeaderboardRow } from "@/lib/leaderboard";
 import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
@@ -19,6 +19,7 @@ import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { NextRaceCard, type NextRace } from "@/components/NextRaceCard";
 import { StreakCard } from "@/components/StreakCard";
 import { SeasonPicksInvite } from "@/components/SeasonPicksInvite";
+import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { getCurrentStreak } from "@/lib/streakCounter";
 import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
 import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
@@ -46,6 +47,8 @@ interface HomeData {
   streak: number | null;
   /** Avant la 1re course de la saison : nombre de pronostics de saison faits (6 globes + 2 Pépites), null ensuite. */
   seasonPicksBeforeStart: number | null;
+  /** Pas encore d'équipe favorite et carte Équipe pas active : invitation à la choisir. */
+  canChooseFavoriteTeam: boolean;
   cards: PlayerCards | null;
 }
 
@@ -59,7 +62,7 @@ async function getHomeData(): Promise<HomeData> {
   const user = userResult.user;
 
   if (!season) {
-    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, seasonPicksBeforeStart: null, cards: null };
+    return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, seasonPicksBeforeStart: null, canChooseFavoriteTeam: false, cards: null };
   }
 
   const { now } = await getClock();
@@ -122,6 +125,7 @@ async function getHomeData(): Promise<HomeData> {
     .maybeSingle();
 
   const favoriteTeam = favoriteTeamResult.data as HomeData["favoriteTeam"];
+  const canChooseFavoriteTeam = Boolean(user && !favoriteTeam && !(await isEquipeCardActive(supabase, user.id, season.id)));
   const favoriteTeamStats = favoriteTeam
     ? await getFavoriteTeamStats(supabase, season.id, { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex })
     : null;
@@ -157,13 +161,14 @@ async function getHomeData(): Promise<HomeData> {
     lastResults,
     streak,
     seasonPicksBeforeStart,
+    canChooseFavoriteTeam,
     cards,
   };
 }
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, seasonPicksBeforeStart, cards }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, seasonPicksBeforeStart, canChooseFavoriteTeam, cards }] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
@@ -199,6 +204,20 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             <div className="font-display text-[11px] font-bold uppercase tracking-wider text-gold">
               {t("seasonBadge", { label: season!.label })}
             </div>
+
+            {canChooseFavoriteTeam && (
+              <Link
+                href="/compte#equipe-favorite"
+                className="flex items-center gap-3 rounded-xl border border-ice/40 bg-ice-soft px-3 py-2.5"
+              >
+                <span className="text-lg">❤️</span>
+                <span className="flex flex-1 flex-col">
+                  <span className="font-display text-[13px] font-bold text-ice">{t("favoriteTeamInvite")}</span>
+                  <span className="text-[11px] text-text-dim">{t("favoriteTeamInviteHint")}</span>
+                </span>
+                <ChevronRightIcon className="h-4 w-4 flex-shrink-0 text-ice" />
+              </Link>
+            )}
 
             {favoriteTeam && (
               <div className="flex flex-col gap-1">

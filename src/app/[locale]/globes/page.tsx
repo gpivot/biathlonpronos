@@ -17,6 +17,11 @@ const CATEGORIES = [
   { category: "meilleure_nation_h", format: "meilleure_nation", sex: "H", isNation: true },
 ] as const;
 
+/** Choix des pronostics de saison : favoris d'abord (cote croissante), puis par nom à cote égale. */
+function byOddsThenLabel(a: { odds: number; label: string }, b: { odds: number; label: string }) {
+  return Number(a.odds) - Number(b.odds) || a.label.localeCompare(b.label);
+}
+
 export default async function GlobesPage() {
   const supabase = createClient();
   const t = await getTranslations("Globes");
@@ -78,7 +83,7 @@ export default async function GlobesPage() {
         label: `${o.athletes.first_name} ${o.athletes.last_name} (${o.athletes.nation_code}) — ×${o.value}`,
         odds: o.value,
       }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+      .sort(byOddsThenLabel);
   const pickByCategory = new Map((existingPicks ?? []).map((p) => [p.category, p]));
 
   const categories: GlobeCategoryConfig[] = [];
@@ -99,8 +104,8 @@ export default async function GlobesPage() {
         isNation: true,
         initialPick: existing?.nation_code ?? null,
         options: (odds ?? [])
-          .map((o) => ({ id: o.nation_code as string, label: `${nameByNationCode.get(o.nation_code!) ?? o.nation_code} — ×${o.value}` }))
-          .sort((a, b) => a.label.localeCompare(b.label)),
+          .map((o) => ({ id: o.nation_code as string, label: `${nameByNationCode.get(o.nation_code!) ?? o.nation_code} — ×${o.value}`, odds: Number(o.value) }))
+          .sort(byOddsThenLabel),
       });
     } else {
       const { data: odds } = await supabase
@@ -119,8 +124,9 @@ export default async function GlobesPage() {
           .map((o: any) => ({
             id: o.athlete_id,
             label: `${o.athletes.first_name} ${o.athletes.last_name} (${o.athletes.nation_code}) — ×${o.value}`,
+            odds: Number(o.value),
           }))
-          .sort((a, b) => a.label.localeCompare(b.label)),
+          .sort(byOddsThenLabel),
       });
     }
   }

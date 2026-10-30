@@ -1019,3 +1019,21 @@ l'encadré « Saison » de l'accueil invite à saisir ses pronostics de saison (
 compteur sur 8 = 6 globes + 2 Pépites, bouton vers `/globes`) à la place de la « Série en cours ».
 Masquée aussi dès que `/globes` se verrouille (`seasons.starts_on` passé), pour ne pas inviter
 vers une page fermée. La série reprend sa place ensuite.
+
+## Équipe favorite définitive, invitations à compléter (30/10/2026)
+
+**Demandes de Guillaume** :
+- **Ma saison** : sur chaque pronostic de saison pas encore choisi, un bouton « Compléter » (vers
+  `/globes`) remplace « Pas encore choisi », tant que les pronostics de saison sont modifiables
+  (avant `seasons.starts_on`). Dans la pop-up d'un autre joueur, le texte reste.
+- **Saisie des pronostics de saison** (`/globes`) : athlètes, nations et Pépites triés par cote
+  croissante (puis par nom à cote égale).
+- **Équipe favorite définitive** : choisie une seule fois pour la saison, à tout moment tant que la
+  carte Équipe du joueur n'est pas active (`bonus_cards` de type `equipe` au statut `used`).
+  Confirmation au moment du choix (« définitif pour la saison, servira avec la carte Équipe »),
+  puis affichage en lecture seule dans le Profil. L'accueil invite à la choisir tant qu'elle ne
+  l'est pas (lien vers `/compte#equipe-favorite`). Migration **0028** : la politique « write own »
+  est remplacée par une insertion seule, refusée si la carte Équipe est active ; plus de
+  modification ni de suppression par le joueur. Les équipes déjà choisies restent telles quelles.
+  À confirmer : un joueur dont la carte Équipe est active sans équipe favorite ne peut plus en
+  choisir (la carte ne lui rapporte rien).

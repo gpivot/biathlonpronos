@@ -69,7 +69,9 @@
     "seasonPicksDone": "Tout est saisi. Tu peux encore changer d'avis jusqu'au début de la saison.",
     "seasonPicksButton": "Saisir mes pronostics de saison",
     "seasonPicksEdit": "Modifier mes pronostics de saison",
-    "lastResultExtra_equipe": "Carte Équipe"
+    "lastResultExtra_equipe": "Carte Équipe",
+    "favoriteTeamInvite": "Choisis ton équipe favorite",
+    "favoriteTeamInviteHint": "Suis ses victoires et podiums, et prépare la carte bonus Équipe."
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
@@ -151,7 +153,7 @@
     "back": "← Retour",
     "loginRequired": "Connecte-toi pour accéder à ton compte.",
     "favoriteTeamTitle": "Équipe favorite",
-    "favoriteTeamHint": "Une nation + un sexe (ex. France Femmes). Pour le plaisir : tu suivras ses victoires et ses podiums de la saison sur l'accueil.",
+    "favoriteTeamHint": "Une nation + un sexe (ex. France Femmes). Tu suivras ses victoires et ses podiums sur l'accueil, et elle servira avec la carte bonus Équipe. Choix définitif pour la saison.",
     "women": "Femmes",
     "men": "Hommes",
     "save": "Enregistrer",
@@ -174,7 +176,13 @@
     "editPseudo": "Modifier le pseudo",
     "cancel": "Annuler",
     "pseudoLengthError": "Le pseudo doit faire entre {min} et {max} caractères.",
-    "lightTheme": "Thème clair"
+    "lightTheme": "Thème clair",
+    "favoriteTeamChoose": "Choisir cette équipe",
+    "favoriteTeamWarning": "Tu choisis {team}. Ce choix est définitif pour toute la saison et servira avec la carte bonus Équipe. Tu confirmes ?",
+    "favoriteTeamConfirm": "Je confirme",
+    "favoriteTeamCancel": "Annuler",
+    "favoriteTeamChosen": "Choix définitif pour la saison. C'est elle qui compte avec la carte bonus Équipe.",
+    "favoriteTeamLocked": "Ta carte Équipe est déjà active : l'équipe favorite ne peut plus être choisie cette saison."
   },
   "Globes": {
     "back": "← Retour",
@@ -255,7 +263,8 @@
     "pepite_F": "Ma Pépite Femmes",
     "pepite_H": "Ma Pépite Hommes",
     "specialRaceBanner": "Course malus · {name}",
-    "opensOn": "Ouvre le {date}"
+    "opensOn": "Ouvre le {date}",
+    "seasonPredictionsComplete": "Compléter"
   },
   "RaceFormat": {
     "sprint": "Sprint",

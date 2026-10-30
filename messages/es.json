@@ -69,7 +69,9 @@
     "seasonPicksDone": "Todo listo. Puedes cambiar de opinión hasta el inicio de la temporada.",
     "seasonPicksButton": "Introducir mis pronósticos de temporada",
     "seasonPicksEdit": "Modificar mis pronósticos de temporada",
-    "lastResultExtra_equipe": "Carta Equipo"
+    "lastResultExtra_equipe": "Carta Equipo",
+    "favoriteTeamInvite": "Elige tu equipo favorito",
+    "favoriteTeamInviteHint": "Sigue sus victorias y podios, y prepara la carta bonus Equipo."
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -151,7 +153,7 @@
     "back": "← Volver",
     "loginRequired": "Inicia sesión para acceder a tu cuenta.",
     "favoriteTeamTitle": "Equipo favorito",
-    "favoriteTeamHint": "Una nación + un sexo (p. ej. Francia Mujeres). Por diversión: seguirás sus victorias y podios de la temporada en la página de inicio.",
+    "favoriteTeamHint": "Una nación + un sexo (p. ej. Francia Mujeres). Seguirás sus victorias y podios en la portada, y contará con la carta bonus Equipo. Elección definitiva para la temporada.",
     "women": "Mujeres",
     "men": "Hombres",
     "save": "Guardar",
@@ -174,7 +176,13 @@
     "editPseudo": "Editar el apodo",
     "cancel": "Cancelar",
     "pseudoLengthError": "El apodo debe tener entre {min} y {max} caracteres.",
-    "lightTheme": "Tema claro"
+    "lightTheme": "Tema claro",
+    "favoriteTeamChoose": "Elegir este equipo",
+    "favoriteTeamWarning": "Eliges {team}. Esta elección es definitiva para toda la temporada y contará con la carta bonus Equipo. ¿Confirmas?",
+    "favoriteTeamConfirm": "Confirmo",
+    "favoriteTeamCancel": "Cancelar",
+    "favoriteTeamChosen": "Elección definitiva para la temporada. Es el equipo que cuenta con la carta bonus Equipo.",
+    "favoriteTeamLocked": "Tu carta Equipo ya está activa: ya no se puede elegir el equipo favorito esta temporada."
   },
   "Globes": {
     "back": "← Volver",
@@ -255,7 +263,8 @@
     "pepite_F": "Mi Diamante en bruto femenino",
     "pepite_H": "Mi Diamante en bruto masculino",
     "specialRaceBanner": "Carrera malus · {name}",
-    "opensOn": "Abre el {date}"
+    "opensOn": "Abre el {date}",
+    "seasonPredictionsComplete": "Completar"
   },
   "RaceFormat": {
     "sprint": "Sprint",
