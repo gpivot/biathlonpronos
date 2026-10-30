@@ -733,6 +733,27 @@ ouverte à tous (rien à copier), à coller par Guillaume.
   nom de l'épreuve, date et heure ; boutons « Course préc. » / « Course suiv. » au milieu de la
   barre du haut (ordre chronologique de la saison, grisés en début/fin de saison).
 
+## Classement : filtres Général / Ligue et Saison / Par étapes (fin octobre 2026)
+
+En haut du Classement, deux paires de boutons (`classement/StandingsFilters.tsx`), portées par
+l'URL (`?portee=ligue&ligue=…&periode=etapes&etape=…&course=…`) pour qu'un lien garde le filtre :
+
+- **Général / Ligue.** « Ligue » ouvre un menu déroulant des ligues du joueur pour la saison active
+  (première par ordre alphabétique par défaut). Les membres sans point y figurent à 0. Sans ligue,
+  un encadré renvoie vers l'onglet Ligues.
+- **Saison / Par étapes.** « Saison » : classement général (globes compris), comme avant ; la liste
+  « Meilleures séries en cours » n'apparaît qu'en Général + Saison. « Par étapes » : un menu des
+  étapes (par défaut la dernière étape commencée) et un menu des courses (« Toute l'étape » par
+  défaut, ou une seule course). Les points sont ceux des courses de l'étape seulement.
+- **Pronostics des joueurs.** Étape en cours (une course partie et une pas encore notée) : sous
+  chaque joueur, ses pronostics sur les courses déjà verrouillées de l'étape. Une course choisie
+  seule : ses pronostics dès qu'elle est verrouillée, même si l'étape est finie. Jamais sur une
+  course pas encore partie (migration 0018). **À confirmer** : menus déroulants plutôt qu'une liste
+  dépliée des étapes ; pronostics masqués sur une étape entièrement terminée.
+
+Code : `src/lib/standings.ts` (`buildStandings`, `isStageOngoing`, `pickDefaultStandingsStageId`,
+testés). Aucun SQL : ligues, adhésions, score_ledger et pronostics verrouillés sont déjà lisibles.
+
 ## Listes de départ poursuite et mass start (octobre 2026)
 
 **Demande de Guillaume** : n'afficher dans le pronostic que les biathlètes qui prennent vraiment
