@@ -320,7 +320,8 @@
     "chooseFour": "Scegli 4 biatleti",
     "sortByStart": "Ordine di partenza",
     "sortByOdds": "Per quota",
-    "startPosition": "parte {position}º"
+    "startPosition": "parte {position}º",
+    "startPositionWithGap": "parte {position}º a +{gap}s"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",

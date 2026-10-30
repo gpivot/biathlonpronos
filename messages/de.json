@@ -320,7 +320,8 @@
     "chooseFour": "Wähle 4 Biathleten",
     "sortByStart": "Startreihenfolge",
     "sortByOdds": "Nach Quote",
-    "startPosition": "Start Nr. {position}"
+    "startPosition": "Start Nr. {position}",
+    "startPositionWithGap": "Start Nr. {position} mit +{gap}s"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",

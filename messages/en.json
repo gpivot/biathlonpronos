@@ -320,7 +320,8 @@
     "chooseFour": "Pick 4 biathletes",
     "sortByStart": "Start order",
     "sortByOdds": "By odds",
-    "startPosition": "starts {position, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}"
+    "startPosition": "starts {position, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}",
+    "startPositionWithGap": "starts {position, selectordinal, one {#st} two {#nd} few {#rd} other {#th}} at +{gap}s"
   },
   "SignIn": {
     "prompt": "Sign in to continue",

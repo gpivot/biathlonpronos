@@ -31,6 +31,7 @@ export function PredictionForm({
   x2Eligible,
   x2UsesRemaining,
   startOrder = {},
+  startGaps = {},
 }: {
   raceId: string;
   format: string;
@@ -45,6 +46,8 @@ export function PredictionForm({
   x2UsesRemaining: number;
   /** Poursuite : place de départ (= classement du sprint) par athlète. Vide sinon. */
   startOrder?: Record<string, number>;
+  /** Poursuite : retard au départ en secondes entières par athlète. */
+  startGaps?: Record<string, number>;
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
   const [cardChoice, setCardChoice] = useState<CardChoice>(
@@ -248,7 +251,11 @@ export function PredictionForm({
                   {a.nation_code}
                   {/* Tri par cote d'une poursuite : la position de départ reste visible. */}
                   {sortBy === "odds" && startOrder[a.athlete_id] != null
-                    ? ` · ${t("startPosition", { position: startOrder[a.athlete_id] })}`
+                    ? ` · ${
+                        startGaps[a.athlete_id] != null
+                          ? t("startPositionWithGap", { position: startOrder[a.athlete_id], gap: startGaps[a.athlete_id] })
+                          : t("startPosition", { position: startOrder[a.athlete_id] })
+                      }`
                     : ""}
                   {isGrilled ? ` · ${t("grilled")}` : ""}
                 </span>
@@ -266,6 +273,10 @@ export function PredictionForm({
                 >
                   ×3
                 </button>
+              )}
+              {/* Poursuite : retard au départ, à gauche de la cote. */}
+              {startGaps[a.athlete_id] != null && (
+                <div className="font-display text-xs font-semibold tabular-nums text-text-dim">+{startGaps[a.athlete_id]}s</div>
               )}
               <div className={`font-display text-sm font-bold ${isSelected ? "text-ice" : "text-text-dim"}`}>
                 ×{a.value}
