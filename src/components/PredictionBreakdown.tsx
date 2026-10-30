@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { LastResultExtra, LastResultPick } from "@/lib/lastResult";
+import { ShootingDots } from "./ShootingDots";
 
 const COMBINATION_KINDS: LastResultExtra["kind"][] = ["top3", "top5", "top10", "pronoParfait"];
 
@@ -87,6 +88,7 @@ export function PredictionBreakdown({
               {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
               <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
             </div>
+            <ShootingDots shootings={pick.shootings} />
             <div
               className={`whitespace-nowrap font-display font-bold ${
                 pick.points == null

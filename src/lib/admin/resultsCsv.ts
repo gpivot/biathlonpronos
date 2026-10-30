@@ -1,12 +1,13 @@
 import { normalizeLabel, parseCsv, toCsv } from "./csv";
+import { parseShootings, totalMisses } from "../shootings";
 
 /**
  * CSV des résultats d'une course, importé dans le formulaire de saisie (`ResultsForm`) : il ne
  * fait que pré-remplir les lignes, l'admin relit puis valide pour calculer les points. Pensé pour
  * être produit par une IA à partir du classement officiel IBU.
  */
-export const ATHLETE_RESULTS_HEADERS = ["Rang", "Nom", "Prénom", "Nation", "Écart (s)", "Tours de péna", "Fusée", "Gâchette"];
-export const NATION_RESULTS_HEADERS = ["Rang", "Nation"];
+export const ATHLETE_RESULTS_HEADERS = ["Rang", "Nom", "Prénom", "Nation", "Écart (s)", "Tirs", "Tours de péna", "Fusée", "Gâchette"];
+export const NATION_RESULTS_HEADERS = ["Rang", "Nation", "Tirs"];
 
 export interface ResultsCsvCandidate {
   id: string;
@@ -22,6 +23,8 @@ export interface ResultsCsvCandidate {
 export interface ParsedResultRow {
   rank: string;
   timeGapSeconds: string;
+  /** Fautes par tir, « 0+1+0+2 ». */
+  shootings: string;
   penaltyLaps: string;
   isFusee: boolean;
   isGachette: boolean;
@@ -104,6 +107,7 @@ export function parseResultsCsv(
     let label: string;
     let found: ResultsCsvCandidate[];
     const nation = cell(row, "nation", "pays", "nat").toUpperCase();
+    const shootings = cell(row, "tirs", "tir", "shootings");
     if (mode === "nation") {
       label = cell(row, "nation", "pays", "equipe");
       found = findByName(label);
@@ -133,10 +137,18 @@ export function parseResultsCsv(
 
     const gap = parseTimeGap(cell(row, "ecart (s)", "ecart", "gap", "behind"));
     const gachetteFromMisses = cell(row, "fautes", "misses");
+    if (mode === "nation") {
+      result.rows[candidate.id] = { rank: String(rank), timeGapSeconds: "", shootings, penaltyLaps: "", isFusee: false, isGachette: false };
+      result.matched++;
+      return;
+    }
+    // Tours de péna = nombre de fautes au tir : repris des tirs quand la colonne est vide.
+    const missesFromShootings = totalMisses(parseShootings(shootings));
     result.rows[candidate.id] = {
       rank: String(rank),
       timeGapSeconds: gap != null ? String(gap) : rank === 1 ? "0" : "",
-      penaltyLaps: cell(row, "tours de pena", "tours de penalite"),
+      shootings,
+      penaltyLaps: cell(row, "tours de pena", "tours de penalite") || (missesFromShootings != null ? String(missesFromShootings) : ""),
       isFusee: parseFlag(row["fusee"]),
       isGachette: gachetteFromMisses !== "" ? Number(gachetteFromMisses) === 0 : parseFlag(row["gachette"]),
     };
@@ -160,13 +172,13 @@ export function buildResultsCsv(
   const yesNo = (v: boolean | undefined) => (v ? "oui" : "");
 
   if (mode === "nation") {
-    return toCsv(NATION_RESULTS_HEADERS, ordered.map((c) => [rows[c.id]?.rank, c.nationCode]));
+    return toCsv(NATION_RESULTS_HEADERS, ordered.map((c) => [rows[c.id]?.rank, c.nationCode, rows[c.id]?.shootings]));
   }
   return toCsv(
     ATHLETE_RESULTS_HEADERS,
     ordered.map((c) => {
       const r = rows[c.id];
-      return [r?.rank, c.lastName, c.firstName, c.nationCode, r?.timeGapSeconds, r?.penaltyLaps, yesNo(r?.isFusee), yesNo(r?.isGachette)];
+      return [r?.rank, c.lastName, c.firstName, c.nationCode, r?.timeGapSeconds, r?.shootings, r?.penaltyLaps, yesNo(r?.isFusee), yesNo(r?.isGachette)];
     })
   );
 }

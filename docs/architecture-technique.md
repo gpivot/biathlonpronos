@@ -890,3 +890,23 @@ Code : `src/lib/bonusCards.ts` (testé), `src/components/StreakCard.tsx`, `Claim
   joués), à coller par Guillaume.
 - Si le 4e choix couvre une course où Ça farte avait déjà été posé, Ça farte l'emporte sur cette
   course (choix pragmatique, à confirmer).
+
+## Fautes au tir et course « Tour de péna » (fin octobre 2026)
+
+- **Bug corrigé** : à la course « Tour de péna », aucun tour n'était compté. Le moteur lisait bien
+  `race_results.penalty_laps`, mais la récupération des résultats IBU laissait la colonne « Tours
+  de péna » vide (seul le CSV fait main la remplissait). Règle confirmée par Guillaume : **tours de
+  péna = nombre de fautes au tir de l'athlète**. L'import IBU remplit désormais cette colonne avec
+  `ShootingTotal` ; à défaut, la somme des fautes par tir sert de tours de péna (CSV, saisie admin,
+  enregistrement et calcul des points). Pour une course déjà notée, relancer « Récupérer les
+  résultats officiels IBU » puis « Enregistrer et calculer les scores ».
+- **Fautes par tir** : nouvelle colonne `race_results.shootings smallint[]` (migration 0024), lue
+  dans le champ IBU `Shootings` (« 0+1+0+2 »), colonne « Tirs » du CSV et du tableau de saisie.
+  Affichées en ronds noirs chiffrés en blanc (`ShootingDots`, comme biathlonworld) à côté de chaque
+  athlète dans le classement d'une course terminée et dans le détail des pronostics : 2 ronds au
+  sprint et en relais, 4 sinon (`shootingCount`).
+- **Relais (à confirmer)** : 2 ronds pour l'équipe = fautes au couché et au debout, tous relayeurs
+  additionnés ; chaque balle de pioche utilisée compte comme une faute (le format IBU d'un tir de
+  relais est « tours de péna + balles de pioche »). Le format exact renvoyé par l'IBU pour la ligne
+  d'équipe n'a pas pu être vérifié (site injoignable depuis l'environnement de développement) :
+  le code accepte la ligne d'équipe ou, à défaut, additionne les lignes des relayeurs.

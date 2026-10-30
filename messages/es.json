@@ -50,6 +50,7 @@
     "lastResultExtra_pepite": "Bonus Diamante",
     "fuseeLabel": "Cohete: mejor tiempo de esquí",
     "gachetteLabel": "Gatillo: tiro sin fallos",
+    "shootingsLabel": "Fallos en el tiro: {shots}",
     "fuseeGachetteLegend": "🚀 Cohete +50 pts · 🎯 Gatillo +20 pts, ya incluidos en los puntos",
     "lastResultMultiplier_bonusX2": "Bonus ×2 · {points}",
     "lastResultMultiplier_coefficient": "Coef. ×2 · {points}",
