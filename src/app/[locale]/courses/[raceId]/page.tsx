@@ -327,7 +327,8 @@ export default async function RacePage({
                   initialCardTarget={initialCardTarget}
                   x2Eligible={x2Eligible}
                   x2UsesRemaining={x2UsesRemaining}
-                  startOrder={startOrder}
+                  // Mass start : pas d'écart de départ, tri par cote seulement (la liste ne sert qu'à filtrer).
+                  startOrder={race.format === "poursuite" ? startOrder : {}}
                   startGaps={startGaps}
                 />
               )}
