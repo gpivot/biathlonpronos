@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { CloseIcon } from "@/components/icons";
@@ -15,6 +15,7 @@ import { CloseIcon } from "@/components/icons";
  */
 export function GuestSignupDialog({ onDone, onClose }: { onDone: () => void; onClose: () => void }) {
   const t = useTranslations("Guest");
+  const locale = useLocale();
   const supabase = createClient();
   const [step, setStep] = useState<"details" | "code">("details");
   const [pseudo, setPseudo] = useState("");
@@ -48,7 +49,8 @@ export function GuestSignupDialog({ onDone, onClose }: { onDone: () => void; onC
 
     const { error: updateError } = await supabase.auth.updateUser({
       email: email.trim(),
-      data: { pseudo: pseudo.trim(), first_name: firstName.trim(), last_name: lastName.trim() },
+      // locale : langue de l'e-mail du code (modèle Supabase « Change Email Address »).
+      data: { pseudo: pseudo.trim(), first_name: firstName.trim(), last_name: lastName.trim(), locale },
     });
     setBusy(false);
     if (updateError) {

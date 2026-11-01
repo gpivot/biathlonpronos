@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AppleIcon, FacebookIcon, GoogleIcon, LogoMark } from "@/components/icons";
@@ -25,6 +25,7 @@ export default function SignInPage() {
   const supabase = createClient();
   const router = useRouter();
   const t = useTranslations("SignIn");
+  const locale = useLocale();
 
   async function handleOAuth(provider: "google" | "apple" | "facebook") {
     await supabase.auth.signInWithOAuth({
@@ -61,7 +62,7 @@ export default function SignInPage() {
 
     const { error } =
       mode === "sign-up"
-        ? await supabase.auth.signUp({ email, password })
+        ? await supabase.auth.signUp({ email, password, options: { data: { locale } } })
         : await supabase.auth.signInWithPassword({ email, password });
 
     setLoading(false);
