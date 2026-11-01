@@ -1,4 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { fetchAll } from "./admin/fetchAll";
+import { areJokersApplied, loadSeasonJokers } from "./jokers";
 
 export interface LeaderboardRow {
   userId: string;
@@ -6,15 +8,20 @@ export interface LeaderboardRow {
   points: number;
 }
 
-/** Classement général : agrégat du score_ledger, jamais recalculé à la main. */
+/**
+ * Classement général : agrégat du score_ledger, jamais recalculé à la main. En fin de saison, une
+ * fois les jokers activés par l'admin (`seasons.jokers_applied`), les résultats qu'ils effacent sont
+ * retirés du total (cf. src/lib/jokers.ts).
+ */
 export async function getLeaderboard(supabase: SupabaseClient, seasonId: string): Promise<LeaderboardRow[]> {
-  const { data: ledger, error } = await supabase
-    .from("score_ledger")
-    .select("user_id, points, profiles(pseudo)")
-    .eq("season_id", seasonId);
-
-  if (error) {
-    console.error("getLeaderboard:", error.message);
+  let ledger: any[];
+  try {
+    // Plus de 1000 lignes dès quelques courses avec beaucoup de joueurs : lecture par pages.
+    ledger = await fetchAll<any>((from, to) =>
+      supabase.from("score_ledger").select("id, user_id, points, profiles(pseudo)").eq("season_id", seasonId).order("id").range(from, to)
+    );
+  } catch (error) {
+    console.error("getLeaderboard:", (error as Error).message);
     return [];
   }
 
@@ -26,6 +33,14 @@ export async function getLeaderboard(supabase: SupabaseClient, seasonId: string)
       existing.points += entry.points;
     } else {
       totalsByUserId.set(entry.user_id, { userId: entry.user_id, pseudo, points: entry.points });
+    }
+  }
+
+  if (totalsByUserId.size > 0 && (await areJokersApplied(supabase, seasonId))) {
+    const jokers = await loadSeasonJokers(supabase, seasonId, Array.from(totalsByUserId.keys()));
+    for (const [userId, selection] of Array.from(jokers)) {
+      const row = totalsByUserId.get(userId);
+      if (row) row.points = Math.round((row.points + selection.delta) * 10) / 10;
     }
   }
 

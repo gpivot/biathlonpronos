@@ -21,7 +21,7 @@ import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
 import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
-import { MALUS_SCALE, SPECIAL_RULE_ICONS } from "@/lib/specialRules";
+import { MALUS_SCALE, SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
 import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
 import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 import { HelpButton } from "@/components/HelpButton";
@@ -82,6 +82,8 @@ export default async function RacePage({
   // §7 — bonus ×2 personnel : 3 fois par saison, jamais sur une course
   // spéciale ni sur une étape Mondiaux/JO (déjà comptée double).
   const x2Eligible = !race.special_rule && stage.coefficient !== 2;
+  // Fête nationale : course bonus, encadré doré au lieu du rouge des malus.
+  const bonusRule = isBonusRule(race.special_rule);
   let x2UsesRemaining = 0;
 
   if (user) {
@@ -213,6 +215,13 @@ export default async function RacePage({
   const pointsEarned = raceResult?.prediction?.points ?? 0;
   const multiplier = raceResult?.prediction?.multiplier ?? null;
   const players = displayStatus === "finished" ? await getRacePlayers(supabase, race.id) : [];
+  // Après la course : un joueur qui a pronostiqué mais n'est dans aucune ligue est invité à se
+  // comparer aux autres et à rejoindre (ou créer) une ligue (parcours d'invité, 01/11/2026).
+  let compareInvite = false;
+  if (displayStatus === "finished" && user && !user.is_anonymous && raceResult?.prediction) {
+    const { count } = await supabase.from("league_memberships").select("league_id", { count: "exact", head: true }).eq("user_id", user.id);
+    compareInvite = (count ?? 0) === 0;
+  }
   const ongoingBoard = displayStatus === "ongoing" ? await getOngoingBoard(supabase, stage.season_id, race.id) : [];
 
   // Courses précédente et suivante de la saison (ordre chronologique), boutons de l'en-tête.
@@ -242,7 +251,11 @@ export default async function RacePage({
         {/* Course malus : contour rouge autour de l'encadré, avec le nom du malus et son « ? ». */}
         <div
           className={`flex flex-col gap-3 rounded-[18px] border px-4 py-4 ${
-            race.special_rule ? "border-red/70 bg-gradient-to-br from-red/15 to-card" : "border-border bg-gradient-to-br from-card2 to-card"
+            race.special_rule
+              ? bonusRule
+                ? "border-gold/70 bg-gradient-to-br from-gold/15 to-card"
+                : "border-red/70 bg-gradient-to-br from-red/15 to-card"
+              : "border-border bg-gradient-to-br from-card2 to-card"
           }`}
         >
           <div className="flex items-center gap-2 font-display text-[13px] font-bold text-ice">
@@ -268,13 +281,21 @@ export default async function RacePage({
           </div>
           {race.special_rule && (
             // Course malus : bandeau rouge avec gros picto, nom du malus, phrase choc et « ? » illustré.
-            <div className="flex items-center gap-3 rounded-2xl border border-red/40 bg-red/10 px-3 py-2.5">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red/20 text-xl">
+            <div
+              className={`flex items-center gap-3 rounded-2xl border px-3 py-2.5 ${
+                bonusRule ? "border-gold/40 bg-gold/10" : "border-red/40 bg-red/10"
+              }`}
+            >
+              <div
+                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-xl ${
+                  bonusRule ? "bg-gold/20" : "bg-red/20"
+                }`}
+              >
                 {SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}
               </div>
               <div className="flex min-w-0 flex-1 flex-col">
-                <div className="font-display text-[11px] font-bold uppercase tracking-wider text-red">
-                  {t("malusLabel")} · {tFormat(`specialRule_${race.special_rule}`)}
+                <div className={`font-display text-[11px] font-bold uppercase tracking-wider ${bonusRule ? "text-gold" : "text-red"}`}>
+                  {t(bonusRule ? "bonusLabel" : "malusLabel")} · {tFormat(`specialRule_${race.special_rule}`)}
                 </div>
                 <div className="text-[13px] font-semibold leading-snug text-frost">{t(`malusTagline_${race.special_rule}`)}</div>
               </div>
@@ -439,6 +460,32 @@ export default async function RacePage({
                   ) : (
                     <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} showLegend={false} showCalc />
                   )}
+                </div>
+              </div>
+            )}
+
+            {compareInvite && (
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-ice/40 bg-ice-soft p-4">
+                <div className="font-display text-sm font-bold text-ice">🏁 {t("compareTitle")}</div>
+                <p className="text-[13px] leading-relaxed text-frost">
+                  {t("compareBody", {
+                    rank: raceResult?.prediction?.playerRank ?? "–",
+                    count: raceResult?.prediction?.playerCount ?? 0,
+                  })}
+                </p>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/classement?periode=etapes&etape=${stage.id}&course=${race.id}`}
+                    className="flex-1 rounded-full bg-ice py-2 text-center font-display text-[12px] font-bold text-on-ice"
+                  >
+                    {t("compareStandings")}
+                  </Link>
+                  <Link
+                    href="/ligues"
+                    className="flex-1 rounded-full border border-border bg-card py-2 text-center font-display text-[12px] font-bold text-frost"
+                  >
+                    {t("compareLeague")}
+                  </Link>
                 </div>
               </div>
             )}

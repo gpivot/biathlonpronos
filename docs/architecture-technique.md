@@ -1053,3 +1053,68 @@ Décisions de Guillaume du 01/11/2026 :
 - **Chat noir retirée** (réservée au vélo) : supprimée du règlement, des textes et du type
   `BonusCardType`. La valeur `chat_noir` reste dans l'enum `bonus_card_type` en base (retirer une
   valeur d'enum Postgres est lourd et inutile : aucune fonction ne la propose).
+
+## Fête nationale, jokers de fin de saison, parcours d'invité (01/11/2026)
+
+Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031).
+
+### Fête nationale (course bonus)
+- Nouvelle valeur `fete_nationale` de l'enum `special_rule` (migration **0029**, à exécuter seule),
+  choisie par l'admin sur une **course individuelle** (`SPECIAL_RULE_FORMATS`).
+- Moteur (`computeIndividualRaceScore`, entrée `nationalDayTeam`, testé) : un biathlète pronostiqué
+  de l'**équipe favorite** du joueur (nation + sexe) **classé dans le Top 10** voit ses points
+  (cote × rang + Fusée/Gâchette) passer à ×2. `breakdown.nationalDayBoostedAthleteIds`.
+- Non cumulable : ni avec le bonus ×2 perso, ni avec le coefficient Mondiaux/JO (jamais ×4) ; la
+  cible de Ça farte reste à ×3. Comme toute course spéciale, le bonus ×2 perso n'y est pas proposé.
+  Les bonus de combinaison et la carte Équipe ne sont pas doublés.
+- Affichage doré (bandeau « Course bonus · Fête nationale » sur la page de la course et dans le
+  calendrier, barème illustré dans le « ? »), « 🎉×2 » à côté du biathlète doublé dans le détail.
+- **À confirmer** : le Top 10 est lu après la carte Aspiration (un 11e remonté 10e est doublé) ; sans
+  équipe favorite, aucun bonus ; Fête nationale impossible sur un relais.
+
+### Jokers de fin de saison
+- `src/lib/jokers.ts` (`selectJokers`, `computeSeasonJokers`, testés) : par joueur, les 3 plus
+  mauvais résultats de courses individuelles et les 2 plus mauvais relais **parmi les courses
+  notées**, hors Mondiaux/JO (coefficient 2). Ordre : courses non jouées d'abord (pas de pronostic),
+  puis les plus petits scores, puis la plus ancienne.
+- Effacer = retirer les points de la course du total (un 0 ne change rien, un malus est rendu, un
+  petit score positif est retiré). Le bonus Pépite gagné sur une course n'est jamais effacé.
+- **Application** : calcul à la lecture, rien n'est supprimé de `score_ledger`. L'admin active les
+  jokers en fin de saison (bouton « Appliquer les jokers » dans la saison, `/admin`, colonne
+  `seasons.jokers_applied`, migration **0030**, réversible). `getLeaderboard` (général, ligues, carte
+  de rang, pop-up) retire alors les points effacés ; le classement « Par étapes » reste brut.
+- **Aperçu** dans Ma saison (`JokersCard`) : résultats qui seraient effacés si la saison
+  s'arrêtait aujourd'hui, et l'effet sur le total.
+- **À confirmer** : relais des Mondiaux/JO exclus aussi ; une course non jouée est prise en
+  priorité même si une course jouée a un malus plus lourd (lecture littérale de la règle) ; un
+  joueur arrivé en cours de saison a les courses d'avant son inscription comptées comme non jouées.
+
+### Parcours d'invité (connexion anonyme Supabase)
+- Accueil visiteur : le bouton « Jouer » mène à `/jouer`, qui ouvre une session anonyme
+  (`signInAnonymously`) puis la prochaine course où l'on peut pronostiquer (`findNextPlayableRace` :
+  pas partie, pronostics ouverts, cotes saisies, liste de départ connue).
+- À la validation du premier pronostic (`PredictionForm` / `RelayPredictionForm`), un invité (ou
+  un visiteur arrivé directement sur une course) voit `GuestSignupDialog` : pseudo, prénom, nom,
+  e-mail → `updateUser({ email, data })` envoie un code → `verifyOtp({ type: "email_change" })`. Le
+  compte anonyme devient permanent **avec le même identifiant**, sans mot de passe ; le pseudo est
+  écrit dans `profiles`, prénom et nom restent privés (métadonnées Supabase Auth, visibles dans
+  `/admin/joueurs`). Le pronostic n'est enregistré qu'après la confirmation.
+- Connexion ensuite : « Se connecter avec un code reçu par e-mail » sur la page de connexion
+  (`signInWithOtp`, `shouldCreateUser: false`).
+- Après la course : sur la page d'une course notée, un joueur qui a pronostiqué et n'a aucune ligue
+  voit « Et les autres ? » (sa place, liens vers le classement de la course et les ligues). Juste
+  après la création du compte, un encart « Bienvenue » propose déjà de rejoindre une ligue.
+- Un invité est traité comme un visiteur ailleurs (accueil vitrine, Profil, Ligues, Globes, Ma
+  saison, notifications).
+- **Base (migration 0031)** : profil « Invité » créé pour un compte sans e-mail (`handle_new_user`) ;
+  `is_guest()` ; règles RLS **restrictives** : un invité ne peut rien écrire (pronostics, globes,
+  Pépites, équipe favorite, ligues, pseudo) tant que son compte n'est pas confirmé ; garde-fou de
+  300 comptes invités par heure pour tout le site (trigger sur `auth.users`) ; purge des invités de
+  plus de 7 jours (`purge_anonymous_users`, chaque nuit par pg_cron s'il est activé, et bouton dans
+  `/admin/joueurs`).
+- **Réglages Supabase à faire par Guillaume** : activer les connexions anonymes ; limite par
+  adresse IP (Authentication > Rate Limits) ; modèles d'e-mail « Change Email Address » et « Magic
+  Link » avec `{{ .Token }}` (le code) ; longueur du code e-mail à 6 chiffres ; pg_cron.
+- **À confirmer** : le format exact du jeton envoyé à un compte anonyme qui ajoute un e-mail
+  (modèle « Change Email Address ») est à vérifier au premier test réel ; un e-mail déjà inscrit
+  renvoie vers la connexion et le pronostic est à revalider ; pas de CAPTCHA pour l'instant.

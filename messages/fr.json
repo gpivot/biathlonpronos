@@ -77,7 +77,7 @@
     "heroTitle": "Pronostique les courses de biathlon.",
     "heroAccent": "Défie tes amis.",
     "heroSubtitle": "30 secondes par course pour jouer. Toute la journée pour suivre le tir.",
-    "heroCta": "Commencer gratuitement",
+    "heroCta": "Jouer",
     "heroSignIn": "Déjà inscrit ? Se connecter",
     "appStoresTitle": "Ou télécharger l'application",
     "appStoreSoon": "Bientôt disponible sur",
@@ -135,14 +135,16 @@
     "s_mondiaux_title": "7. Mondiaux et Jeux Olympiques",
     "s_mondiaux_body": "Toutes les courses de ces compétitions comptent double automatiquement, non cumulable avec le bonus ×2 personnel.",
     "s_special_title": "8. Les courses spéciales",
-    "s_special_body": "Tour de péna : -20 pts par tour de pénalité de tes biathlètes. Brouillard : hors Top 10, malus égal à la place obtenue. T'es collé(e) : malus si un ou plusieurs de tes 3 choix terminent hors Top 10 (jusqu'à -300), et -200 si tu ne pronostiques pas du tout.",
+    "s_special_body": "Tour de péna : -20 pts par tour de pénalité de tes biathlètes. Brouillard : hors Top 10, malus égal à la place obtenue. T'es collé(e) : malus si un ou plusieurs de tes 3 choix terminent hors Top 10 (jusqu'à -300), et -200 si tu ne pronostiques pas du tout. Fête nationale (course bonus) : les biathlètes pronostiqués de ton équipe favorite (nation et sexe) qui finissent dans le Top 10 rapportent double, sans cumul avec un autre ×2 (Ça farte reste à ×3).",
     "s_streak_title": "9. Le 10/10 et les cartes bonus",
     "s_streak_body": "10 courses consécutives où tu marques des points (relais compris) te rapportent une carte bonus, que tu choisis. Une même carte ne se prend pas deux fois de suite. Fondue (dégriller une fois tes biathlètes), Ça farte (×3 sur un biathlète d'une course individuelle, jamais ×6 avec un ×2) et 4e choix (4 biathlètes, les 3 meilleurs comptent, sur 2 courses hommes et 2 courses femmes, activé tout de suite). À partir de la 4e étape, Aspiration (tes biathlètes comptent une place plus haut sur une course). Après les Mondiaux, Équipe (jusqu'à la fin de la saison, chaque biathlète de ton équipe favorite dans le Top 10 te rapporte sa cote). Ça farte peut se jouer pendant un 4e choix, pas Aspiration.",
     "s_pepite_title": "10. La Pépite",
     "s_pepite_body": "Mise en début de saison sur un outsider par sexe (cote ≥ 30). Pronostic caché : à son premier Top 10 de la saison, son score de la course s'ajoute en bonus, puis elle redevient une biathlète comme une autre.",
     "s_fuseegachette_title": "11. Fusée & Gâchette",
     "s_fuseegachette_body": "Fusée (sprint et individuel uniquement) : +50 pts si l'un de tes choix a le meilleur temps de ski de la course (une fois). Gâchette (poursuite et mass start uniquement) : +20 pts par choix ayant fait un 20/20 au tir (cumulable).",
-    "s_classement_title": "12. Le classement général",
+    "s_jokers_title": "12. Les jokers de fin de saison",
+    "s_jokers_body": "En fin de saison, tes 3 plus mauvais résultats de courses individuelles et tes 2 plus mauvais relais sont effacés (jamais les Mondiaux ni les JO). Une course non jouée est effacée en priorité. Effacer un résultat retire ses points : un 0 ne coûte rien, un malus est annulé. Aperçu pendant la saison dans Ma saison.",
+    "s_classement_title": "13. Le classement général",
     "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Le classement par étapes additionne les points d'une seule étape : son leader porte le Dossard Rouge, et chaque joueur affiche le nombre d'étapes gagnées. Des ligues privées entre amis existent aussi."
   },
   "Compte": {
@@ -264,7 +266,16 @@
     "pepite_H": "Ma Pépite Hommes",
     "specialRaceBanner": "Course malus · {name}",
     "opensOn": "Ouvre le {date}",
-    "seasonPredictionsComplete": "Compléter"
+    "seasonPredictionsComplete": "Compléter",
+    "specialBonusBanner": "Course bonus · {name}",
+    "jokersTitle": "Jokers de fin de saison",
+    "jokersPreview": "Aperçu : si la saison s'arrêtait aujourd'hui",
+    "jokersApplied": "Appliqués au classement",
+    "jokersDelta": "{points} pts",
+    "jokersHelp": "En fin de saison, tes 3 plus mauvais résultats de courses individuelles et tes 2 plus mauvais relais sont effacés (jamais les Mondiaux ni les JO). Une course non jouée est effacée en priorité. Effacer un résultat retire ses points : un 0 ne coûte rien, un malus est annulé.",
+    "jokersNone": "Aucun résultat à effacer pour l'instant.",
+    "jokersPoints": "{points} pts",
+    "jokersNotPlayed": "Non jouée"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -277,7 +288,8 @@
     "relais_mixte_simple": "Relais Mixte Simple",
     "specialRule_tour_de_pena": "Tour de péna",
     "specialRule_brouillard": "Brouillard",
-    "specialRule_tes_colle": "T'es collé(e)"
+    "specialRule_tes_colle": "T'es collé(e)",
+    "specialRule_fete_nationale": "Fête nationale"
   },
   "Sex": {
     "F": "Femmes",
@@ -334,7 +346,17 @@
     "malusScale_tes_colle_4": "Pas de pronostic → -200 pts (un choix manquant compte hors Top 10)",
     "calcDetail": "cote {odds} × {multiplier}",
     "calcOddsOnly": "cote {odds}",
-    "penaltyLapsMalus": "{count, plural, one {# tour de péna} other {# tours de péna}} : {points}"
+    "penaltyLapsMalus": "{count, plural, one {# tour de péna} other {# tours de péna}} : {points}",
+    "bonusLabel": "Course bonus",
+    "malusTagline_fete_nationale": "Les biathlètes de ton équipe favorite dans le Top 10 comptent double !",
+    "malusScale_fete_nationale_1": "Un biathlète de ton équipe favorite (nation et sexe) pronostiqué et classé dans le Top 10 → ses points ×2",
+    "malusScale_fete_nationale_2": "Exemple avec France Hommes : Perrot 2e à une cote de 8 → 8 × 18 × 2 = 288 pts",
+    "malusScale_fete_nationale_3": "Pas de bonus ×2 perso sur cette course : jamais de ×4",
+    "malusScale_fete_nationale_4": "Ça farte reste à ×3 sur sa cible ; sans équipe favorite, pas de bonus",
+    "compareTitle": "Et les autres, ils ont fait comment ?",
+    "compareBody": "Tu termines {rank}e sur {count} joueurs sur cette course. Compare-toi dans le classement, et rejoins une ligue pour te mesurer à tes amis toute la saison.",
+    "compareStandings": "Classement de la course",
+    "compareLeague": "Rejoindre une ligue"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",
@@ -385,7 +407,13 @@
     "submit": "Se connecter",
     "signUpSubmit": "Créer mon compte",
     "switchToSignUp": "Pas encore de compte ? Crée-en un",
-    "switchToSignIn": "Déjà un compte ? Connecte-toi"
+    "switchToSignIn": "Déjà un compte ? Connecte-toi",
+    "useCode": "Se connecter avec un code reçu par e-mail",
+    "usePassword": "Se connecter avec un mot de passe",
+    "codeSend": "Recevoir un code",
+    "codeSent": "Code envoyé à {email}.",
+    "codeWrong": "Code incorrect ou expiré.",
+    "codeUnknownEmail": "Aucun compte avec cet e-mail."
   },
   "Support": {
     "title": "Support",
@@ -684,5 +712,36 @@
     "perfectPicks": "{count, plural, one {# prono parfait} other {# pronos parfaits}}",
     "helpStageLeader": "Dossard rouge : le leader de l'étape affichée (classement « Par étapes »), et le nombre d'étapes gagnées.",
     "helpPerfect": "Pronos parfaits : les 3 biathlètes qui rapportaient le plus sur la course."
+  },
+  "Guest": {
+    "title": "Crée ton compte pour valider",
+    "intro": "Dernière étape : ton pronostic est enregistré dès que ton compte est créé. Pas de mot de passe, juste un code reçu par e-mail.",
+    "pseudo": "Pseudo (visible dans les classements)",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "E-mail",
+    "privacy": "Ton prénom, ton nom et ton e-mail restent privés ; seul ton pseudo est visible des autres joueurs.",
+    "privacyLink": "Confidentialité",
+    "sendCode": "Recevoir mon code",
+    "sending": "Envoi…",
+    "codeTitle": "Entre ton code",
+    "codeIntro": "Nous avons envoyé un code à 6 chiffres à {email}.",
+    "verify": "Valider mon pronostic",
+    "verifying": "Vérification…",
+    "wrongCode": "Code incorrect ou expiré.",
+    "resend": "Renvoyer le code",
+    "resent": "Code renvoyé",
+    "changeEmail": "Modifier l'e-mail",
+    "emailTaken": "Cet e-mail a déjà un compte : connecte-toi, puis valide à nouveau ton pronostic.",
+    "signInLink": "Se connecter",
+    "guestUnavailable": "Impossible de créer un compte invité pour l'instant, réessaie dans un moment.",
+    "close": "Fermer",
+    "welcomeTitle": "Bienvenue dans le jeu !",
+    "welcomeBody": "Ton pronostic est validé. Après la course, compare-toi aux autres joueurs dans le classement, et rejoins une ligue pour jouer entre amis.",
+    "joinLeague": "Rejoindre une ligue",
+    "goHome": "Accueil",
+    "loadingRace": "On t'ouvre la prochaine course…",
+    "noRace": "Aucune course n'est ouverte aux pronostics pour l'instant.",
+    "seeCalendar": "Voir le calendrier"
   }
 }

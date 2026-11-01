@@ -477,6 +477,11 @@ async function scoreIndividualPredictions(
       // ne rapporte plus de points, elle reste une info ludique sur l'accueil.
       favoriteTeam: null,
       raceCountryCode: stage.country_code,
+      // Fête nationale (01/11/2026) : les biathlètes de l'équipe favorite du joueur dans le Top 10 comptent double.
+      nationalDayTeam:
+        race.special_rule === "fete_nationale"
+          ? (favoriteTeamByUserId.get(prediction.user_id) as { nationCode: string; sex: "H" | "F" } | undefined) ?? null
+          : null,
     });
 
     // Carte Équipe : la cote de chaque biathlète de l'équipe favorite dans le Top 10, en plus.

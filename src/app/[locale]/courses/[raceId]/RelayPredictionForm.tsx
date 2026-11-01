@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "@/i18n/navigation";
 import { CheckIcon } from "@/components/icons";
+import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 
@@ -34,9 +36,13 @@ export function RelayPredictionForm({
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Parcours d'invité : création du compte à la validation du premier pronostic.
+  const [guestDialog, setGuestDialog] = useState(false);
+  const [welcome, setWelcome] = useState(false);
   // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
   const [savedState, setSavedState] = useState({ nation: initialSelection, bonusX2: initialBonusX2 });
   const supabase = createClient();
+  const router = useRouter();
   const t = useTranslations("PredictionForm");
 
   const canUseX2 = x2Eligible && (initialBonusX2 || x2UsesRemaining > 0);
@@ -50,8 +56,9 @@ export function RelayPredictionForm({
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-      setError(t("loginRequired"));
+    // Visiteur ou invité (session anonyme) : création du compte d'abord, puis enregistrement.
+    if (!user || user.is_anonymous) {
+      setGuestDialog(true);
       setSaving(false);
       return;
     }
@@ -102,6 +109,19 @@ export function RelayPredictionForm({
         success={validated ? t("saved") : null}
         error={error}
       />
+
+      {welcome && validated && <GuestWelcome />}
+      {guestDialog && (
+        <GuestSignupDialog
+          onClose={() => setGuestDialog(false)}
+          onDone={async () => {
+            setGuestDialog(false);
+            setWelcome(true);
+            await submit();
+            router.refresh();
+          }}
+        />
+      )}
 
       <div className="flex items-center gap-2">
         <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("chooseNation")}</div>

@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
+import { getLeaderboard } from "@/lib/leaderboard";
 
 export const dynamic = "force-dynamic";
 
@@ -30,16 +31,9 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ l
     const memberIds = memberships.map((m) => m.user_id);
     const pseudoByUserId = new Map(memberships.map((m: any) => [m.user_id, m.profiles?.pseudo ?? "?"]));
 
-    const { data: ledger } = await supabase
-      .from("score_ledger")
-      .select("user_id, points")
-      .eq("season_id", league.season_id)
-      .in("user_id", memberIds);
-
-    const totals = new Map<string, number>();
-    for (const entry of ledger ?? []) {
-      totals.set(entry.user_id, (totals.get(entry.user_id) ?? 0) + entry.points);
-    }
+    // Même total que le classement général (jokers de fin de saison compris une fois appliqués).
+    const general = await getLeaderboard(supabase, league.season_id);
+    const totals = new Map(general.map((row) => [row.userId, row.points]));
 
     leaderboard = memberIds
       .map((userId) => ({ userId, pseudo: pseudoByUserId.get(userId) ?? "?", points: totals.get(userId) ?? 0 }))

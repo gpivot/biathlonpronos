@@ -176,7 +176,7 @@ export async function updateRace(formData: FormData) {
   const format = String(formData.get("format"));
   const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
-  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle.");
+  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle ; Fête nationale : seulement sur une course individuelle.");
   // relais_h/f portent le sexe dans le format, les relais mixtes n'en ont pas.
   const sexless = format.startsWith("relais_");
 

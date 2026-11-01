@@ -56,8 +56,9 @@ export async function Landing() {
 
         <p className="relative mt-5 max-w-md text-base leading-relaxed text-text-dim sm:text-lg">{t("heroSubtitle")}</p>
 
+        {/* Parcours d'invité : on joue tout de suite, le compte n'est demandé qu'à la validation du pronostic. */}
         <Link
-          href="/sign-in"
+          href="/jouer"
           className="relative mt-8 rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
         >
           {t("heroCta")} →

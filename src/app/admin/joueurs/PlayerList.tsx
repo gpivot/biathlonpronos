@@ -4,6 +4,8 @@ export interface PlayerRow {
   id: string;
   pseudo: string;
   email: string;
+  /** Prénom et nom saisis à la création du compte (parcours d'invité), privés. */
+  fullName: string;
   isAdmin: boolean;
   createdAt: string;
 }
@@ -28,7 +30,10 @@ export function PlayerList({ players, meId }: { players: PlayerRow[]; meId: stri
                 )}
                 {isMe && <span className="text-[11px] font-normal text-text-dim">(toi)</span>}
               </div>
-              <div className="truncate text-xs text-text-dim">{p.email || "email inconnu"}</div>
+              <div className="truncate text-xs text-text-dim">
+                {p.fullName ? `${p.fullName} · ` : ""}
+                {p.email || "email inconnu"}
+              </div>
             </div>
             {isMe ? null : (
               <form action={setAdminRole}>

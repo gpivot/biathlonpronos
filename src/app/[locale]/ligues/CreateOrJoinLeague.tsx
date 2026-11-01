@@ -28,7 +28,7 @@ export function CreateOrJoinLeague({ seasonId }: { seasonId: string }) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) {
+    if (!user || user.is_anonymous) {
       setError(t("loginRequired"));
       setLoading(false);
       return;
@@ -60,7 +60,7 @@ export function CreateOrJoinLeague({ seasonId }: { seasonId: string }) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-    if (!user) {
+    if (!user || user.is_anonymous) {
       setError(t("loginRequired"));
       setLoading(false);
       return;

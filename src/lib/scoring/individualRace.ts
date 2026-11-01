@@ -70,10 +70,17 @@ export function computeIndividualRaceScore(
         ? input.card.caFarteTargetAthleteId ?? null
         : null;
 
+  // Fête nationale : biathlètes de l'équipe favorite (nation + sexe) classés dans le Top 10.
+  // Leurs points passent à ×2, sans cumul avec le bonus ×2 perso ni le coefficient Mondiaux/JO.
+  const isNationalDayBoosted = (athleteId: string) =>
+    input.specialRule === "fete_nationale" &&
+    isFavoriteTeamAthlete(athleteId, input.athleteTeamByAthleteId, input.nationalDayTeam ?? null) &&
+    (resultsByAthleteId.get(athleteId)?.rank ?? Infinity) <= 10;
+
   // 5b. Carte "Balle de pioche" — 4 choix, seuls les 3 meilleurs comptent. Avec Ça farte posé sur
   // un des 4, le ×3 est pris en compte pour désigner les 3 meilleurs (confirmé).
   const { counted, dropped } = selectCountedAthletes(input.predictedAthleteIds, rawScore, input.card, (id) =>
-    id === caFarteTargetId ? 3 : globalMultiplier
+    id === caFarteTargetId ? 3 : isNationalDayBoosted(id) ? 2 : globalMultiplier
   );
 
   // 5a. Carte "Ça farte" (×3) et 7. Bonus Team Nation (×2). Confirmé par
@@ -81,11 +88,18 @@ export function computeIndividualRaceScore(
   // par "Ça farte" ne reçoit ni le coefficient/bonus perso, ni Team Nation.
   const perAthlete: Record<string, number> = {};
   const teamNationBoostedAthleteIds: string[] = [];
+  const nationalDayBoostedAthleteIds: string[] = [];
   for (const athleteId of counted) {
     const isCaFarteTarget = caFarteTargetId === athleteId;
 
     if (isCaFarteTarget) {
       perAthlete[athleteId] = rawScore[athleteId] * 3;
+      continue;
+    }
+
+    if (isNationalDayBoosted(athleteId)) {
+      perAthlete[athleteId] = rawScore[athleteId] * 2;
+      nationalDayBoostedAthleteIds.push(athleteId);
       continue;
     }
 
@@ -135,6 +149,7 @@ export function computeIndividualRaceScore(
       fuseeGachetteBonus,
       droppedByBalleDePioche: dropped,
       teamNationBoostedAthleteIds,
+      nationalDayBoostedAthleteIds,
     },
   };
 }
@@ -179,6 +194,16 @@ function selectCountedAthletes(
 
   const sorted = [...predictedAthleteIds].sort((a, b) => rawScore[b] * multiplierOf(b) - rawScore[a] * multiplierOf(a));
   return { counted: sorted.slice(0, 3), dropped: sorted.slice(3) };
+}
+
+function isFavoriteTeamAthlete(
+  athleteId: string,
+  athleteTeamByAthleteId: Record<string, { nationCode: string; sex: Sex }>,
+  team: FavoriteTeam | null
+): boolean {
+  if (!team) return false;
+  const athleteTeam = athleteTeamByAthleteId[athleteId];
+  return athleteTeam?.nationCode === team.nationCode && athleteTeam?.sex === team.sex;
 }
 
 function isEligibleForTeamNationBonus(

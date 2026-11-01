@@ -21,6 +21,21 @@ export async function createSeason(formData: FormData) {
   revalidatePath("/admin");
 }
 
+/**
+ * Jokers de fin de saison (01/11/2026) : à activer quand la dernière course est notée. Le
+ * classement retire alors les résultats effacés par les jokers ; réversible (désactiver).
+ */
+export async function setJokersApplied(formData: FormData) {
+  await requireAdmin();
+  const { error } = await createAdminClient()
+    .from("seasons")
+    .update({ jokers_applied: formData.get("applied") === "1" })
+    .eq("id", String(formData.get("season_id")));
+  if (error) throw new Error(`${error.message} (migration 0030 appliquée ?)`);
+
+  revalidatePath("/admin");
+}
+
 export async function activateSeason(formData: FormData) {
   await requireAdmin();
   const admin = createAdminClient();
@@ -54,7 +69,7 @@ export async function createRace(formData: FormData) {
   const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
   const format = String(formData.get("format"));
-  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle.");
+  if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle ; Fête nationale : seulement sur une course individuelle.");
 
   // L'input datetime-local ne porte pas de fuseau ; on le traite comme UTC
   // (cohérent avec supabase/seed.sql) pour éviter toute ambiguïté serveur.
