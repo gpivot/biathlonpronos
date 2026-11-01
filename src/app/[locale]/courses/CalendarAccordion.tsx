@@ -9,7 +9,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { RaceDisplayStatus } from "@/lib/raceStatus";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
-import { SPECIAL_RULE_ICONS } from "@/lib/specialRules";
+import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
 
 export interface CalendarRace {
   id: string;
@@ -185,11 +185,13 @@ export function CalendarAccordion({
                     );
                     if (!race.special_rule) return <div key={race.id}>{link}</div>;
                     // Course malus : bandeau et contour rouges, avec le picto du malus (modèle VéloPronos).
+                    // Course bonus (Fête nationale) : même bandeau, en doré.
+                    const bonus = isBonusRule(race.special_rule);
                     return (
-                      <div key={race.id} className="overflow-hidden rounded-xl border-2 border-red bg-red">
-                        <div className="flex items-center gap-1.5 px-3 py-1 font-display text-[11px] font-bold uppercase tracking-wide text-white">
+                      <div key={race.id} className={`overflow-hidden rounded-xl border-2 ${bonus ? "border-gold bg-gold" : "border-red bg-red"}`}>
+                        <div className={`flex items-center gap-1.5 px-3 py-1 font-display text-[11px] font-bold uppercase tracking-wide ${bonus ? "text-bg" : "text-white"}`}>
                           <span>{SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}</span>
-                          {t("specialRaceBanner", { name: tFormat(`specialRule_${race.special_rule}`) })}
+                          {t(bonus ? "specialBonusBanner" : "specialRaceBanner", { name: tFormat(`specialRule_${race.special_rule}`) })}
                         </div>
                         <div className="[&>a]:rounded-none [&>a]:border-0">{link}</div>
                       </div>

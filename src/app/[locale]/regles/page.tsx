@@ -14,6 +14,7 @@ const SECTIONS = [
   "streak",
   "pepite",
   "fuseegachette",
+  "jokers",
   "classement",
 ] as const;
 

@@ -423,3 +423,72 @@ describe("computeIndividualRaceScore — carte Aspiration", () => {
     expect(withCard.breakdown.combinationBonus + withCard.breakdown.pronoParfaitBonus).toBeGreaterThan(0);
   });
 });
+
+describe("computeIndividualRaceScore — Fête nationale", () => {
+  const teams = {
+    fra: { nationCode: "FRA", sex: "H" as const },
+    fraF: { nationCode: "FRA", sex: "F" as const },
+    nor: { nationCode: "NOR", sex: "H" as const },
+  };
+  const input = (overrides: Partial<IndividualRaceScoringInput> = {}) =>
+    baseInput({
+      predictedAthleteIds: ["perrot", "boe", "jacquelin"],
+      results: [
+        { athleteId: "boe", rank: 1 },
+        { athleteId: "perrot", rank: 2 },
+        { athleteId: "zz", rank: 3 },
+        { athleteId: "jacquelin", rank: 12 },
+      ],
+      // zz (3e) rapporte plus que le trio : pas de Prono parfait ni de bonus de combinaison ici.
+      oddsByAthleteId: { perrot: 8, boe: 4, jacquelin: 12, zz: 100 },
+      athleteTeamByAthleteId: { perrot: teams.fra, jacquelin: teams.fra, boe: teams.nor },
+      specialRule: "fete_nationale",
+      nationalDayTeam: { nationCode: "FRA", sex: "H" },
+      ...overrides,
+    });
+
+  it("double les points d'un biathlète de l'équipe favorite classé dans le Top 10", () => {
+    const result = computeIndividualRaceScore(input());
+    expect(result.perAthlete.perrot).toBe(8 * 18 * 2);
+    expect(result.perAthlete.boe).toBe(4 * 25); // autre nation : inchangé
+    expect(result.breakdown.nationalDayBoostedAthleteIds).toEqual(["perrot"]);
+  });
+
+  it("ne double rien hors Top 10 (même avec un bonus Fusée)", () => {
+    const result = computeIndividualRaceScore(
+      input({
+        results: [
+          { athleteId: "boe", rank: 1 },
+          { athleteId: "perrot", rank: 2 },
+          { athleteId: "jacquelin", rank: 12, isFusee: true },
+        ],
+      })
+    );
+    expect(result.perAthlete.jacquelin).toBe(50);
+    expect(result.breakdown.nationalDayBoostedAthleteIds).not.toContain("jacquelin");
+  });
+
+  it("exige la nation ET le sexe de l'équipe favorite", () => {
+    const result = computeIndividualRaceScore(input({ nationalDayTeam: { nationCode: "FRA", sex: "F" } }));
+    expect(result.perAthlete.perrot).toBe(8 * 18);
+  });
+
+  it("ne s'applique que sur une course Fête nationale et avec une équipe favorite", () => {
+    expect(computeIndividualRaceScore(input({ specialRule: null })).perAthlete.perrot).toBe(8 * 18);
+    expect(computeIndividualRaceScore(input({ nationalDayTeam: null })).perAthlete.perrot).toBe(8 * 18);
+  });
+
+  it("ne se cumule pas avec le bonus ×2 perso ni le coefficient Mondiaux/JO", () => {
+    const withX2 = computeIndividualRaceScore(input({ bonusX2Active: true }));
+    expect(withX2.perAthlete.perrot).toBe(8 * 18 * 2);
+    expect(withX2.perAthlete.boe).toBe(4 * 25 * 2);
+    const worlds = computeIndividualRaceScore(input({ stageCoefficient: 2 }));
+    expect(worlds.perAthlete.perrot).toBe(8 * 18 * 2);
+  });
+
+  it("Ça farte reste à ×3 sur sa cible, jamais ×6", () => {
+    const result = computeIndividualRaceScore(input({ card: { type: "ca_farte", targetAthleteId: "perrot" } }));
+    expect(result.perAthlete.perrot).toBe(8 * 18 * 3);
+    expect(result.breakdown.nationalDayBoostedAthleteIds).toEqual([]);
+  });
+});

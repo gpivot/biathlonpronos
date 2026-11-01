@@ -28,6 +28,8 @@ export interface LastResultPick {
   points: number | null;
   /** Choix visé par la carte « Ça farte » (×3). */
   caFarte: boolean;
+  /** Course Fête nationale : biathlète de l'équipe favorite dans le Top 10, points doublés (déjà inclus). */
+  nationalDay?: boolean;
   /** Meilleur temps de ski (+50) / sans-faute au tir (+20), déjà inclus dans `points`. */
   fusee: boolean;
   gachette: boolean;
@@ -108,6 +110,7 @@ interface IndividualBreakdown {
   specialMalus?: number;
   droppedByBalleDePioche?: string[];
   teamNationBoostedAthleteIds?: string[];
+  nationalDayBoostedAthleteIds?: string[];
   aspirationBonus?: number;
   pepiteBonus?: number;
   /** Carte Équipe : cotes des biathlètes de l'équipe favorite dans le Top 10. */
@@ -118,7 +121,8 @@ interface IndividualBreakdown {
  * Reconstitue les points de chaque athlète pronostiqué à partir du détail
  * enregistré dans score_ledger.breakdown, en rejouant les multiplicateurs du
  * moteur (cf. computeIndividualRaceScore) : Fusée/Gâchette, Balle de pioche,
- * Ça farte ×3, coefficient Mondiaux/JO ou bonus ×2 perso, Team Nation ×2.
+ * Ça farte ×3, coefficient Mondiaux/JO ou bonus ×2 perso, Team Nation ×2, Fête nationale ×2 (jamais
+ * cumulée avec un autre ×2 : elle reste dans les points du choix, hors du gain du bonus ×2 affiché à part).
  */
 export function computeIndividualPickPoints(params: {
   athleteIds: string[];
@@ -132,6 +136,7 @@ export function computeIndividualPickPoints(params: {
   const resultByAthleteId = new Map(results.filter((r) => r.athlete_id).map((r) => [r.athlete_id!, r]));
   const dropped = new Set(breakdown.droppedByBalleDePioche ?? []);
   const teamNation = new Set(breakdown.teamNationBoostedAthleteIds ?? []);
+  const nationalDay = new Set(breakdown.nationalDayBoostedAthleteIds ?? []);
   const globalMultiplier = stageCoefficient === 2 ? 2 : bonusX2 ? 2 : 1;
 
   const points: Record<string, number | null> = {};
@@ -145,7 +150,12 @@ export function computeIndividualPickPoints(params: {
       (breakdown.base?.[id] ?? 0) +
       (result?.is_fusee ? FUSEE_BONUS : 0) +
       (result?.is_gachette ? GACHETTE_BONUS : 0);
-    points[id] = id === caFarteTargetId ? raw * 3 : raw * globalMultiplier * (teamNation.has(id) ? 2 : 1);
+    points[id] =
+      id === caFarteTargetId
+        ? raw * 3
+        : nationalDay.has(id)
+          ? raw * 2
+          : raw * globalMultiplier * (teamNation.has(id) ? 2 : 1);
   }
   return points;
 }
@@ -404,6 +414,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
         rank: row?.rank ?? null,
         points: counted && laps > 0 ? pickPoints[id]! - penaltyPoints : pickPoints[id],
         caFarte: id === caFarteTargetId,
+        nationalDay: (breakdown.nationalDayBoostedAthleteIds ?? []).includes(id),
         fusee: row?.is_fusee ?? false,
         gachette: row?.is_gachette ?? false,
         shootings: row?.shootings ?? null,

@@ -21,7 +21,7 @@ import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
 import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
 import { ShowMore } from "@/components/ShowMore";
-import { MALUS_SCALE, SPECIAL_RULE_ICONS } from "@/lib/specialRules";
+import { MALUS_SCALE, SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
 import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
 import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 import { HelpButton } from "@/components/HelpButton";
@@ -82,6 +82,8 @@ export default async function RacePage({
   // §7 — bonus ×2 personnel : 3 fois par saison, jamais sur une course
   // spéciale ni sur une étape Mondiaux/JO (déjà comptée double).
   const x2Eligible = !race.special_rule && stage.coefficient !== 2;
+  // Fête nationale : course bonus, encadré doré au lieu du rouge des malus.
+  const bonusRule = isBonusRule(race.special_rule);
   let x2UsesRemaining = 0;
 
   if (user) {
@@ -242,7 +244,11 @@ export default async function RacePage({
         {/* Course malus : contour rouge autour de l'encadré, avec le nom du malus et son « ? ». */}
         <div
           className={`flex flex-col gap-3 rounded-[18px] border px-4 py-4 ${
-            race.special_rule ? "border-red/70 bg-gradient-to-br from-red/15 to-card" : "border-border bg-gradient-to-br from-card2 to-card"
+            race.special_rule
+              ? bonusRule
+                ? "border-gold/70 bg-gradient-to-br from-gold/15 to-card"
+                : "border-red/70 bg-gradient-to-br from-red/15 to-card"
+              : "border-border bg-gradient-to-br from-card2 to-card"
           }`}
         >
           <div className="flex items-center gap-2 font-display text-[13px] font-bold text-ice">
@@ -268,13 +274,21 @@ export default async function RacePage({
           </div>
           {race.special_rule && (
             // Course malus : bandeau rouge avec gros picto, nom du malus, phrase choc et « ? » illustré.
-            <div className="flex items-center gap-3 rounded-2xl border border-red/40 bg-red/10 px-3 py-2.5">
-              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red/20 text-xl">
+            <div
+              className={`flex items-center gap-3 rounded-2xl border px-3 py-2.5 ${
+                bonusRule ? "border-gold/40 bg-gold/10" : "border-red/40 bg-red/10"
+              }`}
+            >
+              <div
+                className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full text-xl ${
+                  bonusRule ? "bg-gold/20" : "bg-red/20"
+                }`}
+              >
                 {SPECIAL_RULE_ICONS[race.special_rule] ?? "⚠️"}
               </div>
               <div className="flex min-w-0 flex-1 flex-col">
-                <div className="font-display text-[11px] font-bold uppercase tracking-wider text-red">
-                  {t("malusLabel")} · {tFormat(`specialRule_${race.special_rule}`)}
+                <div className={`font-display text-[11px] font-bold uppercase tracking-wider ${bonusRule ? "text-gold" : "text-red"}`}>
+                  {t(bonusRule ? "bonusLabel" : "malusLabel")} · {tFormat(`specialRule_${race.special_rule}`)}
                 </div>
                 <div className="text-[13px] font-semibold leading-snug text-frost">{t(`malusTagline_${race.special_rule}`)}</div>
               </div>

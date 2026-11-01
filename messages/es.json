@@ -135,14 +135,16 @@
     "s_mondiaux_title": "7. Mundiales y Juegos Olímpicos",
     "s_mondiaux_body": "Todas las carreras de estas competiciones cuentan doble automáticamente, no acumulable con el bonus ×2 personal.",
     "s_special_title": "8. Las carreras especiales",
-    "s_special_body": "Vuelta de penalización: -20 pts por cada vuelta de penalización de tus biatletas. Niebla: fuera del Top 10, un malus igual al puesto obtenido. Pillado: un malus si uno o varios de tus 3 elegidos terminan fuera del Top 10 (hasta -300), y -200 si no pronosticas nada.",
+    "s_special_body": "Vuelta de penalización: -20 pts por cada vuelta de penalización de tus biatletas. Niebla: fuera del Top 10, un malus igual al puesto obtenido. Pillado: un malus si uno o varios de tus 3 elegidos terminan fuera del Top 10 (hasta -300), y -200 si no pronosticas nada. Fiesta nacional (carrera bonus): tus biatletas pronosticados de tu equipo favorito (nación y sexo) que terminan en el Top 10 puntúan doble, sin acumularse con otro ×2 (Ça farte sigue en ×3).",
     "s_streak_title": "9. La racha 10/10 y las cartas bonus",
     "s_streak_body": "10 carreras consecutivas sumando puntos (relevos incluidos) te dan una carta bonus a elegir. La misma carta no se puede elegir dos veces seguidas. Deshielo (desquemar una vez a tus biatletas), Turbo (×3 a un biatleta en una carrera individual, nunca ×6 con un ×2) y 4.ª elección (4 biatletas, cuentan las 3 mejores, en 2 carreras masculinas y 2 femeninas, activa enseguida). Desde la 4.ª etapa, Rebufo (tus biatletas cuentan un puesto más arriba en una carrera). Tras el Mundial, Equipo (hasta el final de la temporada, cada biatleta de tu equipo favorito en el Top 10 te da su cuota). Ça farte se puede jugar durante un 4.º biatleta, Aspiration no.",
     "s_pepite_title": "10. El Diamante en bruto",
     "s_pepite_body": "Una apuesta hecha al inicio de la temporada por un outsider de cada sexo (cuota ≥ 30). Un pronóstico oculto: en su primer Top 10 de la temporada, su puntuación de la carrera se suma como bonus y luego vuelve a ser un atleta como los demás.",
     "s_fuseegachette_title": "11. Cohete y Gatillo",
     "s_fuseegachette_body": "Cohete (solo sprint e individual): +50 pts si uno de tus elegidos ha hecho el mejor tiempo de esquí de la carrera (una vez). Gatillo (solo persecución y salida en masa): +20 pts por cada elegido con un 20/20 en el tiro (acumulable).",
-    "s_classement_title": "12. La clasificación general",
+    "s_jokers_title": "12. Comodines de fin de temporada",
+    "s_jokers_body": "Al final de la temporada se borran tus 3 peores resultados en carreras individuales y tus 2 peores relevos (nunca Mundiales ni JJ. OO.). Una carrera no jugada se borra primero. Borrar un resultado quita sus puntos: un 0 no cuesta nada, un malus se anula. Vista previa durante la temporada en Mi temporada.",
+    "s_classement_title": "13. La clasificación general",
     "s_classement_body": "Suma todos los puntos de la temporada. El líder lleva el Dorsal Amarillo. La clasificación por etapas suma los puntos de una sola etapa: su líder lleva el Dorsal Rojo, y cada jugador muestra el número de etapas ganadas. También existen ligas privadas entre amigos."
   },
   "Compte": {
@@ -264,7 +266,16 @@
     "pepite_H": "Mi Diamante en bruto masculino",
     "specialRaceBanner": "Carrera malus · {name}",
     "opensOn": "Abre el {date}",
-    "seasonPredictionsComplete": "Completar"
+    "seasonPredictionsComplete": "Completar",
+    "specialBonusBanner": "Carrera bonus · {name}",
+    "jokersTitle": "Comodines de fin de temporada",
+    "jokersPreview": "Vista previa: si la temporada terminara hoy",
+    "jokersApplied": "Aplicados a la clasificación",
+    "jokersDelta": "{points} pts",
+    "jokersHelp": "Al final de la temporada se borran tus 3 peores resultados en carreras individuales y tus 2 peores relevos (nunca Mundiales ni JJ. OO.). Una carrera no jugada se borra primero. Borrar un resultado quita sus puntos: un 0 no cuesta nada, un malus se anula.",
+    "jokersNone": "Nada que borrar por ahora.",
+    "jokersPoints": "{points} pts",
+    "jokersNotPlayed": "No jugada"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -277,7 +288,8 @@
     "relais_mixte_simple": "Relevo mixto simple",
     "specialRule_tour_de_pena": "Vuelta de penalización",
     "specialRule_brouillard": "Niebla",
-    "specialRule_tes_colle": "Castigado"
+    "specialRule_tes_colle": "Castigado",
+    "specialRule_fete_nationale": "Fiesta nacional"
   },
   "Sex": {
     "F": "Mujeres",
@@ -334,7 +346,13 @@
     "malusScale_tes_colle_4": "Sin pronóstico → -200 pts (una elección que falta cuenta fuera del Top 10)",
     "calcDetail": "cuota {odds} × {multiplier}",
     "calcOddsOnly": "cuota {odds}",
-    "penaltyLapsMalus": "{count, plural, one {# vuelta de penalización} other {# vueltas de penalización}}: {points}"
+    "penaltyLapsMalus": "{count, plural, one {# vuelta de penalización} other {# vueltas de penalización}}: {points}",
+    "bonusLabel": "Carrera bonus",
+    "malusTagline_fete_nationale": "¡Los biatletas de tu equipo favorito en el Top 10 cuentan doble!",
+    "malusScale_fete_nationale_1": "Un biatleta de tu equipo favorito (nación y sexo) pronosticado y en el Top 10 → sus puntos ×2",
+    "malusScale_fete_nationale_2": "Ejemplo con Francia Hombres: Perrot 2.º con cuota 8 → 8 × 18 × 2 = 288 pts",
+    "malusScale_fete_nationale_3": "Sin bonus ×2 personal en esta carrera: nunca ×4",
+    "malusScale_fete_nationale_4": "Ça farte sigue en ×3 sobre su objetivo; sin equipo favorito, no hay bonus"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",

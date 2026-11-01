@@ -15,11 +15,16 @@ export const SPECIAL_RULES = [
   { value: "tour_de_pena", label: "Tour de péna" },
   { value: "brouillard", label: "Brouillard (sprint, individuelle)" },
   { value: "tes_colle", label: "T'es collé(e)" },
+  { value: "fete_nationale", label: "Fête nationale (bonus, course individuelle)" },
 ];
 
-/** Formats autorisés par course spéciale (absent : tous). Brouillard : sprint ou individuelle (demande de Guillaume). */
+/**
+ * Formats autorisés par course spéciale (absent : tous). Brouillard : sprint ou individuelle (demande
+ * de Guillaume). Fête nationale : courses individuelles (elle porte sur des biathlètes pronostiqués).
+ */
 export const SPECIAL_RULE_FORMATS: Record<string, string[]> = {
   brouillard: ["sprint", "individuel"],
+  fete_nationale: ["sprint", "poursuite", "individuel", "mass_start"],
 };
 
 export function isSpecialRuleAllowed(format: string, specialRule: string): boolean {

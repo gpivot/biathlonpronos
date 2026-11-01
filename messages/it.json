@@ -135,14 +135,16 @@
     "s_mondiaux_title": "7. Mondiali e Olimpiadi",
     "s_mondiaux_body": "Tutte le gare di questi eventi valgono automaticamente doppio, non cumulabile con il bonus ×2 personale.",
     "s_special_title": "8. Gare speciali",
-    "s_special_body": "Giro di penalità: -20 pt per ogni giro di penalità dei tuoi biatleti. Nebbia: fuori dalla Top 10, un malus pari alla posizione d'arrivo. Bocciato: un malus se uno o più dei tuoi 3 scelti arrivano fuori dalla Top 10 (fino a -300), e -200 se non fai nessun pronostico.",
+    "s_special_body": "Giro di penalità: -20 pt per ogni giro di penalità dei tuoi biatleti. Nebbia: fuori dalla Top 10, un malus pari alla posizione d'arrivo. Bocciato: un malus se uno o più dei tuoi 3 scelti arrivano fuori dalla Top 10 (fino a -300), e -200 se non fai nessun pronostico. Festa nazionale (gara bonus): i tuoi biatleti pronosticati della tua squadra preferita (nazione e sesso) che finiscono nella Top 10 valgono doppio, senza cumulo con un altro ×2 (Ça farte resta a ×3).",
     "s_streak_title": "9. La serie 10/10 e le carte bonus",
     "s_streak_body": "10 gare consecutive a punti (staffette comprese) ti fanno guadagnare una carta bonus a scelta. La stessa carta non si può prendere due volte di fila. Fonduta (sbloccare una volta i biatleti bruciati), Sciolina magica (×3 su un biatleta in una gara individuale, mai ×6 con un ×2) e 4ª scelta (4 biatleti, contano i 3 migliori, su 2 gare maschili e 2 femminili, attiva subito). Dalla 4ª tappa, Scia (i tuoi biatleti contano una posizione più in alto in una gara). Dopo i Mondiali, Squadra (fino a fine stagione, ogni biatleta della tua squadra preferita nella Top 10 ti fa guadagnare la sua quota). Ça farte si può giocare durante la 4ª scelta, Aspiration no.",
     "s_pepite_title": "10. La Pepita",
     "s_pepite_body": "Una scommessa fatta a inizio stagione su un outsider per sesso (quota ≥ 30). Una scelta nascosta: alla sua prima Top 10 della stagione, il suo punteggio in quella gara ti viene aggiunto come bonus, poi torna a essere un atleta normale.",
     "s_fuseegachette_title": "11. Razzo e Grilletto",
     "s_fuseegachette_body": "Razzo (solo sprint e individuale): +50 pt se uno dei tuoi scelti ha il miglior tempo sugli sci della gara (una volta). Grilletto (solo inseguimento e mass start): +20 pt per ogni scelto che fa 20/20 al poligono (cumulabile).",
-    "s_classement_title": "12. Classifica generale",
+    "s_jokers_title": "12. Jolly di fine stagione",
+    "s_jokers_body": "A fine stagione vengono cancellati i tuoi 3 peggiori risultati nelle gare individuali e le tue 2 peggiori staffette (mai Mondiali né Olimpiadi). Una gara non giocata viene cancellata per prima. Cancellare un risultato toglie i suoi punti: uno 0 non costa nulla, un malus viene annullato. Anteprima durante la stagione in La mia stagione.",
+    "s_classement_title": "13. Classifica generale",
     "s_classement_body": "Somma tutti i punti della stagione. Il leader indossa il Pettorale Giallo. La classifica per tappe somma i punti di una sola tappa: il suo leader indossa il Pettorale Rosso, e ogni giocatore mostra il numero di tappe vinte. Esistono anche leghe private tra amici."
   },
   "Compte": {
@@ -264,7 +266,16 @@
     "pepite_H": "La mia Pepita uomini",
     "specialRaceBanner": "Gara malus · {name}",
     "opensOn": "Apre il {date}",
-    "seasonPredictionsComplete": "Completa"
+    "seasonPredictionsComplete": "Completa",
+    "specialBonusBanner": "Gara bonus · {name}",
+    "jokersTitle": "Jolly di fine stagione",
+    "jokersPreview": "Anteprima: se la stagione finisse oggi",
+    "jokersApplied": "Applicati alla classifica",
+    "jokersDelta": "{points} pt",
+    "jokersHelp": "A fine stagione vengono cancellati i tuoi 3 peggiori risultati nelle gare individuali e le tue 2 peggiori staffette (mai Mondiali né Olimpiadi). Una gara non giocata viene cancellata per prima. Cancellare un risultato toglie i suoi punti: uno 0 non costa nulla, un malus viene annullato.",
+    "jokersNone": "Ancora niente da cancellare.",
+    "jokersPoints": "{points} pt",
+    "jokersNotPlayed": "Non giocata"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -277,7 +288,8 @@
     "relais_mixte_simple": "Single mixed",
     "specialRule_tour_de_pena": "Giro di penalità",
     "specialRule_brouillard": "Nebbia",
-    "specialRule_tes_colle": "In castigo"
+    "specialRule_tes_colle": "In castigo",
+    "specialRule_fete_nationale": "Festa nazionale"
   },
   "Sex": {
     "F": "Donne",
@@ -334,7 +346,13 @@
     "malusScale_tes_colle_4": "Nessun pronostico → -200 pti (una scelta mancante conta fuori dalla Top 10)",
     "calcDetail": "quota {odds} × {multiplier}",
     "calcOddsOnly": "quota {odds}",
-    "penaltyLapsMalus": "{count, plural, one {# giro di penalità} other {# giri di penalità}}: {points}"
+    "penaltyLapsMalus": "{count, plural, one {# giro di penalità} other {# giri di penalità}}: {points}",
+    "bonusLabel": "Gara bonus",
+    "malusTagline_fete_nationale": "I biatleti della tua squadra preferita nella Top 10 valgono doppio!",
+    "malusScale_fete_nationale_1": "Un biatleta della tua squadra preferita (nazione e sesso) pronosticato e nella Top 10 → i suoi punti ×2",
+    "malusScale_fete_nationale_2": "Esempio con Francia Uomini: Perrot 2° a quota 8 → 8 × 18 × 2 = 288 pt",
+    "malusScale_fete_nationale_3": "Niente bonus ×2 personale su questa gara: mai ×4",
+    "malusScale_fete_nationale_4": "Ça farte resta a ×3 sul suo obiettivo; senza squadra preferita, niente bonus"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",

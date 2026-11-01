@@ -160,6 +160,14 @@ Sur cette course, la contre-performance est sanctionnée. Un biathlète choisi q
 
 Attention, si tu oublies volontairement de parier à cette étape → -200 pts, ou si tu ne choisis qu'un ou 2 biathlètes, ils sont considérés comme hors top 10 et le malus s'applique.
 
+### Fête nationale (course bonus, ajoutée le 01/11/2026)
+
+Une course individuelle désignée à l'avance devient la Fête nationale. Les points d'un biathlète que tu as pronostiqué et qui appartient à ton **équipe favorite** (même nation et même sexe, par exemple France Hommes) sont **doublés s'il termine dans le Top 10**.
+
+Exemple avec France Hommes : tu pronostiques Perrot, 2e à une cote de 8 → 8 × 18 × 2 = 288 points.
+
+Ce doublement n'est pas cumulable avec le bonus ×2 personnel (qui ne peut de toute façon pas être joué sur une course spéciale) ni avec le coefficient des Mondiaux/JO : jamais de ×4. Avec Ça farte, le biathlète ciblé reste à ×3. Sans équipe favorite, la Fête nationale ne rapporte rien de plus.
+
 ## 10. Le bonus Team Nation
 
 > **Retiré le 30/10/2026 (Guillaume)** : trop compliqué pour l'instant. L'équipe favorite reste une info ludique (victoires et podiums de la saison sur l'accueil), sans effet sur les points.
@@ -231,6 +239,16 @@ Afin de conserver un équilibre entre les disciplines, chaque bonus ne s'appliqu
 Tous les points obtenus pendant la saison alimentent ton classement général Biathlonpronos. Il additionne : les points des courses individuelles ; les bonus de pronostics ; les relais ; les courses spéciales ; les cartes bonus ; les bonus Fusée et Gâchette ; les pronostics de saison.
 
 Le leader du classement général porte virtuellement le **Dossard Jaune**.
+
+### Les jokers de fin de saison (ajoutés le 01/11/2026)
+
+En fin de saison, chaque joueur efface automatiquement :
+- ses **3 plus mauvais résultats de courses individuelles** ;
+- ses **2 plus mauvais relais**.
+
+Les courses des Mondiaux et des Jeux Olympiques ne sont jamais effacées. Une course **non jouée** compte comme un résultat à effacer en priorité : les jokers servent d'abord à couvrir les absences. Effacer un résultat retire ses points du total (un 0 ne coûte rien, un malus est annulé, un petit score est retiré).
+
+Les jokers ne s'appliquent qu'en fin de saison. Pendant la saison, « Ma saison » montre un aperçu : les résultats qui seraient effacés si la saison s'arrêtait aujourd'hui.
 
 Le classement **par étapes** additionne les points des courses d'une seule étape. Le leader de chaque étape porte le **Dossard Rouge** (le jaune reste réservé au classement général). À côté de son pseudo, chaque joueur affiche le nombre d'étapes qu'il a gagnées.
 

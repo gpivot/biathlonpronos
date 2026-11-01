@@ -6,6 +6,26 @@ import { shortAthleteName } from "./athleteName";
 import { getCurrentStreak } from "./streakCounter";
 import { isPredictionOpen, predictionOpensOn } from "./predictionWindow";
 import { getPlayerCards, type PlayerCards } from "./bonusCards";
+import { areJokersApplied, loadSeasonJokers } from "./jokers";
+
+/** Une course effacée par les jokers de fin de saison, telle qu'affichée dans « Ma saison ». */
+export interface JokerLine {
+  raceId: string;
+  format: string;
+  sex: string | null;
+  location: string;
+  countryCode: string | null;
+  played: boolean;
+  points: number;
+}
+
+export interface SeasonJokers {
+  /** Appliqués au classement (fin de saison) ; sinon simple aperçu. */
+  applied: boolean;
+  /** Variation du total : moins la somme des points effacés. */
+  delta: number;
+  erased: JokerLine[];
+}
 
 /**
  * Contenu de « Ma saison » (`/courses`) pour un joueur : courses de chaque étape avec son
@@ -35,6 +55,8 @@ export interface SeasonView {
   streak: number | null;
   /** Cartes bonus (crédits à choisir et cartes prises), null pour un visiteur. */
   cards: PlayerCards | null;
+  /** Jokers de fin de saison (aperçu ou appliqués), pour le joueur lui-même seulement. */
+  jokers: SeasonJokers | null;
 }
 
 export async function getSeasonView(
@@ -47,7 +69,8 @@ export async function getSeasonView(
   const seasonStarted = new Date(season.starts_on) <= now;
   const showSeasonPicks = isOwner || seasonStarted;
 
-  const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards] = await Promise.all([
+  const withJokers = Boolean(userId && isOwner);
+  const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards, jokersApplied, jokerSelections] = await Promise.all([
     userId
       ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, bonus_x2_used").eq("user_id", userId)
       : Promise.resolve({ data: [] as any[] }),
@@ -66,6 +89,8 @@ export async function getSeasonView(
       : Promise.resolve({ data: [] as any[] }),
     userId ? getCurrentStreak(supabase, season.id, userId) : Promise.resolve(null),
     userId ? getPlayerCards(supabase, season.id, userId, now) : Promise.resolve(null),
+    withJokers ? areJokersApplied(supabase, season.id) : Promise.resolve(false),
+    withJokers ? loadSeasonJokers(supabase, season.id, [userId!]) : Promise.resolve(null),
   ]);
 
   const { data: stages, error } = await supabase
@@ -156,7 +181,31 @@ export async function getSeasonView(
       .sort((a: any, b: any) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
   }));
 
-  return { stages: mapped, seasonPicks, streak, cards };
+  const raceInfo = new Map(
+    mapped.flatMap((stage) => stage.races.map((race: any) => [race.id as string, { race, stage }] as const))
+  );
+  const selection = jokerSelections?.get(userId ?? "") ?? null;
+  const jokers: SeasonJokers | null =
+    selection && raceInfo.size > 0 && mapped.some((stage) => stage.races.some((r: any) => r.status === "finished"))
+      ? {
+          applied: jokersApplied,
+          delta: selection.delta,
+          erased: selection.erased.map((c) => {
+            const info = raceInfo.get(c.raceId);
+            return {
+              raceId: c.raceId,
+              format: info?.race.format ?? "",
+              sex: info?.race.sex ?? null,
+              location: info?.stage.location ?? "",
+              countryCode: info?.stage.country_code ?? null,
+              played: c.played,
+              points: c.points,
+            };
+          }),
+        }
+      : null;
+
+  return { stages: mapped, seasonPicks, streak, cards, jokers };
 }
 
 /** Étape ouverte par défaut : la première qui n'est pas entièrement terminée. */

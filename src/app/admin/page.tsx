@@ -26,6 +26,7 @@ import {
   importCalendar,
   removeSeason,
   removeStage,
+  setJokersApplied,
 } from "./calendrier/actions";
 import { removeRace } from "./races/[raceId]/actions";
 
@@ -108,6 +109,26 @@ export default async function AdminCalendarResultsPage() {
                   sont ceux qui ont une cote globe, jeune ou meilleure nation.
                 </p>
                 <GlobesSection admin={admin} seasonId={s.id} />
+                <form action={setJokersApplied} className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3">
+                  <input type="hidden" name="season_id" value={s.id} />
+                  <input type="hidden" name="applied" value={s.jokers_applied ? "0" : "1"} />
+                  <div className="flex-1 text-xs text-text-dim">
+                    <b className="text-frost">Jokers de fin de saison</b> : {s.jokers_applied ? "appliqués au classement." : "pas encore appliqués."}{" "}
+                    Les 3 plus mauvaises courses individuelles et les 2 plus mauvais relais de chaque joueur (hors
+                    Mondiaux/JO, courses non jouées d&apos;abord) sont retirés du classement. À activer quand la dernière
+                    course est notée ; les joueurs en voient l&apos;aperçu dans Ma saison.
+                  </div>
+                  <ConfirmButton
+                    message={
+                      s.jokers_applied
+                        ? "Retirer les jokers du classement ?"
+                        : "Appliquer les jokers de fin de saison au classement ? (réversible)"
+                    }
+                    className="rounded border border-border px-3 py-1 text-xs"
+                  >
+                    {s.jokers_applied ? "Retirer les jokers" : "Appliquer les jokers"}
+                  </ConfirmButton>
+                </form>
               </div>
             </details>
           ))}

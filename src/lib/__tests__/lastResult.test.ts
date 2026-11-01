@@ -62,6 +62,12 @@ describe("encart Dernier résultat : points par athlète", () => {
     expectSameAsEngine(baseInput({ predictedAthleteIds: ["a", "b", "c", "d"], card: { type: "balle_de_pioche" } })));
   it("Team Nation à domicile", () =>
     expectSameAsEngine(baseInput({ favoriteTeam: { nationCode: "FRA", sex: "H" } })));
+  it("Fête nationale (équipe favorite dans le Top 10)", () =>
+    expectSameAsEngine(baseInput({ specialRule: "fete_nationale", nationalDayTeam: { nationCode: "FRA", sex: "H" } })));
+  it("Fête nationale avec un bonus ×2 perso (pas de cumul)", () =>
+    expectSameAsEngine(
+      baseInput({ specialRule: "fete_nationale", nationalDayTeam: { nationCode: "FRA", sex: "H" }, bonusX2Active: true })
+    ));
   it("podium complet (bonus de combinaison)", () => expectSameAsEngine(baseInput({ predictedAthleteIds: ["a", "b", "e"] })));
 });
 
