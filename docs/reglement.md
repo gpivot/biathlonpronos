@@ -208,8 +208,7 @@ Sur une course individuelle de ton choix, chacun de tes biathlètes compte une p
 ### Équipe (à partir de l'étape qui suit les Mondiaux ou les JO)
 Dès que tu la choisis et jusqu'à la fin de la saison, chaque biathlète de ton équipe favorite qui termine dans le Top 10 ajoute une fois sa cote au score de la course, que tu l'aies choisi ou non. Exemple avec France Hommes : tu pronostiques Perrot, 2e à une cote de 8 ; Jacquelin (4e, cote 12) et Claude (8e, cote 24) ne sont pas dans ton pronostic. Tu marques 8 × 18 pour Perrot, plus 8 + 12 + 24 grâce à la carte. Sur le relais hommes ou femmes de ton équipe, ta nation dans le Top 10 ajoute une fois la cote du relais. Ces points comptent pour ta série.
 
-### Chat noir
-Une fois gagnée, cette carte permet de corriger l'un de tes pronostics de début de saison. Tu peux remplacer un seul choix Globe / Jeune par un autre biathlète. Elle permet notamment de réagir à une blessure, un forfait longue durée ou un début de saison totalement manqué. Le changement doit être effectué avant la fin de la 3e étape de la Coupe du Monde. (Pas encore proposée.)
+> **Chat noir retirée le 01/11/2026 (Guillaume)** : la carte (corriger un pronostic de début de saison) est désormais réservée à VéloPronos.
 
 ## 14. La pépite
 
@@ -233,7 +232,9 @@ Tous les points obtenus pendant la saison alimentent ton classement général Bi
 
 Le leader du classement général porte virtuellement le **Dossard Jaune**.
 
-Des classements annexes permettent également de suivre les meilleurs joueurs sur certaines dimensions du jeu. Leur leader porte un **Dossard Rouge**.
+Le classement **par étapes** additionne les points des courses d'une seule étape. Le leader de chaque étape porte le **Dossard Rouge** (le jaune reste réservé au classement général). À côté de son pseudo, chaque joueur affiche le nombre d'étapes qu'il a gagnées.
+
+**Les pictos des joueurs** : dossard jaune (leader du général), dossard rouge (leader de l'étape, avec le nombre d'étapes gagnées), ⚡ bonus ×2 utilisés (avec le nombre), 🍾 courses gagnées (meilleur pronostiqueur), ⭐ pronos parfaits (avec le nombre), ❄️ Pépite révélée.
 
 ## 17. Les courses
 

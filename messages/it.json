@@ -143,7 +143,7 @@
     "s_fuseegachette_title": "11. Razzo e Grilletto",
     "s_fuseegachette_body": "Razzo (solo sprint e individuale): +50 pt se uno dei tuoi scelti ha il miglior tempo sugli sci della gara (una volta). Grilletto (solo inseguimento e mass start): +20 pt per ogni scelto che fa 20/20 al poligono (cumulabile).",
     "s_classement_title": "12. Classifica generale",
-    "s_classement_body": "Somma tutti i punti ottenuti nella stagione. Il leader indossa il Pettorale giallo. Esistono anche classifiche secondarie (Pettorale rosso) e leghe private tra amici."
+    "s_classement_body": "Somma tutti i punti della stagione. Il leader indossa il Pettorale Giallo. La classifica per tappe somma i punti di una sola tappa: il suo leader indossa il Pettorale Rosso, e ogni giocatore mostra il numero di tappe vinte. Esistono anche leghe private tra amici."
   },
   "Compte": {
     "pushTitle": "📱 Notifiche dell'app",
@@ -658,7 +658,6 @@
     "name_ca_farte": "Sciolina magica",
     "name_balle_de_pioche": "4ª scelta",
     "name_fondue": "Fonduta",
-    "name_chat_noir": "Gatto nero",
     "desc_ca_farte": "Tienila in mano: un ×3 su uno dei tuoi biatleti, nella gara individuale che preferisci.",
     "desc_balle_de_pioche": "Si attiva subito sulle prossime 4 gare individuali (2 maschili, 2 femminili): 4 biatleti invece di 3, contano i tuoi 3 migliori.",
     "name_aspiration": "Scia",
@@ -676,9 +675,14 @@
     "raceWins": "{count, plural, one {# gara vinta} other {# gare vinte}} (miglior pronosticatore)",
     "pepite": "{count, plural, one {Pepita rivelata} other {# Pepite rivelate}}",
     "helpTitle": "Le icone dei giocatori",
-    "helpLeader": "Pettorale giallo: leader della classifica mostrata (generale o lega).",
+    "helpLeader": "Pettorale giallo: il leader della classifica generale della stagione (o della lega).",
     "helpX2": "Bonus ×2 già usati, sui 3 della stagione.",
     "helpWins": "Gare vinte da miglior pronosticatore.",
-    "helpPepite": "Pepita rivelata: primo Top 10 raggiunto, bonus incassato."
+    "helpPepite": "Pepita rivelata: primo Top 10 raggiunto, bonus incassato.",
+    "stageLeader": "Pettorale rosso: leader della tappa",
+    "stageWins": "Pettorale rosso: {count, plural, one {# tappa vinta} other {# tappe vinte}}",
+    "perfectPicks": "{count, plural, one {# pronostico perfetto} other {# pronostici perfetti}}",
+    "helpStageLeader": "Pettorale rosso: il leader della tappa mostrata (classifica «Per tappe»), con il numero di tappe vinte.",
+    "helpPerfect": "Pronostici perfetti: i 3 biatleti che valevano più punti nella gara."
   }
 }

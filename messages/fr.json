@@ -143,7 +143,7 @@
     "s_fuseegachette_title": "11. Fusée & Gâchette",
     "s_fuseegachette_body": "Fusée (sprint et individuel uniquement) : +50 pts si l'un de tes choix a le meilleur temps de ski de la course (une fois). Gâchette (poursuite et mass start uniquement) : +20 pts par choix ayant fait un 20/20 au tir (cumulable).",
     "s_classement_title": "12. Le classement général",
-    "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Des classements annexes (Dossard Rouge) et des ligues privées entre amis existent aussi."
+    "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Le classement par étapes additionne les points d'une seule étape : son leader porte le Dossard Rouge, et chaque joueur affiche le nombre d'étapes gagnées. Des ligues privées entre amis existent aussi."
   },
   "Compte": {
     "pushTitle": "📱 Notifications de l'appli",
@@ -658,7 +658,6 @@
     "name_ca_farte": "Ça farte",
     "name_balle_de_pioche": "4e choix",
     "name_fondue": "Fondue",
-    "name_chat_noir": "Chat noir",
     "desc_ca_farte": "À garder en main : un ×3 sur un de tes biathlètes, sur la course individuelle de ton choix.",
     "desc_balle_de_pioche": "S'active tout de suite, sur les 4 prochaines courses individuelles (2 hommes, 2 femmes) : 4 biathlètes au lieu de 3, tes 3 meilleurs comptent.",
     "name_aspiration": "Aspiration",
@@ -676,9 +675,14 @@
     "raceWins": "{count, plural, one {# course gagnée} other {# courses gagnées}} (meilleur pronostiqueur)",
     "pepite": "{count, plural, one {Pépite révélée} other {# Pépites révélées}}",
     "helpTitle": "Les pictos des joueurs",
-    "helpLeader": "Dossard jaune : le leader du classement affiché (général ou ligue).",
+    "helpLeader": "Dossard jaune : le leader du classement général de la saison (ou de la ligue).",
     "helpX2": "Bonus ×2 déjà utilisés sur les 3 de la saison.",
     "helpWins": "Courses gagnées en terminant meilleur pronostiqueur.",
-    "helpPepite": "Pépite révélée : elle a fait son premier Top 10 et rapporté son bonus."
+    "helpPepite": "Pépite révélée : elle a fait son premier Top 10 et rapporté son bonus.",
+    "stageLeader": "Dossard rouge : leader de l'étape",
+    "stageWins": "Dossard rouge : {count, plural, one {# étape gagnée} other {# étapes gagnées}}",
+    "perfectPicks": "{count, plural, one {# prono parfait} other {# pronos parfaits}}",
+    "helpStageLeader": "Dossard rouge : le leader de l'étape affichée (classement « Par étapes »), et le nombre d'étapes gagnées.",
+    "helpPerfect": "Pronos parfaits : les 3 biathlètes qui rapportaient le plus sur la course."
   }
 }

@@ -100,8 +100,7 @@ retenus dans `src/lib/scoring/individualRace.ts`, confirmés par Guillaume le 20
 ### Hors périmètre de cette première version du moteur
 
 - **Globes de saison** (gros globe / meilleur jeune / meilleure nation, §6) et **Pépite** (§14) :
-  implémentés depuis, voir plus bas. Seule la correction **Chat Noir** (§13) reste hors périmètre,
-  en suspens (dépend d'un verrouillage/correction des globes non construit).
+  implémentés depuis, voir plus bas. La carte **Chat Noir** (§13) a été retirée du jeu le 01/11/2026.
 - **Grillage** (§2) : n'est pas un calcul de points, mais une contrainte de sélection à
   vérifier côté écran de pronostic (empêcher de choisir un biathlète grillé) — pas traité ici.
 
@@ -128,8 +127,7 @@ compilation propre, `npm test` = 27 tests verts sur le moteur de scoring).
   de score, trigger de création du profil à l'inscription, rôle admin, lecture publique du
   classement) et ajoutant les cotes de relais
 
-**Absent** : correction Chat Noir (dépend des globes, dont le pronostic joueur existe mais dont la
-saisie n'est pas encore verrouillable/corrigeable), pages publicitaires/RGPD.
+**Absent** : pages publicitaires/RGPD (la carte Chat Noir a été retirée du jeu le 01/11/2026).
 
 **Cartes bonus — implémentées et testées de bout en bout.** Confirmé par Guillaume (2026-09-11) :
 au 10/10, **le joueur choisit lui-même** le type de carte (pas de tirage aléatoire) parmi les 4,
@@ -139,8 +137,7 @@ sauf s'il détient déjà un exemplaire non utilisé de ce type (grisé jusqu'à
 "Aucune / Balle de pioche / Ça farte" (mutuellement exclusifs, cf. colonne unique
 `predictions.bonus_card_used`), sélection de la cible du ×3 pour Ça farte, bouton dédié "Utiliser
 Fondue" sur l'écran de course. Bonus ×2 personnel (§7) : compteur "3 par saison" calculé à la volée,
-désactivé sur les courses spéciales et les étapes Mondiaux/JO. **Chat Noir** non câblé (dépend du
-verrouillage/correction des globes, non construit).
+désactivé sur les courses spéciales et les étapes Mondiaux/JO. **Chat Noir** retirée du jeu (01/11/2026).
 
 **Globes de saison (§6) et Pépite (§14) — implémentés et testés de bout en bout.**
 `src/lib/scoring/seasonPredictions.ts` : barème gros globe vs jeune/nation (`GROS_GLOBE_MULTIPLIERS`
@@ -148,7 +145,7 @@ verrouillage/correction des globes, non construit).
 saison + choix de la Pépite. Écran admin `/admin/globes` (section « Globes de saison » de `/admin` depuis octobre 2026) : saisie du classement final officiel
 (jusqu'à 5 rangs) par catégorie, déclenche le calcul. **Pas encore fait** : verrouillage des globes
 avant le début de saison au niveau base (la page affiche un message mais rien n'empêche une écriture
-directe), correction Chat Noir (en suspens, cf. §12 ci-dessous).
+directe).
 
 **Pépite (§14) — mécanique corrigée par Guillaume, une par sexe.** Ce n'est pas un bonus fixe au
 1er Top 10 : c'est un **pronostic caché**, actif sur chaque course individuelle jusqu'à son 1er
@@ -261,7 +258,7 @@ Admin est un `<a>` natif (pas le `Link` i18n) car `/admin` est hors routing `[lo
    interactivement — upload de fichier non automatisable ici).
 9. ~~Globes de saison + Pépite.~~ Fait, testé de bout en bout ; mécanique Pépite corrigée par
    Guillaume (pronostic caché par sexe, cf. ci-dessus). Reste : verrouillage base des globes avant
-   le début de saison, correction Chat Noir (en suspens).
+   le début de saison.
 10. ~~Classements annexes.~~ Une dimension (meilleure série 10/10) implémentée ; le classement par
     type de course évoqué par Guillaume est mis en suspens pour l'instant.
 11. Emplacements publicitaires et bannière de consentement cookies (prévus dans l'architecture,
@@ -897,8 +894,8 @@ bas du Profil. Décisions de Guillaume (30/10/2026) :
 - **Choix de la carte** dans l'encadré « Série en cours » de l'accueil et de Ma saison (plus dans le
   Profil) : bouton doré « 10/10 ! Choisis ta carte bonus » qui ouvre un pop-up ; sur l'accueil le
   pop-up s'ouvre tout seul une fois par visite (« Plus tard » le referme). Seules deux cartes sont
-  proposées : **Ça farte** et **4e choix** (`balle_de_pioche` en base). Fondue et Chat noir restent
-  dans le code mais ne se choisissent plus.
+  proposées : **Ça farte** et **4e choix** (`balle_de_pioche` en base). Fondue reste
+  dans le code mais ne se choisit plus (Chat noir a depuis été retirée, 01/11/2026).
 - **Rappel des cartes** sous la série : dorée « disponible », contour doré « active » (jouée, une
   course couverte pas encore notée ; « active, 2/4 courses » pour le 4e choix), grisée et barrée
   « utilisée ». Mêmes pastilles en haut du pop-up d'un joueur du Classement.
@@ -1037,3 +1034,22 @@ vers une page fermée. La série reprend sa place ensuite.
   modification ni de suppression par le joueur. Les équipes déjà choisies restent telles quelles.
   À confirmer : un joueur dont la carte Équipe est active sans équipe favorite ne peut plus en
   choisir (la carte ne lui rapporte rien).
+
+## Dossard rouge par étape, pictos, retrait de Chat noir (01/11/2026)
+
+Décisions de Guillaume du 01/11/2026 :
+- **Dossard rouge** (`StageLeaderBib`, `PlayerBadgesRow` prop `stageLeader`) : dans le Classement
+  filtré « Par étapes » sur « Toute l'étape », le 1er (avec des points) porte le dossard rouge au lieu
+  du jaune. Le **dossard jaune est réservé au classement de la saison** (général, ou ligue sur la
+  saison) ; sur une seule course, ni jaune ni rouge (le 🍾 désigne déjà le vainqueur).
+- **Étapes gagnées** (`countStageWins`, testé) : dossard rouge suivi du nombre, à côté du pseudo
+  (Classement, pop-up joueur, carte de rang et Top 5 de l'accueil). Une étape compte quand **toutes
+  ses courses sont notées** ; le vainqueur est le joueur qui a le plus de points sur l'ensemble de
+  ses courses (bonus Pépite compris, comme pour les courses gagnées), ex æquo tous vainqueurs.
+  **À confirmer** : l'étape en cours ne compte pas encore (son leader porte le rouge seulement dans
+  le classement « Par étapes »).
+- **⭐ n pronos parfaits** : nombre de lignes de `score_ledger` avec `breakdown.pronoParfaitBonus`
+  positif. Pictos conservés : ⚡ ×2 (avec le nombre), 🍾 courses gagnées, ❄️ Pépite.
+- **Chat noir retirée** (réservée au vélo) : supprimée du règlement, des textes et du type
+  `BonusCardType`. La valeur `chat_noir` reste dans l'enum `bonus_card_type` en base (retirer une
+  valeur d'enum Postgres est lourd et inutile : aucune fonction ne la propose).

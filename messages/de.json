@@ -143,7 +143,7 @@
     "s_fuseegachette_title": "11. Rakete & Abzug",
     "s_fuseegachette_body": "Rakete (nur Sprint und Einzel): +50 Pkt., wenn einer deiner Tipps die beste Laufzeit des Rennens hatte (einmalig). Abzug (nur Verfolgung und Massenstart): +20 Pkt. pro Tipp mit 20/20 am Schießstand (kumulierbar).",
     "s_classement_title": "12. Gesamtwertung",
-    "s_classement_body": "Zählt alle in der Saison erzielten Punkte zusammen. Der Führende trägt das Gelbe Trikot. Es gibt außerdem Nebenwertungen (Rotes Trikot) und private Ligen unter Freunden."
+    "s_classement_body": "Zählt alle Punkte der Saison zusammen. Der Führende trägt das Gelbe Trikot. Die Wertung nach Etappen zählt die Punkte einer einzelnen Etappe: ihr Führender trägt das Rote Trikot, und jeder Spieler zeigt die Zahl seiner gewonnenen Etappen. Es gibt auch private Ligen unter Freunden."
   },
   "Compte": {
     "pushTitle": "📱 App-Benachrichtigungen",
@@ -658,7 +658,6 @@
     "name_ca_farte": "Turbowachs",
     "name_balle_de_pioche": "4. Tipp",
     "name_fondue": "Fondue",
-    "name_chat_noir": "Schwarze Katze",
     "desc_ca_farte": "Behalte sie auf der Hand: ein ×3 auf einen deiner Biathleten, im Einzelrennen deiner Wahl.",
     "desc_balle_de_pioche": "Wird sofort aktiv, für die nächsten 4 Einzelrennen (2 Herren, 2 Damen): 4 statt 3 Biathleten, deine 3 besten zählen.",
     "name_aspiration": "Windschatten",
@@ -676,9 +675,14 @@
     "raceWins": "{count, plural, one {# Rennen gewonnen} other {# Rennen gewonnen}} (bester Tipper)",
     "pepite": "{count, plural, one {Rohdiamant aufgedeckt} other {# Rohdiamanten aufgedeckt}}",
     "helpTitle": "Die Spieler-Symbole",
-    "helpLeader": "Gelbes Trikot: Führender der angezeigten Wertung (gesamt oder Liga).",
+    "helpLeader": "Gelbes Trikot: Führender der Gesamtwertung der Saison (oder der Liga).",
     "helpX2": "Bereits genutzte ×2-Boni, von 3 pro Saison.",
     "helpWins": "Rennen, bei denen der Spieler bester Tipper war.",
-    "helpPepite": "Rohdiamant aufgedeckt: erste Top-10-Platzierung, Bonus kassiert."
+    "helpPepite": "Rohdiamant aufgedeckt: erste Top-10-Platzierung, Bonus kassiert.",
+    "stageLeader": "Rotes Trikot: Führender der Etappe",
+    "stageWins": "Rotes Trikot: {count, plural, one {# Etappe gewonnen} other {# Etappen gewonnen}}",
+    "perfectPicks": "{count, plural, one {# perfekter Tipp} other {# perfekte Tipps}}",
+    "helpStageLeader": "Rotes Trikot: Führender der angezeigten Etappe (Wertung „Nach Etappen“), mit der Zahl der gewonnenen Etappen.",
+    "helpPerfect": "Perfekte Tipps: die 3 punktstärksten Biathleten des Rennens."
   }
 }

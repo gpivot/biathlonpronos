@@ -2,18 +2,23 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Pictos d'un joueur à côté de son pseudo (Classement, pop-up joueur), repris de VéloPronos :
- * dossard jaune du leader, ⚡ bonus ×2 utilisés, 🍾 courses gagnées (meilleur pronostiqueur),
- * ❄️ Pépite révélée. Le leader dépend du classement affiché : il est passé à part.
+ * dossard jaune du leader du général, dossard rouge des étapes gagnées, ⚡ bonus ×2 utilisés,
+ * 🍾 courses gagnées (meilleur pronostiqueur), ⭐ pronos parfaits, ❄️ Pépite révélée. Le leader
+ * dépend du classement affiché : il est passé à part.
  */
 export interface PlayerBadges {
   x2Used: number;
   raceWins: number;
+  /** Étapes terminées gagnées (plus de points sur l'ensemble des courses de l'étape). */
+  stageWins: number;
+  /** Courses où le joueur a réussi le Prono parfait. */
+  perfectPicks: number;
   pepites: number;
 }
 
 export const X2_PER_SEASON = 3;
 
-export const NO_BADGES: PlayerBadges = { x2Used: 0, raceWins: 0, pepites: 0 };
+export const NO_BADGES: PlayerBadges = { x2Used: 0, raceWins: 0, stageWins: 0, perfectPicks: 0, pepites: 0 };
 
 /**
  * Partie pure (testée) : victoires de course par joueur. Le vainqueur d'une course est le joueur
@@ -39,19 +44,43 @@ export function countRaceWins(ledger: { userId: string; raceId: string | null; p
 }
 
 /**
+ * Partie pure (testée) : étapes gagnées par joueur. Seules les étapes terminées (toutes leurs
+ * courses notées) comptent ; le vainqueur est le joueur qui marque le plus de points sur
+ * l'ensemble de leurs courses (ex æquo : tous vainqueurs), à condition d'en marquer.
+ */
+export function countStageWins(
+  ledger: { userId: string; raceId: string | null; points: number }[],
+  races: { id: string; stageId: string; finished: boolean }[]
+): Map<string, number> {
+  const stageOfRace = new Map(races.map((r) => [r.id, r.stageId]));
+  const finishedStages = new Set(races.map((r) => r.stageId));
+  for (const r of races) if (!r.finished) finishedStages.delete(r.stageId);
+  const byStage = ledger
+    .filter((row) => row.raceId && finishedStages.has(stageOfRace.get(row.raceId) ?? ""))
+    .map((row) => ({ userId: row.userId, raceId: stageOfRace.get(row.raceId!)!, points: row.points }));
+  // Même calcul que les victoires de course, avec l'étape à la place de la course.
+  return countRaceWins(byStage);
+}
+
+/**
  * Pictos de tous les joueurs de la saison. Les ×2 joués sur des courses pas encore parties
  * restent invisibles pour les autres joueurs (pronostics cachés, migration 0018) ; les Pépites
  * ne sont lisibles qu'une fois révélées, ce qui est justement ce qu'on affiche.
  */
 export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string): Promise<Map<string, PlayerBadges>> {
-  const [{ data: ledger }, { data: x2 }, { data: pepites }] = await Promise.all([
-    supabase.from("score_ledger").select("user_id, race_id, points").eq("season_id", seasonId).not("race_id", "is", null),
+  const [{ data: ledger }, { data: x2 }, { data: pepites }, { data: races }] = await Promise.all([
+    supabase
+      .from("score_ledger")
+      .select("user_id, race_id, points, perfect:breakdown->pronoParfaitBonus")
+      .eq("season_id", seasonId)
+      .not("race_id", "is", null),
     supabase
       .from("predictions")
       .select("user_id, races!inner(stages!inner(season_id))")
       .eq("bonus_x2_used", true)
       .eq("races.stages.season_id", seasonId),
     supabase.from("pepites").select("user_id").eq("season_id", seasonId).eq("bonus_claimed", true),
+    supabase.from("races").select("id, stage_id, status, stages!inner(season_id)").eq("stages.season_id", seasonId),
   ]);
 
   const badges = new Map<string, PlayerBadges>();
@@ -60,8 +89,15 @@ export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string
     if (!entry) badges.set(userId, (entry = { ...NO_BADGES }));
     return entry;
   };
-  const wins = countRaceWins(((ledger ?? []) as any[]).map((l) => ({ userId: l.user_id, raceId: l.race_id, points: l.points })));
+  const ledgerRows = ((ledger ?? []) as any[]).map((l) => ({ userId: l.user_id, raceId: l.race_id, points: Number(l.points) }));
+  const wins = countRaceWins(ledgerRows);
   for (const [userId, count] of Array.from(wins)) get(userId).raceWins = count;
+  const stageWins = countStageWins(
+    ledgerRows,
+    ((races ?? []) as any[]).map((r) => ({ id: r.id, stageId: r.stage_id, finished: r.status === "finished" }))
+  );
+  for (const [userId, count] of Array.from(stageWins)) get(userId).stageWins = count;
+  for (const l of (ledger ?? []) as any[]) if (Number(l.perfect ?? 0) > 0) get(l.user_id).perfectPicks += 1;
   for (const p of (x2 ?? []) as any[]) get(p.user_id).x2Used += 1;
   for (const p of (pepites ?? []) as any[]) get(p.user_id).pepites += 1;
   return badges;

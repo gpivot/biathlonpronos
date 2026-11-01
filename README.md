@@ -87,10 +87,9 @@ retenus dans ce moteur.
 
 ## Limites connues (voir `docs/architecture-technique.md` pour le détail à jour)
 
-- **Chat Noir** (correction d'un pronostic de globe) : en suspens, dépend du verrouillage/de la
-  correction des globes de saison qui n'existe pas encore côté base.
-- **Classements annexes (Dossard Rouge)** : une seule dimension implémentée (meilleure série
-  10/10). Un classement par type de course (sprint/poursuite/individuel/mass start/relais) était
+- **Chat Noir** : carte retirée du jeu le 01/11/2026 (réservée à VéloPronos).
+- **Classements annexes** : le Dossard Rouge est porté par le leader de chaque étape (classement
+  « Par étapes ») ; liste des meilleures séries 10/10. Un classement par type de course (sprint/poursuite/individuel/mass start/relais) était
   envisagé mais mis en suspens pour l'instant.
 - **Imports CSV du back-office** (calendrier, cotes, résultats) : logique couverte par les tests
   unitaires et écrans vérifiés dans le navigateur sur des données factices ; l'import des cotes

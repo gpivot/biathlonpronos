@@ -17,8 +17,8 @@ export type BonusCardEffect =
   | { type: "balle_de_pioche"; caFarteTargetAthleteId?: string }
   | { type: "ca_farte"; targetAthleteId: string } // ×3 sur un athlète choisi
   | { type: "aspiration" }; // chaque athlète pronostiqué compte une place plus haut
-// "fondue" (dégrillage) et "chat_noir" (correction des globes de saison)
-// n'affectent pas le calcul des points d'une course — traités ailleurs.
+// "fondue" (dégrillage) n'affecte pas le calcul des points d'une course — traité ailleurs.
+// "chat_noir" a été retiré du jeu le 01/11/2026 (carte réservée à VéloPronos).
 
 export interface FavoriteTeam {
   nationCode: string;

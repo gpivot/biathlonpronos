@@ -143,7 +143,7 @@
     "s_fuseegachette_title": "11. Cohete y Gatillo",
     "s_fuseegachette_body": "Cohete (solo sprint e individual): +50 pts si uno de tus elegidos ha hecho el mejor tiempo de esquí de la carrera (una vez). Gatillo (solo persecución y salida en masa): +20 pts por cada elegido con un 20/20 en el tiro (acumulable).",
     "s_classement_title": "12. La clasificación general",
-    "s_classement_body": "Suma todos los puntos conseguidos durante la temporada. El líder lleva el Dorsal amarillo. También hay clasificaciones secundarias (Dorsal rojo) y ligas privadas entre amigos."
+    "s_classement_body": "Suma todos los puntos de la temporada. El líder lleva el Dorsal Amarillo. La clasificación por etapas suma los puntos de una sola etapa: su líder lleva el Dorsal Rojo, y cada jugador muestra el número de etapas ganadas. También existen ligas privadas entre amigos."
   },
   "Compte": {
     "pushTitle": "📱 Notificaciones de la app",
@@ -658,7 +658,6 @@
     "name_ca_farte": "Turbo",
     "name_balle_de_pioche": "4.ª elección",
     "name_fondue": "Deshielo",
-    "name_chat_noir": "Gato negro",
     "desc_ca_farte": "Guárdala en la mano: un ×3 a uno de tus biatletas, en la carrera individual que elijas.",
     "desc_balle_de_pioche": "Se activa enseguida en las 4 próximas carreras individuales (2 masculinas, 2 femeninas): 4 biatletas en lugar de 3, cuentan tus 3 mejores.",
     "name_aspiration": "Rebufo",
@@ -676,9 +675,14 @@
     "raceWins": "{count, plural, one {# carrera ganada} other {# carreras ganadas}} (mejor pronosticador)",
     "pepite": "{count, plural, one {Diamante en bruto revelado} other {# Diamantes en bruto revelados}}",
     "helpTitle": "Los iconos de los jugadores",
-    "helpLeader": "Dorsal amarillo: líder de la clasificación mostrada (general o liga).",
+    "helpLeader": "Dorsal amarillo: el líder de la clasificación general de la temporada (o de la liga).",
     "helpX2": "Bonus ×2 ya usados, de los 3 de la temporada.",
     "helpWins": "Carreras ganadas como mejor pronosticador.",
-    "helpPepite": "Diamante en bruto revelado: logró su primer Top 10 y dio su bonus."
+    "helpPepite": "Diamante en bruto revelado: logró su primer Top 10 y dio su bonus.",
+    "stageLeader": "Dorsal rojo: líder de la etapa",
+    "stageWins": "Dorsal rojo: {count, plural, one {# etapa ganada} other {# etapas ganadas}}",
+    "perfectPicks": "{count, plural, one {# pronóstico perfecto} other {# pronósticos perfectos}}",
+    "helpStageLeader": "Dorsal rojo: el líder de la etapa mostrada (clasificación «Por etapas»), con el número de etapas ganadas.",
+    "helpPerfect": "Pronósticos perfectos: los 3 biatletas que más puntos daban en la carrera."
   }
 }

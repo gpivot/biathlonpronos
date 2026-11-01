@@ -143,7 +143,7 @@
     "s_fuseegachette_title": "11. Rocket & Trigger",
     "s_fuseegachette_body": "Rocket (sprint and individual only): +50 pts if one of your picks had the race's best ski time (once). Trigger (pursuit and mass start only): +20 pts per pick with a perfect 20/20 at the range (stackable).",
     "s_classement_title": "12. Overall standings",
-    "s_classement_body": "Adds up every point scored over the season. The leader wears the Yellow Bib. Secondary standings (Red Bib) and private leagues between friends also exist."
+    "s_classement_body": "Adds up every point scored over the season. The leader wears the Yellow Bib. The by-stage standings add up the points of a single stage: its leader wears the Red Bib, and each player shows how many stages they have won. Private leagues between friends also exist."
   },
   "Compte": {
     "pushTitle": "📱 App notifications",
@@ -658,7 +658,6 @@
     "name_ca_farte": "Boost",
     "name_balle_de_pioche": "4th pick",
     "name_fondue": "Meltdown",
-    "name_chat_noir": "Black Cat",
     "desc_ca_farte": "Keep it in hand: a ×3 on one of your biathletes, on the individual race of your choice.",
     "desc_balle_de_pioche": "Activates right away on the next 4 individual races (2 men's, 2 women's): 4 biathletes instead of 3, your best 3 count.",
     "name_aspiration": "Slipstream",
@@ -676,9 +675,14 @@
     "raceWins": "{count, plural, one {# race won} other {# races won}} (best predictor)",
     "pepite": "{count, plural, one {Diamond in the Rough revealed} other {# Diamonds in the Rough revealed}}",
     "helpTitle": "Player icons",
-    "helpLeader": "Yellow bib: leader of the standings shown (overall or league).",
+    "helpLeader": "Yellow bib: leader of the season's overall standings (or of the league).",
     "helpX2": "×2 bonuses already used, out of 3 per season.",
     "helpWins": "Races won as the best predictor.",
-    "helpPepite": "Diamond in the Rough revealed: it got its first Top 10 and paid its bonus."
+    "helpPepite": "Diamond in the Rough revealed: it got its first Top 10 and paid its bonus.",
+    "stageLeader": "Red bib: stage leader",
+    "stageWins": "Red bib: {count, plural, one {# stage won} other {# stages won}}",
+    "perfectPicks": "{count, plural, one {# perfect pick} other {# perfect picks}}",
+    "helpStageLeader": "Red bib: leader of the stage shown (\"By stage\" standings), with the number of stages won.",
+    "helpPerfect": "Perfect picks: the 3 highest-scoring biathletes of the race."
   }
 }

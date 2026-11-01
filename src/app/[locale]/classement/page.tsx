@@ -8,7 +8,7 @@ import { getClock } from "@/lib/clock";
 import { getLeaderboard } from "@/lib/leaderboard";
 import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
 import { HelpButton } from "@/components/HelpButton";
-import { LeaderBib, PlayerBadgesRow } from "@/components/PlayerBadgesRow";
+import { LeaderBib, PlayerBadgesRow, StageLeaderBib } from "@/components/PlayerBadgesRow";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import {
   buildStandings,
@@ -139,8 +139,10 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
             closeLabel={t("close")}
             items={[
               { icon: <LeaderBib className="h-5 w-5" />, text: tBadges("helpLeader") },
+              { icon: <StageLeaderBib className="h-5 w-5" />, text: tBadges("helpStageLeader") },
               { icon: "⚡", text: tBadges("helpX2") },
               { icon: "🍾", text: tBadges("helpWins") },
+              { icon: "⭐", text: tBadges("helpPerfect") },
               { icon: "❄️", text: tBadges("helpPepite") },
             ]}
           />
@@ -181,7 +183,12 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <div className="flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5">
                     <span className="max-w-full truncate text-sm font-semibold">{row.pseudo}</span>
-                    <PlayerBadgesRow badges={badges.get(row.userId)} leader={row.rank === 1 && row.points > 0} />
+                    {/* Dossard jaune réservé à la saison ; sur une étape entière, son leader porte le rouge. */}
+                    <PlayerBadgesRow
+                      badges={badges.get(row.userId)}
+                      leader={period === "season" && row.rank === 1 && row.points > 0}
+                      stageLeader={period === "stages" && !race && row.rank === 1 && row.points > 0}
+                    />
                   </div>
                   {showPicks &&
                     (row.picks && row.picks.length > 0 ? (
