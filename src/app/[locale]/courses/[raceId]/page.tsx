@@ -215,6 +215,13 @@ export default async function RacePage({
   const pointsEarned = raceResult?.prediction?.points ?? 0;
   const multiplier = raceResult?.prediction?.multiplier ?? null;
   const players = displayStatus === "finished" ? await getRacePlayers(supabase, race.id) : [];
+  // Après la course : un joueur qui a pronostiqué mais n'est dans aucune ligue est invité à se
+  // comparer aux autres et à rejoindre (ou créer) une ligue (parcours d'invité, 01/11/2026).
+  let compareInvite = false;
+  if (displayStatus === "finished" && user && !user.is_anonymous && raceResult?.prediction) {
+    const { count } = await supabase.from("league_memberships").select("league_id", { count: "exact", head: true }).eq("user_id", user.id);
+    compareInvite = (count ?? 0) === 0;
+  }
   const ongoingBoard = displayStatus === "ongoing" ? await getOngoingBoard(supabase, stage.season_id, race.id) : [];
 
   // Courses précédente et suivante de la saison (ordre chronologique), boutons de l'en-tête.
@@ -453,6 +460,32 @@ export default async function RacePage({
                   ) : (
                     <PredictionBreakdown picks={raceResult.prediction.picks} extras={raceResult.prediction.extras} showLegend={false} showCalc />
                   )}
+                </div>
+              </div>
+            )}
+
+            {compareInvite && (
+              <div className="flex flex-col gap-2.5 rounded-2xl border border-ice/40 bg-ice-soft p-4">
+                <div className="font-display text-sm font-bold text-ice">🏁 {t("compareTitle")}</div>
+                <p className="text-[13px] leading-relaxed text-frost">
+                  {t("compareBody", {
+                    rank: raceResult?.prediction?.playerRank ?? "–",
+                    count: raceResult?.prediction?.playerCount ?? 0,
+                  })}
+                </p>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/classement?periode=etapes&etape=${stage.id}&course=${race.id}`}
+                    className="flex-1 rounded-full bg-ice py-2 text-center font-display text-[12px] font-bold text-on-ice"
+                  >
+                    {t("compareStandings")}
+                  </Link>
+                  <Link
+                    href="/ligues"
+                    className="flex-1 rounded-full border border-border bg-card py-2 text-center font-display text-[12px] font-bold text-frost"
+                  >
+                    {t("compareLeague")}
+                  </Link>
                 </div>
               </div>
             )}

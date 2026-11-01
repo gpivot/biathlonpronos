@@ -59,7 +59,8 @@ async function getHomeData(): Promise<HomeData> {
     supabase.from("seasons").select("id, label, starts_on").eq("status", "active").maybeSingle(),
     supabase.auth.getUser(),
   ]);
-  const user = userResult.user;
+  // Invité (session anonyme du bouton « Jouer ») : traité comme un visiteur, il voit la vitrine.
+  const user = userResult.user && !userResult.user.is_anonymous ? userResult.user : null;
 
   if (!season) {
     return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, seasonPicksBeforeStart: null, canChooseFavoriteTeam: false, cards: null };

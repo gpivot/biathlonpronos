@@ -17,3 +17,14 @@ export async function setAdminRole(formData: FormData) {
 
   revalidatePath("/admin/joueurs");
 }
+
+/**
+ * Parcours d'invité : supprime les comptes invités (session anonyme) jamais confirmés depuis plus de
+ * 7 jours. Même fonction que la purge automatique de nuit (migration 0031).
+ */
+export async function purgeGuests() {
+  await requireAdmin();
+  const { error } = await createAdminClient().rpc("purge_anonymous_users");
+  if (error) throw new Error(`${error.message} (migration 0031 appliquée ?)`);
+  revalidatePath("/admin/joueurs");
+}

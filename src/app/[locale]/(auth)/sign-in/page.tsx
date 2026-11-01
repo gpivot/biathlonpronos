@@ -8,9 +8,13 @@ import { AppleIcon, FacebookIcon, GoogleIcon, LogoMark } from "@/components/icon
 import { isNativeApp } from "@/lib/native/firebaseMessaging";
 
 export default function SignInPage() {
-  const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
+  // « code » : connexion sans mot de passe, par un code à 6 chiffres reçu par e-mail (les comptes
+  // créés depuis le parcours d'invité n'ont pas de mot de passe).
+  const [mode, setMode] = useState<"sign-in" | "sign-up" | "code">("sign-in");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   // Dans l'appli Android / iOS, Google refuse la connexion depuis une vue web intégrée : on n'y
@@ -29,8 +33,29 @@ export default function SignInPage() {
     });
   }
 
+  async function handleCodeSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    if (!codeSent) {
+      const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false } });
+      setLoading(false);
+      if (error) setError(/signups? not allowed|not found/i.test(error.message) ? t("codeUnknownEmail") : error.message);
+      else setCodeSent(true);
+      return;
+    }
+    const { error } = await supabase.auth.verifyOtp({ email: email.trim(), token: code.trim(), type: "email" });
+    setLoading(false);
+    if (error) {
+      setError(t("codeWrong"));
+      return;
+    }
+    router.push("/");
+  }
+
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (mode === "code") return handleCodeSubmit(e);
     setLoading(true);
     setError(null);
 
@@ -100,23 +125,62 @@ export default function SignInPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none focus:border-ice"
         />
-        <input
-          type="password"
-          required
-          placeholder={t("passwordPlaceholder")}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none focus:border-ice"
-        />
+        {mode === "code" ? (
+          codeSent && (
+            <>
+              <div className="text-xs text-text-dim">{t("codeSent", { email: email.trim() })}</div>
+              <input
+                required
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                pattern="[0-9]{6,8}"
+                maxLength={8}
+                placeholder="123456"
+                value={code}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                className="rounded-xl border border-border bg-card px-4 py-3 text-center font-display text-xl tracking-[0.4em] outline-none focus:border-ice"
+              />
+            </>
+          )
+        ) : (
+          <input
+            type="password"
+            required
+            placeholder={t("passwordPlaceholder")}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none focus:border-ice"
+          />
+        )}
         {error && <div className="text-xs text-red">{error}</div>}
         <button
           type="submit"
           disabled={loading}
           className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice disabled:opacity-60"
         >
-          {loading ? t("connecting") : mode === "sign-up" ? t("signUpSubmit") : t("submit")}
+          {loading
+            ? t("connecting")
+            : mode === "code"
+              ? codeSent
+                ? t("submit")
+                : t("codeSend")
+              : mode === "sign-up"
+                ? t("signUpSubmit")
+                : t("submit")}
         </button>
       </form>
+
+      <button
+        onClick={() => {
+          setMode(mode === "code" ? "sign-in" : "code");
+          setCodeSent(false);
+          setCode("");
+          setError(null);
+        }}
+        className="text-xs font-semibold text-ice underline"
+      >
+        {mode === "code" ? t("usePassword") : t("useCode")}
+      </button>
 
       <button
         onClick={() => {

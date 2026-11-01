@@ -45,7 +45,9 @@ async function getCalendarData(): Promise<CalendarData> {
   if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, seasonPicksOpen: false, streak: null, cards: null, jokers: null };
 
   const { now } = await getClock();
-  const { stages, seasonPicks, streak, cards, jokers } = await getSeasonView(supabase, season, userResult.user?.id ?? null, now);
+  // Invité (session anonyme) : vu comme un visiteur tant que son compte n'est pas créé.
+  const playerId = userResult.user && !userResult.user.is_anonymous ? userResult.user.id : null;
+  const { stages, seasonPicks, streak, cards, jokers } = await getSeasonView(supabase, season, playerId, now);
   return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, streak, cards, jokers };
 }
 

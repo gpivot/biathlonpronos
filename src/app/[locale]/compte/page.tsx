@@ -21,7 +21,7 @@ export default async function ComptePage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user || user.is_anonymous) {
     return (
       <div className="mx-auto flex min-h-dvh max-w-md flex-col gap-4 px-5 pt-6">
         <TitleBar />

@@ -77,7 +77,7 @@
     "heroTitle": "Pronostica le gare di biathlon.",
     "heroAccent": "Sfida i tuoi amici.",
     "heroSubtitle": "30 secondi a gara per giocare. Tutta la giornata per seguire il poligono.",
-    "heroCta": "Inizia gratis",
+    "heroCta": "Gioca",
     "heroSignIn": "Già registrato? Accedi",
     "appStoresTitle": "Oppure scarica l'app",
     "appStoreSoon": "Presto disponibile su",
@@ -352,7 +352,11 @@
     "malusScale_fete_nationale_1": "Un biatleta della tua squadra preferita (nazione e sesso) pronosticato e nella Top 10 → i suoi punti ×2",
     "malusScale_fete_nationale_2": "Esempio con Francia Uomini: Perrot 2° a quota 8 → 8 × 18 × 2 = 288 pt",
     "malusScale_fete_nationale_3": "Niente bonus ×2 personale su questa gara: mai ×4",
-    "malusScale_fete_nationale_4": "Ça farte resta a ×3 sul suo obiettivo; senza squadra preferita, niente bonus"
+    "malusScale_fete_nationale_4": "Ça farte resta a ×3 sul suo obiettivo; senza squadra preferita, niente bonus",
+    "compareTitle": "E gli altri, come è andata?",
+    "compareBody": "Hai chiuso {rank}° su {count} giocatori in questa gara. Confrontati in classifica e unisciti a una lega per sfidare gli amici tutta la stagione.",
+    "compareStandings": "Classifica della gara",
+    "compareLeague": "Unisciti a una lega"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",
@@ -403,7 +407,13 @@
     "submit": "Accedi",
     "signUpSubmit": "Crea il mio account",
     "switchToSignUp": "Non hai ancora un account? Creane uno",
-    "switchToSignIn": "Hai già un account? Accedi"
+    "switchToSignIn": "Hai già un account? Accedi",
+    "useCode": "Accedi con un codice via e-mail",
+    "usePassword": "Accedi con la password",
+    "codeSend": "Ricevi un codice",
+    "codeSent": "Codice inviato a {email}.",
+    "codeWrong": "Codice errato o scaduto.",
+    "codeUnknownEmail": "Nessun account con questa e-mail."
   },
   "Support": {
     "title": "Assistenza",
@@ -702,5 +712,36 @@
     "perfectPicks": "{count, plural, one {# pronostico perfetto} other {# pronostici perfetti}}",
     "helpStageLeader": "Pettorale rosso: il leader della tappa mostrata (classifica «Per tappe»), con il numero di tappe vinte.",
     "helpPerfect": "Pronostici perfetti: i 3 biatleti che valevano più punti nella gara."
+  },
+  "Guest": {
+    "title": "Crea il tuo account per confermare",
+    "intro": "Ultimo passo: il tuo pronostico viene salvato appena l'account è creato. Nessuna password, solo un codice via e-mail.",
+    "pseudo": "Nickname (visibile nelle classifiche)",
+    "firstName": "Nome",
+    "lastName": "Cognome",
+    "email": "E-mail",
+    "privacy": "Nome, cognome ed e-mail restano privati; solo il tuo nickname è visibile agli altri giocatori.",
+    "privacyLink": "Privacy",
+    "sendCode": "Ricevi il codice",
+    "sending": "Invio…",
+    "codeTitle": "Inserisci il codice",
+    "codeIntro": "Abbiamo inviato un codice di 6 cifre a {email}.",
+    "verify": "Conferma il pronostico",
+    "verifying": "Verifica…",
+    "wrongCode": "Codice errato o scaduto.",
+    "resend": "Invia di nuovo il codice",
+    "resent": "Codice inviato",
+    "changeEmail": "Cambia e-mail",
+    "emailTaken": "Questa e-mail ha già un account: accedi e conferma di nuovo il pronostico.",
+    "signInLink": "Accedi",
+    "guestUnavailable": "Impossibile creare un account ospite ora, riprova tra poco.",
+    "close": "Chiudi",
+    "welcomeTitle": "Benvenuto nel gioco!",
+    "welcomeBody": "Il tuo pronostico è confermato. Dopo la gara, confrontati con gli altri in classifica e unisciti a una lega per giocare con gli amici.",
+    "joinLeague": "Unisciti a una lega",
+    "goHome": "Home",
+    "loadingRace": "Apriamo la prossima gara…",
+    "noRace": "Nessuna gara è aperta ai pronostici al momento.",
+    "seeCalendar": "Vedi il calendario"
   }
 }

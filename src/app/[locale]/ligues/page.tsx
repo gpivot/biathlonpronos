@@ -19,7 +19,7 @@ export default async function LiguesPage() {
   } = await supabase.auth.getUser();
 
   let myLeagues: { id: string; name: string }[] = [];
-  if (user) {
+  if (user && !user.is_anonymous) {
     const { data: memberships } = await supabase
       .from("league_memberships")
       .select("leagues(id, name)")
@@ -41,7 +41,7 @@ export default async function LiguesPage() {
           <HeaderActions />
         </div>
 
-        {!user ? (
+        {!user || user.is_anonymous ? (
           <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">
             {t("loginRequired")}
           </div>

@@ -19,7 +19,7 @@ export async function registerPushToken(token: string, platform: string, locale:
   const {
     data: { user },
   } = await createClient().auth.getUser();
-  if (!user) return false;
+  if (!user || user.is_anonymous) return false;
 
   const { error } = await createAdminClient()
     .from("push_tokens")

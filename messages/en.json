@@ -77,7 +77,7 @@
     "heroTitle": "Predict the biathlon races.",
     "heroAccent": "Challenge your friends.",
     "heroSubtitle": "30 seconds per race to play. All day long to follow the shooting.",
-    "heroCta": "Start for free",
+    "heroCta": "Play",
     "heroSignIn": "Already registered? Sign in",
     "appStoresTitle": "Or download the app",
     "appStoreSoon": "Coming soon on",
@@ -352,7 +352,11 @@
     "malusScale_fete_nationale_1": "A biathlete of your favourite team (nation and sex) you picked who finishes in the Top 10 → their points ×2",
     "malusScale_fete_nationale_2": "Example with France Men: Perrot 2nd at odds of 8 → 8 × 18 × 2 = 288 pts",
     "malusScale_fete_nationale_3": "No personal ×2 bonus on this race: never ×4",
-    "malusScale_fete_nationale_4": "Boost stays at ×3 on its target; no favourite team, no bonus"
+    "malusScale_fete_nationale_4": "Boost stays at ×3 on its target; no favourite team, no bonus",
+    "compareTitle": "How did the others do?",
+    "compareBody": "You finished #{rank} of {count} players on this race. Compare yourself in the standings, and join a league to take on your friends all season.",
+    "compareStandings": "Race standings",
+    "compareLeague": "Join a league"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",
@@ -403,7 +407,13 @@
     "submit": "Sign in",
     "signUpSubmit": "Create my account",
     "switchToSignUp": "No account yet? Create one",
-    "switchToSignIn": "Already have an account? Sign in"
+    "switchToSignIn": "Already have an account? Sign in",
+    "useCode": "Sign in with a code sent by email",
+    "usePassword": "Sign in with a password",
+    "codeSend": "Get a code",
+    "codeSent": "Code sent to {email}.",
+    "codeWrong": "Wrong or expired code.",
+    "codeUnknownEmail": "No account with this email."
   },
   "Support": {
     "title": "Support",
@@ -702,5 +712,36 @@
     "perfectPicks": "{count, plural, one {# perfect pick} other {# perfect picks}}",
     "helpStageLeader": "Red bib: leader of the stage shown (\"By stage\" standings), with the number of stages won.",
     "helpPerfect": "Perfect picks: the 3 highest-scoring biathletes of the race."
+  },
+  "Guest": {
+    "title": "Create your account to confirm",
+    "intro": "Last step: your prediction is saved as soon as your account is created. No password, just a code sent by email.",
+    "pseudo": "Username (shown in the standings)",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "privacy": "Your first name, last name and email stay private; only your username is visible to other players.",
+    "privacyLink": "Privacy",
+    "sendCode": "Get my code",
+    "sending": "Sending…",
+    "codeTitle": "Enter your code",
+    "codeIntro": "We sent a 6-digit code to {email}.",
+    "verify": "Confirm my prediction",
+    "verifying": "Checking…",
+    "wrongCode": "Wrong or expired code.",
+    "resend": "Resend code",
+    "resent": "Code resent",
+    "changeEmail": "Change email",
+    "emailTaken": "This email already has an account: sign in, then confirm your prediction again.",
+    "signInLink": "Sign in",
+    "guestUnavailable": "Can't create a guest account right now, please try again shortly.",
+    "close": "Close",
+    "welcomeTitle": "Welcome to the game!",
+    "welcomeBody": "Your prediction is confirmed. After the race, compare yourself with other players in the standings, and join a league to play with friends.",
+    "joinLeague": "Join a league",
+    "goHome": "Home",
+    "loadingRace": "Opening the next race…",
+    "noRace": "No race is open for predictions right now.",
+    "seeCalendar": "See the calendar"
   }
 }

@@ -77,7 +77,7 @@
     "heroTitle": "Tippe auf die Biathlonrennen.",
     "heroAccent": "Fordere deine Freunde heraus.",
     "heroSubtitle": "30 Sekunden pro Rennen zum Tippen. Den ganzen Tag, um das Schießen zu verfolgen.",
-    "heroCta": "Kostenlos starten",
+    "heroCta": "Spielen",
     "heroSignIn": "Schon registriert? Anmelden",
     "appStoresTitle": "Oder lade die App herunter",
     "appStoreSoon": "Bald verfügbar im",
@@ -352,7 +352,11 @@
     "malusScale_fete_nationale_1": "Ein getippter Biathlet deines Lieblingsteams (Nation und Geschlecht) in den Top 10 → seine Punkte ×2",
     "malusScale_fete_nationale_2": "Beispiel mit Frankreich Herren: Perrot Zweiter bei Quote 8 → 8 × 18 × 2 = 288 Pkt.",
     "malusScale_fete_nationale_3": "Kein persönlicher ×2-Bonus in diesem Rennen: nie ×4",
-    "malusScale_fete_nationale_4": "Turbowachs bleibt ×3 auf seinem Ziel; ohne Lieblingsteam kein Bonus"
+    "malusScale_fete_nationale_4": "Turbowachs bleibt ×3 auf seinem Ziel; ohne Lieblingsteam kein Bonus",
+    "compareTitle": "Wie haben die anderen getippt?",
+    "compareBody": "Du bist {rank}. von {count} Spielern in diesem Rennen. Vergleiche dich in der Wertung und tritt einer Liga bei, um dich die ganze Saison mit Freunden zu messen.",
+    "compareStandings": "Wertung des Rennens",
+    "compareLeague": "Einer Liga beitreten"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",
@@ -403,7 +407,13 @@
     "submit": "Anmelden",
     "signUpSubmit": "Mein Konto erstellen",
     "switchToSignUp": "Noch kein Konto? Jetzt erstellen",
-    "switchToSignIn": "Schon ein Konto? Anmelden"
+    "switchToSignIn": "Schon ein Konto? Anmelden",
+    "useCode": "Mit einem Code per E-Mail anmelden",
+    "usePassword": "Mit Passwort anmelden",
+    "codeSend": "Code anfordern",
+    "codeSent": "Code an {email} gesendet.",
+    "codeWrong": "Falscher oder abgelaufener Code.",
+    "codeUnknownEmail": "Kein Konto mit dieser E-Mail."
   },
   "Support": {
     "title": "Support",
@@ -702,5 +712,36 @@
     "perfectPicks": "{count, plural, one {# perfekter Tipp} other {# perfekte Tipps}}",
     "helpStageLeader": "Rotes Trikot: Führender der angezeigten Etappe (Wertung „Nach Etappen“), mit der Zahl der gewonnenen Etappen.",
     "helpPerfect": "Perfekte Tipps: die 3 punktstärksten Biathleten des Rennens."
+  },
+  "Guest": {
+    "title": "Erstelle dein Konto zum Bestätigen",
+    "intro": "Letzter Schritt: Dein Tipp wird gespeichert, sobald dein Konto erstellt ist. Kein Passwort, nur ein Code per E-Mail.",
+    "pseudo": "Pseudonym (in den Wertungen sichtbar)",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "privacy": "Vorname, Nachname und E-Mail bleiben privat; nur dein Pseudonym sehen die anderen Spieler.",
+    "privacyLink": "Datenschutz",
+    "sendCode": "Code anfordern",
+    "sending": "Wird gesendet…",
+    "codeTitle": "Gib deinen Code ein",
+    "codeIntro": "Wir haben einen 6-stelligen Code an {email} gesendet.",
+    "verify": "Tipp bestätigen",
+    "verifying": "Wird geprüft…",
+    "wrongCode": "Falscher oder abgelaufener Code.",
+    "resend": "Code erneut senden",
+    "resent": "Code gesendet",
+    "changeEmail": "E-Mail ändern",
+    "emailTaken": "Für diese E-Mail gibt es schon ein Konto: melde dich an und bestätige deinen Tipp erneut.",
+    "signInLink": "Anmelden",
+    "guestUnavailable": "Gastkonto gerade nicht möglich, bitte versuche es gleich noch einmal.",
+    "close": "Schließen",
+    "welcomeTitle": "Willkommen im Spiel!",
+    "welcomeBody": "Dein Tipp ist bestätigt. Vergleiche dich nach dem Rennen in der Wertung mit den anderen und tritt einer Liga bei, um mit Freunden zu spielen.",
+    "joinLeague": "Einer Liga beitreten",
+    "goHome": "Startseite",
+    "loadingRace": "Das nächste Rennen wird geöffnet…",
+    "noRace": "Gerade ist kein Rennen für Tipps geöffnet.",
+    "seeCalendar": "Kalender ansehen"
   }
 }

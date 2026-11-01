@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/navigation";
 import { CheckIcon } from "@/components/icons";
+import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { shortAthleteName } from "@/lib/athleteName";
@@ -64,6 +65,9 @@ export function PredictionForm({
   const [sortBy, setSortBy] = useState<"start" | "odds">(hasStartOrder ? "start" : "odds");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Parcours d'invité : création du compte à la validation du premier pronostic.
+  const [guestDialog, setGuestDialog] = useState(false);
+  const [welcome, setWelcome] = useState(false);
   // Dernier pronostic enregistré, pour signaler une modification pas encore validée.
   const [savedState, setSavedState] = useState(() => ({
     key: [...initialSelection].sort().join(","),
@@ -112,8 +116,9 @@ export function PredictionForm({
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user) {
-      setError(t("loginRequired"));
+    // Visiteur ou invité (session anonyme) : création du compte d'abord, puis enregistrement.
+    if (!user || user.is_anonymous) {
+      setGuestDialog(true);
       setSaving(false);
       return;
     }
@@ -241,6 +246,19 @@ export function PredictionForm({
         success={validated ? t("saved") : null}
         error={error}
       />
+
+      {welcome && validated && <GuestWelcome />}
+      {guestDialog && (
+        <GuestSignupDialog
+          onClose={() => setGuestDialog(false)}
+          onDone={async () => {
+            setGuestDialog(false);
+            setWelcome(true);
+            await submit();
+            router.refresh();
+          }}
+        />
+      )}
 
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
