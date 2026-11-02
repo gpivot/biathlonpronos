@@ -414,7 +414,8 @@
     "countdownUnitHours": "h",
     "countdownUnitMinutes": "min",
     "countdownUnitSeconds": "s",
-    "opinionTitle": "Biathlonpronos' take"
+    "opinionTitle": "Biathlonpronos' take",
+    "bonusQuestionsLine": "Bonus questions"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",
@@ -801,5 +802,25 @@
     "loadingRace": "Opening the next race…",
     "noRace": "No race is open for predictions right now.",
     "seeCalendar": "See the calendar"
+  },
+  "BonusQuestions": {
+    "sectionTitle": "Bonus questions",
+    "liveLabel": "Live question",
+    "preRaceLabel": "Bonus question",
+    "remaining": "{time} left",
+    "closed": "Closed",
+    "pointsBadge": "Bonus question +{points} pts",
+    "answeredCanChange": "Answer saved, you can change it while the question is open. {points} pts if it's right!",
+    "signInToAnswer": "Sign in to answer.",
+    "answerToEarn": "Find the right answer to earn {points} pts in the overall standings.",
+    "notAnswered": "No answer.",
+    "error_notAuthenticated": "Sign in to answer.",
+    "error_closed": "Too late, the question is closed.",
+    "error_unknown": "Answer not saved, please try again.",
+    "answerButton": "Answer and earn {points} pts",
+    "later": "Later",
+    "pendingResult": "Answer saved. Result as soon as the right answer is known.",
+    "correct": "Right answer!",
+    "wrong": "Wrong answer: 0 pts."
   }
 }

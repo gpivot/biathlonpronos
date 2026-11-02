@@ -23,6 +23,8 @@ import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { getCurrentStreak } from "@/lib/streakCounter";
 import { getPlayerCards, type PlayerCards } from "@/lib/bonusCards";
 import { getFavoriteTeamStats, type FavoriteTeamStats } from "@/lib/favoriteTeamStats";
+import { fetchLiveQuestionInvites } from "@/lib/bonusQuestionActions";
+import { LiveQuestionInviteCard } from "@/components/LiveQuestionInvite";
 
 export const dynamic = "force-dynamic";
 
@@ -169,10 +171,12 @@ async function getHomeData(): Promise<HomeData> {
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, seasonPicksBeforeStart, canChooseFavoriteTeam, cards }] = await Promise.all([
+  const [t, tSex, { season, userId, weekStage, weekResults, nowMs, nextRace, leaderboard, badges, favoriteTeam, favoriteTeamStats, nextStage, lastResults, streak, seasonPicksBeforeStart, canChooseFavoriteTeam, cards }, liveInvites] = await Promise.all([
     getTranslations("Home"),
     getTranslations("Sex"),
     getHomeData(),
+    // Questions live ouvertes sans réponse du joueur : en tête de l'accueil (questions bonus).
+    fetchLiveQuestionInvites(),
   ]);
 
   // Visiteur non connecté : page d'accueil vitrine façon VéloPronos.
@@ -199,6 +203,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           </div>
           <HeaderActions />
         </div>
+
+        {liveInvites.map((invite) => (
+          <LiveQuestionInviteCard key={invite.id} invite={invite} />
+        ))}
 
         {loggedInWithSeason ? (
           <div className="flex flex-col gap-3 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-5">

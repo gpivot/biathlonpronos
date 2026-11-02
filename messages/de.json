@@ -414,7 +414,8 @@
     "countdownUnitHours": "Std",
     "countdownUnitMinutes": "Min",
     "countdownUnitSeconds": "Sek",
-    "opinionTitle": "Die Meinung von Biathlonpronos"
+    "opinionTitle": "Die Meinung von Biathlonpronos",
+    "bonusQuestionsLine": "Bonusfragen"
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",
@@ -801,5 +802,25 @@
     "loadingRace": "Das nächste Rennen wird geöffnet…",
     "noRace": "Gerade ist kein Rennen für Tipps geöffnet.",
     "seeCalendar": "Kalender ansehen"
+  },
+  "BonusQuestions": {
+    "sectionTitle": "Bonusfragen",
+    "liveLabel": "Live-Frage",
+    "preRaceLabel": "Bonusfrage",
+    "remaining": "noch {time}",
+    "closed": "Beendet",
+    "pointsBadge": "Bonusfrage +{points} Pkt.",
+    "answeredCanChange": "Antwort gespeichert, änderbar solange die Frage offen ist. {points} Pkt., wenn sie stimmt!",
+    "signInToAnswer": "Melde dich an, um zu antworten.",
+    "answerToEarn": "Finde die richtige Antwort und hol dir {points} Pkt. in der Gesamtwertung.",
+    "notAnswered": "Keine Antwort.",
+    "error_notAuthenticated": "Melde dich an, um zu antworten.",
+    "error_closed": "Zu spät, die Frage ist geschlossen.",
+    "error_unknown": "Antwort nicht gespeichert, bitte erneut versuchen.",
+    "answerButton": "Antworten und {points} Pkt. holen",
+    "later": "Später",
+    "pendingResult": "Antwort gespeichert. Ergebnis, sobald die richtige Antwort feststeht.",
+    "correct": "Richtige Antwort!",
+    "wrong": "Falsche Antwort: 0 Pkt."
   }
 }
