@@ -15,7 +15,7 @@ import {
 import { ConfirmButton } from "../../_components/ConfirmButton";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
-import { removeRace, resetResults, updateRace } from "./actions";
+import { removeRace, resetResults, updateRace, updateRaceOpinion } from "./actions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { START_LIST_FORMATS, getStartList } from "@/lib/startList";
 import { StartListPanel } from "./StartListPanel";
@@ -159,6 +159,24 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           </button>
         </div>
         <p className="text-xs text-text-dim">Heure de départ en UTC : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
+      </form>
+
+      <form action={updateRaceOpinion} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+        <div className="text-sm font-semibold">L&apos;avis de Biathlonpronos</div>
+        <input type="hidden" name="race_id" value={race.id} />
+        <textarea
+          name="opinion"
+          rows={4}
+          defaultValue={race.opinion ?? ""}
+          placeholder="Ton commentaire sur la course (favoris, pièges, météo…)"
+          className={`${inputClass} w-full`}
+        />
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs text-text-dim">Affiché dans un encadré sur la page de la course. Laisse vide pour masquer la rubrique.</p>
+          <button type="submit" className="flex-shrink-0 rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+            Enregistrer
+          </button>
+        </div>
       </form>
 
       {startList && <StartListPanel raceId={race.id} format={race.format} startList={startList} />}

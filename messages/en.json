@@ -408,7 +408,13 @@
     "compareTitle": "How did the others do?",
     "compareBody": "You finished #{rank} of {count} players on this race. Compare yourself in the standings, and join a league to take on your friends all season.",
     "compareStandings": "Race standings",
-    "compareLeague": "Join a league"
+    "compareLeague": "Join a league",
+    "countdownToLock": "Time left to predict",
+    "countdownUnitDays": "d",
+    "countdownUnitHours": "h",
+    "countdownUnitMinutes": "min",
+    "countdownUnitSeconds": "s",
+    "opinionTitle": "Biathlonpronos' take"
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

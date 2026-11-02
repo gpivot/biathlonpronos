@@ -1118,3 +1118,16 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
 - **À confirmer** : le format exact du jeton envoyé à un compte anonyme qui ajoute un e-mail
   (modèle « Change Email Address ») est à vérifier au premier test réel ; un e-mail déjà inscrit
   renvoie vers la connexion et le pronostic est à revalider ; pas de CAPTCHA pour l'instant.
+
+## Page course : compte à rebours et « L'avis de Biathlonpronos » (02/11/2026)
+
+- **Compte à rebours** (`RaceCountdown.tsx`) en haut de la page d'une course à venir : temps
+  restant pour pronostiquer, jusqu'au départ (= verrouillage). Doré dans la dernière heure ; à zéro,
+  la page se recharge. Il part de l'heure du serveur, donc respecte l'horloge simulée de l'admin.
+  Pas de décompte vers l'ouverture des pronos : elle dépend de la réception des listes de départ
+  (décision de Guillaume, 02/11/2026).
+- **L'avis de Biathlonpronos** : colonne `races.opinion` (migration 0032), saisie dans le
+  back-office (`/admin/races/[id]`, encadré dédié). Affiché sous l'en-tête de la course, quel que
+  soit son statut ; vide = rubrique masquée. Le titre est traduit dans les 5 langues, le texte
+  lui-même est affiché tel que saisi (une seule langue, *à confirmer* si une version par langue
+  est souhaitée).

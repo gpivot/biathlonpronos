@@ -408,7 +408,13 @@
     "compareTitle": "E gli altri, come è andata?",
     "compareBody": "Hai chiuso {rank}° su {count} giocatori in questa gara. Confrontati in classifica e unisciti a una lega per sfidare gli amici tutta la stagione.",
     "compareStandings": "Classifica della gara",
-    "compareLeague": "Unisciti a una lega"
+    "compareLeague": "Unisciti a una lega",
+    "countdownToLock": "Tempo rimasto per pronosticare",
+    "countdownUnitDays": "g",
+    "countdownUnitHours": "h",
+    "countdownUnitMinutes": "min",
+    "countdownUnitSeconds": "s",
+    "opinionTitle": "Il parere di Biathlonpronos"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",
