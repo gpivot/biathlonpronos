@@ -357,7 +357,6 @@
     "compareBody": "You finished #{rank} of {count} players on this race. Compare yourself in the standings, and join a league to take on your friends all season.",
     "compareStandings": "Race standings",
     "compareLeague": "Join a league",
-    "countdownToOpening": "Predictions open in",
     "countdownToLock": "Time left to predict",
     "countdownUnitDays": "d",
     "countdownUnitHours": "h",

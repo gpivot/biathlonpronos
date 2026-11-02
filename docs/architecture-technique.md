@@ -1121,12 +1121,11 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
 
 ## Page course : compte à rebours et « L'avis de Biathlonpronos » (02/11/2026)
 
-- **Compte à rebours** (`RaceCountdown.tsx`) en haut de la page d'une course à venir. Deux temps
-  (lecture de la demande, *à confirmer*) : tant que les pronostics de l'étape ne sont pas ouverts
-  (J-7, minuit heure de Paris, `predictionOpensAt`), il décompte jusqu'à leur ouverture ; une fois
-  ouverts, il décompte le temps restant pour pronostiquer, jusqu'au départ (= verrouillage). Doré
-  dans la dernière heure. À zéro, la page se recharge. Il part de l'heure du serveur, donc respecte
-  l'horloge simulée de l'admin.
+- **Compte à rebours** (`RaceCountdown.tsx`) en haut de la page d'une course à venir : temps
+  restant pour pronostiquer, jusqu'au départ (= verrouillage). Doré dans la dernière heure ; à zéro,
+  la page se recharge. Il part de l'heure du serveur, donc respecte l'horloge simulée de l'admin.
+  Pas de décompte vers l'ouverture des pronos : elle dépend de la réception des listes de départ
+  (décision de Guillaume, 02/11/2026).
 - **L'avis de Biathlonpronos** : colonne `races.opinion` (migration 0032), saisie dans le
   back-office (`/admin/races/[id]`, encadré dédié). Affiché sous l'en-tête de la course, quel que
   soit son statut ; vide = rubrique masquée. Le titre est traduit dans les 5 langues, le texte

@@ -16,7 +16,7 @@ import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
 import { getStartList } from "@/lib/startList";
-import { isPredictionOpen, predictionOpensAt, predictionOpensOn } from "@/lib/predictionWindow";
+import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { RaceCountdown } from "./RaceCountdown";
 import { RaceOpinion } from "./RaceOpinion";
 import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
@@ -252,15 +252,8 @@ export default async function RacePage({
           {showForm ? <div className="h-8 w-8 flex-shrink-0" /> : <RuleInfoButton format={race.format} />}
         </div>
 
-        {/* Avant le départ : temps restant avant l'ouverture des pronostics, puis pour pronostiquer. */}
-        {displayStatus === "upcoming" && (
-          <RaceCountdown
-            key={predictionsOpen ? "lock" : "opening"}
-            mode={predictionsOpen ? "lock" : "opening"}
-            target={predictionsOpen ? race.locks_at : predictionOpensAt(stage.starts_on).toISOString()}
-            serverNow={now.getTime()}
-          />
-        )}
+        {/* Avant le départ : temps restant pour pronostiquer, jusqu'au verrouillage. */}
+        {displayStatus === "upcoming" && <RaceCountdown target={race.locks_at} serverNow={now.getTime()} />}
 
         {/* Course malus : contour rouge autour de l'encadré, avec le nom du malus et son « ? ». */}
         <div

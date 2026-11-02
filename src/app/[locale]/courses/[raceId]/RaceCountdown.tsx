@@ -5,21 +5,13 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 
 /**
- * Compte à rebours en haut de la page course, tant qu'elle n'a pas démarré :
- * - pronostics pas encore ouverts : temps restant avant leur ouverture ;
- * - pronostics ouverts : temps restant pour pronostiquer (jusqu'au départ = verrouillage).
+ * Compte à rebours en haut de la page course, tant qu'elle n'a pas démarré : temps restant pour
+ * pronostiquer, jusqu'au départ (= verrouillage). Pas de décompte vers l'ouverture des pronos, qui
+ * dépend de la réception des listes de départ (décision de Guillaume, 02/11/2026).
  * `serverNow` est l'heure du serveur au rendu (horloge simulée de l'admin comprise), le décompte
- * avance ensuite au rythme du navigateur. À zéro, la page se recharge pour passer à l'étape suivante.
+ * avance ensuite au rythme du navigateur. À zéro, la page se recharge (course verrouillée).
  */
-export function RaceCountdown({
-  target,
-  serverNow,
-  mode,
-}: {
-  target: string;
-  serverNow: number;
-  mode: "opening" | "lock";
-}) {
+export function RaceCountdown({ target, serverNow }: { target: string; serverNow: number }) {
   const t = useTranslations("Race");
   const router = useRouter();
   const [elapsed, setElapsed] = useState(0);
@@ -49,7 +41,7 @@ export function RaceCountdown({
   ];
   // Jours masqués quand il en reste zéro ; dernière heure avant le départ en doré pour presser le joueur.
   const shown = units[0].value > 0 ? units : units.slice(1);
-  const urgent = mode === "lock" && remaining < 3600 * 1000;
+  const urgent = remaining < 3600 * 1000;
 
   return (
     <div
@@ -60,7 +52,7 @@ export function RaceCountdown({
       aria-live="off"
     >
       <div className={`font-display text-[12px] font-bold uppercase leading-tight tracking-wider ${urgent ? "text-gold" : "text-ice"}`}>
-        ⏳ {t(mode === "opening" ? "countdownToOpening" : "countdownToLock")}
+        ⏳ {t("countdownToLock")}
       </div>
       <div className="flex gap-1.5">
         {shown.map((u) => (
