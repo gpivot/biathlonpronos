@@ -89,7 +89,7 @@ export function PredictionSummary({
           onClick={onToggleX2}
           disabled={!bonusX2 && x2Remaining === 0}
           className={`flex items-center justify-between gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors disabled:opacity-40 ${
-            bonusX2 ? "border-gold bg-gold text-[#2a1900]" : "border-gold/50 bg-gold-soft text-gold"
+            bonusX2 ? "border-gold bg-gold text-on-gold" : "border-gold/50 bg-gold-soft text-gold"
           }`}
         >
           <span className="flex items-center gap-2.5">

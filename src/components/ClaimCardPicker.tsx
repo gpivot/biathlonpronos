@@ -60,7 +60,7 @@ export function ClaimCardPicker({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="w-full rounded-full bg-gold py-2.5 text-center font-display text-[13px] font-extrabold text-[#2a1900]"
+        className="w-full rounded-full bg-gold py-2.5 text-center font-display text-[13px] font-extrabold text-on-gold"
       >
         {t("claimButton", { count: unclaimed })}
       </button>

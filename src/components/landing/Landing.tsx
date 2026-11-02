@@ -83,7 +83,7 @@ export async function Landing() {
                 <ol className="mt-1 flex flex-col gap-2.5">
                   {[1, 2, 3].map((n) => (
                     <li key={n} className="flex gap-3 text-sm leading-snug">
-                      <span className="mt-px flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-gold font-display text-[10px] font-extrabold text-[#2a1900]">
+                      <span className="mt-px flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-gold font-display text-[10px] font-extrabold text-on-gold">
                         {n}
                       </span>
                       <span>{t(`${key}Pin${n}`)}</span>

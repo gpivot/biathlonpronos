@@ -11,7 +11,7 @@ export function Pin({ n, className = "" }: { n: number; className?: string }) {
   return (
     <span
       aria-hidden
-      className={`absolute z-10 flex h-6 w-6 items-center justify-center rounded-full bg-gold font-display text-[11px] font-extrabold text-[#2a1900] shadow-[0_0_0_3px_rgb(var(--c-bg))] ${className}`}
+      className={`absolute z-10 flex h-6 w-6 items-center justify-center rounded-full bg-gold font-display text-[11px] font-extrabold text-on-gold shadow-[0_0_0_3px_rgb(var(--c-bg))] ${className}`}
     >
       {n}
     </span>
@@ -178,7 +178,7 @@ export async function StrategyMockup() {
         {cards.map((c, i) => (
           <div
             key={c}
-            className={`flex h-24 w-[30%] flex-col items-center justify-center gap-1 rounded-xl bg-gold px-1 text-center text-[#2a1900] shadow-md ${
+            className={`flex h-24 w-[30%] flex-col items-center justify-center gap-1 rounded-xl bg-gold px-1 text-center text-on-gold shadow-md ${
               i === 0 ? "-rotate-6" : i === 2 ? "rotate-6" : "-translate-y-1"
             }`}
           >

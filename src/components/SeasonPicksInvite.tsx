@@ -25,7 +25,7 @@ export function SeasonPicksInvite({ chosen }: { chosen: number }) {
       <Link
         href="/globes"
         className={`flex items-center justify-center gap-1 rounded-full py-2.5 font-display text-[13px] font-bold ${
-          done ? "border border-gold/50 bg-gold-soft text-gold" : "bg-gold text-[#2a1900]"
+          done ? "border border-gold/50 bg-gold-soft text-gold" : "bg-gold text-on-gold"
         }`}
       >
         {done ? t("seasonPicksEdit") : t("seasonPicksButton")}

@@ -28,7 +28,7 @@ export function BonusCardsList({ cards, compact = false }: { cards: BonusCardVie
                 ? "border border-border text-text-dim opacity-60"
                 : card.state === "active"
                   ? "border border-gold bg-gold-soft text-gold"
-                  : "bg-gold text-[#2a1900]"
+                  : "bg-gold text-on-gold"
             }`}
           >
             <span className="text-[12px]">🃏</span>

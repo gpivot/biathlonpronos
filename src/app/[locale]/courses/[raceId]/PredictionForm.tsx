@@ -335,7 +335,7 @@ export function PredictionForm({
                     setCaFarteTarget(a.athlete_id);
                   }}
                   className={`whitespace-nowrap rounded-full px-2 py-1 font-display text-[11px] font-bold ${
-                    isCaFarteTarget ? "bg-gold text-[#2a1900]" : "border border-border text-text-dim"
+                    isCaFarteTarget ? "bg-gold text-on-gold" : "border border-border text-text-dim"
                   }`}
                 >
                   ×3

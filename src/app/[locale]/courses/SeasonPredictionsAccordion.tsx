@@ -60,7 +60,7 @@ export function SeasonPredictionsAccordion({
               ) : !readOnly && picksOpen ? (
                 <Link
                   href="/globes"
-                  className="whitespace-nowrap rounded-full bg-gold px-3 py-1 font-display text-[12px] font-bold text-[#2a1900]"
+                  className="whitespace-nowrap rounded-full bg-gold px-3 py-1 font-display text-[12px] font-bold text-on-gold"
                 >
                   {t("seasonPredictionsComplete")}
                 </Link>

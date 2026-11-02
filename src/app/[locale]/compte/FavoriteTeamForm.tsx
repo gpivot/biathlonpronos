@@ -110,7 +110,7 @@ export function FavoriteTeamForm({
                   type="button"
                   onClick={confirm}
                   disabled={saving}
-                  className="rounded-xl bg-gold px-4 py-2 font-display text-sm font-bold text-[#2a1900] disabled:opacity-60"
+                  className="rounded-xl bg-gold px-4 py-2 font-display text-sm font-bold text-on-gold disabled:opacity-60"
                 >
                   {saving ? t("saving") : t("favoriteTeamConfirm")}
                 </button>

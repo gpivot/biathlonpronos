@@ -21,8 +21,10 @@ const config: Config = {
         "gold-soft": "oklch(var(--c-gold-soft) / <alpha-value>)",
         red: "oklch(var(--c-red) / <alpha-value>)",
         frost: "rgb(var(--c-frost) / <alpha-value>)",
-        // Texte posé sur un fond `ice` (sombre en thème sombre, blanc sur l'ocre du thème clair).
+        // Texte posé sur un fond `ice` (sombre en thème sombre, blanc sur le bleu foncé du thème clair).
         "on-ice": "rgb(var(--c-on-ice) / <alpha-value>)",
+        // Texte posé sur un fond `gold` (brun foncé sur l'or du thème sombre, blanc sur le bleu du thème clair).
+        "on-gold": "rgb(var(--c-on-gold) / <alpha-value>)",
         // Fond de la barre de navigation basse (blanche en thème clair, comme VéloPronos).
         nav: "rgb(var(--c-nav) / <alpha-value>)",
         // Turquoise fixe des dégradés de marque (avatar, en-têtes) : ne change pas avec le thème.
