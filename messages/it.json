@@ -472,7 +472,10 @@
     "codeSend": "Ricevi un codice",
     "codeSent": "Codice inviato a {email}.",
     "codeWrong": "Codice errato o scaduto.",
-    "codeUnknownEmail": "Nessun account con questa e-mail."
+    "codeUnknownEmail": "Nessun account con questa e-mail.",
+    "oauthUnavailable": "L'accesso con {provider} non è ancora disponibile. Per ora usa la tua e-mail.",
+    "oauthFailed": "Accesso non riuscito ({detail}). Riprova o usa la tua e-mail.",
+    "oauthNoEmail": "Questo account non ci ha condiviso un indirizzo e-mail. Consenti la condivisione dell'e-mail o accedi con la tua e-mail."
   },
   "Support": {
     "title": "Assistenza",

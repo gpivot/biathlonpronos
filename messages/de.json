@@ -472,7 +472,10 @@
     "codeSend": "Code anfordern",
     "codeSent": "Code an {email} gesendet.",
     "codeWrong": "Falscher oder abgelaufener Code.",
-    "codeUnknownEmail": "Kein Konto mit dieser E-Mail."
+    "codeUnknownEmail": "Kein Konto mit dieser E-Mail.",
+    "oauthUnavailable": "Die Anmeldung mit {provider} ist noch nicht verfügbar. Nutze vorerst deine E-Mail.",
+    "oauthFailed": "Anmeldung fehlgeschlagen ({detail}). Versuche es erneut oder nutze deine E-Mail.",
+    "oauthNoEmail": "Dieses Konto hat uns keine E-Mail-Adresse übermittelt. Erlaube die Freigabe der E-Mail oder melde dich mit deiner E-Mail an."
   },
   "Support": {
     "title": "Support",

@@ -17,6 +17,7 @@ export default function SignInPage() {
   const [codeSent, setCodeSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [oauthError, setOauthError] = useState<string | null>(null);
   // Dans l'appli Android / iOS, Google refuse la connexion depuis une vue web intégrée : on n'y
   // propose que l'email (à revoir quand la connexion Google / Apple sera branchée en natif).
   const [inApp, setInApp] = useState(false);
@@ -27,11 +28,42 @@ export default function SignInPage() {
   const t = useTranslations("SignIn");
   const locale = useLocale();
 
+  // Erreur renvoyée par /auth/callback (refus du fournisseur, compte sans e-mail, etc.).
+  useEffect(() => {
+    const detail = new URLSearchParams(window.location.search).get("oauth_error");
+    if (detail) setOauthError(oauthErrorMessage(detail));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function oauthErrorMessage(detail: string) {
+    if (/email/i.test(detail)) return t("oauthNoEmail");
+    return t("oauthFailed", { detail });
+  }
+
   async function handleOAuth(provider: "google" | "apple" | "facebook") {
-    await supabase.auth.signInWithOAuth({
+    setOauthError(null);
+    const name = { google: "Google", apple: "Apple", facebook: "Facebook" }[provider];
+    // Si le fournisseur n'est pas activé dans Supabase, Supabase afficherait une page d'erreur brute
+    // (« Unsupported provider: provider is not enabled ») : on vérifie avant de partir.
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/auth/v1/settings`, {
+        headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! },
+      });
+      if (res.ok) {
+        const settings = (await res.json()) as { external?: Record<string, boolean> };
+        if (settings.external && !settings.external[provider]) {
+          setOauthError(t("oauthUnavailable", { provider: name }));
+          return;
+        }
+      }
+    } catch {
+      // Vérification impossible : on tente quand même la connexion.
+    }
+    const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
+    if (error) setOauthError(oauthErrorMessage(error.message));
   }
 
   async function handleCodeSubmit(e: React.FormEvent) {
@@ -107,6 +139,7 @@ export default function SignInPage() {
                 {label}
               </button>
             ))}
+            {oauthError && <div className="text-center text-xs text-red">{oauthError}</div>}
           </div>
 
           <div className="flex w-full items-center gap-3 text-xs text-text-dim">

@@ -472,7 +472,10 @@
     "codeSend": "Get a code",
     "codeSent": "Code sent to {email}.",
     "codeWrong": "Wrong or expired code.",
-    "codeUnknownEmail": "No account with this email."
+    "codeUnknownEmail": "No account with this email.",
+    "oauthUnavailable": "Sign-in with {provider} isn't available yet. Please use your email for now.",
+    "oauthFailed": "Sign-in failed ({detail}). Try again or use your email.",
+    "oauthNoEmail": "This account didn't share an email address with us. Allow email sharing or sign in with your email."
   },
   "Support": {
     "title": "Support",

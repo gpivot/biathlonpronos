@@ -472,7 +472,10 @@
     "codeSend": "Recibir un código",
     "codeSent": "Código enviado a {email}.",
     "codeWrong": "Código incorrecto o caducado.",
-    "codeUnknownEmail": "No hay ninguna cuenta con este correo."
+    "codeUnknownEmail": "No hay ninguna cuenta con este correo.",
+    "oauthUnavailable": "El inicio de sesión con {provider} aún no está disponible. Usa tu correo electrónico por ahora.",
+    "oauthFailed": "Error al iniciar sesión ({detail}). Inténtalo de nuevo o usa tu correo electrónico.",
+    "oauthNoEmail": "Esta cuenta no nos ha compartido una dirección de correo. Permite compartir el correo o inicia sesión con tu correo electrónico."
   },
   "Support": {
     "title": "Soporte",

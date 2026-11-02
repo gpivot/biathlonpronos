@@ -382,6 +382,10 @@ velopronos.fr), avec la même typographie.
   dans la Politique de confidentialité et les CGU. **Prérequis** : le fournisseur Facebook doit
   être activé dans Supabase (Authentication > Providers > Facebook, avec l'App ID et le secret
   d'une app Meta for Developers), comme Google et Apple ; sans ça le bouton renvoie une erreur.
+  Depuis le 02/11/2026, la page vérifie avant de partir (`/auth/v1/settings` de Supabase) que le
+  fournisseur est activé et affiche sinon « La connexion avec X n'est pas encore disponible » au
+  lieu de la page d'erreur brute de Supabase. `/auth/callback` renvoie les échecs (refus,
+  compte sans e-mail, code expiré) vers `/sign-in?oauth_error=…`, affichés sous les boutons.
 - **Calendrier : étape des Mondiaux en doré.** Dans `CalendarAccordion`, une étape à
   `coefficient = 2` (déjà la convention « Mondiaux / JO » de la table `stages`) a un encart doré,
   le libellé « Championnats du monde » et son lieu en or. Pas de nouvelle colonne : il suffit que
