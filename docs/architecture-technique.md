@@ -424,6 +424,14 @@ token `on-ice` (foncé en thème sombre, blanc en thème clair). Les dégradés 
 en-têtes, bouton « Commencer gratuitement ») gardent le bleu → turquoise fixe (`teal`) dans les deux
 thèmes, comme VéloPronos. Le back-office `/admin` reste sombre.
 
+### Thème clair en tons bleus (novembre 2026)
+
+À la demande de Guillaume, le thème clair quitte le beige et l'ocre de VéloPronos pour des tons
+« glace » : fond bleu très clair (#eaf2fb), cartes blanches, texte bleu nuit, accent `ice` bleu
+foncé (boutons, en-têtes d'étape, onglet actif) et `gold` bleu vif (points, saison, série, cartes
+bonus). Le texte posé sur un fond `gold` passe par le nouveau token `on-gold` (brun foncé en thème
+sombre, inchangé ; blanc en thème clair). Le thème sombre n'est pas modifié.
+
 ### Ma saison : étapes repliées et Championnats du monde dorés (octobre 2026)
 
 Dans l'onglet Ma saison, toutes les étapes sont repliées à l'arrivée (avant, la première étape à
