@@ -547,7 +547,7 @@
           "Profilinformationen (Benutzername, Lieblingsnation)",
           "Tipps, Bonuskarten und Spielverlauf",
           "Wertungen, Ligen und Statistiken",
-          "Anmeldedaten (E-Mail und Passwort oder OAuth-Anbieter: Google, Apple, Facebook)"
+          "Anmeldedaten (E-Mail und Passwort oder OAuth-Anbieter: Google, Apple)"
         ],
         "note": "Wir erheben keinerlei Bank- oder Zahlungsdaten: Das Spiel ist vollständig kostenlos."
       },
@@ -574,7 +574,7 @@
       {
         "title": "5. Anmeldung über Drittanbieter (OAuth)",
         "paragraphs": [
-          "Die Anwendung bietet die Anmeldung über Google, Apple und Facebook an. Diese Anmeldungen unterliegen den Datenschutzrichtlinien der jeweiligen Anbieter, und wir erhalten niemals Ihr Passwort. Wenn Sie sich per E-Mail anmelden, wird Ihr Passwort von unserem Authentifizierungsanbieter verschlüsselt gespeichert: Wir haben niemals Zugriff darauf im Klartext."
+          "Die Anwendung bietet die Anmeldung über Google und Apple an. Diese Anmeldungen unterliegen den Datenschutzrichtlinien der jeweiligen Anbieter, und wir erhalten niemals Ihr Passwort. Wenn Sie sich per E-Mail anmelden, wird Ihr Passwort von unserem Authentifizierungsanbieter verschlüsselt gespeichert: Wir haben niemals Zugriff darauf im Klartext."
         ]
       },
       {
@@ -645,8 +645,7 @@
         "bullets": [
           "E-Mail und Passwort",
           "Google",
-          "Apple",
-          "Facebook"
+          "Apple"
         ],
         "after": [
           "Sie müssen mindestens 13 Jahre alt sein, um die Anwendung zu nutzen."

@@ -547,7 +547,7 @@
           "Profile information (username, favorite nation)",
           "Predictions, bonus cards and game history",
           "Standings, leagues and statistics",
-          "Sign-in data (email and password, or OAuth provider: Google, Apple, Facebook)"
+          "Sign-in data (email and password, or OAuth provider: Google, Apple)"
         ],
         "note": "We do not collect any bank or payment data: the game is entirely free."
       },
@@ -574,7 +574,7 @@
       {
         "title": "5. Third-party sign-in (OAuth)",
         "paragraphs": [
-          "The application offers sign-in with Google, Apple and Facebook. These sign-ins are subject to those providers' privacy policies, and we never receive your password. If you sign in by email, your password is stored encrypted by our authentication provider: we never have access to it in plain text."
+          "The application offers sign-in with Google and Apple. These sign-ins are subject to those providers' privacy policies, and we never receive your password. If you sign in by email, your password is stored encrypted by our authentication provider: we never have access to it in plain text."
         ]
       },
       {
@@ -645,8 +645,7 @@
         "bullets": [
           "Email and password",
           "Google",
-          "Apple",
-          "Facebook"
+          "Apple"
         ],
         "after": [
           "You must be at least 13 years old to use the Application."

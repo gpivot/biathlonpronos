@@ -547,7 +547,7 @@
           "Información del perfil (nombre de usuario, nación favorita)",
           "Pronósticos, cartas bonus e historial de juego",
           "Clasificaciones, ligas y estadísticas",
-          "Datos de inicio de sesión (correo electrónico y contraseña, o proveedor OAuth: Google, Apple, Facebook)"
+          "Datos de inicio de sesión (correo electrónico y contraseña, o proveedor OAuth: Google, Apple)"
         ],
         "note": "No recopilamos ningún dato bancario ni de pago: el juego es totalmente gratuito."
       },
@@ -574,7 +574,7 @@
       {
         "title": "5. Inicio de sesión con terceros (OAuth)",
         "paragraphs": [
-          "La aplicación permite iniciar sesión con Google, Apple y Facebook. Estos inicios de sesión están sujetos a las políticas de privacidad de dichos proveedores, y nunca recibimos su contraseña. Si inicia sesión con su correo electrónico, nuestro proveedor de autenticación almacena su contraseña cifrada: nunca tenemos acceso a ella en texto claro."
+          "La aplicación permite iniciar sesión con Google y Apple. Estos inicios de sesión están sujetos a las políticas de privacidad de dichos proveedores, y nunca recibimos su contraseña. Si inicia sesión con su correo electrónico, nuestro proveedor de autenticación almacena su contraseña cifrada: nunca tenemos acceso a ella en texto claro."
         ]
       },
       {
@@ -645,8 +645,7 @@
         "bullets": [
           "Correo electrónico y contraseña",
           "Google",
-          "Apple",
-          "Facebook"
+          "Apple"
         ],
         "after": [
           "Debe tener al menos 13 años para utilizar la Aplicación."

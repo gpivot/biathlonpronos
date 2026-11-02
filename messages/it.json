@@ -547,7 +547,7 @@
           "Informazioni del profilo (nome utente, nazione preferita)",
           "Pronostici, carte bonus e cronologia di gioco",
           "Classifiche, leghe e statistiche",
-          "Dati di accesso (email e password, oppure provider OAuth: Google, Apple, Facebook)"
+          "Dati di accesso (email e password, oppure provider OAuth: Google, Apple)"
         ],
         "note": "Non raccogliamo alcun dato bancario o di pagamento: il gioco è interamente gratuito."
       },
@@ -574,7 +574,7 @@
       {
         "title": "5. Accesso tramite terzi (OAuth)",
         "paragraphs": [
-          "L'applicazione consente l'accesso tramite Google, Apple e Facebook. Tali accessi sono soggetti alle informative sulla privacy di questi fornitori e non riceviamo mai la Sua password. Se accede tramite email, la Sua password viene conservata in forma crittografata dal nostro fornitore di autenticazione: non abbiamo mai accesso ad essa in chiaro."
+          "L'applicazione consente l'accesso tramite Google e Apple. Tali accessi sono soggetti alle informative sulla privacy di questi fornitori e non riceviamo mai la Sua password. Se accede tramite email, la Sua password viene conservata in forma crittografata dal nostro fornitore di autenticazione: non abbiamo mai accesso ad essa in chiaro."
         ]
       },
       {
@@ -645,8 +645,7 @@
         "bullets": [
           "Email e password",
           "Google",
-          "Apple",
-          "Facebook"
+          "Apple"
         ],
         "after": [
           "Per utilizzare l'Applicazione è necessario avere almeno 13 anni."
