@@ -393,6 +393,9 @@ velopronos.fr), avec la même typographie.
   fournisseur est activé et affiche sinon « La connexion avec X n'est pas encore disponible » au
   lieu de la page d'erreur brute de Supabase. `/auth/callback` renvoie les échecs (refus,
   compte sans e-mail, code expiré) vers `/sign-in?oauth_error=…`, affichés sous les boutons.
+  Le bouton Facebook est **masqué** depuis le 02/11/2026 (Meta bloque l'inscription développeur de
+  Guillaume) : ligne commentée dans `sign-in/page.tsx`, à réactiver plus tard. Les mentions de
+  Facebook dans la Politique de confidentialité et les CGU sont laissées en place.
 - **Calendrier : étape des Mondiaux en doré.** Dans `CalendarAccordion`, une étape à
   `coefficient = 2` (déjà la convention « Mondiaux / JO » de la table `stages`) a un encart doré,
   le libellé « Championnats du monde » et son lieu en or. Pas de nouvelle colonne : il suffit que

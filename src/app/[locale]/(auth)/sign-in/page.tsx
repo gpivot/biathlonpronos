@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { AppleIcon, FacebookIcon, GoogleIcon, LogoMark } from "@/components/icons";
+import { AppleIcon, GoogleIcon, LogoMark } from "@/components/icons";
 import { isNativeApp } from "@/lib/native/firebaseMessaging";
 
 export default function SignInPage() {
@@ -127,7 +127,10 @@ export default function SignInPage() {
               [
                 { provider: "google", label: t("continueGoogle"), icon: <GoogleIcon className="h-5 w-5" /> },
                 { provider: "apple", label: t("continueApple"), icon: <AppleIcon className="h-5 w-5" /> },
-                { provider: "facebook", label: t("continueFacebook"), icon: <FacebookIcon className="h-5 w-5" /> },
+                // Facebook masqué le 02/11/2026 (inscription Meta for Developers bloquée côté
+                // Guillaume). Pour le réactiver : décommenter la ligne une fois le fournisseur
+                // activé dans Supabase.
+                // { provider: "facebook", label: t("continueFacebook"), icon: <FacebookIcon className="h-5 w-5" /> },
               ] as const
             ).map(({ provider, label, icon }) => (
               <button
