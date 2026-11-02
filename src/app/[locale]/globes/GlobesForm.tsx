@@ -23,6 +23,7 @@ export function GlobesForm({ seasonId, categories }: { seasonId: string; categor
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [openInfo, setOpenInfo] = useState<string | null>(null);
   const supabase = createClient();
   const t = useTranslations("Globes");
 
@@ -66,9 +67,28 @@ export function GlobesForm({ seasonId, categories }: { seasonId: string; categor
     <div className="flex flex-col gap-4">
       {categories.map((c) => (
         <div key={c.category} className="flex flex-col gap-1.5">
-          <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
-            {t(`category_${c.category}`)}
+          <div className="flex items-center gap-1.5">
+            <span className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
+              {t(`category_${c.category}`)}
+            </span>
+            <button
+              type="button"
+              onClick={() => setOpenInfo((prev) => (prev === c.category ? null : c.category))}
+              aria-label={t("infoLabel")}
+              aria-expanded={openInfo === c.category}
+              title={t("infoLabel")}
+              className={`flex h-5 w-5 items-center justify-center rounded-full border text-[11px] font-bold leading-none transition-colors ${
+                openInfo === c.category ? "border-ice bg-ice text-on-ice" : "border-border text-text-dim hover:border-ice hover:text-ice"
+              }`}
+            >
+              i
+            </button>
           </div>
+          {openInfo === c.category && (
+            <p className="rounded-lg border border-border bg-card px-3 py-2 text-xs leading-snug text-text-dim">
+              {t(`info_${c.category}`)}
+            </p>
+          )}
           <select
             value={picks[c.category]}
             onChange={(e) => setPicks((prev) => ({ ...prev, [c.category]: e.target.value }))}

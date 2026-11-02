@@ -147,6 +147,13 @@ saison + choix de la Pépite. Écran admin `/admin/globes` (section « Globes de
 avant le début de saison au niveau base (la page affiche un message mais rien n'empêche une écriture
 directe).
 
+Depuis le 02/11/2026, chaque intitulé du formulaire `/globes` a un bouton ⓘ qui déplie une
+explication du classement (clés `Globes.info_*`, 5 langues). Définitions retenues : gros globe =
+vainqueur(e) du classement général de la Coupe du monde ; meilleur(e) jeune = biathlète de moins
+de 25 ans le/la mieux classé(e) au général (classement U25) ; meilleure nation = vainqueur de la
+Coupe des nations (points cumulés individuels + relais). **À confirmer** par Guillaume,
+notamment la limite d'âge du « meilleur jeune ».
+
 **Pépite (§14) — mécanique corrigée par Guillaume, une par sexe.** Ce n'est pas un bonus fixe au
 1er Top 10 : c'est un **pronostic caché**, actif sur chaque course individuelle jusqu'à son 1er
 Top 10 de la saison. À ce moment-là, `computePepiteBonus` (cote de la course × multiplicateur de
