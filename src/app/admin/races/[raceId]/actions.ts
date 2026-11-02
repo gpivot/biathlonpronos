@@ -6,6 +6,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { fetchIbuResults, fetchIbuStartList } from "@/lib/admin/ibuResults";
 import { matchStartList, saveStartList } from "@/lib/admin/startListImport";
+import { notifyRaceResults } from "@/lib/notifications/jobs";
 import { redirect } from "next/navigation";
 import {
   deleteRace,
@@ -33,13 +34,18 @@ export async function submitResults(
     const summary = await scoreRace(admin, raceId);
     const pursuitRescored = await rescorePursuitAfterSprint(admin, raceId);
     const massStartNote = await tryMassStartListAfter(admin, raceId);
+    // Les points sont enregistrés même si la notification échoue (Firebase pas branché…).
+    const pushNote = await notifyRaceResults(admin, raceId).catch(
+      (error) => ` Notification non envoyée : ${error instanceof Error ? error.message : "erreur inconnue"}.`
+    );
     revalidatePath("/admin", "layout");
     return {
       status: "success",
       message:
         `Résultats enregistrés, ${summary.scoredPredictions} pronostic(s) noté(s), séries 10/10 recalculées.` +
         (pursuitRescored ? " Poursuite de l'étape renotée avec ses nouvelles cotes." : "") +
-        massStartNote,
+        massStartNote +
+        pushNote,
     };
   } catch (err) {
     return { status: "error", message: err instanceof Error ? err.message : "Erreur inconnue." };

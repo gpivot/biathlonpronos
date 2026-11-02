@@ -96,7 +96,7 @@ export async function launchLiveQuestion(questionId: string, minutes: number): P
         title: `🔴 Question live · +${BONUS_QUESTION_POINTS} pts`,
         body: question.question,
         url: `/courses/${question.race_id}`,
-      });
+      }, { preference: "live_push" });
       pushNote = `Notification envoyée à ${report.sent} téléphone(s) sur ${report.devices}.`;
     } catch (pushError) {
       pushNote = `Notification non envoyée : ${pushError instanceof Error ? pushError.message : "erreur inconnue"}.`;

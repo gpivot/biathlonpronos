@@ -10,12 +10,14 @@ export function NotificationForm() {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [url, setUrl] = useState("/");
+  const [push, setPush] = useState(true);
+  const [email, setEmail] = useState(false);
   const [result, setResult] = useState<SendNotificationResult | null>(null);
 
   const send = (audience: "me" | "all") => {
-    if (audience === "all" && !window.confirm("Envoyer cette notification à tous les joueurs ?")) return;
+    if (audience === "all" && !window.confirm("Envoyer ce message à tous les joueurs ?")) return;
     setResult(null);
-    startTransition(async () => setResult(await sendNotification({ title, body, url, audience })));
+    startTransition(async () => setResult(await sendNotification({ title, body, url, audience, channels: { push, email } })));
   };
 
   return (
@@ -26,12 +28,25 @@ export function NotificationForm() {
       </label>
       <label className="flex flex-col gap-1 text-sm font-semibold">
         Texte
-        <textarea value={body} onChange={(e) => setBody(e.target.value)} maxLength={400} rows={3} className={inputClass} />
+        <textarea value={body} onChange={(e) => setBody(e.target.value)} maxLength={2000} rows={4} className={inputClass} />
+        <span className="text-xs font-normal text-text-dim">
+          {body.length} caractère(s) · 400 maximum pour une notification de l&apos;appli, plus long possible par e-mail
+        </span>
       </label>
       <label className="flex flex-col gap-1 text-sm font-semibold">
         Page ouverte au clic
         <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="/courses" className={inputClass} />
       </label>
+      <div className="flex flex-wrap gap-4 text-sm">
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={push} onChange={(e) => setPush(e.target.checked)} />
+          📱 Appli
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={email} onChange={(e) => setEmail(e.target.checked)} />
+          ✉️ E-mail (joueurs qui ont accepté les nouvelles du jeu)
+        </label>
+      </div>
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
@@ -53,13 +68,29 @@ export function NotificationForm() {
       {pending && <p className="text-sm text-text-dim">Envoi…</p>}
       {result?.ok === false && <p className="text-sm text-red">{result.error}</p>}
       {result?.ok && (
-        <p className="text-sm text-text-dim">
-          {result.report.devices === 0
-            ? "Aucun téléphone inscrit pour l'instant."
-            : `Envoyée à ${result.report.sent} téléphone(s) sur ${result.report.devices}${
-                result.report.removed > 0 ? `, ${result.report.removed} appli(s) désinstallée(s) retirée(s)` : ""
-              }.`}
-        </p>
+        <div className="flex flex-col gap-1 text-sm text-text-dim">
+          {result.report && (
+            <p>
+              {result.report.devices === 0
+                ? "Appli : aucun téléphone à notifier."
+                : `Appli : envoyée à ${result.report.sent} téléphone(s) sur ${result.report.devices}${
+                    result.report.removed > 0 ? `, ${result.report.removed} appli(s) désinstallée(s) retirée(s)` : ""
+                  }.`}
+            </p>
+          )}
+          {result.email && (
+            <p>
+              {result.email.recipients === 0
+                ? "E-mail : aucun joueur n'a accepté les nouvelles du jeu par e-mail."
+                : `E-mail : ${result.email.sent} envoyé(s) sur ${result.email.recipients}.`}
+            </p>
+          )}
+          {result.notes.map((note) => (
+            <p key={note} className="text-gold">
+              {note}
+            </p>
+          ))}
+        </div>
       )}
     </div>
   );
