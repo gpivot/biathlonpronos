@@ -76,7 +76,7 @@
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
     "heroAccent": "Challenge your friends.",
-    "heroSubtitle": "30 seconds per race to play. All day long to follow the shooting.",
+    "heroSubtitle": "A simple prediction game that turns into a real biathlon strategy game.",
     "heroCta": "I'm in",
     "heroSignIn": "Already registered? Sign in",
     "appStoresTitle": "Or download the app",
@@ -196,7 +196,8 @@
     "s_jokers_title": "12. End-of-season jokers",
     "s_jokers_body": "At the end of the season, your 3 worst individual race results and your 2 worst relays are wiped (never the World Championships or Olympics). A race you didn't play is wiped first. Wiping a result removes its points: a 0 costs nothing, a malus is cancelled. Preview during the season in My season.",
     "s_classement_title": "13. Overall standings",
-    "s_classement_body": "Adds up every point scored over the season. The leader wears the Yellow Bib. The by-stage standings add up the points of a single stage: its leader wears the Red Bib, and each player shows how many stages they have won. Private leagues between friends also exist."
+    "s_classement_body": "Adds up every point scored over the season. The leader wears the Yellow Bib. The by-stage standings add up the points of a single stage: its leader wears the Red Bib, and each player shows how many stages they have won. Private leagues between friends also exist.",
+    "essentialsTitle": "The essentials in 4 points"
   },
   "Compte": {
     "pushTitle": "📱 App notifications",

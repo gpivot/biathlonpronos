@@ -76,7 +76,7 @@
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",
     "heroAccent": "Sfida i tuoi amici.",
-    "heroSubtitle": "30 secondi a gara per giocare. Tutta la giornata per seguire il poligono.",
+    "heroSubtitle": "Un gioco di pronostici semplice che diventa un vero gioco di strategia sul biathlon.",
     "heroCta": "Ci sto",
     "heroSignIn": "Già registrato? Accedi",
     "appStoresTitle": "Oppure scarica l'app",
@@ -91,7 +91,7 @@
     "f2Title": "Fai punti se i tuoi biatleti finiscono nella Top 10",
     "f2Body": "Ogni biatleta porta la sua quota moltiplicata in base al piazzamento. Centinaia di punti in palio a ogni gara.",
     "f2Pin1": "Come in Coppa del Mondo, vincere paga: quota × 25 per il 1°, fino a × 1 per il 10°.",
-    "f2Pin2": "Un'outsider ben piazzata rende più di una favorita che vince.",
+    "f2Pin2": "Un outsider ben piazzato rende più di un favorito che vince.",
     "f2Pin3": "Bonus se le tue 3 scelte finiscono nella Top 10 (+20), nella Top 5 (+50) o sul podio (+100). E +200 per il pronostico perfetto.",
     "f3Title": "Sfida i tuoi amici nelle leghe",
     "f3Body": "Crea la tua lega, condividi il codice e segui la vostra classifica, oltre a quella generale.",
@@ -132,7 +132,7 @@
     "faq_when_q": "Fino a quando posso fare o modificare il pronostico?",
     "faq_when_a": "I pronostici di una tappa si aprono una settimana prima dell'inizio. Puoi modificarli quante volte vuoi fino alla partenza di ogni gara, poi vengono bloccati.",
     "faq_points_q": "Quanti punti si possono vincere in una gara?",
-    "faq_points_a": "Centinaia. Ogni biatleta nella Top 10 porta la sua quota moltiplicata in base al piazzamento: × 25 per il vincitore, × 18 per il 2°… fino a × 1 per il 10°. Come il punteggio della Coppa del Mondo, premia soprattutto la vittoria. Una biatleta con quota 9 che vince porta già 225 punti, senza contare i bonus Top 10, Top 5, Podio e Pronostico perfetto.",
+    "faq_points_a": "Centinaia. Ogni biatleta nella Top 10 porta la sua quota moltiplicata in base al piazzamento: × 25 per il vincitore, × 18 per il 2°… fino a × 1 per il 10°. Come il punteggio della Coppa del Mondo, premia soprattutto la vittoria. Un biatleta con quota 9 che vince porta già 225 punti, senza contare i bonus Top 10, Top 5, Podio e Pronostico perfetto.",
     "faq_relays_q": "Le staffette contano?",
     "faq_relays_a": "Sì. In una staffetta scegli una nazione, e solo le prime 5 fanno punti (quota × 10 per la vittoria). Ci sono meno punti in palio rispetto alle gare individuali, perché sia la costanza a fare la differenza.",
     "faq_burnt_q": "Perché un biatleta è «bruciato»?",
@@ -196,7 +196,8 @@
     "s_jokers_title": "12. Jolly di fine stagione",
     "s_jokers_body": "A fine stagione vengono cancellati i tuoi 3 peggiori risultati nelle gare individuali e le tue 2 peggiori staffette (mai Mondiali né Olimpiadi). Una gara non giocata viene cancellata per prima. Cancellare un risultato toglie i suoi punti: uno 0 non costa nulla, un malus viene annullato. Anteprima durante la stagione in La mia stagione.",
     "s_classement_title": "13. Classifica generale",
-    "s_classement_body": "Somma tutti i punti della stagione. Il leader indossa il Pettorale Giallo. La classifica per tappe somma i punti di una sola tappa: il suo leader indossa il Pettorale Rosso, e ogni giocatore mostra il numero di tappe vinte. Esistono anche leghe private tra amici."
+    "s_classement_body": "Somma tutti i punti della stagione. Il leader indossa il Pettorale Giallo. La classifica per tappe somma i punti di una sola tappa: il suo leader indossa il Pettorale Rosso, e ogni giocatore mostra il numero di tappe vinte. Esistono anche leghe private tra amici.",
+    "essentialsTitle": "L'essenziale in 4 punti"
   },
   "Compte": {
     "pushTitle": "📱 Notifiche dell'app",

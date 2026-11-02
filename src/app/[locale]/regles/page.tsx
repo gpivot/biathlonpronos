@@ -19,7 +19,7 @@ const SECTIONS = [
 ] as const;
 
 export default async function ReglesPage() {
-  const t = await getTranslations("Regles");
+  const [t, tLanding] = await Promise.all([getTranslations("Regles"), getTranslations("Landing")]);
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col gap-6 px-5 pb-10 pt-6">
@@ -30,6 +30,24 @@ export default async function ReglesPage() {
       <div className="flex flex-col gap-2">
         <div className="font-display text-lg font-bold">{t("title")}</div>
         <p className="text-[13px] leading-relaxed text-text-dim">{t("intro")}</p>
+      </div>
+
+      {/* Les 4 points de la page d'accueil visiteur, en résumé avant le détail du règlement. */}
+      <div className="flex flex-col gap-3 rounded-2xl border border-ice/40 bg-ice-soft p-4">
+        <div className="font-display text-xs font-bold uppercase tracking-wider text-ice">{t("essentialsTitle")}</div>
+        <ol className="flex flex-col gap-2.5">
+          {(["f1", "f2", "f3", "f4"] as const).map((key, index) => (
+            <li key={key} className="flex gap-3">
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-blue to-teal font-display text-[12px] font-extrabold text-white">
+                {index + 1}
+              </span>
+              <span className="flex flex-col gap-0.5">
+                <span className="font-display text-[13px] font-bold leading-snug">{tLanding(`${key}Title`)}</span>
+                <span className="text-[12px] leading-relaxed text-text-dim">{tLanding(`${key}Body`)}</span>
+              </span>
+            </li>
+          ))}
+        </ol>
       </div>
 
       <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4">

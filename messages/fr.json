@@ -76,7 +76,7 @@
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
     "heroAccent": "Défie tes amis.",
-    "heroSubtitle": "30 secondes par course pour jouer. Toute la journée pour suivre le tir.",
+    "heroSubtitle": "Un jeu de pronostics simple qui devient un vrai jeu de stratégie autour du biathlon.",
     "heroCta": "Je joue",
     "heroSignIn": "Déjà inscrit ? Se connecter",
     "appStoresTitle": "Ou télécharger l'application",
@@ -91,7 +91,7 @@
     "f2Title": "Tu marques si tes biathlètes finissent dans le Top 10",
     "f2Body": "Chaque biathlète rapporte sa cote multipliée selon sa place. Des centaines de points se jouent à chaque course.",
     "f2Pin1": "Comme en Coupe du monde, la victoire paie : cote × 25 pour le 1er, jusqu'à × 1 pour le 10e.",
-    "f2Pin2": "Une outsider bien placée rapporte plus qu'une favorite qui gagne.",
+    "f2Pin2": "Un outsider bien placé rapporte plus qu'un favori qui gagne.",
     "f2Pin3": "Bonus si tes 3 choix finissent dans le Top 10 (+20), le Top 5 (+50) ou sur le podium (+100). Et +200 pour le prono parfait.",
     "f3Title": "Défie tes amis dans des ligues",
     "f3Body": "Crée ta ligue, partage le code et suis votre classement à vous, en plus du classement général.",
@@ -132,7 +132,7 @@
     "faq_when_q": "Jusqu'à quand puis-je faire ou modifier mon prono ?",
     "faq_when_a": "Les pronos d'une étape ouvrent une semaine avant son début. Tu peux les modifier autant que tu veux jusqu'au départ de chaque course, puis ils sont verrouillés.",
     "faq_points_q": "Combien de points peut-on gagner sur une course ?",
-    "faq_points_a": "Des centaines. Chaque biathlète du Top 10 rapporte sa cote multipliée selon sa place : × 25 pour le vainqueur, × 18 pour le 2e… jusqu'à × 1 pour le 10e. Comme le barème de la Coupe du monde, il récompense d'abord la victoire. Une biathlète à cote 9 qui gagne rapporte déjà 225 points, sans compter les bonus Top 10, Top 5, Podium et Prono parfait.",
+    "faq_points_a": "Des centaines. Chaque biathlète du Top 10 rapporte sa cote multipliée selon sa place : × 25 pour le vainqueur, × 18 pour le 2e… jusqu'à × 1 pour le 10e. Comme le barème de la Coupe du monde, il récompense d'abord la victoire. Un biathlète à cote 9 qui gagne rapporte déjà 225 points, sans compter les bonus Top 10, Top 5, Podium et Prono parfait.",
     "faq_relays_q": "Les relais comptent-ils ?",
     "faq_relays_a": "Oui. Sur un relais, tu choisis une nation, et seules les 5 premières marquent (cote × 10 pour la victoire). Il y a moins de points en jeu que sur les courses individuelles, pour que la régularité fasse la différence.",
     "faq_burnt_q": "Pourquoi un biathlète est-il « grillé » ?",
@@ -196,7 +196,8 @@
     "s_jokers_title": "12. Les jokers de fin de saison",
     "s_jokers_body": "En fin de saison, tes 3 plus mauvais résultats de courses individuelles et tes 2 plus mauvais relais sont effacés (jamais les Mondiaux ni les JO). Une course non jouée est effacée en priorité. Effacer un résultat retire ses points : un 0 ne coûte rien, un malus est annulé. Aperçu pendant la saison dans Ma saison.",
     "s_classement_title": "13. Le classement général",
-    "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Le classement par étapes additionne les points d'une seule étape : son leader porte le Dossard Rouge, et chaque joueur affiche le nombre d'étapes gagnées. Des ligues privées entre amis existent aussi."
+    "s_classement_body": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune. Le classement par étapes additionne les points d'une seule étape : son leader porte le Dossard Rouge, et chaque joueur affiche le nombre d'étapes gagnées. Des ligues privées entre amis existent aussi.",
+    "essentialsTitle": "L'essentiel en 4 points"
   },
   "Compte": {
     "pushTitle": "📱 Notifications de l'appli",

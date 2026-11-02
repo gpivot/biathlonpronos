@@ -76,7 +76,7 @@
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
     "heroAccent": "Fordere deine Freunde heraus.",
-    "heroSubtitle": "30 Sekunden pro Rennen zum Tippen. Den ganzen Tag, um das Schießen zu verfolgen.",
+    "heroSubtitle": "Ein einfaches Tippspiel, das zu einem echten Biathlon-Strategiespiel wird.",
     "heroCta": "Ich spiele",
     "heroSignIn": "Schon registriert? Anmelden",
     "appStoresTitle": "Oder lade die App herunter",
@@ -91,7 +91,7 @@
     "f2Title": "Du punktest, wenn deine Biathleten in die Top 10 kommen",
     "f2Body": "Jeder Biathlet bringt seine Quote, multipliziert je nach Platz. In jedem Rennen stehen Hunderte Punkte auf dem Spiel.",
     "f2Pin1": "Wie im Weltcup zahlt sich der Sieg aus: Quote × 25 für Platz 1, bis × 1 für Platz 10.",
-    "f2Pin2": "Eine gut platzierte Außenseiterin bringt mehr als eine siegreiche Favoritin.",
+    "f2Pin2": "Ein gut platzierter Außenseiter bringt mehr als ein siegreicher Favorit.",
     "f2Pin3": "Bonus, wenn deine 3 Tipps in den Top 10 (+20), den Top 5 (+50) oder auf dem Podium (+100) landen. Und +200 für den perfekten Tipp.",
     "f3Title": "Fordere deine Freunde in Ligen heraus",
     "f3Body": "Erstelle deine Liga, teile den Code und verfolge eure eigene Wertung, zusätzlich zur Gesamtwertung.",
@@ -132,7 +132,7 @@
     "faq_when_q": "Bis wann kann ich meinen Tipp abgeben oder ändern?",
     "faq_when_a": "Die Tipps einer Etappe öffnen eine Woche vor ihrem Beginn. Du kannst sie bis zum Start jedes Rennens beliebig oft ändern, danach sind sie gesperrt.",
     "faq_points_q": "Wie viele Punkte kann man in einem Rennen gewinnen?",
-    "faq_points_a": "Hunderte. Jeder Biathlet in den Top 10 bringt seine Quote, multipliziert je nach Platz: × 25 für den Sieger, × 18 für Platz 2 … bis × 1 für Platz 10. Wie die Weltcup-Wertung belohnt sie vor allem den Sieg. Eine Biathletin mit Quote 9, die gewinnt, bringt schon 225 Punkte, ohne die Boni Top 10, Top 5, Podium und perfekter Tipp.",
+    "faq_points_a": "Hunderte. Jeder Biathlet in den Top 10 bringt seine Quote, multipliziert je nach Platz: × 25 für den Sieger, × 18 für Platz 2 … bis × 1 für Platz 10. Wie die Weltcup-Wertung belohnt sie vor allem den Sieg. Ein Biathlet mit Quote 9, der gewinnt, bringt schon 225 Punkte, ohne die Boni Top 10, Top 5, Podium und perfekter Tipp.",
     "faq_relays_q": "Zählen die Staffeln?",
     "faq_relays_a": "Ja. Bei einer Staffel tippst du auf eine Nation, und nur die ersten 5 punkten (Quote × 10 für den Sieg). Es gibt weniger Punkte als bei Einzelrennen, damit die Beständigkeit den Unterschied macht.",
     "faq_burnt_q": "Warum ist ein Biathlet „gesperrt“?",
@@ -196,7 +196,8 @@
     "s_jokers_title": "12. Joker zum Saisonende",
     "s_jokers_body": "Am Saisonende werden deine 3 schlechtesten Einzelrennen und deine 2 schlechtesten Staffeln gestrichen (nie WM oder Olympia). Ein nicht gespieltes Rennen wird zuerst gestrichen. Ein gestrichenes Ergebnis zieht seine Punkte ab: eine 0 kostet nichts, ein Malus wird aufgehoben. Vorschau während der Saison unter Meine Saison.",
     "s_classement_title": "13. Gesamtwertung",
-    "s_classement_body": "Zählt alle Punkte der Saison zusammen. Der Führende trägt das Gelbe Trikot. Die Wertung nach Etappen zählt die Punkte einer einzelnen Etappe: ihr Führender trägt das Rote Trikot, und jeder Spieler zeigt die Zahl seiner gewonnenen Etappen. Es gibt auch private Ligen unter Freunden."
+    "s_classement_body": "Zählt alle Punkte der Saison zusammen. Der Führende trägt das Gelbe Trikot. Die Wertung nach Etappen zählt die Punkte einer einzelnen Etappe: ihr Führender trägt das Rote Trikot, und jeder Spieler zeigt die Zahl seiner gewonnenen Etappen. Es gibt auch private Ligen unter Freunden.",
+    "essentialsTitle": "Das Wichtigste in 4 Punkten"
   },
   "Compte": {
     "pushTitle": "📱 App-Benachrichtigungen",

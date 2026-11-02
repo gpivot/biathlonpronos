@@ -76,7 +76,7 @@
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
     "heroAccent": "Reta a tus amigos.",
-    "heroSubtitle": "30 segundos por carrera para jugar. Todo el día para seguir el tiro.",
+    "heroSubtitle": "Un juego de pronósticos sencillo que se convierte en un verdadero juego de estrategia de biatlón.",
     "heroCta": "Me apunto",
     "heroSignIn": "¿Ya estás registrado? Inicia sesión",
     "appStoresTitle": "O descarga la app",
@@ -91,7 +91,7 @@
     "f2Title": "Puntúas si tus biatletas terminan en el Top 10",
     "f2Body": "Cada biatleta aporta su cuota multiplicada según su puesto. Cientos de puntos en juego en cada carrera.",
     "f2Pin1": "Como en la Copa del Mundo, ganar compensa: cuota × 25 para el 1.º, hasta × 1 para el 10.º.",
-    "f2Pin2": "Una outsider bien colocada da más que una favorita que gana.",
+    "f2Pin2": "Un outsider bien colocado da más que un favorito que gana.",
     "f2Pin3": "Bonus si tus 3 elegidos terminan en el Top 10 (+20), el Top 5 (+50) o en el podio (+100). Y +200 por el pronóstico perfecto.",
     "f3Title": "Desafía a tus amigos en ligas",
     "f3Body": "Crea tu liga, comparte el código y sigue vuestra propia clasificación, además de la general.",
@@ -132,7 +132,7 @@
     "faq_when_q": "¿Hasta cuándo puedo hacer o cambiar mi pronóstico?",
     "faq_when_a": "Los pronósticos de una etapa se abren una semana antes de su inicio. Puedes cambiarlos tantas veces como quieras hasta la salida de cada carrera; después quedan bloqueados.",
     "faq_points_q": "¿Cuántos puntos se pueden ganar en una carrera?",
-    "faq_points_a": "Cientos. Cada biatleta del Top 10 aporta su cuota multiplicada según su puesto: × 25 para el ganador, × 18 para el 2.º… hasta × 1 para el 10.º. Como el baremo de la Copa del Mundo, premia ante todo la victoria. Una biatleta con cuota 9 que gana ya aporta 225 puntos, sin contar los bonus Top 10, Top 5, Podio y Pronóstico perfecto.",
+    "faq_points_a": "Cientos. Cada biatleta del Top 10 aporta su cuota multiplicada según su puesto: × 25 para el ganador, × 18 para el 2.º… hasta × 1 para el 10.º. Como el baremo de la Copa del Mundo, premia ante todo la victoria. Un biatleta con cuota 9 que gana ya aporta 225 puntos, sin contar los bonus Top 10, Top 5, Podio y Pronóstico perfecto.",
     "faq_relays_q": "¿Cuentan los relevos?",
     "faq_relays_a": "Sí. En un relevo eliges una nación, y solo puntúan las 5 primeras (cuota × 10 por la victoria). Hay menos puntos en juego que en las carreras individuales, para que la regularidad marque la diferencia.",
     "faq_burnt_q": "¿Por qué un biatleta está «quemado»?",
@@ -196,7 +196,8 @@
     "s_jokers_title": "12. Comodines de fin de temporada",
     "s_jokers_body": "Al final de la temporada se borran tus 3 peores resultados en carreras individuales y tus 2 peores relevos (nunca Mundiales ni JJ. OO.). Una carrera no jugada se borra primero. Borrar un resultado quita sus puntos: un 0 no cuesta nada, un malus se anula. Vista previa durante la temporada en Mi temporada.",
     "s_classement_title": "13. La clasificación general",
-    "s_classement_body": "Suma todos los puntos de la temporada. El líder lleva el Dorsal Amarillo. La clasificación por etapas suma los puntos de una sola etapa: su líder lleva el Dorsal Rojo, y cada jugador muestra el número de etapas ganadas. También existen ligas privadas entre amigos."
+    "s_classement_body": "Suma todos los puntos de la temporada. El líder lleva el Dorsal Amarillo. La clasificación por etapas suma los puntos de una sola etapa: su líder lleva el Dorsal Rojo, y cada jugador muestra el número de etapas ganadas. También existen ligas privadas entre amigos.",
+    "essentialsTitle": "Lo esencial en 4 puntos"
   },
   "Compte": {
     "pushTitle": "📱 Notificaciones de la app",

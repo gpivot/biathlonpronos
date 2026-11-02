@@ -4,7 +4,7 @@ import { LeaderBib, StageLeaderBib } from "@/components/PlayerBadgesRow";
 // Mini-écrans de l'app, commentés façon tutoriel (pastilles numérotées + légende), pour la page
 // d'accueil visiteur. Dessinés en JSX plutôt qu'en captures d'écran : ils restent nets, suivent le
 // thème clair/sombre et se traduisent dans les 5 langues. Données fictives mais réalistes (cotes
-// 2025-26), calculées avec le vrai barème : 3×25 = 75, 9×18 = 162, 15×5 = 75, +20 Top 10 = 332.
+// choisies par Guillaume), calculées avec le vrai barème : 8×25 = 200, 12×18 = 216, 22×5 = 110, +20 Top 10 = 546.
 
 /** Pastille numérotée posée sur un élément du mini-écran, reprise dans la légende. */
 export function Pin({ n, className = "" }: { n: number; className?: string }) {
@@ -41,9 +41,9 @@ function ScreenTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
 export async function PickMockup() {
   const t = await getTranslations("Landing");
   const picks = [
-    { flag: "🇫🇷", name: "L. Jeanmonnot", odds: 3 },
-    { flag: "🇫🇷", name: "J. Braisaz-Bouchet", odds: 9 },
-    { flag: "🇸🇰", name: "P. Fialkova", odds: 15 },
+    { flag: "🇫🇷", name: "L. Jeanmonnot", odds: 8 },
+    { flag: "🇫🇷", name: "J. Braisaz-Bouchet", odds: 12 },
+    { flag: "🇸🇰", name: "P. Fialkova", odds: 22 },
   ];
   return (
     <Phone>
@@ -77,12 +77,12 @@ export async function PickMockup() {
 export async function ScoreMockup() {
   const t = await getTranslations("Landing");
   const rows = [
-    { rank: 1, flag: "🇫🇷", name: "L. Jeanmonnot", odds: 3, mult: 25, mine: true },
-    { rank: 2, flag: "🇫🇷", name: "J. Braisaz-Bouchet", odds: 9, mult: 18, mine: true },
+    { rank: 1, flag: "🇫🇷", name: "L. Jeanmonnot", odds: 8, mult: 25, mine: true },
+    { rank: 2, flag: "🇫🇷", name: "J. Braisaz-Bouchet", odds: 12, mult: 18, mine: true },
     { rank: 3, flag: "🇫🇷", name: "J. Simon", odds: 6, mult: 13, mine: false },
     { rank: 4, flag: "🇸🇪", name: "E. Öberg", odds: 5, mult: 10, mine: false },
     { rank: 5, flag: "🇮🇹", name: "L. Vittozzi", odds: 4, mult: 7, mine: false },
-    { rank: 6, flag: "🇸🇰", name: "P. Fialkova", odds: 15, mult: 5, mine: true },
+    { rank: 6, flag: "🇸🇰", name: "P. Fialkova", odds: 22, mult: 5, mine: true },
   ];
   return (
     <Phone>
@@ -115,7 +115,7 @@ export async function ScoreMockup() {
       </div>
       <div className="flex items-baseline justify-between px-1 pt-0.5">
         <span className="text-[12px] text-text-dim">{t("mockTotal")}</span>
-        <span className="font-display text-xl font-extrabold text-ice">332 pts</span>
+        <span className="font-display text-xl font-extrabold text-ice">546 pts</span>
       </div>
     </Phone>
   );
