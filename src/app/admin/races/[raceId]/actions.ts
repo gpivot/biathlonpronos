@@ -194,6 +194,22 @@ export async function updateRace(formData: FormData) {
   revalidatePath("/admin", "layout");
 }
 
+/** « L'avis de Biathlonpronos » de la course ; un texte vide masque la rubrique sur la page course. */
+export async function updateRaceOpinion(formData: FormData) {
+  await requireAdmin();
+  const raceId = String(formData.get("race_id"));
+  const opinion = String(formData.get("opinion") ?? "").trim();
+
+  const { error } = await createAdminClient()
+    .from("races")
+    .update({ opinion: opinion === "" ? null : opinion })
+    .eq("id", raceId);
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
+}
+
 export async function resetResults(formData: FormData) {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));

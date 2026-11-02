@@ -356,7 +356,14 @@
     "compareTitle": "Et les autres, ils ont fait comment ?",
     "compareBody": "Tu termines {rank}e sur {count} joueurs sur cette course. Compare-toi dans le classement, et rejoins une ligue pour te mesurer à tes amis toute la saison.",
     "compareStandings": "Classement de la course",
-    "compareLeague": "Rejoindre une ligue"
+    "compareLeague": "Rejoindre une ligue",
+    "countdownToOpening": "Ouverture des pronos dans",
+    "countdownToLock": "Temps restant pour pronostiquer",
+    "countdownUnitDays": "j",
+    "countdownUnitHours": "h",
+    "countdownUnitMinutes": "min",
+    "countdownUnitSeconds": "s",
+    "opinionTitle": "L'avis de Biathlonpronos"
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

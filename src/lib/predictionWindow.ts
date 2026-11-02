@@ -1,4 +1,5 @@
 import { addDays, parisDay } from "./weekStage";
+import { fromParisWallTime } from "./displayTimeZone";
 
 /**
  * Les pronostics d'une étape (liste des biathlètes et cotes) n'ouvrent que 7 jours avant son
@@ -14,4 +15,9 @@ export function predictionOpensOn(stageStartsOn: string): string {
 /** Les pronostics de l'étape sont-ils ouverts à cet instant ? */
 export function isPredictionOpen(stageStartsOn: string, now: Date): boolean {
   return parisDay(now) >= predictionOpensOn(stageStartsOn);
+}
+
+/** Instant exact de l'ouverture : minuit (heure de Paris) du jour d'ouverture. */
+export function predictionOpensAt(stageStartsOn: string): Date {
+  return fromParisWallTime(`${predictionOpensOn(stageStartsOn)}T00:00`);
 }

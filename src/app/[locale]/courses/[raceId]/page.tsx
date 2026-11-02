@@ -16,7 +16,9 @@ import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS, previousRaceForGrilling } from "@/lib/grilling";
 import { getRaceResult } from "@/lib/lastResult";
 import { getStartList } from "@/lib/startList";
-import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
+import { isPredictionOpen, predictionOpensAt, predictionOpensOn } from "@/lib/predictionWindow";
+import { RaceCountdown } from "./RaceCountdown";
+import { RaceOpinion } from "./RaceOpinion";
 import { getOngoingBoard, getRacePlayers } from "@/lib/racePlayers";
 import { BackButton } from "@/components/BackButton";
 import { OngoingBoardRowView, PlayerRow, ResultRow } from "./RaceRankingRows";
@@ -207,6 +209,8 @@ export default async function RacePage({
   // Liste des biathlètes visible 7 jours avant l'étape seulement (cotes mises à jour pendant les pauses).
   const predictionsOpen = isPredictionOpen(stage.starts_on, now);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
+  // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
+  const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
   // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
@@ -247,6 +251,16 @@ export default async function RacePage({
           {/* Avec un formulaire, le « ? » est à côté de « Choisis… » ; sinon il reste ici. */}
           {showForm ? <div className="h-8 w-8 flex-shrink-0" /> : <RuleInfoButton format={race.format} />}
         </div>
+
+        {/* Avant le départ : temps restant avant l'ouverture des pronostics, puis pour pronostiquer. */}
+        {displayStatus === "upcoming" && (
+          <RaceCountdown
+            key={predictionsOpen ? "lock" : "opening"}
+            mode={predictionsOpen ? "lock" : "opening"}
+            target={predictionsOpen ? race.locks_at : predictionOpensAt(stage.starts_on).toISOString()}
+            serverNow={now.getTime()}
+          />
+        )}
 
         {/* Course malus : contour rouge autour de l'encadré, avec le nom du malus et son « ? ». */}
         <div
@@ -323,6 +337,8 @@ export default async function RacePage({
             </div>
           )}
         </div>
+
+        {opinion && <RaceOpinion title={t("opinionTitle")} text={opinion} />}
 
         {displayStatus === "upcoming" &&
           (!predictionsOpen ? (
