@@ -1131,3 +1131,30 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   soit son statut ; vide = rubrique masquée. Le titre est traduit dans les 5 langues, le texte
   lui-même est affiché tel que saisi (une seule langue, *à confirmer* si une version par langue
   est souhaitée).
+## Questions bonus avant le départ et live (02/11/2026)
+
+- **Deux sortes** (`bonus_questions.kind`) : `pre_race` (2 à 4 réponses, publiée tout de suite,
+  visible sur la page de la course dès l'ouverture des pronostics à J-7, réponses jusqu'à
+  `races.locks_at`, pas de notification) et `live` (2 réponses, préparée en brouillon puis lancée
+  par l'admin pendant la course pour 1 à 60 min, 5 par défaut ; `opens_at` / `closes_at` en heure
+  réelle même si l'horloge est simulée).
+- **Back-office** : rubrique « Questions bonus » de `/admin/races/[id]` (création, « Lancer +
+  notifier », « Fermer maintenant », bonne réponse, suppression, nombre de réponses par option).
+- **Réponse du joueur** : fonction `answer_bonus_question` (security definer, migration 0033) qui
+  vérifie que la question est ouverte ; réponse modifiable tant qu'elle l'est. Un invité non
+  confirmé ne peut pas répondre (comme pour les pronostics).
+- **Points (décision de Guillaume)** : 20 pts pour une bonne réponse, 0 sinon. L'admin saisit la
+  bonne réponse une fois la question fermée (`setBonusQuestionAnswer`) : les lignes de
+  `score_ledger` de la question (colonne `bonus_question_id`, `race_id` vide) sont réécrites. Le
+  classement général les compte d'office ; le classement d'étape et celui des joueurs d'une course
+  les ajoutent via `getBonusQuestionLedger` (jointure sur `bonus_questions.race_id`). Les jokers ne
+  les effacent pas (ils ne portent que sur les lignes de course). **À confirmer.**
+- **Affichage** : encadré par question sur la page de la course (bonne réponse en vert, mauvaise en
+  rouge) ; course notée : ligne verte « ❓ Questions bonus +20 pts » sous les points du pronostic.
+- **Questions live côté joueur** : encadré rouge en tête de l'accueil et pop-up sur les autres pages
+  (`LiveQuestionPopup` dans le layout, relu à chaque page et toutes les minutes, « Plus tard » le
+  masque pour cette question), avec le temps restant et un bouton vers la course.
+- **Notifications** : `sendPush` (Firebase, cf. « Applis Android / iOS ») au lancement, à tous les
+  téléphones enregistrés, ouvrant `/courses/[id]`. Tant que Firebase n'est pas configuré, la question
+  s'ouvre quand même et le back-office l'indique. Pas de notification navigateur (web push).
+- **Limites** : la question et les réponses sont saisies dans une seule langue (pas de traduction).

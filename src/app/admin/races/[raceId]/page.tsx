@@ -19,6 +19,8 @@ import { removeRace, resetResults, updateRace, updateRaceOpinion } from "./actio
 import { ArrowLeftIcon } from "@/components/icons";
 import { START_LIST_FORMATS, getStartList } from "@/lib/startList";
 import { StartListPanel } from "./StartListPanel";
+import { BonusQuestionsPanel, type AdminBonusQuestion } from "./BonusQuestionsPanel";
+import { bonusQuestionState, type BonusQuestionRow } from "@/lib/bonusQuestions";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
@@ -116,6 +118,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
   const displayStatus = getRaceDisplayStatus(race, now);
   const hasResults = (existingResults ?? []).length > 0 || race.status === "finished";
   const startList = START_LIST_FORMATS.includes(race.format) ? await getStartList(admin, race) : null;
+  const bonusQuestions = await getAdminBonusQuestions(admin, race, now);
 
   return (
     <div className="flex flex-col gap-4">
@@ -181,6 +184,8 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
       {startList && <StartListPanel raceId={race.id} format={race.format} startList={startList} />}
 
+      <BonusQuestionsPanel raceId={race.id} questions={bonusQuestions} />
+
       {candidates.length === 0 ? (
         <p className="text-sm text-text-dim">
           Aucune cote saisie pour ce format (voir Athlètes & cotes) —
@@ -222,6 +227,42 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
       </div>
     </div>
   );
+}
+
+/** Questions bonus de la course, brouillons compris, avec le nombre de réponses par option. */
+async function getAdminBonusQuestions(
+  admin: ReturnType<typeof createAdminClient>,
+  race: { id: string; locks_at: string },
+  now: Date
+): Promise<AdminBonusQuestion[]> {
+  const { data, error } = await admin
+    .from("bonus_questions")
+    .select("id, race_id, kind, question, options, opens_at, closes_at, correct_option, created_at")
+    .eq("race_id", race.id)
+    .order("created_at", { ascending: true });
+  if (error) {
+    // Migration 0033 pas encore appliquée.
+    console.error("getAdminBonusQuestions:", error.message);
+    return [];
+  }
+  const questions = (data ?? []) as BonusQuestionRow[];
+  const { data: answers } = questions.length
+    ? await admin.from("bonus_answers").select("question_id, option_index").in("question_id", questions.map((q) => q.id))
+    : { data: [] as any[] };
+  return questions.map((q) => {
+    const counts = q.options.map(() => 0);
+    for (const a of (answers ?? []) as any[]) if (a.question_id === q.id && counts[a.option_index] != null) counts[a.option_index]++;
+    return {
+      id: q.id,
+      kind: q.kind,
+      question: q.question,
+      options: q.options,
+      state: bonusQuestionState(q, race.locks_at, now, new Date()),
+      closesAt: q.closes_at,
+      correctOption: q.correct_option ?? null,
+      counts,
+    };
+  });
 }
 
 function BackLinks({ raceId }: { raceId: string }) {

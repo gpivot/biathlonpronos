@@ -414,7 +414,8 @@
     "countdownUnitHours": "h",
     "countdownUnitMinutes": "min",
     "countdownUnitSeconds": "s",
-    "opinionTitle": "Il parere di Biathlonpronos"
+    "opinionTitle": "Il parere di Biathlonpronos",
+    "bonusQuestionsLine": "Domande bonus"
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",
@@ -801,5 +802,25 @@
     "loadingRace": "Apriamo la prossima gara…",
     "noRace": "Nessuna gara è aperta ai pronostici al momento.",
     "seeCalendar": "Vedi il calendario"
+  },
+  "BonusQuestions": {
+    "sectionTitle": "Domande bonus",
+    "liveLabel": "Domanda live",
+    "preRaceLabel": "Domanda bonus",
+    "remaining": "Mancano {time}",
+    "closed": "Chiusa",
+    "pointsBadge": "Domanda bonus +{points} pt",
+    "answeredCanChange": "Risposta salvata, modificabile finché la domanda è aperta. {points} pt se è giusta!",
+    "signInToAnswer": "Accedi per rispondere.",
+    "answerToEarn": "Trova la risposta giusta per guadagnare {points} pt nella classifica generale.",
+    "notAnswered": "Nessuna risposta.",
+    "error_notAuthenticated": "Accedi per rispondere.",
+    "error_closed": "Troppo tardi, la domanda è chiusa.",
+    "error_unknown": "Risposta non salvata, riprova.",
+    "answerButton": "Rispondi e guadagna {points} pt",
+    "later": "Più tardi",
+    "pendingResult": "Risposta salvata. Risultato appena si conosce la risposta giusta.",
+    "correct": "Risposta giusta!",
+    "wrong": "Risposta sbagliata: 0 pt."
   }
 }

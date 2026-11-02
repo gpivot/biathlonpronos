@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getLeaderboard } from "./leaderboard";
 import { shortAthleteName } from "./athleteName";
+import { getBonusQuestionLedger } from "./bonusQuestions";
 
 /** Classement des joueurs sur une course notée (page de la course). */
 export interface RacePlayerRow {
@@ -21,11 +22,22 @@ export function rankPlayers(rows: Omit<RacePlayerRow, "rank">[]): RacePlayerRow[
 }
 
 export async function getRacePlayers(supabase: SupabaseClient, raceId: string): Promise<RacePlayerRow[]> {
-  const { data, error } = await supabase.from("score_ledger").select("user_id, points, profiles(pseudo)").eq("race_id", raceId);
+  const [{ data, error }, bonusLedger] = await Promise.all([
+    supabase.from("score_ledger").select("user_id, points, profiles(pseudo)").eq("race_id", raceId),
+    getBonusQuestionLedger(supabase, [raceId]),
+  ]);
   if (error) console.error("getRacePlayers:", error.message);
-  return rankPlayers(
-    (data ?? []).map((row: any) => ({ userId: row.user_id, pseudo: row.profiles?.pseudo ?? "?", points: Number(row.points) }))
-  );
+  // Pronostic + questions bonus de la course, additionnés par joueur.
+  const byUser = new Map<string, Omit<RacePlayerRow, "rank">>();
+  for (const row of [
+    ...(data ?? []).map((row: any) => ({ userId: row.user_id as string, pseudo: row.profiles?.pseudo ?? "?", points: Number(row.points) })),
+    ...bonusLedger,
+  ]) {
+    const existing = byUser.get(row.userId);
+    if (existing) existing.points = Math.round((existing.points + row.points) * 10) / 10;
+    else byUser.set(row.userId, { ...row });
+  }
+  return rankPlayers(Array.from(byUser.values()));
 }
 
 /** Course en cours : classement général de tous les joueurs, avec leur pronostic sur cette course. */

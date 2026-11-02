@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { NavigationTracker } from "@/components/NavigationTracker";
 import { PushRegistrar } from "@/components/PushRegistrar";
+import { LiveQuestionPopup } from "@/components/LiveQuestionInvite";
 import { LocaleSync } from "@/components/LocaleSync";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
@@ -63,6 +64,8 @@ export default async function LocaleLayout({
         <NextIntlClientProvider messages={messages}>
           <NavigationTracker />
           <PushRegistrar />
+          {/* Questions live ouvertes : pop-up sur toutes les pages (questions bonus, 02/11/2026). */}
+          <LiveQuestionPopup />
           <LocaleSync />
           {children}
         </NextIntlClientProvider>

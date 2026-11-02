@@ -240,6 +240,14 @@ Tous les points obtenus pendant la saison alimentent ton classement général Bi
 
 Le leader du classement général porte virtuellement le **Dossard Jaune**.
 
+### Les questions bonus (ajoutées le 02/11/2026)
+
+Sur certaines courses, Biathlonpronos pose des **questions bonus** :
+- **avant le départ** : une question à choix multiple (2 à 4 réponses), visible sur la page de la course pendant que tu pronostiques ; tu peux répondre jusqu'au départ ;
+- **en live, pendant la course** : une question à 2 réponses, ouverte quelques minutes seulement. Une notification t'avertit, et la question apparaît sur l'accueil et en pop-up.
+
+Une **bonne réponse rapporte 20 pts**, une mauvaise 0 pt. Ces points comptent au classement général et au classement de l'étape. Tu peux changer ta réponse tant que la question est ouverte.
+
 ### Les jokers de fin de saison (ajoutés le 01/11/2026)
 
 En fin de saison, chaque joueur efface automatiquement :

@@ -27,6 +27,8 @@ import { MALUS_SCALE, SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules
 import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
 import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 import { HelpButton } from "@/components/HelpButton";
+import { BonusPointsBadge, BonusQuestions } from "@/components/BonusQuestions";
+import { getRaceBonusQuestions } from "@/lib/bonusQuestions";
 
 export const dynamic = "force-dynamic";
 
@@ -228,6 +230,31 @@ export default async function RacePage({
   }
   const ongoingBoard = displayStatus === "ongoing" ? await getOngoingBoard(supabase, stage.season_id, race.id) : [];
 
+  // Questions bonus (avant le départ ou live) et points qu'elles ont rapportés au joueur.
+  const bonusQuestions = await getRaceBonusQuestions(supabase, race, user?.id ?? null, now);
+  const realNowMs = Date.now();
+  const bonusRemainingMs = Object.fromEntries(
+    bonusQuestions.filter((q) => q.kind === "live" && q.state === "open").map((q) => [q.id, Math.max(0, new Date(q.closesAt).getTime() - realNowMs)])
+  );
+  let myBonusPoints = 0;
+  if (user && bonusQuestions.some((q) => q.myAnswer !== null)) {
+    const { data: bonusLedger } = await supabase
+      .from("score_ledger")
+      .select("points")
+      .eq("user_id", user.id)
+      .in(
+        "bonus_question_id",
+        bonusQuestions.map((q) => q.id)
+      );
+    myBonusPoints = (bonusLedger ?? []).reduce((sum: number, row: any) => sum + Number(row.points), 0);
+  }
+  // Avant le départ : seulement les questions « avant le départ », une fois les pronostics ouverts.
+  const visibleBonusQuestions =
+    displayStatus === "upcoming" ? (predictionsOpen ? bonusQuestions.filter((q) => q.kind === "pre_race") : []) : bonusQuestions;
+  const bonusQuestionsBlock = (
+    <BonusQuestions questions={visibleBonusQuestions} remainingMs={bonusRemainingMs} signedIn={Boolean(user && !user.is_anonymous)} />
+  );
+
   // Courses précédente et suivante de la saison (ordre chronologique), boutons de l'en-tête.
   const { data: seasonRaces } = await supabase
     .from("races")
@@ -391,6 +418,10 @@ export default async function RacePage({
             </>
           ))}
 
+        {displayStatus === "upcoming" && bonusQuestionsBlock}
+
+        {displayStatus === "ongoing" && bonusQuestionsBlock}
+
         {displayStatus === "ongoing" && (
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
@@ -459,6 +490,14 @@ export default async function RacePage({
                   <div className="font-display text-2xl font-extrabold text-ice">{Math.round(pointsEarned * 10) / 10} pts</div>
                 </div>
 
+                {/* Questions bonus : à part du pronostic, pour voir d'un coup d'œil ce qu'elles ont rapporté. */}
+                {myBonusPoints > 0 && (
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-green/40 bg-green/10 px-3 py-2">
+                    <BonusPointsBadge label={t("bonusQuestionsLine")} />
+                    <span className="font-display text-base font-extrabold text-green">{formatPoints(myBonusPoints)}</span>
+                  </div>
+                )}
+
                 {/* Rappel du pronostic juste sous les points, pour comprendre d'où ils viennent. */}
                 <div className="flex flex-col gap-2 border-t border-border pt-3">
                   <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">
@@ -472,6 +511,8 @@ export default async function RacePage({
                 </div>
               </div>
             )}
+
+            {bonusQuestionsBlock}
 
             {compareInvite && (
               <div className="flex flex-col gap-2.5 rounded-2xl border border-ice/40 bg-ice-soft p-4">

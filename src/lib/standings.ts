@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { rankPlayers } from "./racePlayers";
 import { shortAthleteName } from "./athleteName";
+import { getBonusQuestionLedger } from "./bonusQuestions";
 import { getRaceDisplayStatus, type RaceDisplayStatus } from "./raceStatus";
 
 /**
@@ -123,7 +124,7 @@ export async function getRacesStandings(
   if (raceIds.length === 0) return buildStandings([], members, null);
   const lockedRaces = races.filter((r) => r.displayStatus !== "upcoming");
 
-  const [{ data: ledger, error }, { data: predictions }] = await Promise.all([
+  const [{ data: ledger, error }, { data: predictions }, bonusLedger] = await Promise.all([
     supabase.from("score_ledger").select("user_id, points, profiles(pseudo)").in("race_id", raceIds),
     withPicks && lockedRaces.length
       ? supabase
@@ -134,6 +135,8 @@ export async function getRacesStandings(
             lockedRaces.map((r) => r.id)
           )
       : Promise.resolve({ data: [] as any[] }),
+    // Questions bonus des courses : leurs 20 pts comptent dans le classement de l'étape.
+    getBonusQuestionLedger(supabase, raceIds),
   ]);
   if (error) console.error("getRacesStandings:", error.message);
 
@@ -174,7 +177,10 @@ export async function getRacesStandings(
   }
 
   return buildStandings(
-    ((ledger ?? []) as any[]).map((l) => ({ userId: l.user_id, pseudo: l.profiles?.pseudo ?? "?", points: Number(l.points) })),
+    [
+      ...((ledger ?? []) as any[]).map((l) => ({ userId: l.user_id, pseudo: l.profiles?.pseudo ?? "?", points: Number(l.points) })),
+      ...bonusLedger,
+    ],
     members,
     picksByUser
   );
