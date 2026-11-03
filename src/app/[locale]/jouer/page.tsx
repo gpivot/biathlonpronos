@@ -16,6 +16,7 @@ export default function PlayPage() {
   const t = useTranslations("Guest");
   const router = useRouter();
   const [failed, setFailed] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -24,6 +25,7 @@ export default function PlayPage() {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+      if (session && !session.user.is_anonymous) setSignedIn(true);
       if (!session) {
         const { error } = await supabase.auth.signInAnonymously();
         // Connexion invitée indisponible (désactivée, limite atteinte) : la course reste visible,
@@ -46,7 +48,21 @@ export default function PlayPage() {
       {failed ? (
         <>
           <p className="text-sm text-text-dim">{t("noRace")}</p>
-          <Link href="/courses" className="rounded-full bg-ice px-5 py-2.5 font-display text-sm font-bold text-on-ice">
+          {/* Pas de course ouverte : on propose de se connecter (ou créer son compte) pour être
+              prêt à la prochaine, et le calendrier pour voir quand elle ouvre. */}
+          {!signedIn && (
+            <Link href="/sign-in" className="rounded-full bg-ice px-5 py-2.5 font-display text-sm font-bold text-on-ice">
+              {t("signInLink")}
+            </Link>
+          )}
+          <Link
+            href="/courses"
+            className={
+              signedIn
+                ? "rounded-full bg-ice px-5 py-2.5 font-display text-sm font-bold text-on-ice"
+                : "rounded-full border border-border px-5 py-2.5 font-display text-sm font-bold text-text"
+            }
+          >
             {t("seeCalendar")}
           </Link>
         </>

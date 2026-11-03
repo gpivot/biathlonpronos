@@ -6,6 +6,19 @@ html,
 body {
   padding: 0;
   margin: 0;
+  /* Rien ne doit élargir la page : dans l'appli iPhone, le moindre débordement fait glisser tout
+     l'écran de côté. */
+  overflow-x: clip;
+}
+
+/* Sur téléphone, iOS zoome sur tout champ écrit en moins de 16 px quand on le touche, et la page
+   reste ensuite agrandie (elle « déborde » sur les côtés). */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em) !important;
+  }
 }
 
 /* Appli iOS / Android (et iPhone en paysage) : le contenu ne passe pas sous l'encoche ni la barre
