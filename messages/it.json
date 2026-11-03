@@ -625,7 +625,14 @@
     "helpButton": "Vedi l'aiuto",
     "back": "Home",
     "privacy": "Informativa sulla privacy",
-    "terms": "Termini"
+    "terms": "Termini",
+    "deleteTitle": "Eliminare il tuo account",
+    "deleteSteps": [
+      "Nell'app o sul sito, apri il tuo profilo e tocca «Elimina il mio account»: si apre un'e-mail precompilata. Puoi anche scrivere direttamente a contact@biathlonpronos.fr dall'indirizzo del tuo account.",
+      "Confermiamo la richiesta via e-mail.",
+      "Il tuo account e i tuoi dati vengono eliminati entro 30 giorni al massimo."
+    ],
+    "deleteData": "Vengono eliminati: il tuo account (e-mail, nome, cognome, nickname), i tuoi pronostici e punti, la partecipazione alle leghe, le impostazioni e i token di notifica. Nessun dato personale viene conservato dopo questo periodo."
   },
   "Privacy": {
     "title": "Informativa sulla privacy",

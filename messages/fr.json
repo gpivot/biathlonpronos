@@ -625,7 +625,14 @@
     "helpButton": "Voir l'aide",
     "back": "Accueil",
     "privacy": "Politique de confidentialité",
-    "terms": "CGU"
+    "terms": "CGU",
+    "deleteTitle": "Supprimer ton compte",
+    "deleteSteps": [
+      "Dans l'appli ou sur le site, ouvre ton profil puis touche « Supprimer mon compte » : un e-mail prérempli s'ouvre. Tu peux aussi écrire directement à contact@biathlonpronos.fr depuis l'adresse de ton compte.",
+      "Nous confirmons ta demande par e-mail.",
+      "Ton compte et tes données sont supprimés sous 30 jours au plus."
+    ],
+    "deleteData": "Sont supprimés : ton compte (e-mail, prénom, nom, pseudo), tes pronostics et tes points, ta participation aux ligues, tes réglages et tes jetons de notification. Aucune donnée personnelle n'est conservée après ce délai."
   },
   "Privacy": {
     "title": "Politique de confidentialité",

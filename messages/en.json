@@ -625,7 +625,14 @@
     "helpButton": "See help",
     "back": "Home",
     "privacy": "Privacy policy",
-    "terms": "Terms"
+    "terms": "Terms",
+    "deleteTitle": "Delete your account",
+    "deleteSteps": [
+      "In the app or on the website, open your profile and tap “Delete my account”: a pre-filled email opens. You can also write directly to contact@biathlonpronos.fr from your account's email address.",
+      "We confirm your request by email.",
+      "Your account and data are deleted within 30 days at most."
+    ],
+    "deleteData": "Deleted: your account (email, first name, last name, username), your predictions and points, your league memberships, your settings and notification tokens. No personal data is kept after this period."
   },
   "Privacy": {
     "title": "Privacy policy",

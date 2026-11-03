@@ -625,7 +625,14 @@
     "helpButton": "Hilfe ansehen",
     "back": "Start",
     "privacy": "Datenschutzerklärung",
-    "terms": "Nutzungsbedingungen"
+    "terms": "Nutzungsbedingungen",
+    "deleteTitle": "Konto löschen",
+    "deleteSteps": [
+      "Öffne in der App oder auf der Website dein Profil und tippe auf „Mein Konto löschen“: Eine vorausgefüllte E-Mail öffnet sich. Du kannst auch direkt von der E-Mail-Adresse deines Kontos an contact@biathlonpronos.fr schreiben.",
+      "Wir bestätigen deine Anfrage per E-Mail.",
+      "Dein Konto und deine Daten werden innerhalb von höchstens 30 Tagen gelöscht."
+    ],
+    "deleteData": "Gelöscht werden: dein Konto (E-Mail, Vorname, Nachname, Pseudonym), deine Tipps und Punkte, deine Ligamitgliedschaften, deine Einstellungen und Benachrichtigungs-Tokens. Nach dieser Frist werden keine personenbezogenen Daten aufbewahrt."
   },
   "Privacy": {
     "title": "Datenschutzerklärung",

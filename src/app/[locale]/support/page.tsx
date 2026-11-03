@@ -24,6 +24,16 @@ export default async function SupportPage() {
           </a>
         </Card>
 
+        {/* Procédure publique demandée par Google Play (URL de suppression de compte). */}
+        <Card id="suppression-compte" emoji="🗑️" title={t("deleteTitle")}>
+          <ol className="flex list-decimal flex-col gap-1.5 pl-4">
+            {(t.raw("deleteSteps") as string[]).map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+          <p className="mt-3">{t("deleteData")}</p>
+        </Card>
+
         <Card emoji="⏰" title={t("delayTitle")}>
           <p>{t("delayBody")}</p>
         </Card>
@@ -63,9 +73,9 @@ export default async function SupportPage() {
   );
 }
 
-function Card({ emoji, title, children }: { emoji: string; title: string; children: React.ReactNode }) {
+function Card({ id, emoji, title, children }: { id?: string; emoji: string; title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-2xl border border-border bg-card p-5">
+    <section id={id} className="scroll-mt-4 rounded-2xl border border-border bg-card p-5">
       <h2 className="mb-2 font-display text-base font-extrabold">
         <span className="mr-2">{emoji}</span>
         {title}
