@@ -337,7 +337,13 @@
     "appleRelay": "Indirizzo nascosto da Apple: ti inoltra le nostre e-mail.",
     "appInstalled": "App installata su {count, plural, one {# telefono} other {# telefoni}}",
     "getApp": "Installa l'app Biathlonpronos sul telefono per ricevere anche gli avvisi, comprese le domande bonus in diretta.",
-    "notificationsSaveError": "Impostazione non salvata, riprova."
+    "notificationsSaveError": "Impostazione non salvata, riprova.",
+    "deleteConfirmTitle": "Eliminare definitivamente il tuo account?",
+    "deleteConfirmBody": "Profilo, pronostici, punti, carte e posto nelle leghe verranno cancellati subito. Le leghe che hai creato passano al membro più anziano. L'azione è irreversibile.",
+    "deleteConfirmButton": "Elimina il mio account",
+    "deleteCancel": "Annulla",
+    "deleting": "Eliminazione…",
+    "deleteError": "Eliminazione non riuscita. Riprova o scrivi a contact@biathlonpronos.fr."
   },
   "Globes": {
     "back": "← Indietro",
@@ -628,9 +634,8 @@
     "terms": "Termini",
     "deleteTitle": "Eliminare il tuo account",
     "deleteSteps": [
-      "Nell'app o sul sito, apri il tuo profilo e tocca «Elimina il mio account»: si apre un'e-mail precompilata. Puoi anche scrivere direttamente a contact@biathlonpronos.fr dall'indirizzo del tuo account.",
-      "Confermiamo la richiesta via e-mail.",
-      "Il tuo account e i tuoi dati vengono eliminati entro 30 giorni al massimo."
+      "Nell'app o sul sito, apri il tuo profilo, tocca «Elimina il mio account» e conferma. Puoi anche scrivere a contact@biathlonpronos.fr dall'indirizzo del tuo account.",
+      "Il tuo account e i tuoi dati vengono eliminati subito (entro 30 giorni al massimo per una richiesta via e-mail)."
     ],
     "deleteData": "Vengono eliminati: il tuo account (e-mail, nome, cognome, nickname), i tuoi pronostici e punti, la partecipazione alle leghe, le impostazioni e i token di notifica. Nessun dato personale viene conservato dopo questo periodo."
   },

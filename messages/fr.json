@@ -337,7 +337,13 @@
     "appleRelay": "Adresse masquée par Apple : il te transfère nos e-mails.",
     "appInstalled": "Appli installée sur {count, plural, one {# téléphone} other {# téléphones}}",
     "getApp": "Installe l'appli Biathlonpronos sur ton téléphone pour recevoir aussi les alertes, dont les questions bonus en direct.",
-    "notificationsSaveError": "Réglage non enregistré, réessaie."
+    "notificationsSaveError": "Réglage non enregistré, réessaie.",
+    "deleteConfirmTitle": "Supprimer définitivement ton compte ?",
+    "deleteConfirmBody": "Ton profil, tes pronostics, tes points, tes cartes et ta place dans les ligues seront effacés tout de suite. Les ligues que tu as créées passent au membre le plus ancien. Cette action est irréversible.",
+    "deleteConfirmButton": "Supprimer mon compte",
+    "deleteCancel": "Annuler",
+    "deleting": "Suppression…",
+    "deleteError": "La suppression a échoué. Réessaie, ou écris-nous à contact@biathlonpronos.fr."
   },
   "Globes": {
     "back": "← Retour",
@@ -628,9 +634,8 @@
     "terms": "CGU",
     "deleteTitle": "Supprimer ton compte",
     "deleteSteps": [
-      "Dans l'appli ou sur le site, ouvre ton profil puis touche « Supprimer mon compte » : un e-mail prérempli s'ouvre. Tu peux aussi écrire directement à contact@biathlonpronos.fr depuis l'adresse de ton compte.",
-      "Nous confirmons ta demande par e-mail.",
-      "Ton compte et tes données sont supprimés sous 30 jours au plus."
+      "Dans l'appli ou sur le site, ouvre ton profil, touche « Supprimer mon compte » puis confirme. Tu peux aussi écrire à contact@biathlonpronos.fr depuis l'adresse de ton compte.",
+      "Ton compte et tes données sont supprimés immédiatement (sous 30 jours au plus pour une demande par e-mail)."
     ],
     "deleteData": "Sont supprimés : ton compte (e-mail, prénom, nom, pseudo), tes pronostics et tes points, ta participation aux ligues, tes réglages et tes jetons de notification. Aucune donnée personnelle n'est conservée après ce délai."
   },
