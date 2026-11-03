@@ -896,10 +896,12 @@ des notifications : elles serviront aux questions bonus posées pendant les cour
 - **Connexion dans l'appli** : Google refuse les vues web intégrées, donc Google et Apple passent
   par la fenêtre native du téléphone (plugin `@capgo/capacitor-social-login`,
   `src/lib/native/socialLogin.ts`) puis `supabase.auth.signInWithIdToken`. Apple sur iPhone
-  seulement (sur Android il faudrait un serveur de redirection) ; Google dès que les identifiants
-  OAuth (client Web déjà utilisé par Supabase + client iOS) sont renseignés dans `socialLogin.ts`
-  et que le client iOS inversé est ajouté comme URL scheme dans `Info.plist`. Côté Supabase, le
-  fournisseur Apple doit lister `fr.biathlonpronos.app` dans ses « Client IDs ». Facebook n'est
+  seulement (sur Android il faudrait un serveur de redirection) ; Google sur les deux (projet
+  Google Cloud `biathlonpronos-6eae5` : client Web « Biathlon Pronos », client iOS « Client iOS 1 »,
+  client Android « Client Android 1 » avec le SHA-1 de signature, identique pour l'upload et Play).
+  Les ID Web et iOS sont dans `socialLogin.ts`, le client iOS inversé est l'URL scheme de
+  `Info.plist`. Côté Supabase, le fournisseur Apple doit lister `fr.biathlonpronos.app` dans ses
+  « Client IDs », le fournisseur Google les ID Web et iOS, avec « Skip nonce checks » activé. Facebook n'est
   pas embarqué.
 - **Builds : Codemagic** (`codemagic.yaml` à la racine), lancés à la main. Android : AAB signé
   (clé « Biathlonpronos » dans Codemagic) ; le premier envoi sur Google Play se fait à la

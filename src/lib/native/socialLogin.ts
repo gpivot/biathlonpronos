@@ -9,16 +9,16 @@ import { nativePlatform } from "./firebaseMessaging";
  *
  * Identifiants OAuth Google (publics, ils ne donnent accès à rien) : le client « Application Web »
  * déjà utilisé par Supabase, et un client « iOS » créé pour fr.biathlonpronos.app dans la même
- * console Google Cloud. Vides tant qu'ils ne sont pas renseignés : le bouton n'apparaît pas.
+ * console Google Cloud (projet biathlonpronos-6eae5). Vides = bouton masqué.
  * Le client iOS doit aussi figurer, à l'envers, dans mobile/ios/App/App/Info.plist (URL scheme),
  * sinon le SDK Google fait planter l'appli.
  */
-export const GOOGLE_WEB_CLIENT_ID = "";
-export const GOOGLE_IOS_CLIENT_ID = "";
+export const GOOGLE_WEB_CLIENT_ID = "226990944454-095hdai0vcus04bjbskvqhsb660v5lff.apps.googleusercontent.com";
+export const GOOGLE_IOS_CLIENT_ID = "226990944454-gug2cblnrvl8flg88rs8fektk64i9fnv.apps.googleusercontent.com";
 
 interface SocialLoginPlugin {
   initialize(options: {
-    google?: { webClientId?: string; iOSClientId?: string; iOSServerClientId?: string; mode?: "online" };
+    google?: { webClientId?: string; iOSClientId?: string; iOSServerClientId?: string; mode?: "online"; skipAuthOnlyAuthorizationAfterSignIn?: boolean };
     apple?: { clientId?: string };
   }): Promise<void>;
   login(options: {
@@ -60,6 +60,9 @@ export async function nativeSignIn(provider: NativeProvider): Promise<{ idToken:
             // Jeton émis pour le client Web : c'est celui que Supabase connaît déjà.
             iOSServerClientId: GOOGLE_WEB_CLIENT_ID,
             mode: "online",
+            // Seul l'idToken sert (Supabase) : on évite l'étape d'autorisation Android qui peut
+            // bloquer sur une BridgeActivity standard.
+            skipAuthOnlyAuthorizationAfterSignIn: true,
           }
         : undefined,
       apple: nativePlatform() === "ios" ? { clientId: "fr.biathlonpronos.app" } : undefined,
