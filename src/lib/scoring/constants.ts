@@ -27,7 +27,7 @@ export const COMBINATION_BONUS = {
 export const PURSUIT_ODDS = {
   stepSeconds: 20,
   incrementPerStep: 5,
-  cap: 40,
+  cap: 50,
 } as const;
 
 /** §5 — relais : barème réduit, seules les 5 premières nations marquent. */

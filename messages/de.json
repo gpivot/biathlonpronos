@@ -220,7 +220,7 @@
     "oddsWhen": "Die Quoten werden zu wichtigen Zeitpunkten der Saison neu bewertet: Weihnachtspause, Ende Januar, nach der WM oder Olympia.",
     "oddsShort": "Quote",
     "pursuitTitle": "Die Verfolgungsquote",
-    "pursuitBody": "Nach dem Sprint wird die Verfolgungsquote automatisch neu berechnet: +5 pro 20 s Rückstand auf den Sieger. Die ersten 20 s sind neutral, und die Quote ist auf 40 begrenzt.",
+    "pursuitBody": "Nach dem Sprint wird die Verfolgungsquote automatisch neu berechnet: +5 pro 20 s Rückstand auf den Sieger. Die ersten 20 s sind neutral, und die Quote ist auf 50 begrenzt.",
     "pursuitExample": "Beispiel: Grundquote 10, Rückstand im Sprint",
     "relayTitle": "Die Staffeln",
     "relayBody": "Du tippst auf eine Nation statt auf 3 Biathleten. Nur die ersten 5 Nationen punkten, mit niedrigeren Werten als bei Einzelrennen.",

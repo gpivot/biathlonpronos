@@ -220,7 +220,7 @@
     "oddsWhen": "Le quote vengono riviste nei momenti chiave della stagione: pausa natalizia, fine gennaio, dopo i Mondiali o le Olimpiadi.",
     "oddsShort": "quota",
     "pursuitTitle": "La quota dell'inseguimento",
-    "pursuitBody": "Dopo la sprint, la quota dell'inseguimento si ricalcola automaticamente: +5 ogni 20 s di distacco dal vincitore. I primi 20 s sono neutri e la quota ha un tetto di 40.",
+    "pursuitBody": "Dopo la sprint, la quota dell'inseguimento si ricalcola automaticamente: +5 ogni 20 s di distacco dal vincitore. I primi 20 s sono neutri e la quota ha un tetto di 50.",
     "pursuitExample": "Esempio: quota base 10, distacco nella sprint",
     "relayTitle": "Le staffette",
     "relayBody": "Pronostichi una nazione invece di 3 biatleti. Solo le prime 5 nazioni fanno punti, con un punteggio ridotto rispetto alle gare individuali.",

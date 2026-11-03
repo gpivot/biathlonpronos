@@ -12,7 +12,12 @@ describe("computePursuitOdds", () => {
     expect(computePursuitOdds(10, 70)).toBe(25);
   });
 
-  it("plafonne la cote à 40", () => {
-    expect(computePursuitOdds(10, 1000)).toBe(40);
+  it("plafonne la cote à 50", () => {
+    expect(computePursuitOdds(10, 1000)).toBe(50);
+    expect(computePursuitOdds(40, 70)).toBe(50);
+  });
+
+  it("ne fait jamais baisser une cote de base", () => {
+    expect(computePursuitOdds(50, 120)).toBe(50);
   });
 });

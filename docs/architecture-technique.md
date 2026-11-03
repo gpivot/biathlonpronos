@@ -1207,3 +1207,22 @@ Détail et mise en route dans `docs/notifications.md`. En bref :
   course de plus de 3 jours, rappels envoyés à tous les comptes (même ceux qui n'ont encore jamais
   joué).
 
+
+## Échelle des cotes (novembre 2026, demande de Guillaume)
+
+Cotes recalculées à partir des résultats des 3 dernières saisons (2023-24 à 2025-26), l'équipe de
+France saisie à la main par Guillaume servant de référence.
+
+- **Courses** : de 8 (ultra favori) à 50 (coureur lambda). 8-15 : multi-vainqueurs du format ;
+  15-22 : déjà vainqueur ou souvent sur le podium ; 23-30 : déjà sur le podium, souvent Top 10 ;
+  30-40 : déjà Top 10, souvent Top 20 ; au-delà de 40 : pas de Top 10, nouveaux, outsiders.
+- **Globes, meilleur jeune, meilleure nation** : de 10 (ultra favori) à 500 (aucune chance) ;
+  tenants du titre (Jeanmonnot, Perrot) autour de 20, soit 100 pts au gros globe (× 5).
+- **Relais** : même échelle que les courses (8 à 50).
+- Méthode (reproductible) : classement du format en Coupe du monde pondéré 50 % / 30 % / 20 %
+  (saison la plus récente d'abord), converti en cote selon le rang, puis borné par les victoires
+  et podiums du format sur les 3 saisons (Mondiaux et JO compris). Globe : classement général
+  pondéré 70 / 20 / 10. Nations : Coupe des nations et classements relais pondérés 60 / 40.
+- **Cote poursuite** : le plafond passe de 40 à 50, le haut de la nouvelle échelle, et ne fait
+  plus jamais baisser une cote de base (avant, un athlète coté 45 serait tombé à 40 en
+  poursuite). **À confirmer.**
