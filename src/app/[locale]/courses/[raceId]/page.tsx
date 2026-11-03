@@ -1,3 +1,4 @@
+import { fullAthleteName } from "@/lib/athleteName";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
@@ -608,7 +609,7 @@ function AthletePickRow({ athlete }: { athlete: AthleteWithOdds | undefined }) {
     <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
       <div className="text-base">{nationFlagEmoji(athlete.nation_code)}</div>
       <div className="flex-1 text-sm font-semibold">
-        {athlete.first_name} {athlete.last_name}
+        {fullAthleteName(athlete)}
       </div>
       <div className="font-display text-sm font-bold text-ice">×{athlete.value}</div>
     </div>

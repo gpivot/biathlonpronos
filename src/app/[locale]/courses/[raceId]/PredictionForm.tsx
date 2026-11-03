@@ -8,7 +8,7 @@ import { CheckIcon } from "@/components/icons";
 import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
-import { shortAthleteName } from "@/lib/athleteName";
+import { fullAthleteName, shortAthleteName } from "@/lib/athleteName";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -312,7 +312,7 @@ export function PredictionForm({
               )}
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">
-                  {a.first_name} {a.last_name}
+                  {fullAthleteName(a)}
                 </span>
                 <span className="text-[11px] text-text-dim">
                   {a.nation_code}

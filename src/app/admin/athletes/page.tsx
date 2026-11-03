@@ -1,3 +1,4 @@
+import { fullAthleteName } from "@/lib/athleteName";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/server";
 import { fetchAll } from "@/lib/admin/fetchAll";
@@ -264,7 +265,7 @@ export default async function AdminAthletesPage({
                                         <input type="hidden" name="season_id" value={season.id} />
                                         <input type="hidden" name="athlete_id" value={athlete.id} />
                                       </form>
-                                      {athlete.first_name} {athlete.last_name}
+                                      {fullAthleteName(athlete)}
                                       {!hasOdds && <span className="ml-1 text-[11px]">(sans cote)</span>}
                                     </td>
                                     {ATHLETE_FORMATS.map((f) => (

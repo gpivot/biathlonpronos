@@ -1,3 +1,4 @@
+import { fullAthleteName } from "@/lib/athleteName";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { GlobeRankingForm, type CandidateOption } from "./GlobeRankingForm";
 
@@ -38,7 +39,7 @@ export async function GlobesSection({ admin, seasonId }: { admin: SupabaseClient
           .filter((o: any) => o.athletes?.sex === c.sex)
           .map((o: any) => ({
             id: o.athlete_id,
-            label: `${o.athletes.first_name} ${o.athletes.last_name} (${o.athletes.nation_code}, ×${o.value})`,
+            label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}, ×${o.value})`,
           }))
           .sort((a, b) => a.label.localeCompare(b.label));
       }

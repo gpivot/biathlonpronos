@@ -1,3 +1,4 @@
+import { fullAthleteName } from "@/lib/athleteName";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createAdminClient } from "@/lib/supabase/server";
@@ -93,7 +94,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         const existing = resultByAthleteId.get(o.athlete_id);
         return {
           id: o.athlete_id,
-          name: `${o.athletes?.first_name ?? ""} ${o.athletes?.last_name ?? ""}`.trim(),
+          name: fullAthleteName(o.athletes),
           subtitle: o.athletes?.nation_code ?? "",
           firstName: o.athletes?.first_name ?? "",
           lastName: o.athletes?.last_name ?? "",

@@ -1,3 +1,4 @@
+import { fullAthleteName } from "@/lib/athleteName";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -80,7 +81,7 @@ export default async function GlobesPage() {
       .filter((o: any) => o.athletes?.sex === sex)
       .map((o: any) => ({
         id: o.athlete_id,
-        label: `${o.athletes.first_name} ${o.athletes.last_name} (${o.athletes.nation_code}) — ×${o.value}`,
+        label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}) — ×${o.value}`,
         odds: o.value,
       }))
       .sort(byOddsThenLabel);
@@ -123,7 +124,7 @@ export default async function GlobesPage() {
           .filter((o: any) => o.athletes?.sex === c.sex)
           .map((o: any) => ({
             id: o.athlete_id,
-            label: `${o.athletes.first_name} ${o.athletes.last_name} (${o.athletes.nation_code}) — ×${o.value}`,
+            label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}) — ×${o.value}`,
             odds: Number(o.value),
           }))
           .sort(byOddsThenLabel),
