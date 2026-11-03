@@ -1228,3 +1228,11 @@ France saisie à la main par Guillaume servant de référence.
 - **Cote poursuite** : le plafond passe de 40 à 50, le haut de la nouvelle échelle, et ne fait
   plus jamais baisser une cote de base (avant, un athlète coté 45 serait tombé à 40 en
   poursuite). **À confirmer.**
+
+## Appli Android : points Play Console à traiter (03/11/2026)
+
+La version 4 (1.0.4) est en examen pour la production. Play Console signale, sans bloquer :
+- optimisation du code DEX insuffisante (obscurcissement 1 %), à corriger d'ici février 2027 :
+  activer `minifyEnabled true` (R8) dans `mobile/android/app/build.gradle`, avec des règles
+  `proguard-rules.pro` pour Capacitor et ses plugins, puis tester toute l'appli avant envoi ;
+- deux recommandations sur l'affichage bord à bord (Android 15) : API obsolètes à remplacer.
