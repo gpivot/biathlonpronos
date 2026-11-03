@@ -1,12 +1,13 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon, ChevronRightIcon, HelpIcon, MessageIcon } from "@/components/icons";
 import { LanguagePills } from "./LanguagePills";
 import { PseudoEditor } from "./PseudoEditor";
 import { ThemeToggle } from "./ThemeToggle";
-import { PushStatusCard } from "./PushStatusCard";
+import { NotificationsCard } from "./NotificationsCard";
+import { withDefaults } from "@/lib/notifications/preferences";
 import { FavoriteTeamForm } from "./FavoriteTeamForm";
 import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { SignOutButton } from "./SignOutButton";
@@ -32,10 +33,14 @@ export default async function ComptePage() {
     );
   }
 
-  const [{ data: profile }, { data: season }, { data: nations }] = await Promise.all([
+  // Réglages de notification et téléphones : tables réservées au serveur (migrations 0021, 0034).
+  const admin = createAdminClient();
+  const [{ data: profile }, { data: season }, { data: nations }, { data: notificationRow }, { count: phoneCount }] = await Promise.all([
     supabase.from("profiles").select("pseudo").eq("id", user.id).single(),
     supabase.from("seasons").select("id").eq("status", "active").maybeSingle(),
     supabase.from("nations").select("code, name").order("name"),
+    admin.from("notification_preferences").select("*").eq("user_id", user.id).maybeSingle(),
+    admin.from("push_tokens").select("token", { count: "exact", head: true }).eq("user_id", user.id),
   ]);
 
   let favoriteTeam: { nation_code: string; sex: "H" | "F" } | null = null;
@@ -53,8 +58,7 @@ export default async function ComptePage() {
   const pseudo = profile?.pseudo ?? "";
   const supportEmail = tSupport("email");
 
-  // Page Profil calquée sur VéloPronos. Les notifications par email n'existent pas encore : leurs
-  // interrupteurs sont affichés désactivés avec la mention « Bientôt ».
+  // Page Profil calquée sur VéloPronos.
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col">
       <div className="flex flex-1 flex-col gap-4 overflow-auto px-5 pb-6 pt-6">
@@ -68,14 +72,7 @@ export default async function ComptePage() {
           <div className="text-[13px] text-text-dim">{user.email}</div>
         </div>
 
-        <PushStatusCard />
-
-        <Card>
-          <SectionLabel>📧 {t("emailNotificationsTitle")}</SectionLabel>
-          <ToggleRow title={t("reminderTitle")} subtitle={t("reminderHint")} soon={t("soon")} />
-          <div className="h-px bg-border" />
-          <ToggleRow title={t("resultsTitle")} subtitle={t("resultsHint")} soon={t("soon")} />
-        </Card>
+        <NotificationsCard initial={withDefaults(notificationRow)} email={user.email ?? ""} phoneCount={phoneCount ?? 0} />
 
         <Card>
           <ThemeToggle />
@@ -142,22 +139,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 function IconBox({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-ice">{children}</div>
-  );
-}
-
-// Interrupteur non fonctionnel pour l'instant (fonctionnalité à venir), affiché activé et grisé.
-function ToggleRow({ title, subtitle, soon }: { title: string; subtitle: string; soon: string }) {
-  return (
-    <div className="flex flex-1 items-center gap-3">
-      <div className="flex flex-1 flex-col gap-0.5">
-        <div className="font-display text-sm font-bold">{title}</div>
-        <div className="text-[12px] text-text-dim">{subtitle}</div>
-      </div>
-      <span className="rounded-full bg-card2 px-2 py-0.5 text-[10px] font-semibold uppercase text-text-dim">{soon}</span>
-      <div aria-disabled className="relative h-6 w-11 flex-shrink-0 rounded-full bg-ice/40 opacity-60">
-        <div className="absolute right-0.5 top-0.5 h-5 w-5 rounded-full bg-bg" />
-      </div>
-    </div>
   );
 }
 

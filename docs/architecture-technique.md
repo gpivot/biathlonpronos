@@ -1180,3 +1180,24 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   téléphones enregistrés, ouvrant `/courses/[id]`. Tant que Firebase n'est pas configuré, la question
   s'ouvre quand même et le back-office l'indique. Pas de notification navigateur (web push).
 - **Limites** : la question et les réponses sont saisies dans une seule langue (pas de traduction).
+
+## Notifications des joueurs : appli et e-mail (02/11/2026)
+
+Détail et mise en route dans `docs/notifications.md`. En bref :
+
+- **Profil > Notifications** remplace les interrupteurs « Bientôt » hérités de VéloPronos : 4 types
+  de message (rappel, résultats, questions live, nouvelles), chacun avec un interrupteur Appli et
+  un interrupteur E-mail (pas d'e-mail pour les questions live). Table `notification_preferences`
+  (migration 0034), réservée au serveur ; pas de ligne = valeurs par défaut.
+- **Rappel** 2 h avant une course non pronostiquée (appli + e-mail par défaut), plusieurs courses
+  regroupées en un message ; **résultats** sur l'appli à la saisie, avec les points du joueur ;
+  **récap e-mail du lundi** (désactivé par défaut) ; **nouvelles** depuis `/admin/notifications`,
+  par e-mail seulement aux joueurs qui l'ont accepté (RGPD). Trace `notification_sends` : jamais
+  deux fois le même envoi.
+- **Horloge** : pg_cron de Supabase appelle `/api/notifications/cron` tous les quarts d'heure
+  (Vercel Hobby limite ses tâches planifiées à une par jour). E-mails par l'API Resend.
+- **À confirmer** : défauts (rappel e-mail activé, récap e-mail désactivé), créneau du récap
+  (lundi 8 h-midi, courses des 7 derniers jours), pas de notification « résultats » pour une
+  course de plus de 3 jours, rappels envoyés à tous les comptes (même ceux qui n'ont encore jamais
+  joué).
+
