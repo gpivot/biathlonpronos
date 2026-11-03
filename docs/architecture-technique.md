@@ -902,7 +902,7 @@ des notifications : elles serviront aux questions bonus posées pendant les cour
   fournisseur Apple doit lister `fr.biathlonpronos.app` dans ses « Client IDs ». Facebook n'est
   pas embarqué.
 - **Builds : Codemagic** (`codemagic.yaml` à la racine), lancés à la main. Android : AAB signé
-  (clé « biathlonpronos_upload » dans Codemagic) ; le premier envoi sur Google Play se fait à la
+  (clé « Biathlonpronos » dans Codemagic) ; le premier envoi sur Google Play se fait à la
   main, l'envoi automatique est ensuite à décommenter. iOS : signature automatique via la clé API
   App Store Connect, envoi sur TestFlight. Les numéros de version suivent le numéro de build.
 - **Fichiers Firebase** (projet `biathlonpronos-6eae5`, ajoutés le 03/11/2026) : `mobile/android/app/google-services.json`

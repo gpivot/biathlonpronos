@@ -4,7 +4,7 @@
 # évolutions natives (notifications, icône…) demandent un nouveau build.
 #
 # À régler une fois dans Codemagic (Team settings / Code signing identities) :
-#   - Android : la clé de signature (keystore) nommée « biathlonpronos_upload » ;
+#   - Android : la clé de signature (keystore) nommée « Biathlonpronos » ;
 #   - iOS : la clé API App Store Connect nommée « Biathlonpronos » (Integrations), puis un
 #     certificat de distribution iOS généré par Codemagic.
 
@@ -15,7 +15,7 @@ workflows:
     max_build_duration: 60
     environment:
       android_signing:
-        - biathlonpronos_upload
+        - Biathlonpronos
       node: 22
       java: 21
     scripts:
