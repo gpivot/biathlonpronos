@@ -220,7 +220,7 @@
     "oddsWhen": "Odds are reassessed at key moments of the season: Christmas break, end of January, after the World Championships or Olympics.",
     "oddsShort": "odds",
     "pursuitTitle": "Pursuit odds",
-    "pursuitBody": "After the sprint, pursuit odds are recalculated automatically: +5 for every 20 s behind the winner. The first 20 s are neutral, and odds are capped at 40.",
+    "pursuitBody": "After the sprint, pursuit odds are recalculated automatically: +5 for every 20 s behind the winner. The first 20 s are neutral, and odds are capped at 50.",
     "pursuitExample": "Example: base odds 10, gap in the sprint",
     "relayTitle": "Relays",
     "relayBody": "You predict a nation instead of 3 biathletes. Only the top 5 nations score, with a lower scale than individual races.",

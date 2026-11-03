@@ -220,7 +220,7 @@
     "oddsWhen": "Les cotes sont réévaluées à des moments clés de la saison : pause de Noël, fin janvier, après les Mondiaux ou les JO.",
     "oddsShort": "cote",
     "pursuitTitle": "La cote poursuite",
-    "pursuitBody": "Après le sprint, la cote poursuite se recalcule automatiquement : +5 par tranche de 20 s de retard sur le vainqueur. La 1re tranche est neutre, et la cote est plafonnée à 40.",
+    "pursuitBody": "Après le sprint, la cote poursuite se recalcule automatiquement : +5 par tranche de 20 s de retard sur le vainqueur. La 1re tranche est neutre, et la cote est plafonnée à 50.",
     "pursuitExample": "Exemple : cote de base 10, retard au sprint",
     "relayTitle": "Les relais",
     "relayBody": "Tu pronostiques une nation plutôt que 3 biathlètes. Seules les 5 premières nations marquent, avec un barème réduit par rapport aux courses individuelles.",

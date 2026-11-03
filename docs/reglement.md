@@ -78,7 +78,7 @@ La poursuite est une course particulière : les biathlètes partent selon les é
 - Elle termine à 42 secondes → cote poursuite = 20
 - Elle termine à 1 min 10 → cote poursuite = 25
 
-La cote poursuite est plafonnée afin d'éviter des multiplicateurs excessifs. Cote maximale recommandée : 40.
+La cote poursuite est plafonnée afin d'éviter des multiplicateurs excessifs. Cote maximale : 50 (le haut de l'échelle des cotes course) ; une cote de base déjà à 50 ne bouge pas.
 
 La position au départ ne compte donc pas directement : c'est bien l'écart chronométrique qui détermine l'ajustement de la cote. Il faut donc prévoir la saisie des écarts de temps lors de la saisie des résultats du sprint.
 

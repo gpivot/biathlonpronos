@@ -220,7 +220,7 @@
     "oddsWhen": "Las cuotas se revisan en momentos clave de la temporada: parón de Navidad, finales de enero, tras el Mundial o los JJ. OO.",
     "oddsShort": "cuota",
     "pursuitTitle": "La cuota de persecución",
-    "pursuitBody": "Tras el sprint, la cuota de persecución se recalcula automáticamente: +5 por cada 20 s de retraso sobre el ganador. Los primeros 20 s son neutros y la cuota tiene un tope de 40.",
+    "pursuitBody": "Tras el sprint, la cuota de persecución se recalcula automáticamente: +5 por cada 20 s de retraso sobre el ganador. Los primeros 20 s son neutros y la cuota tiene un tope de 50.",
     "pursuitExample": "Ejemplo: cuota base 10, retraso en el sprint",
     "relayTitle": "Los relevos",
     "relayBody": "Pronosticas una nación en lugar de 3 biatletas. Solo puntúan las 5 primeras naciones, con una puntuación reducida respecto a las carreras individuales.",
