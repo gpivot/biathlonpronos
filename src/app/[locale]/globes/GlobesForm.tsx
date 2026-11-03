@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
+import { SeasonCategoryIcon } from "@/components/SeasonCategoryIcon";
 
 export interface GlobeOption {
   id: string;
@@ -68,6 +69,7 @@ export function GlobesForm({ seasonId, categories }: { seasonId: string; categor
       {categories.map((c) => (
         <div key={c.category} className="flex flex-col gap-1.5">
           <div className="flex items-center gap-1.5">
+            <SeasonCategoryIcon category={c.category} className="h-6 w-6 flex-shrink-0" />
             <span className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">
               {t(`category_${c.category}`)}
             </span>

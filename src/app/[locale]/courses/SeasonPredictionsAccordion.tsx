@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
 import { nationFlagEmoji } from "@/lib/nationFlags";
+import { SeasonCategoryIcon } from "@/components/SeasonCategoryIcon";
 
 export interface SeasonPick {
   key: string;
@@ -49,8 +50,15 @@ export function SeasonPredictionsAccordion({
         <div className="flex flex-col gap-2 border-t border-border px-3 py-3">
           {picks.map((pick) => (
             <div key={pick.key} className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-2.5">
-              <div className="flex-1 text-[13px] text-text-dim">
-                {pick.labelKey.startsWith("category_") ? tGlobes(pick.labelKey) : `❄️ ${t(pick.labelKey)}`}
+              <div className="flex flex-1 items-center gap-2 text-[13px] text-text-dim">
+                {pick.labelKey.startsWith("category_") ? (
+                  <>
+                    <SeasonCategoryIcon category={pick.labelKey.slice("category_".length)} className="h-5 w-5 flex-shrink-0" />
+                    {tGlobes(pick.labelKey)}
+                  </>
+                ) : (
+                  `❄️ ${t(pick.labelKey)}`
+                )}
               </div>
               {pick.name ? (
                 <div className="flex items-center gap-1.5 text-[13px] font-semibold">
