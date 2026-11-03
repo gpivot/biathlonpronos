@@ -893,13 +893,19 @@ des notifications : elles serviront aux questions bonus posées pendant les cour
   sans dépendance supplémentaire. Les jetons périmés (appli désinstallée) sont supprimés.
   Back-office `/admin/notifications` : envoi « moi seulement » (test) ou à tous les joueurs ; le
   lien est une page sans langue (`/courses`), ouverte dans la langue du joueur.
-- **Connexion dans l'appli** : les boutons Google / Apple / Facebook sont masqués (Google refuse
-  les vues web intégrées, et ils ne sont pas encore branchés) ; email + mot de passe seulement.
+- **Connexion dans l'appli** : Google refuse les vues web intégrées, donc Google et Apple passent
+  par la fenêtre native du téléphone (plugin `@capgo/capacitor-social-login`,
+  `src/lib/native/socialLogin.ts`) puis `supabase.auth.signInWithIdToken`. Apple sur iPhone
+  seulement (sur Android il faudrait un serveur de redirection) ; Google dès que les identifiants
+  OAuth (client Web déjà utilisé par Supabase + client iOS) sont renseignés dans `socialLogin.ts`
+  et que le client iOS inversé est ajouté comme URL scheme dans `Info.plist`. Côté Supabase, le
+  fournisseur Apple doit lister `fr.biathlonpronos.app` dans ses « Client IDs ». Facebook n'est
+  pas embarqué.
 - **Builds : Codemagic** (`codemagic.yaml` à la racine), lancés à la main. Android : AAB signé
   (clé « biathlonpronos_upload » dans Codemagic) ; le premier envoi sur Google Play se fait à la
   main, l'envoi automatique est ensuite à décommenter. iOS : signature automatique via la clé API
   App Store Connect, envoi sur TestFlight. Les numéros de version suivent le numéro de build.
-- **Fichiers Firebase** à ajouter quand Guillaume les fournit : `mobile/android/app/google-services.json`
+- **Fichiers Firebase** (projet `biathlonpronos-6eae5`, ajoutés le 03/11/2026) : `mobile/android/app/google-services.json`
   et `mobile/ios/App/App/GoogleService-Info.plist` (déjà référencé dans le projet Xcode).
 - **Icône et écran de démarrage provisoires** générés depuis le logo (cible) : sources dans
   `mobile/assets/`, regénérés par `npm run assets` dans `mobile/`.

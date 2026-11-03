@@ -23,7 +23,8 @@ const config: CapacitorConfig = {
     allowMixedContent: false,
   },
   ios: {
-    contentInset: "always",
+    // Le site gère lui-même l'encoche (viewport-fit=cover + env(safe-area-inset-*)).
+    contentInset: "never",
   },
   plugins: {
     SplashScreen: {
@@ -34,6 +35,12 @@ const config: CapacitorConfig = {
     FirebaseMessaging: {
       // Notification affichée même quand l'appli est ouverte.
       presentationOptions: ["badge", "sound", "alert"],
+    },
+    // Connexion Google / Apple par la fenêtre native du téléphone (Google refuse les vues web).
+    // Facebook et Twitter ne sont pas embarqués.
+    SocialLogin: {
+      providers: { google: true, apple: true, facebook: false, twitter: false },
+      logLevel: 1,
     },
   },
   // Évite un conflit de noms de paquets Swift (doc du plugin @capacitor-firebase/messaging).
