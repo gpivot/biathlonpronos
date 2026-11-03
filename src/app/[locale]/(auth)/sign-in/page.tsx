@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AppleIcon, GoogleIcon, LogoMark } from "@/components/icons";
 import { isNativeApp } from "@/lib/native/firebaseMessaging";
+import { isCancelError, nativeProviders, nativeSignIn, type NativeProvider } from "@/lib/native/socialLogin";
 
 export default function SignInPage() {
   // « code » : connexion sans mot de passe, par un code à 6 chiffres reçu par e-mail (les comptes
@@ -18,10 +19,14 @@ export default function SignInPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(null);
-  // Dans l'appli Android / iOS, Google refuse la connexion depuis une vue web intégrée : on n'y
-  // propose que l'email (à revoir quand la connexion Google / Apple sera branchée en natif).
+  // Dans l'appli Android / iOS, Google refuse la connexion depuis une vue web intégrée : Google et
+  // Apple y passent par la fenêtre native du téléphone (lib/native/socialLogin), selon la plateforme.
   const [inApp, setInApp] = useState(false);
-  useEffect(() => setInApp(isNativeApp()), []);
+  const [appProviders, setAppProviders] = useState<NativeProvider[]>([]);
+  useEffect(() => {
+    setInApp(isNativeApp());
+    setAppProviders(nativeProviders());
+  }, []);
 
   const supabase = createClient();
   const router = useRouter();
@@ -66,14 +71,33 @@ export default function SignInPage() {
     if (error) setOauthError(oauthErrorMessage(error.message));
   }
 
+  async function handleNativeSignIn(provider: NativeProvider) {
+    setOauthError(null);
+    try {
+      const { idToken, nonce } = await nativeSignIn(provider);
+      const { error } = await supabase.auth.signInWithIdToken({ provider, token: idToken, nonce });
+      if (error) {
+        setOauthError(oauthErrorMessage(error.message));
+        return;
+      }
+      router.push("/");
+    } catch (err) {
+      if (!isCancelError(err)) setOauthError(oauthErrorMessage(err instanceof Error ? err.message : String(err)));
+    }
+  }
+
   async function handleCodeSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError(null);
     if (!codeSent) {
-      const { error } = await supabase.auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false } });
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: { shouldCreateUser: false },
+      });
       setLoading(false);
-      if (error) setError(/signups? not allowed|not found/i.test(error.message) ? t("codeUnknownEmail") : error.message);
+      if (error)
+        setError(/signups? not allowed|not found/i.test(error.message) ? t("codeUnknownEmail") : error.message);
       else setCodeSent(true);
       return;
     }
@@ -120,7 +144,7 @@ export default function SignInPage() {
         <p className="text-sm text-text-dim">{t("prompt")}</p>
       </div>
 
-      {!inApp && (
+      {(!inApp || appProviders.length > 0) && (
         <>
           <div className="flex w-full flex-col gap-3">
             {(
@@ -132,16 +156,18 @@ export default function SignInPage() {
                 // activé dans Supabase.
                 // { provider: "facebook", label: t("continueFacebook"), icon: <FacebookIcon className="h-5 w-5" /> },
               ] as const
-            ).map(({ provider, label, icon }) => (
-              <button
-                key={provider}
-                onClick={() => handleOAuth(provider)}
-                className="flex items-center justify-center gap-3 rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
-              >
-                {icon}
-                {label}
-              </button>
-            ))}
+            )
+              .filter(({ provider }) => !inApp || appProviders.includes(provider))
+              .map(({ provider, label, icon }) => (
+                <button
+                  key={provider}
+                  onClick={() => (inApp ? handleNativeSignIn(provider) : handleOAuth(provider))}
+                  className="flex items-center justify-center gap-3 rounded-xl border border-border bg-card py-3 font-display text-sm font-semibold"
+                >
+                  {icon}
+                  {label}
+                </button>
+              ))}
             {oauthError && <div className="text-center text-xs text-red">{oauthError}</div>}
           </div>
 
