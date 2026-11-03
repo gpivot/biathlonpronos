@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "226990944454",
+    "project_id": "biathlonpronos-6eae5",
+    "storage_bucket": "biathlonpronos-6eae5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:226990944454:android:709f19415240890fa7e7c7",
+        "android_client_info": {
+          "package_name": "fr.biathlonpronos.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuiEP595Zm89fR109MynKsVqYL0RJwpsU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

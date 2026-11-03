@@ -905,7 +905,7 @@ des notifications : elles serviront aux questions bonus posées pendant les cour
   (clé « biathlonpronos_upload » dans Codemagic) ; le premier envoi sur Google Play se fait à la
   main, l'envoi automatique est ensuite à décommenter. iOS : signature automatique via la clé API
   App Store Connect, envoi sur TestFlight. Les numéros de version suivent le numéro de build.
-- **Fichiers Firebase** à ajouter quand Guillaume les fournit : `mobile/android/app/google-services.json`
+- **Fichiers Firebase** (projet `biathlonpronos-6eae5`, ajoutés le 03/11/2026) : `mobile/android/app/google-services.json`
   et `mobile/ios/App/App/GoogleService-Info.plist` (déjà référencé dans le projet Xcode).
 - **Icône et écran de démarrage provisoires** générés depuis le logo (cible) : sources dans
   `mobile/assets/`, regénérés par `npm run assets` dans `mobile/`.
