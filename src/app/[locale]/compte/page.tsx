@@ -11,6 +11,7 @@ import { withDefaults } from "@/lib/notifications/preferences";
 import { FavoriteTeamForm } from "./FavoriteTeamForm";
 import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { SignOutButton } from "./SignOutButton";
+import { DeleteAccountButton } from "./DeleteAccountButton";
 
 export const dynamic = "force-dynamic";
 
@@ -54,9 +55,8 @@ export default async function ComptePage() {
     equipeActive = active;
   }
 
-  const [tSupport, tGlobal] = await Promise.all([getTranslations("Support"), getTranslations("Landing")]);
+  const tGlobal = await getTranslations("Landing");
   const pseudo = profile?.pseudo ?? "";
-  const supportEmail = tSupport("email");
 
   // Page Profil calquée sur VéloPronos.
   return (
@@ -101,12 +101,7 @@ export default async function ComptePage() {
         <div className="pt-3">
           <SignOutButton />
         </div>
-        <a
-          href={`mailto:${supportEmail}?subject=${encodeURIComponent(t("deleteAccount"))}`}
-          className="self-center text-[13px] text-text-dim hover:text-frost"
-        >
-          {t("deleteAccount")}
-        </a>
+        <DeleteAccountButton />
       </div>
       <BottomNav />
     </div>

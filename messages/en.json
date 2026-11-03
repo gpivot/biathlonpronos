@@ -337,7 +337,13 @@
     "appleRelay": "Address hidden by Apple: it forwards our emails to you.",
     "appInstalled": "App installed on {count, plural, one {# phone} other {# phones}}",
     "getApp": "Install the Biathlonpronos app on your phone to also get alerts, including live bonus questions.",
-    "notificationsSaveError": "Setting not saved, please try again."
+    "notificationsSaveError": "Setting not saved, please try again.",
+    "deleteConfirmTitle": "Delete your account for good?",
+    "deleteConfirmBody": "Your profile, predictions, points, cards and league places will be erased right away. Leagues you created pass to their longest-standing member. This cannot be undone.",
+    "deleteConfirmButton": "Delete my account",
+    "deleteCancel": "Cancel",
+    "deleting": "Deleting…",
+    "deleteError": "Deletion failed. Try again, or write to contact@biathlonpronos.fr."
   },
   "Globes": {
     "back": "← Back",
@@ -628,9 +634,8 @@
     "terms": "Terms",
     "deleteTitle": "Delete your account",
     "deleteSteps": [
-      "In the app or on the website, open your profile and tap “Delete my account”: a pre-filled email opens. You can also write directly to contact@biathlonpronos.fr from your account's email address.",
-      "We confirm your request by email.",
-      "Your account and data are deleted within 30 days at most."
+      "In the app or on the website, open your profile, tap “Delete my account” and confirm. You can also write to contact@biathlonpronos.fr from your account's email address.",
+      "Your account and data are deleted immediately (within 30 days at most for an email request)."
     ],
     "deleteData": "Deleted: your account (email, first name, last name, username), your predictions and points, your league memberships, your settings and notification tokens. No personal data is kept after this period."
   },
