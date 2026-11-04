@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { AppleIcon, GoogleIcon, LogoMark } from "@/components/icons";
 import { isNativeApp } from "@/lib/native/firebaseMessaging";
@@ -29,9 +28,16 @@ export default function SignInPage() {
   }, []);
 
   const supabase = createClient();
-  const router = useRouter();
   const t = useTranslations("SignIn");
   const locale = useLocale();
+
+  // Après connexion, on recharge complètement la page d'accueil plutôt que router.push("/") :
+  // le routeur de Next.js gardait en cache la version « visiteur » de l'accueil (préchargée avant
+  // la connexion), si bien que l'appli affichait encore l'écran de connexion et qu'il fallait se
+  // connecter une 2e fois. Le rechargement envoie les nouveaux cookies de session au serveur.
+  function goHome() {
+    window.location.assign(`/${locale}`);
+  }
 
   // Erreur renvoyée par /auth/callback (refus du fournisseur, compte sans e-mail, etc.).
   useEffect(() => {
@@ -80,7 +86,7 @@ export default function SignInPage() {
         setOauthError(oauthErrorMessage(error.message));
         return;
       }
-      router.push("/");
+      goHome();
     } catch (err) {
       if (!isCancelError(err)) setOauthError(oauthErrorMessage(err instanceof Error ? err.message : String(err)));
     }
@@ -107,7 +113,7 @@ export default function SignInPage() {
       setError(t("codeWrong"));
       return;
     }
-    router.push("/");
+    goHome();
   }
 
   async function handleEmailSubmit(e: React.FormEvent) {
@@ -126,7 +132,7 @@ export default function SignInPage() {
       setError(error.message);
       return;
     }
-    router.push("/");
+    goHome();
   }
 
   return (
