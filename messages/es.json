@@ -942,6 +942,8 @@
     "x2Used": "{used}/{max} bonus ×2 usados",
     "raceWins": "{count, plural, one {# carrera ganada} other {# carreras ganadas}} (mejor pronosticador)",
     "pepite": "{count, plural, one {Diamante oculto revelado} other {# Diamantes ocultos revelados}}",
+    "pepiteF": "Diamante femenino",
+    "pepiteH": "Diamante masculino",
     "helpTitle": "Los iconos de los jugadores",
     "helpLeader": "Dorsal amarillo: el líder de la clasificación general de la temporada (o de la liga).",
     "helpX2": "Bonus ×2 ya usados, de los 3 de la temporada.",

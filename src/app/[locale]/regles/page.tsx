@@ -2,11 +2,10 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { LeaderBib, StageLeaderBib, YoungBib } from "@/components/PlayerBadgesRow";
+import { CrystalGlobeIcon } from "@/components/SeasonCategoryIcon";
 import { ScoreMockup } from "@/components/landing/Mockups";
 import {
   COMBINATION_BONUS,
-  FUSEE_CARD_BONUS_BY_SKI_RANK,
-  GACHETTE_CARD_BONUS,
   GROS_GLOBE_MULTIPLIERS,
   PETIT_GLOBE_MULTIPLIERS,
   RANK_MULTIPLIERS,
@@ -216,25 +215,6 @@ export default async function ReglesPage() {
             </RuleCard>
           </div>
 
-          <RuleCard emoji="🚀" title={t("fgTitle")} body={t("fgBody")}>
-            <div className="grid grid-cols-2 gap-2">
-              <BonusTile
-                emoji="🚀"
-                name={t("fuseeName")}
-                value={`+${FUSEE_CARD_BONUS_BY_SKI_RANK[1]}/${FUSEE_CARD_BONUS_BY_SKI_RANK[2]}/${FUSEE_CARD_BONUS_BY_SKI_RANK[3]}`}
-                desc={t("fuseeDesc")}
-                formats={t("fuseeFormats")}
-              />
-              <BonusTile
-                emoji="🎯"
-                name={t("gachetteName")}
-                value={`+${GACHETTE_CARD_BONUS.other}`}
-                desc={t("gachetteDesc")}
-                formats={t("gachetteFormats")}
-              />
-            </div>
-          </RuleCard>
-
           <RuleCard emoji="❓" title={t("questionsTitle")} body={t("questionsBody")}>
             <div className="grid grid-cols-2 gap-2">
               <div className="flex flex-col gap-0.5 rounded-xl border border-border bg-card2 px-3 py-2">
@@ -324,7 +304,9 @@ export default async function ReglesPage() {
               {(["women", "men"] as const).map((sex) => (
                 <div key={sex} className="flex flex-col gap-1 rounded-xl border border-border bg-card2 px-3 py-2">
                   <span className="font-display text-[11px] font-extrabold uppercase tracking-wide text-text-dim">{t(sex)}</span>
-                  <span className="text-[12px]">🔮 {t("globeBig")}</span>
+                  <span className="flex items-center gap-1 text-[12px]">
+                    <CrystalGlobeIcon className="h-4 w-4" /> {t("globeBig")}
+                  </span>
                   <span className="flex items-center gap-1 text-[12px]">
                     <YoungBib /> {t("globeYoung")}
                   </span>
@@ -332,7 +314,9 @@ export default async function ReglesPage() {
                 </div>
               ))}
             </div>
-            <Label>🔮 {t("globeBigScale")}</Label>
+            <Label>
+              <CrystalGlobeIcon className="inline h-4 w-4 align-middle" /> {t("globeBigScale")}
+            </Label>
             <Scale multipliers={GROS_GLOBE_MULTIPLIERS} rank={rank} />
             <Label>
               <span className="inline-flex items-center gap-1 align-middle">
@@ -483,21 +467,6 @@ function Scale({
           <div className="font-display text-sm font-extrabold text-ice">×{m}</div>
         </div>
       ))}
-    </div>
-  );
-}
-
-function BonusTile({ emoji, name, value, desc, formats }: { emoji: string; name: string; value: string; desc: string; formats: string }) {
-  return (
-    <div className="flex flex-col gap-1 rounded-xl border border-green/40 bg-green/10 px-3 py-2.5">
-      <div className="flex items-baseline justify-between gap-1">
-        <span className="font-display text-[13px] font-extrabold">
-          {emoji} {name}
-        </span>
-        <span className="font-display text-base font-extrabold text-green">{value}</span>
-      </div>
-      <span className="text-[11px] leading-snug text-text-dim">{desc}</span>
-      <span className="self-start rounded-full bg-card2 px-2 py-0.5 font-display text-[10px] font-bold">{formats}</span>
     </div>
   );
 }

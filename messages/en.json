@@ -942,6 +942,8 @@
     "x2Used": "{used}/{max} ×2 bonuses used",
     "raceWins": "{count, plural, one {# race won} other {# races won}} (best predictor)",
     "pepite": "{count, plural, one {Hidden Diamond revealed} other {# Hidden Diamonds revealed}}",
+    "pepiteF": "Women's Diamond",
+    "pepiteH": "Men's Diamond",
     "helpTitle": "Player icons",
     "helpLeader": "Yellow bib: leader of the season's overall standings (or of the league).",
     "helpX2": "×2 bonuses already used, out of 3 per season.",
