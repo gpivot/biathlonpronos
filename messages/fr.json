@@ -279,7 +279,7 @@
     "jokersBody": "En fin de saison, tes plus mauvais résultats sont effacés (jamais les Mondiaux ni les JO). Une course non jouée est effacée en priorité. Effacer un résultat retire ses points : un 0 ne coûte rien, un malus est annulé.",
     "jokersIndividual": "courses individuelles",
     "jokersRelay": "relais",
-    "jokersPreview": "Aperçu pendant la saison dans Ma saison.",
+    "jokersPreview": "Aperçu pendant la saison dans Classement, encadré « Mon classement ».",
     "generalTitle": "Classement général",
     "generalBody": "Additionne tous les points de la saison. Le leader porte le Dossard Jaune.",
     "stageTitle": "Classement par étapes",
@@ -411,7 +411,8 @@
     "noLeagueButton": "Voir les ligues",
     "emptyStage": "Aucun point sur cette étape pour le moment.",
     "noStages": "Aucune étape programmée pour le moment.",
-    "noPicks": "Pas de pronostic"
+    "noPicks": "Pas de pronostic",
+    "myRankingTitle": "Mon classement"
   },
   "Courses": {
     "title": "Ma saison",

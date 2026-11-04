@@ -279,7 +279,7 @@
     "jokersBody": "A fine stagione vengono cancellati i tuoi risultati peggiori (mai Mondiali né Olimpiadi). Una gara non giocata viene cancellata per prima. Cancellare un risultato toglie i suoi punti: uno 0 non costa nulla, un malus viene annullato.",
     "jokersIndividual": "gare individuali",
     "jokersRelay": "staffette",
-    "jokersPreview": "Anteprima durante la stagione in La mia stagione.",
+    "jokersPreview": "Anteprima durante la stagione in Classifica, riquadro «La mia classifica».",
     "generalTitle": "Classifica generale",
     "generalBody": "Somma tutti i punti della stagione. Il leader indossa il Pettorale giallo.",
     "stageTitle": "Classifica per tappe",
@@ -411,7 +411,8 @@
     "noLeagueButton": "Vedi le leghe",
     "emptyStage": "Ancora nessun punto su questa tappa.",
     "noStages": "Nessuna tappa ancora in programma.",
-    "noPicks": "Nessun pronostico"
+    "noPicks": "Nessun pronostico",
+    "myRankingTitle": "La mia classifica"
   },
   "Courses": {
     "title": "La mia stagione",

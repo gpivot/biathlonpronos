@@ -5,7 +5,7 @@ import { displayedSex } from "@/lib/raceLabel";
 import type { SeasonJokers } from "@/lib/seasonView";
 
 /**
- * « Ma saison » : jokers de fin de saison. Avant leur activation par l'admin, un aperçu (« si la
+ * Classement, encadré « Mon classement » : jokers de fin de saison. Avant leur activation par l'admin, un aperçu (« si la
  * saison s'arrêtait aujourd'hui ») ; ensuite, les résultats effacés et leur effet sur le total.
  */
 export function JokersCard({ jokers }: { jokers: SeasonJokers }) {

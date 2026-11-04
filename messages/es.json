@@ -279,7 +279,7 @@
     "jokersBody": "Al final de la temporada se borran tus peores resultados (nunca Mundiales ni JJ. OO.). Una carrera no jugada se borra primero. Borrar un resultado quita sus puntos: un 0 no cuesta nada, un malus se anula.",
     "jokersIndividual": "carreras individuales",
     "jokersRelay": "relevos",
-    "jokersPreview": "Vista previa durante la temporada en Mi temporada.",
+    "jokersPreview": "Vista previa durante la temporada en Clasificación, recuadro «Mi clasificación».",
     "generalTitle": "Clasificación general",
     "generalBody": "Suma todos los puntos de la temporada. El líder lleva el Dorsal amarillo.",
     "stageTitle": "Clasificación por etapas",
@@ -411,7 +411,8 @@
     "noLeagueButton": "Ver las ligas",
     "emptyStage": "Todavía no hay puntos en esta etapa.",
     "noStages": "Todavía no hay etapas programadas.",
-    "noPicks": "Sin pronóstico"
+    "noPicks": "Sin pronóstico",
+    "myRankingTitle": "Mi clasificación"
   },
   "Courses": {
     "title": "Mi temporada",

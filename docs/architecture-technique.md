@@ -1126,7 +1126,7 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   jokers en fin de saison (bouton « Appliquer les jokers » dans la saison, `/admin`, colonne
   `seasons.jokers_applied`, migration **0030**, réversible). `getLeaderboard` (général, ligues, carte
   de rang, pop-up) retire alors les points effacés ; le classement « Par étapes » reste brut.
-- **Aperçu** dans Ma saison (`JokersCard`) : résultats qui seraient effacés si la saison
+- **Aperçu** dans Classement, encadré « Mon classement » (`JokersCard`, `getPlayerJokers`) : résultats qui seraient effacés si la saison
   s'arrêtait aujourd'hui, et l'effet sur le total.
 - **À confirmer** : relais des Mondiaux/JO exclus aussi ; une course non jouée est prise en
   priorité même si une course jouée a un malus plus lourd (lecture littérale de la règle) ; un

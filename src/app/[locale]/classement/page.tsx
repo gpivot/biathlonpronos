@@ -22,6 +22,8 @@ import {
 import { PlayerSeasonButton } from "./PlayerSeasonButton";
 import { StandingsFilters, type StandingsFilterOptions, type StandingsFilterState } from "./StandingsFilters";
 import { seasonHasFinishedRace } from "@/lib/streakCounter";
+import { getPlayerJokers } from "@/lib/seasonView";
+import { JokersCard } from "@/components/JokersCard";
 
 export const dynamic = "force-dynamic";
 
@@ -53,11 +55,12 @@ type SearchParams = { portee?: string; ligue?: string; periode?: string; etape?:
 
 export default async function ClassementPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const query = await searchParams;
-  const [t, tFormat, tSex, tBadges] = await Promise.all([
+  const [t, tFormat, tSex, tBadges, tHome] = await Promise.all([
     getTranslations("Classement"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
     getTranslations("Badges"),
+    getTranslations("Home"),
   ]);
   const raceLabel = (race: { format: string; sex: string }) =>
     race.format.startsWith("relais") ? tFormat(race.format) : `${tFormat(race.format)} ${tSex(race.sex)}`;
@@ -70,12 +73,20 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const userId = userResult.user?.id ?? null;
   const { now } = await getClock();
 
-  const [stages, leagueRows] = await Promise.all([
+  const [stages, leagueRows, leaderboard, jokers, badges] = await Promise.all([
     season ? getStandingsStages(supabase, season.id, now) : Promise.resolve([]),
     season && userId
       ? supabase.from("league_memberships").select("leagues!inner(id, name, season_id)").eq("user_id", userId).eq("leagues.season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
+    // Classement général de la saison : sert à l'encadré « Mon classement » et à la vue Saison.
+    season ? getLeaderboard(supabase, season.id) : Promise.resolve([]),
+    season && userId ? getPlayerJokers(supabase, season.id, userId) : Promise.resolve(null),
+    season ? getPlayerBadges(supabase, season.id) : Promise.resolve(new Map<string, PlayerBadges>()),
   ]);
+  // « Mon classement » : même calcul que l'encadré de l'accueil (rang général de la saison).
+  const myRankIndex = userId ? leaderboard.findIndex((row) => row.userId === userId) : -1;
+  const myRank = myRankIndex >= 0 ? myRankIndex + 1 : null;
+  const myPoints = myRankIndex >= 0 ? leaderboard[myRankIndex].points : 0;
   const leagues = ((leagueRows.data ?? []) as any[])
     .map((m) => m.leagues)
     .filter(Boolean)
@@ -102,18 +113,10 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   let rows: StandingsRow[] = [];
   let showPicks = false;
   let streakLeaderboard: StreakRow[] = [];
-  let badges = new Map<string, PlayerBadges>();
   if (season && !noLeague) {
-    const [members, playerBadges] = await Promise.all([
-      leagueId ? getLeagueMembers(supabase, leagueId) : Promise.resolve(null),
-      getPlayerBadges(supabase, season.id),
-    ]);
-    badges = playerBadges;
+    const members = leagueId ? await getLeagueMembers(supabase, leagueId) : null;
     if (period === "season") {
-      const [leaderboard, streaks] = await Promise.all([
-        getLeaderboard(supabase, season.id),
-        scope === "general" ? getStreakLeaderboard(supabase, season.id) : Promise.resolve([]),
-      ]);
+      const streaks = scope === "general" ? await getStreakLeaderboard(supabase, season.id) : [];
       rows = buildStandings(leaderboard, members, null);
       streakLeaderboard = streaks;
     } else if (stage) {
@@ -151,6 +154,26 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
           />
           <HeaderActions />
         </div>
+
+        {season && userId && (
+          <div className="flex flex-col gap-3 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-5">
+            <div className="font-display text-[11px] font-bold uppercase tracking-wider text-gold">{t("myRankingTitle")}</div>
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="font-display text-2xl font-extrabold text-frost">{myRank ? `#${myRank}` : "–"}</div>
+                  <PlayerBadgesRow badges={badges.get(userId)} leader={myRank === 1 && myPoints > 0} />
+                </div>
+                <div className="text-xs text-text-dim">{tHome("rankLabel")}</div>
+              </div>
+              <div className="text-right">
+                <div className="font-display text-2xl font-extrabold text-ice">{myPoints} pts</div>
+                <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
+              </div>
+            </div>
+            {jokers && <JokersCard jokers={jokers} />}
+          </div>
+        )}
 
         <StandingsFilters state={state} options={options} />
 

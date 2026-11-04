@@ -279,7 +279,7 @@
     "jokersBody": "Am Saisonende werden deine schlechtesten Ergebnisse gestrichen (nie WM oder Olympia). Ein nicht gespieltes Rennen wird zuerst gestrichen. Ein gestrichenes Ergebnis zieht seine Punkte ab: eine 0 kostet nichts, ein Malus wird aufgehoben.",
     "jokersIndividual": "Einzelrennen",
     "jokersRelay": "Staffeln",
-    "jokersPreview": "Vorschau während der Saison unter Meine Saison.",
+    "jokersPreview": "Vorschau während der Saison unter Rangliste, Feld „Meine Platzierung“.",
     "generalTitle": "Gesamtwertung",
     "generalBody": "Zählt alle Punkte der Saison zusammen. Der Führende trägt das Gelbe Trikot.",
     "stageTitle": "Wertung nach Stationen",
@@ -411,7 +411,8 @@
     "noLeagueButton": "Ligen ansehen",
     "emptyStage": "Noch keine Punkte auf dieser Etappe.",
     "noStages": "Noch keine Etappe geplant.",
-    "noPicks": "Kein Tipp"
+    "noPicks": "Kein Tipp",
+    "myRankingTitle": "Meine Platzierung"
   },
   "Courses": {
     "title": "Meine Saison",

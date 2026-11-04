@@ -279,7 +279,7 @@
     "jokersBody": "At the end of the season, your worst results are wiped (never the World Championships or Olympics). A race you didn't play is wiped first. Wiping a result removes its points: a 0 costs nothing, a malus is cancelled.",
     "jokersIndividual": "individual races",
     "jokersRelay": "relays",
-    "jokersPreview": "Preview during the season in My season.",
+    "jokersPreview": "Preview during the season in Standings, “My ranking” box.",
     "generalTitle": "Overall standings",
     "generalBody": "Adds up every point of the season. The leader wears the Yellow Bib.",
     "stageTitle": "Stage standings",
@@ -411,7 +411,8 @@
     "noLeagueButton": "See leagues",
     "emptyStage": "No points on this stage yet.",
     "noStages": "No stage scheduled yet.",
-    "noPicks": "No prediction"
+    "noPicks": "No prediction",
+    "myRankingTitle": "My ranking"
   },
   "Courses": {
     "title": "My season",

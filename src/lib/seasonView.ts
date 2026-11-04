@@ -8,7 +8,7 @@ import { isPredictionOpen, predictionOpensOn } from "./predictionWindow";
 import { getPlayerCards, type PlayerCards } from "./bonusCards";
 import { areJokersApplied, loadSeasonJokers } from "./jokers";
 
-/** Une course effacée par les jokers de fin de saison, telle qu'affichée dans « Ma saison ». */
+/** Une course effacée par les jokers de fin de saison, telle qu'affichée dans « Mon classement » (page Classement). */
 export interface JokerLine {
   raceId: string;
   format: string;
@@ -55,8 +55,6 @@ export interface SeasonView {
   streak: number | null;
   /** Cartes bonus (crédits à choisir et cartes prises), null pour un visiteur. */
   cards: PlayerCards | null;
-  /** Jokers de fin de saison (aperçu ou appliqués), pour le joueur lui-même seulement. */
-  jokers: SeasonJokers | null;
 }
 
 export async function getSeasonView(
@@ -69,8 +67,7 @@ export async function getSeasonView(
   const seasonStarted = new Date(season.starts_on) <= now;
   const showSeasonPicks = isOwner || seasonStarted;
 
-  const withJokers = Boolean(userId && isOwner);
-  const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards, jokersApplied, jokerSelections] = await Promise.all([
+  const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards] = await Promise.all([
     userId
       ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, bonus_x2_used").eq("user_id", userId)
       : Promise.resolve({ data: [] as any[] }),
@@ -89,8 +86,6 @@ export async function getSeasonView(
       : Promise.resolve({ data: [] as any[] }),
     userId ? getCurrentStreak(supabase, season.id, userId) : Promise.resolve(null),
     userId ? getPlayerCards(supabase, season.id, userId, now) : Promise.resolve(null),
-    withJokers ? areJokersApplied(supabase, season.id) : Promise.resolve(false),
-    withJokers ? loadSeasonJokers(supabase, season.id, [userId!]) : Promise.resolve(null),
   ]);
 
   const { data: stages, error } = await supabase
@@ -181,31 +176,41 @@ export async function getSeasonView(
       .sort((a: any, b: any) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
   }));
 
-  const raceInfo = new Map(
-    mapped.flatMap((stage) => stage.races.map((race: any) => [race.id as string, { race, stage }] as const))
-  );
-  const selection = jokerSelections?.get(userId ?? "") ?? null;
-  const jokers: SeasonJokers | null =
-    selection && raceInfo.size > 0 && mapped.some((stage) => stage.races.some((r: any) => r.status === "finished"))
-      ? {
-          applied: jokersApplied,
-          delta: selection.delta,
-          erased: selection.erased.map((c) => {
-            const info = raceInfo.get(c.raceId);
-            return {
-              raceId: c.raceId,
-              format: info?.race.format ?? "",
-              sex: info?.race.sex ?? null,
-              location: info?.stage.location ?? "",
-              countryCode: info?.stage.country_code ?? null,
-              played: c.played,
-              points: c.points,
-            };
-          }),
-        }
-      : null;
+  return { stages: mapped, seasonPicks, streak, cards };
+}
 
-  return { stages: mapped, seasonPicks, streak, cards, jokers };
+/**
+ * Jokers de fin de saison d'un joueur (aperçu ou appliqués), affichés dans l'encadré
+ * « Mon classement » de la page Classement. null tant qu'aucune course n'est notée.
+ */
+export async function getPlayerJokers(supabase: SupabaseClient, seasonId: string, userId: string): Promise<SeasonJokers | null> {
+  const [applied, selections, { data: races }] = await Promise.all([
+    areJokersApplied(supabase, seasonId),
+    loadSeasonJokers(supabase, seasonId, [userId]),
+    supabase
+      .from("races")
+      .select("id, format, sex, status, stages!inner(season_id, location, country_code)")
+      .eq("stages.season_id", seasonId),
+  ]);
+  const raceById = new Map(((races ?? []) as any[]).map((r) => [r.id as string, r]));
+  const selection = selections.get(userId) ?? null;
+  if (!selection || !Array.from(raceById.values()).some((r) => r.status === "finished")) return null;
+  return {
+    applied,
+    delta: selection.delta,
+    erased: selection.erased.map((c) => {
+      const race = raceById.get(c.raceId);
+      return {
+        raceId: c.raceId,
+        format: race?.format ?? "",
+        sex: race?.sex ?? null,
+        location: race?.stages?.location ?? "",
+        countryCode: race?.stages?.country_code ?? null,
+        played: c.played,
+        points: c.points,
+      };
+    }),
+  };
 }
 
 /** Étape ouverte par défaut : la première qui n'est pas entièrement terminée. */

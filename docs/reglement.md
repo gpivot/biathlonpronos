@@ -256,7 +256,7 @@ En fin de saison, chaque joueur efface automatiquement :
 
 Les courses des Mondiaux et des Jeux Olympiques ne sont jamais effacées. Une course **non jouée** compte comme un résultat à effacer en priorité : les jokers servent d'abord à couvrir les absences. Effacer un résultat retire ses points du total (un 0 ne coûte rien, un malus est annulé, un petit score est retiré).
 
-Les jokers ne s'appliquent qu'en fin de saison. Pendant la saison, « Ma saison » montre un aperçu : les résultats qui seraient effacés si la saison s'arrêtait aujourd'hui.
+Les jokers ne s'appliquent qu'en fin de saison. Pendant la saison, l'encadré « Mon classement » de la page Classement montre un aperçu : les résultats qui seraient effacés si la saison s'arrêtait aujourd'hui.
 
 Le classement **par étapes** additionne les points des courses d'une seule étape. Le leader de chaque étape porte le **Dossard Rouge** (le jaune reste réservé au classement général). À côté de son pseudo, chaque joueur affiche le nombre d'étapes qu'il a gagnées.
 
