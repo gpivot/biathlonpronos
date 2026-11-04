@@ -8,7 +8,7 @@ import {
   TOUR_DE_PENA_MALUS_PER_LAP,
 } from "./scoring/constants";
 import { totalMisses } from "./shootings";
-import { RELAY_FORMATS } from "./grilling";
+import { RELAY_FORMATS } from "./raceFormats";
 import { applyFuseeGachetteRules } from "./scoring/fuseeGachette";
 import { shortAthleteName } from "./athleteName";
 import { getUserBonusQuestionPointsByRace } from "./bonusQuestions";

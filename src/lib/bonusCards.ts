@@ -3,7 +3,6 @@ import type { BonusCardEffect } from "./scoring/types";
 
 /**
  * Cartes bonus gagnées au 10/10 (§12-13), choisies par le joueur (demandes de Guillaume, octobre 2026) :
- * - « Fondue » : dégrille une fois ses biathlètes, sur la course de son choix ;
  * - « Ça farte » : ×3 sur un biathlète d'une course individuelle, joué quand on veut ;
  * - « 4e choix » (`balle_de_pioche` en base) : 4 biathlètes au lieu de 3, les 3 meilleurs comptent,
  *   activé tout de suite sur 4 courses individuelles (2 hommes, 2 femmes) ;
@@ -14,10 +13,11 @@ import type { BonusCardEffect } from "./scoring/types";
  *   sexe) ajoute une fois sa cote aux points de la course.
  * Une même carte ne se prend pas sur deux 10/10 d'affilée. Sur une même course, Ça farte et
  * Aspiration s'excluent, Aspiration et 4e choix aussi ; Ça farte se pose sur un des 4 choix d'un
- * 4e choix. Fondue et Équipe se cumulent avec tout.
+ * 4e choix. Équipe se cumule avec tout. La carte « Fondue » (dégrillage) a été supprimée avec la
+ * règle des biathlètes grillés le 04/11/2026 (elle reste prévue pour VéloPronos).
  */
 
-export const CLAIMABLE_CARD_TYPES = ["fondue", "ca_farte", "balle_de_pioche", "aspiration", "equipe"] as const;
+export const CLAIMABLE_CARD_TYPES = ["ca_farte", "balle_de_pioche", "aspiration", "equipe"] as const;
 export type ClaimableCardType = (typeof CLAIMABLE_CARD_TYPES)[number];
 /** Cartes jouées par le joueur sur une course de son choix depuis le formulaire de pronostic. */
 export type RaceCardType = "ca_farte" | "aspiration";

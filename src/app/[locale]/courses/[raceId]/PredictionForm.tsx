@@ -27,7 +27,6 @@ export function PredictionForm({
   format,
   athletes,
   initialSelection,
-  grilledAthleteIds,
   hiddenPepiteIds = [],
   playableCards,
   activeCard,
@@ -43,7 +42,6 @@ export function PredictionForm({
   format: string;
   athletes: AthleteWithOdds[];
   initialSelection: string[];
-  grilledAthleteIds: string[];
   /** Pépites cachées pas encore révélées du joueur : déjà jouées en caché, pas sélectionnables. */
   hiddenPepiteIds?: string[];
   /** Cartes (Ça farte, Aspiration) que le joueur peut encore jouer sur cette course. */
@@ -85,7 +83,6 @@ export function PredictionForm({
   const router = useRouter();
   const t = useTranslations("PredictionForm");
 
-  const grilledSet = new Set(grilledAthleteIds);
   const pepiteSet = new Set(hiddenPepiteIds);
   const hasCaFarte = playableCards.some((c) => c.card_type === "ca_farte");
   const hasAspiration = playableCards.some((c) => c.card_type === "aspiration");
@@ -98,8 +95,8 @@ export function PredictionForm({
   function toggle(athleteId: string) {
     setSelected((prev) => {
       if (prev.includes(athleteId)) return prev.filter((id) => id !== athleteId);
-      // Un biathlète grillé peut être retiré du pronostic, pas ajouté.
-      if (grilledSet.has(athleteId) || pepiteSet.has(athleteId)) return prev;
+      // Une Pépite cachée peut être retirée du pronostic, pas ajoutée.
+      if (pepiteSet.has(athleteId)) return prev;
       if (prev.length >= requiredCount) return prev;
       return [...prev, athleteId];
     });
@@ -313,21 +310,20 @@ export function PredictionForm({
         {visibleAthletes.map((a) => {
           const isSelected = selected.includes(a.athlete_id);
           const isPepite = pepiteSet.has(a.athlete_id);
-          const isGrilled = grilledSet.has(a.athlete_id) || isPepite;
           const isCaFarteTarget = cardChoice === "ca_farte" && caFarteTarget === a.athlete_id;
           return (
             <button
               key={a.athlete_id}
               onClick={() => toggle(a.athlete_id)}
-              disabled={isGrilled && !isSelected}
+              disabled={isPepite && !isSelected}
               className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
-                isGrilled && !isSelected
+                isPepite && !isSelected
                   ? "border-border bg-card opacity-40"
                   : isCaFarteTarget
-                    ? "border-gold bg-gold-soft"
-                    : isSelected
-                      ? "border-ice bg-ice-soft"
-                      : "border-border bg-card"
+                  ? "border-gold bg-gold-soft"
+                  : isSelected
+                    ? "border-ice bg-ice-soft"
+                    : "border-border bg-card"
               }`}
             >
               {sortBy === "start" && (
@@ -349,7 +345,7 @@ export function PredictionForm({
                           : t("startPosition", { position: startOrder[a.athlete_id] })
                       }`
                     : ""}
-                  {isPepite ? ` · ❄️ ${t("hiddenPepite")}` : isGrilled ? ` · ${t("grilled")}` : ""}
+                  {isPepite ? ` · ❄️ ${t("hiddenPepite")}` : ""}
                 </span>
               </div>
               {isSelected && cardChoice === "ca_farte" && (

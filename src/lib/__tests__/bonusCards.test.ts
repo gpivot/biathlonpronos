@@ -163,7 +163,7 @@ describe("cartes de la saison", () => {
   ];
 
   it("Aspiration dès le départ de la 4e étape, Équipe après les Mondiaux", () => {
-    expect(isCardUnlocked("fondue", stages, new Date("2026-11-01"))).toBe(true);
+    expect(isCardUnlocked("ca_farte", stages, new Date("2026-11-01"))).toBe(true);
     expect(isCardUnlocked("aspiration", stages, new Date("2027-01-02T11:00:00Z"))).toBe(false);
     expect(isCardUnlocked("aspiration", stages, new Date("2027-01-02T12:00:00Z"))).toBe(true);
     expect(isCardUnlocked("equipe", stages, new Date("2027-02-20"))).toBe(false);
@@ -179,7 +179,6 @@ describe("cartes de la saison", () => {
   it("pas la même carte deux 10/10 de suite", () => {
     const offers = offeredCards("ca_farte", stages, new Date("2026-12-01"));
     expect(Object.fromEntries(offers.map((o) => [o.type, o.state]))).toEqual({
-      fondue: "offered",
       ca_farte: "justTaken",
       balle_de_pioche: "offered",
       aspiration: "locked",
