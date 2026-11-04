@@ -170,7 +170,7 @@ cachée » (5 langues). Changements :
 - **Éligibilité** : toutes les cotes courantes du biathlète pour la saison (sprint, poursuite,
   individuel, mass start, gros globe, meilleur jeune) doivent être ≥ 30, et non plus la seule cote
   du sprint (ex. Ponsiluoma : sprint 30 mais poursuite 15, donc plus éligible). Lecture de la
-  phrase « aucune de tes cotes ne soit inférieure à 30 » d'après l'exemple donné, **à confirmer**.
+  règle confirmée par Guillaume le 04/11/2026.
   `isPepiteEligibleOdds` côté code, `pepite_is_eligible` côté base. `odds_at_pick` = la plus basse
   de ses cotes. Une Pépite déjà choisie qui n'est plus éligible peut être remplacée (le formulaire
   `/globes` se rouvre, la base l'autorise) ; sinon le choix reste définitif.
