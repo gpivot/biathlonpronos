@@ -21,6 +21,7 @@ import {
 } from "@/lib/standings";
 import { PlayerSeasonButton } from "./PlayerSeasonButton";
 import { StandingsFilters, type StandingsFilterOptions, type StandingsFilterState } from "./StandingsFilters";
+import { seasonHasFinishedRace } from "@/lib/streakCounter";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,8 @@ interface StreakRow {
 }
 
 async function getStreakLeaderboard(supabase: ReturnType<typeof createClient>, seasonId: string): Promise<StreakRow[]> {
+  // Pas de séries avant la 1re course notée de la saison (cf. getCurrentStreak).
+  if (!(await seasonHasFinishedRace(supabase, seasonId))) return [];
   const { data: streaks } = await supabase
     .from("streak_counters")
     .select("user_id, current_streak, profiles(pseudo)")
