@@ -229,14 +229,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {favoriteTeam && (
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-[13px] text-text-dim">
-                  <span className="text-base">{nationFlagEmoji(favoriteTeam.nation_code)}</span>
+                  <span className="text-[22px] leading-none">{nationFlagEmoji(favoriteTeam.nation_code)}</span>
                   {t("favoriteNationLabel")}
                   <span className="font-semibold text-frost">
                     {favoriteTeam.nations?.name ?? favoriteTeam.nation_code} {tSex(favoriteTeam.sex)}
                   </span>
                 </div>
                 {favoriteTeamStats && (
-                  <div className="flex items-center gap-3 pl-7 text-[12px] font-semibold text-frost">
+                  <div className="flex items-center gap-3 pl-[30px] text-[12px] font-semibold text-frost">
                     <span>🏆 {t("favoriteTeamWins", { count: favoriteTeamStats.wins })}</span>
                     <span>🏅 {t("favoriteTeamPodiums", { count: favoriteTeamStats.podiums })}</span>
                   </div>
