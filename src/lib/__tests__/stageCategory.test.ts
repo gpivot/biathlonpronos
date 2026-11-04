@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { stageCategory, stageCategoryFields, stageCategoryFormValue } from "../stageCategory";
+import { stageCategory, stageCategoryFields, stageCategoryFormValue, stageLabel } from "../stageCategory";
 import { computeSeasonJokers } from "../jokers";
 import { countStageWins } from "../playerBadges";
 import { isCardFreeRace, quatriemeChoixWindow, type CardRace } from "../bonusCards";
@@ -85,5 +85,14 @@ describe("étape hors classement : cartes et CSV", () => {
     expect(OFF_STANDINGS_CATEGORY.test("Course test")).toBe(true);
     expect(OFF_STANDINGS_CATEGORY.test("Coupe du Monde")).toBe(false);
     expect(OFF_STANDINGS_CATEGORY.test("Championnats du Monde")).toBe(false);
+  });
+});
+
+describe("mention d'étape", () => {
+  it("garde un texte court, null si vide", () => {
+    expect(stageLabel("  Pré-saison ")).toBe("Pré-saison");
+    expect(stageLabel("")).toBeNull();
+    expect(stageLabel(null)).toBeNull();
+    expect(stageLabel("x".repeat(60))).toHaveLength(40);
   });
 });

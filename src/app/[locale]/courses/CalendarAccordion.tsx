@@ -37,6 +37,8 @@ export interface CalendarStage {
   coefficient: 1 | 2;
   /** false : étape « Autre (×0) », hors classement de la saison (affichée grisée). */
   counts_in_standings?: boolean;
+  /** Mention réglée dans l'admin (ex. « Pré-saison »), affichée au-dessus du lieu à la place de celle de la catégorie. */
+  label?: string | null;
   /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
   opensOn: string | null;
   races: CalendarRace[];
@@ -96,20 +98,20 @@ export function CalendarAccordion({
             >
               <div
                 className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-lg ${
-                  isOffStandings ? "bg-text-dim/15 grayscale" : isChampionship ? "bg-gold/20" : "bg-ice-soft"
+                  isOffStandings ? "bg-text-dim/15" : isChampionship ? "bg-gold/20" : "bg-ice-soft"
                 }`}
               >
                 {nationFlagEmoji(stage.country_code)}
               </div>
               <div className="flex flex-1 flex-col gap-0.5">
-                {isChampionship && !isOffStandings && (
-                  <div className="font-display text-[10px] font-bold uppercase tracking-wider text-gold">
-                    {t("worldChampionships")}
-                  </div>
-                )}
-                {isOffStandings && (
-                  <div className="font-display text-[10px] font-bold uppercase tracking-wider text-text-dim">
-                    {t("offStandingsBadge")}
+                {/* Type d'étape au-dessus du lieu : mention de l'admin, sinon celle de la catégorie (rien pour une étape hors classement). */}
+                {(stage.label?.trim() || !isOffStandings) && (
+                  <div
+                    className={`font-display text-[10px] font-bold uppercase tracking-wider ${
+                      isOffStandings ? "text-text-dim" : isChampionship ? "text-gold" : "text-ice"
+                    }`}
+                  >
+                    {stage.label?.trim() || t(isChampionship ? "worldChampionships" : "worldCup")}
                   </div>
                 )}
                 <div className={`text-sm font-semibold ${isOffStandings ? "text-text-dim" : isChampionship ? "text-gold" : ""}`}>
@@ -121,11 +123,6 @@ export function CalendarAccordion({
                   {new Date(stage.ends_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                 </div>
               </div>
-              {isOffStandings && (
-                <div className="whitespace-nowrap rounded-full border border-text-dim/40 px-2.5 py-1 font-display text-[11px] font-bold text-text-dim">
-                  ×0
-                </div>
-              )}
               {stage.coefficient === 2 && !isOffStandings && (
                 <div className="whitespace-nowrap rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
                   {t("coefficientBadge")}
@@ -147,6 +144,7 @@ export function CalendarAccordion({
                   isOffStandings ? "border-dashed border-text-dim/30" : isChampionship ? "border-gold/30" : "border-border"
                 }`}
               >
+                {isOffStandings && <div className="px-1.5 text-[12px] text-text-dim">{t("offStandingsStageNote")}</div>}
                 {stage.races.length === 0 ? (
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (

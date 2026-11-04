@@ -441,6 +441,8 @@
     "importLoading": "Importazione...",
     "importSummary": "{stagesCreated} tappa/e create, {stagesUpdated} aggiornate · {racesCreated} gara/e create, {racesUpdated} aggiornate.",
     "worldChampionships": "Mondiali",
+    "worldCup": "Coppa del Mondo",
+    "offStandingsStageNote": "Questa tappa non conta per la classifica generale.",
     "toPlayCount": "{count} da giocare",
     "toPlayButton": "Da giocare",
     "seasonPredictionsTitle": "I miei pronostici di stagione",

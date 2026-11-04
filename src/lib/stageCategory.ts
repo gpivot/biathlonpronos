@@ -45,3 +45,9 @@ export function stageCategoryFields(value: unknown): StageCategoryFields {
   if (v === "2") return { coefficient: 2, counts_in_standings: true };
   return { coefficient: 1, counts_in_standings: true };
 }
+
+/** Mention d'étape saisie dans l'admin (ex. « Pré-saison ») : 40 caractères au plus, null si vide (migration 0042). */
+export function stageLabel(value: unknown): string | null {
+  const text = typeof value === "string" ? value.trim().slice(0, 40) : "";
+  return text || null;
+}

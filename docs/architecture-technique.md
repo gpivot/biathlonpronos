@@ -1504,10 +1504,14 @@ testé).
 - **Pépite** : jamais révélée sur une course hors classement ; elle reste cachée pour la suite.
 - **Jokers de fin de saison** : ses courses ne sont jamais prises (elles ne comptent déjà pas).
 - **Globes** (pronostics de saison) : non concernés, ils dépendent des classements IBU.
-- **Affichage** : encart grisé en pointillés avec « Hors classement » et une pastille « ×0 » dans
-  le Calendrier, pastille « ×0 · Hors classement » sur l'étape de la semaine et le dernier
-  résultat, encadré gris explicatif sur la page de la course. Badge « ×0 · hors classement » dans
-  `/admin`.
+- **Affichage** (revu par Guillaume le 04/11/2026) : encart grisé en pointillés dans le Calendrier,
+  drapeau gardé en couleur, sans pastille « ×0 » ; au-dessus du lieu, la **mention de l'étape**
+  réglée dans l'admin (ex. « PRÉ-SAISON », colonne `stages.label`, migration **0042**), rien si
+  elle est vide ; une fois l'étape dépliée, la phrase « Cette étape ne compte pas pour le classement
+  général. » Les autres étapes affichent leur type au-dessus du lieu : « COUPE DU MONDE » (×1) ou
+  « CHAMPIONNATS DU MONDE » (×2), sauf mention de l'admin qui les remplace. Étape de la semaine :
+  bandeau grisé avec la mention. Pastille « ×0 · Hors classement » sur le dernier résultat,
+  encadré gris explicatif sur la page de la course, badge « ×0 · hors classement » dans `/admin`.
 - **Admin / CSV** : menu « Autre (×0, hors classement) » à la création et à la modification d'une
   étape ; à l'import du calendrier, une catégorie contenant « Autre », « Hors classement » ou
   « Test » rend l'étape hors classement ; l'export écrit « Autre (hors classement) ».

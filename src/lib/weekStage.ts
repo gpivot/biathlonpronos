@@ -38,6 +38,8 @@ export interface WeekStage {
   coefficient: number;
   /** false : étape « Autre (×0) », hors classement de la saison. */
   countsInStandings: boolean;
+  /** Mention réglée dans l'admin (ex. « Pré-saison »), null sinon. */
+  label: string | null;
   startsOn: string;
   endsOn: string;
   /** Toutes les courses de l'étape, dans l'ordre chronologique. */
@@ -96,7 +98,7 @@ export async function getWeekStage(
   now: Date
 ): Promise<WeekStage | null> {
   const today = parisDay(now);
-  const select = "id, location, country_code, coefficient, counts_in_standings, starts_on, ends_on";
+  const select = "id, location, country_code, coefficient, counts_in_standings, label, starts_on, ends_on";
   const { data: current } = await supabase
     .from("stages")
     .select(select)
@@ -192,6 +194,7 @@ export async function getWeekStage(
     countryCode: stage.country_code,
     coefficient: stage.coefficient,
     countsInStandings: stage.counts_in_standings !== false,
+    label: stage.label?.trim() || null,
     startsOn: stage.starts_on,
     endsOn: stage.ends_on,
     races: races.map(toRace),

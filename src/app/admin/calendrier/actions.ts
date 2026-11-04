@@ -7,7 +7,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { importCalendarCsv } from "@/lib/admin/calendarImport";
 import { deleteStage, recomputeSeasonStreaks } from "@/lib/admin/raceResults";
-import { stageCategoryFields } from "@/lib/stageCategory";
+import { stageCategoryFields, stageLabel } from "@/lib/stageCategory";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
 
 export async function createSeason(formData: FormData) {
@@ -60,6 +60,7 @@ export async function createStage(formData: FormData) {
     starts_on: String(formData.get("starts_on")),
     ends_on: String(formData.get("ends_on")),
     ...stageCategoryFields(formData.get("coefficient")),
+    label: stageLabel(formData.get("label")),
   });
   if (error) throw new Error(error.message);
 
@@ -158,6 +159,7 @@ export async function updateStage(formData: FormData) {
       starts_on: startsOn,
       ends_on: endsOn,
       ...category,
+      label: stageLabel(formData.get("label")),
     })
     .eq("id", stageId);
   if (error) throw new Error(error.message);
