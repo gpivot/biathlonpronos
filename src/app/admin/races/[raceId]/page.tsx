@@ -33,12 +33,12 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
   const { data: race } = await admin
     .from("races")
-    .select("*, stages(location, season_id)")
+    .select("*, stages(location, season_id, coefficient)")
     .eq("id", raceId)
     .single();
   if (!race) notFound();
 
-  const stage = race.stages as { location: string; season_id: string };
+  const stage = race.stages as { location: string; season_id: string; coefficient: number };
   const isRelay = RELAY_FORMATS.includes(race.format);
 
   const { data: existingResults } = await admin.from("race_results").select("*").eq("race_id", raceId);
@@ -157,7 +157,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
             title="Heure de départ (= verrouillage), en UTC"
             className={inputClass}
           />
-          <SpecialRuleSelect defaultValue={race.special_rule ?? ""} defaultFormat={race.format} className={inputClass} />
+          <SpecialRuleSelect defaultValue={race.special_rule ?? ""} defaultFormat={race.format} championship={stage.coefficient === 2} className={inputClass} />
           <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Enregistrer
           </button>

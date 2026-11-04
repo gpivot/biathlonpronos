@@ -432,6 +432,13 @@ velopronos.fr), avec la même typographie.
   `coefficient = 2` (déjà la convention « Mondiaux / JO » de la table `stages`) a un encart doré,
   le libellé « Championnats du monde » et son lieu en or. Pas de nouvelle colonne : il suffit que
   l'étape soit saisie avec le coefficient 2 (cas d'Otepää 2027).
+- **Pas de course spéciale sur les Mondiaux / JO** (décision de Guillaume, 04/11/2026). Le back-office
+  grise les malus et la Fête nationale sur une étape à coefficient 2, refuse côté serveur d'en créer
+  (`createRace`, `updateRace`) et refuse de passer en coefficient 2 une étape qui en a déjà.
+- **Accueil, « L'étape de la semaine » : étapes et courses spéciales signalées** (04/11/2026), comme
+  dans Ma saison : en-tête doré « Championnats du monde » + « Coeff. ×2 », bandeau rouge des malus /
+  doré de la Fête nationale sur chaque course, badge « Bonus ×2 actif ». Fête nationale : badge doré
+  « ×2 » (sans 🎉) à côté du biathlète de l'équipe favorite qui a marqué.
 - **Choix de la langue par drapeaux, en haut de chaque onglet** (comme VéloPronos) : bouton rond avec
   le drapeau de la langue courante, qui déroule les autres drapeaux (`LocaleSwitcher`, drapeaux
   en SVG car Windows n'affiche pas les emojis drapeaux). Affiché dans l'en-tête du dashboard (à

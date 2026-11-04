@@ -73,6 +73,13 @@ export async function createRace(formData: FormData) {
   const format = String(formData.get("format"));
   if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle ; Fête nationale : seulement sur une course individuelle.");
 
+  const admin = createAdminClient();
+  const stageId = String(formData.get("stage_id"));
+  if (specialRule !== "") {
+    const { data: stage } = await admin.from("stages").select("coefficient").eq("id", stageId).single();
+    if (stage?.coefficient === 2) throw new Error("Pas de course malus ni de Fête nationale sur les Mondiaux / JO (étape à coefficient 2).");
+  }
+
   // L'input datetime-local ne porte pas de fuseau ; on le traite comme UTC
   // (cohérent avec supabase/seed.sql) pour éviter toute ambiguïté serveur.
   const locksAt = `${String(formData.get("locks_at"))}:00Z`;
@@ -83,8 +90,8 @@ export async function createRace(formData: FormData) {
   const isSexEncodedInFormat = format === "relais_h" || format === "relais_f";
   const isMixed = format === "relais_mixte" || format === "relais_mixte_simple";
 
-  const { error } = await createAdminClient().from("races").insert({
-    stage_id: String(formData.get("stage_id")),
+  const { error } = await admin.from("races").insert({
+    stage_id: stageId,
     format,
     sex: sex === "" || isSexEncodedInFormat || isMixed ? null : sex,
     locks_at: locksAt,
@@ -133,11 +140,16 @@ export async function updateStage(formData: FormData) {
   const startsOn = String(formData.get("starts_on"));
   const endsOn = String(formData.get("ends_on"));
   if (endsOn < startsOn) throw new Error("La date de fin doit être après la date de début.");
-
-  const admin = createAdminClient();
   const stageId = String(formData.get("stage_id"));
-  const { data: before } = await admin.from("stages").select("season_id, counts_in_standings").eq("id", stageId).single();
   const category = stageCategoryFields(formData.get("coefficient"));
+  const admin = createAdminClient();
+  // Mondiaux / JO : pas de course spéciale (décision de Guillaume, 04/11/2026).
+  if (category.coefficient === 2) {
+    const { count } = await admin.from("races").select("id", { count: "exact", head: true }).eq("stage_id", stageId).not("special_rule", "is", null);
+    if (count) throw new Error("Cette étape a des courses malus ou Fête nationale : retire-les avant de passer l'étape en Mondiaux / JO (coefficient 2).");
+  }
+
+  const { data: before } = await admin.from("stages").select("season_id, counts_in_standings").eq("id", stageId).single();
   const { error } = await admin
     .from("stages")
     .update({
