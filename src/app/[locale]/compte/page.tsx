@@ -5,6 +5,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon, ChevronDownIcon, ChevronRightIcon, HelpIcon, MessageIcon, PencilIcon } from "@/components/icons";
 import { LanguagePills } from "./LanguagePills";
 import { PseudoEditor } from "./PseudoEditor";
+import { AvatarPicker } from "./AvatarPicker";
 import { ThemeToggle } from "./ThemeToggle";
 import { NotificationsCard } from "./NotificationsCard";
 import { withDefaults } from "@/lib/notifications/preferences";
@@ -37,7 +38,7 @@ export default async function ComptePage() {
   // Réglages de notification et téléphones : tables réservées au serveur (migrations 0021, 0034).
   const admin = createAdminClient();
   const [{ data: profile }, { data: notificationRow }, { count: phoneCount }, unreadReplies] = await Promise.all([
-    supabase.from("profiles").select("pseudo").eq("id", user.id).single(),
+    supabase.from("profiles").select("*").eq("id", user.id).single(),
     admin.from("notification_preferences").select("*").eq("user_id", user.id).maybeSingle(),
     admin.from("push_tokens").select("token", { count: "exact", head: true }).eq("user_id", user.id),
     // Messagerie « Suggérer une modification » (migration 0037) : 0 tant que la table n'existe pas.
@@ -54,9 +55,7 @@ export default async function ComptePage() {
         <TitleBar />
 
         <div className="flex flex-col items-center gap-2 py-4 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-blue to-teal font-display text-3xl font-extrabold text-white">
-            {pseudo.charAt(0).toUpperCase() || "?"}
-          </div>
+          <AvatarPicker initial={(profile as { avatar?: string | null } | null)?.avatar ?? null} pseudo={pseudo} />
           <PseudoEditor userId={user.id} initialPseudo={pseudo} />
           <div className="text-[13px] text-text-dim">{user.email}</div>
         </div>

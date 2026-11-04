@@ -341,7 +341,11 @@
     "deleting": "Suppression…",
     "deleteError": "La suppression a échoué. Réessaie, ou écris-nous à contact@biathlonpronos.fr.",
     "suggestChange": "Suggérer une modification",
-    "suggestChangeHint": "Une erreur, une idée ? Écris-nous, on te répond ici"
+    "suggestChangeHint": "Une erreur, une idée ? Écris-nous, on te répond ici",
+    "avatarChange": "Changer de picto",
+    "avatarTitle": "Choisis ton picto",
+    "avatarNone": "Aucun (initiale du pseudo)",
+    "avatarError": "Picto non enregistré, réessaie."
   },
   "Globes": {
     "back": "← Retour",

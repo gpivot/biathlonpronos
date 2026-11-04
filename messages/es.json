@@ -341,7 +341,11 @@
     "deleting": "Eliminando…",
     "deleteError": "No se pudo eliminar. Inténtalo de nuevo o escribe a contact@biathlonpronos.fr.",
     "suggestChange": "Sugerir un cambio",
-    "suggestChangeHint": "¿Un error, una idea? Escríbenos, te respondemos aquí"
+    "suggestChangeHint": "¿Un error, una idea? Escríbenos, te respondemos aquí",
+    "avatarChange": "Cambiar icono",
+    "avatarTitle": "Elige tu icono",
+    "avatarNone": "Ninguno (inicial de tu apodo)",
+    "avatarError": "Icono no guardado, vuelve a intentarlo."
   },
   "Globes": {
     "back": "← Volver",

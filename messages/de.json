@@ -341,7 +341,11 @@
     "deleting": "Wird gelöscht…",
     "deleteError": "Löschen fehlgeschlagen. Versuche es erneut oder schreib an contact@biathlonpronos.fr.",
     "suggestChange": "Änderung vorschlagen",
-    "suggestChangeHint": "Fehler entdeckt oder eine Idee? Schreib uns, wir antworten hier"
+    "suggestChangeHint": "Fehler entdeckt oder eine Idee? Schreib uns, wir antworten hier",
+    "avatarChange": "Symbol ändern",
+    "avatarTitle": "Wähle dein Symbol",
+    "avatarNone": "Keins (Anfangsbuchstabe des Spielernamens)",
+    "avatarError": "Symbol nicht gespeichert, bitte versuch es noch einmal."
   },
   "Globes": {
     "back": "← Zurück",
