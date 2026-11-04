@@ -12,6 +12,7 @@ import { FavoriteTeamForm } from "./FavoriteTeamForm";
 import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { SignOutButton } from "./SignOutButton";
 import { DeleteAccountButton } from "./DeleteAccountButton";
+import { FaqList } from "@/components/FaqList";
 
 export const dynamic = "force-dynamic";
 
@@ -92,6 +93,11 @@ export default async function ComptePage() {
           <LanguagePills />
           <p className="text-center text-[12px] text-text-dim">{t("languagesAvailable", { count: 5 })}</p>
         </Card>
+
+        <section id="faq" className="flex scroll-mt-6 flex-col gap-3 pt-2">
+          <SectionLabel>❓ {tGlobal("footerFaq")}</SectionLabel>
+          <FaqList rulesLink={false} />
+        </section>
 
         <div className="flex flex-col gap-2.5">
           <LinkRow href="/regles" icon={<HelpIcon className="h-5 w-5" />} label={t("helpAndRules")} />

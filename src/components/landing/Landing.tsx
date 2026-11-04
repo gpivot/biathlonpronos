@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { AppleIcon, LogoMark, PlayIcon } from "@/components/icons";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
+import { FaqList } from "@/components/FaqList";
 import { LeagueMockup, PickMockup, ScoreMockup, StrategyMockup } from "./Mockups";
 
 // Page d'accueil visiteur (non connecté) : accroche avec le bouton « Je joue », puis 4 points
@@ -13,8 +14,6 @@ const FEATURES = [
   { key: "f3", Mockup: LeagueMockup },
   { key: "f4", Mockup: StrategyMockup },
 ] as const;
-
-const FAQ = ["free", "account", "when", "points", "relays", "burnt", "mistakes", "special", "cards", "team", "standings", "worlds"] as const;
 
 export async function Landing() {
   const t = await getTranslations("Landing");
@@ -101,21 +100,8 @@ export async function Landing() {
 
       <section id="faq" className="mx-auto w-full max-w-2xl scroll-mt-6 px-5 py-16">
         <SectionTitle eyebrow={t("faqEyebrow")} title={t("faqTitle")} />
-        <div className="mt-10 flex flex-col gap-2.5">
-          {FAQ.map((q) => (
-            <details key={q} className="group rounded-2xl border border-border bg-card/70 px-5 py-4 open:bg-card">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[15px] font-bold [&::-webkit-details-marker]:hidden">
-                {t(`faq_${q}_q`)}
-                <span className="text-xl leading-none text-ice transition group-open:rotate-45">+</span>
-              </summary>
-              <p className="mt-3 text-sm leading-relaxed text-text-dim">{t(`faq_${q}_a`)}</p>
-            </details>
-          ))}
-        </div>
-        <div className="mt-6 text-center">
-          <Link href="/regles" className="text-sm font-semibold text-ice underline-offset-4 hover:underline">
-            {t("faqRulesLink")} →
-          </Link>
+        <div className="mt-10">
+          <FaqList />
         </div>
       </section>
 
