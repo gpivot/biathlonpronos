@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createAdminClient, createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
-import { ArrowLeftIcon, ChevronDownIcon, ChevronRightIcon, HelpIcon, MessageIcon } from "@/components/icons";
+import { ArrowLeftIcon, ChevronDownIcon, ChevronRightIcon, HelpIcon, MessageIcon, PencilIcon } from "@/components/icons";
 import { LanguagePills } from "./LanguagePills";
 import { PseudoEditor } from "./PseudoEditor";
 import { ThemeToggle } from "./ThemeToggle";
@@ -13,6 +13,7 @@ import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { SignOutButton } from "./SignOutButton";
 import { DeleteAccountButton } from "./DeleteAccountButton";
 import { FaqList } from "@/components/FaqList";
+import { unreadRepliesCount } from "@/lib/supportMessages";
 
 export const dynamic = "force-dynamic";
 
@@ -37,12 +38,14 @@ export default async function ComptePage() {
 
   // Réglages de notification et téléphones : tables réservées au serveur (migrations 0021, 0034).
   const admin = createAdminClient();
-  const [{ data: profile }, { data: season }, { data: nations }, { data: notificationRow }, { count: phoneCount }] = await Promise.all([
+  const [{ data: profile }, { data: season }, { data: nations }, { data: notificationRow }, { count: phoneCount }, unreadReplies] = await Promise.all([
     supabase.from("profiles").select("pseudo").eq("id", user.id).single(),
     supabase.from("seasons").select("id").eq("status", "active").maybeSingle(),
     supabase.from("nations").select("code, name").order("name"),
     admin.from("notification_preferences").select("*").eq("user_id", user.id).maybeSingle(),
     admin.from("push_tokens").select("token", { count: "exact", head: true }).eq("user_id", user.id),
+    // Messagerie « Suggérer une modification » (migration 0037) : 0 tant que la table n'existe pas.
+    unreadRepliesCount(admin, user.id).catch(() => 0),
   ]);
 
   let favoriteTeam: { nation_code: string; sex: "H" | "F" } | null = null;
@@ -110,6 +113,13 @@ export default async function ComptePage() {
             </div>
           </details>
           <LinkRow href="/regles" icon={<HelpIcon className="h-5 w-5" />} label={t("helpAndRules")} />
+          <LinkRow
+            href="/compte/messages"
+            icon={<PencilIcon className="h-5 w-5" />}
+            label={t("suggestChange")}
+            hint={t("suggestChangeHint")}
+            badge={unreadReplies}
+          />
           <LinkRow href="/support" icon={<MessageIcon className="h-5 w-5" />} label={tGlobal("footerSupport")} />
         </div>
 
@@ -152,11 +162,31 @@ function IconBox({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LinkRow({ href, icon, label }: { href: string; icon: React.ReactNode; label: string }) {
+function LinkRow({
+  href,
+  icon,
+  label,
+  hint,
+  badge = 0,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  hint?: string;
+  badge?: number;
+}) {
   return (
     <Link href={href} className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
       <IconBox>{icon}</IconBox>
-      <span className="flex-1 font-display text-sm font-bold">{label}</span>
+      <span className="flex flex-1 flex-col">
+        <span className="font-display text-sm font-bold">{label}</span>
+        {hint && <span className="text-[12px] text-text-dim">{hint}</span>}
+      </span>
+      {badge > 0 && (
+        <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red px-1.5 text-[11px] font-bold text-white">
+          {badge}
+        </span>
+      )}
       <ChevronRightIcon className="h-4 w-4 text-text-dim" />
     </Link>
   );

@@ -339,7 +339,9 @@
     "deleteConfirmButton": "Eliminar mi cuenta",
     "deleteCancel": "Cancelar",
     "deleting": "Eliminando…",
-    "deleteError": "No se pudo eliminar. Inténtalo de nuevo o escribe a contact@biathlonpronos.fr."
+    "deleteError": "No se pudo eliminar. Inténtalo de nuevo o escribe a contact@biathlonpronos.fr.",
+    "suggestChange": "Sugerir un cambio",
+    "suggestChangeHint": "¿Un error, una idea? Escríbenos, te respondemos aquí"
   },
   "Globes": {
     "back": "← Volver",
@@ -648,6 +650,18 @@
       "Tu cuenta y tus datos se eliminan de inmediato (en un plazo máximo de 30 días si lo pides por correo)."
     ],
     "deleteData": "Se eliminan: tu cuenta (correo, nombre, apellido, apodo), tus pronósticos y puntos, tu participación en ligas, tus ajustes y tokens de notificación. No se conserva ningún dato personal después de este plazo."
+  },
+  "SupportMessages": {
+    "title": "Conversación con Biathlonpronos",
+    "loginRequired": "Inicia sesión para escribir al equipo de Biathlonpronos.",
+    "emptyTitle": "Sugerir un cambio",
+    "emptyBody": "¿Un error en un resultado, una cuota, un nombre? ¿Una idea para mejorar el juego? Escríbenos aquí: te respondemos en la app y recibes una notificación si la tienes en el móvil.",
+    "placeholderFirst": "Escribe tu mensaje…",
+    "placeholderReply": "Responde a Biathlonpronos…",
+    "send": "Enviar",
+    "invalid": "Mensaje vacío o demasiado largo (2000 caracteres como máximo).",
+    "tooMany": "Muchos mensajes en poco tiempo: vuelve a intentarlo en una hora.",
+    "error": "Mensaje no enviado, vuelve a intentarlo."
   },
   "Privacy": {
     "title": "Política de privacidad",
@@ -980,7 +994,8 @@
     "newsButton": "Abrir Biathlonpronos",
     "footer": "Recibes este email porque juegas a Biathlonpronos.",
     "manage": "Gestionar mis notificaciones",
-    "unsubscribe": "Dejar de recibir estos emails"
+    "unsubscribe": "Dejar de recibir estos emails",
+    "supportReplyPushTitle": "💬 Biathlonpronos te ha respondido"
   },
   "Unsubscribe": {
     "title": "Darse de baja",
