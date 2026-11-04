@@ -1262,3 +1262,7 @@ La version 4 (1.0.4) est en examen pour la production. Play Console signale, san
   activer `minifyEnabled true` (R8) dans `mobile/android/app/build.gradle`, avec des règles
   `proguard-rules.pro` pour Capacitor et ses plugins, puis tester toute l'appli avant envoi ;
 - deux recommandations sur l'affichage bord à bord (Android 15) : API obsolètes à remplacer.
+- Notifications iOS : la clé APNs doit être créée chez Apple en **Sandbox & Production** (une
+  clé « Sandbox » seule donne `401 THIRD_PARTY_AUTH_ERROR Invalid APNs credential` sur
+  TestFlight et l'App Store). Clé actuelle « Biathlonpronos Push Prod », importée dans Firebase en
+  développement et en production. `/admin/notifications` affiche la raison des échecs Firebase.
