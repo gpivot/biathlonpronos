@@ -1385,3 +1385,12 @@ pronostics de saison (`/globes`), avec les globes et la Pépite, puisque tout se
 moment. Il reste possible après le début de saison (seule la carte Équipe active le bloque).
 Dans « Ma saison », l'accordéon « Mes pronostics de saison » a une ligne ❤️ Équipe favorite (l'équipe
 choisie, ou un bouton « Choisir » vers `/globes#equipe-favorite`). Le lien de l'accueil y mène aussi.
+
+## Picto de profil (04/11/2026)
+
+Chaque joueur peut choisir un picto (emoji d'une liste de 24, `src/lib/avatars.ts`) en touchant le
+grand carré du Profil ; « Aucun » revient à l'initiale du pseudo. Le picto remplace la silhouette du
+rond en haut à droite des onglets. Colonne `profiles.avatar` (migration **0038**), écrite par une
+Server Action (les joueurs ne peuvent modifier que leur pseudo, 0016). Photo de profil écartée pour
+l'instant (stockage, modération, bouton « signaler » exigé par Apple). Le picto pourrait aussi
+s'afficher dans le Classement : à décider avec Guillaume.
