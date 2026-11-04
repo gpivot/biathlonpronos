@@ -11,6 +11,7 @@ const items = [
   { href: "/admin/joueurs", label: "Joueurs & rôles", matches: ["/admin/joueurs"] },
   { href: "/admin/horloge", label: "Horloge simulée", matches: ["/admin/horloge"] },
   { href: "/admin/notifications", label: "Notifications", matches: ["/admin/notifications"] },
+  { href: "/admin/messages", label: "Messages", matches: ["/admin/messages"] },
 ];
 
 export function AdminNav() {

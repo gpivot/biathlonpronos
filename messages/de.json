@@ -342,7 +342,9 @@
     "deleteConfirmButton": "Mein Konto löschen",
     "deleteCancel": "Abbrechen",
     "deleting": "Wird gelöscht…",
-    "deleteError": "Löschen fehlgeschlagen. Versuche es erneut oder schreib an contact@biathlonpronos.fr."
+    "deleteError": "Löschen fehlgeschlagen. Versuche es erneut oder schreib an contact@biathlonpronos.fr.",
+    "suggestChange": "Änderung vorschlagen",
+    "suggestChangeHint": "Fehler entdeckt oder eine Idee? Schreib uns, wir antworten hier"
   },
   "Globes": {
     "back": "← Zurück",
@@ -664,6 +666,18 @@
       "Dein Konto und deine Daten werden sofort gelöscht (bei einer Anfrage per E-Mail innerhalb von höchstens 30 Tagen)."
     ],
     "deleteData": "Gelöscht werden: dein Konto (E-Mail, Vorname, Nachname, Pseudonym), deine Tipps und Punkte, deine Ligamitgliedschaften, deine Einstellungen und Benachrichtigungs-Tokens. Nach dieser Frist werden keine personenbezogenen Daten aufbewahrt."
+  },
+  "SupportMessages": {
+    "title": "Unterhaltung mit Biathlonpronos",
+    "loginRequired": "Melde dich an, um dem Biathlonpronos-Team zu schreiben.",
+    "emptyTitle": "Änderung vorschlagen",
+    "emptyBody": "Ein Fehler in einem Ergebnis, einer Quote oder einem Namen? Eine Idee, um das Spiel zu verbessern? Schreib uns hier: Wir antworten in der App, und du bekommst eine Benachrichtigung, wenn du sie auf deinem Handy hast.",
+    "placeholderFirst": "Schreib deine Nachricht…",
+    "placeholderReply": "Biathlonpronos antworten…",
+    "send": "Senden",
+    "invalid": "Nachricht leer oder zu lang (maximal 2000 Zeichen).",
+    "tooMany": "Viele Nachrichten in kurzer Zeit: Versuch es in einer Stunde noch einmal.",
+    "error": "Nachricht nicht gesendet, bitte versuch es noch einmal."
   },
   "Privacy": {
     "title": "Datenschutzerklärung",
@@ -1014,7 +1028,8 @@
     "newsButton": "Biathlonpronos öffnen",
     "footer": "Du erhältst diese E-Mail, weil du bei Biathlonpronos mitspielst.",
     "manage": "Benachrichtigungen verwalten",
-    "unsubscribe": "Diese E-Mails nicht mehr erhalten"
+    "unsubscribe": "Diese E-Mails nicht mehr erhalten",
+    "supportReplyPushTitle": "💬 Biathlonpronos hat dir geantwortet"
   },
   "Unsubscribe": {
     "title": "Abmelden",

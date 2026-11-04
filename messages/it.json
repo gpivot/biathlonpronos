@@ -342,7 +342,9 @@
     "deleteConfirmButton": "Elimina il mio account",
     "deleteCancel": "Annulla",
     "deleting": "Eliminazione…",
-    "deleteError": "Eliminazione non riuscita. Riprova o scrivi a contact@biathlonpronos.fr."
+    "deleteError": "Eliminazione non riuscita. Riprova o scrivi a contact@biathlonpronos.fr.",
+    "suggestChange": "Suggerisci una modifica",
+    "suggestChangeHint": "Un errore, un'idea? Scrivici, ti rispondiamo qui"
   },
   "Globes": {
     "back": "← Indietro",
@@ -664,6 +666,18 @@
       "Il tuo account e i tuoi dati vengono eliminati subito (entro 30 giorni al massimo per una richiesta via e-mail)."
     ],
     "deleteData": "Vengono eliminati: il tuo account (e-mail, nome, cognome, nickname), i tuoi pronostici e punti, la partecipazione alle leghe, le impostazioni e i token di notifica. Nessun dato personale viene conservato dopo questo periodo."
+  },
+  "SupportMessages": {
+    "title": "Conversazione con Biathlonpronos",
+    "loginRequired": "Accedi per scrivere al team Biathlonpronos.",
+    "emptyTitle": "Suggerisci una modifica",
+    "emptyBody": "Un errore in un risultato, una quota, un nome? Un'idea per migliorare il gioco? Scrivici qui: ti rispondiamo nell'app e ricevi una notifica se ce l'hai sul telefono.",
+    "placeholderFirst": "Scrivi il tuo messaggio…",
+    "placeholderReply": "Rispondi a Biathlonpronos…",
+    "send": "Invia",
+    "invalid": "Messaggio vuoto o troppo lungo (massimo 2000 caratteri).",
+    "tooMany": "Tanti messaggi in poco tempo: riprova tra un'ora.",
+    "error": "Messaggio non inviato, riprova."
   },
   "Privacy": {
     "title": "Informativa sulla privacy",
@@ -1014,7 +1028,8 @@
     "newsButton": "Apri Biathlonpronos",
     "footer": "Ricevi questa e-mail perché giochi a Biathlonpronos.",
     "manage": "Gestisci le mie notifiche",
-    "unsubscribe": "Non ricevere più queste e-mail"
+    "unsubscribe": "Non ricevere più queste e-mail",
+    "supportReplyPushTitle": "💬 Biathlonpronos ti ha risposto"
   },
   "Unsubscribe": {
     "title": "Annulla iscrizione",

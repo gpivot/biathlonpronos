@@ -6,6 +6,7 @@ import { FirebaseMessaging, isNativeApp, nativePlatform, type PushPermission } f
 import { registerPushToken } from "@/lib/push/actions";
 import type { NotificationPreferences, PreferenceKey } from "@/lib/notifications/preferences";
 import { setNotificationPreference } from "./notificationActions";
+import { ChevronDownIcon } from "@/components/icons";
 
 interface Row {
   title: string;
@@ -15,7 +16,7 @@ interface Row {
 }
 
 /**
- * Carte « Notifications » du profil : pour chaque type de message, un interrupteur Appli
+ * Carte « Notifications » du profil, repliée en accordéon : pour chaque type de message, un interrupteur Appli
  * (téléphone) et un interrupteur E-mail. Sous le tableau, l'état des notifications sur ce
  * téléphone (dans l'appli) ou une invitation à installer l'appli (sur le site), puis l'adresse
  * à laquelle partent les e-mails.
@@ -79,62 +80,69 @@ export function NotificationsCard({
   const appleRelay = /@privaterelay\.appleid\.com$/i.test(email);
 
   return (
-    <div className="flex flex-col gap-1 rounded-2xl border border-border bg-card p-4">
-      <div className="flex items-end gap-2 pb-1">
-        <div className="flex-1 font-display text-xs font-bold uppercase tracking-wider text-text-dim">🔔 {t("notificationsTitle")}</div>
-        <div className="w-14 text-center text-[11px] font-semibold text-text-dim">{t("columnApp")}</div>
-        <div className="w-14 text-center text-[11px] font-semibold text-text-dim">{t("columnEmail")}</div>
-      </div>
-
-      {rows.map((row, i) => (
-        <div key={row.push} className={`flex items-center gap-2 py-2.5 ${i > 0 ? "border-t border-border" : ""}`}>
-          <div className="flex flex-1 flex-col gap-0.5">
-            <div className="font-display text-sm font-bold">{row.title}</div>
-            <div className="text-[12px] text-text-dim">{row.hint}</div>
-          </div>
-          <div className="flex w-14 justify-center">
-            <Switch on={prefs[row.push]} label={`${row.title} · ${t("columnApp")}`} onClick={() => toggle(row.push)} />
-          </div>
-          <div className="flex w-14 justify-center">
-            {row.email ? (
-              <Switch on={prefs[row.email]} label={`${row.title} · ${t("columnEmail")}`} onClick={() => toggle(row.email!)} />
-            ) : (
-              <span className="text-text-dim/50" title={t("notApplicable")} aria-label={t("notApplicable")}>
-                —
-              </span>
-            )}
-          </div>
+    <details className="group rounded-2xl border border-border bg-card">
+      <summary className="flex cursor-pointer list-none items-center gap-3.5 px-4 py-3.5 [&::-webkit-details-marker]:hidden">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-lg">🔔</div>
+        <span className="flex-1 font-display text-sm font-bold">{t("notificationsTitle")}</span>
+        <ChevronDownIcon className="h-4 w-4 text-text-dim transition group-open:rotate-180" />
+      </summary>
+      <div className="flex flex-col gap-1 px-4 pb-4">
+        <div className="flex items-end gap-2 pb-1">
+          <div className="flex-1" />
+          <div className="w-14 text-center text-[11px] font-semibold text-text-dim">{t("columnApp")}</div>
+          <div className="w-14 text-center text-[11px] font-semibold text-text-dim">{t("columnEmail")}</div>
         </div>
-      ))}
 
-      {error && <p className="text-[12px] text-red">{t("notificationsSaveError")}</p>}
+        {rows.map((row, i) => (
+          <div key={row.push} className={`flex items-center gap-2 py-2.5 ${i > 0 ? "border-t border-border" : ""}`}>
+            <div className="flex flex-1 flex-col gap-0.5">
+              <div className="font-display text-sm font-bold">{row.title}</div>
+              <div className="text-[12px] text-text-dim">{row.hint}</div>
+            </div>
+            <div className="flex w-14 justify-center">
+              <Switch on={prefs[row.push]} label={`${row.title} · ${t("columnApp")}`} onClick={() => toggle(row.push)} />
+            </div>
+            <div className="flex w-14 justify-center">
+              {row.email ? (
+                <Switch on={prefs[row.email]} label={`${row.title} · ${t("columnEmail")}`} onClick={() => toggle(row.email!)} />
+              ) : (
+                <span className="text-text-dim/50" title={t("notApplicable")} aria-label={t("notApplicable")}>
+                  —
+                </span>
+              )}
+            </div>
+          </div>
+        ))}
 
-      <div className="mt-2 flex flex-col gap-2">
-        {native ? (
-          permission === "granted" ? (
-            <Info icon={<span className="text-green">●</span>}>{t("pushOn")}</Info>
-          ) : permission === "denied" ? (
-            <Info icon="📱">{t("pushOff")}</Info>
-          ) : permission !== null ? (
-            <button
-              type="button"
-              onClick={() => enablePush().catch(() => {})}
-              className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice"
-            >
-              {t("pushEnable")}
-            </button>
-          ) : null
-        ) : phoneCount > 0 ? (
-          <Info icon="📱">{t("appInstalled", { count: phoneCount })}</Info>
-        ) : (
-          <Info icon="📱">{t("getApp")}</Info>
-        )}
-        <Info icon="✉️">
-          <span className="break-words">{t("emailTo", { email })}</span>
-          {appleRelay && <span className="mt-0.5 block text-[11px] text-text-dim">{t("appleRelay")}</span>}
-        </Info>
+        {error && <p className="text-[12px] text-red">{t("notificationsSaveError")}</p>}
+
+        <div className="mt-2 flex flex-col gap-2">
+          {native ? (
+            permission === "granted" ? (
+              <Info icon={<span className="text-green">●</span>}>{t("pushOn")}</Info>
+            ) : permission === "denied" ? (
+              <Info icon="📱">{t("pushOff")}</Info>
+            ) : permission !== null ? (
+              <button
+                type="button"
+                onClick={() => enablePush().catch(() => {})}
+                className="rounded-xl bg-ice py-3 font-display text-sm font-bold text-on-ice"
+              >
+                {t("pushEnable")}
+              </button>
+            ) : null
+          ) : phoneCount > 0 ? (
+            <Info icon="📱">{t("appInstalled", { count: phoneCount })}</Info>
+          ) : (
+            <Info icon="📱">{t("getApp")}</Info>
+          )}
+          <Info icon="✉️">
+            <span className="break-words">{t("emailTo", { email })}</span>
+            {appleRelay && <span className="mt-0.5 block text-[11px] text-text-dim">{t("appleRelay")}</span>}
+          </Info>
+        </div>
       </div>
-    </div>
+    </details>
   );
 }
 

@@ -1423,3 +1423,24 @@ sont jamais effacées.
 
 **Migrations** : **0038** (nouvelles valeurs d'enum, à exécuter seule) puis **0039** (colonnes,
 table des réglages, fonctions). Les deux sont à coller avant la fusion de la PR.
+
+## Page Profil : notifications repliées, « Suggérer une modification » (04/11/2026)
+
+- La carte **Notifications** du profil est un accordéon, fermé par défaut (comme la FAQ).
+- L'encadré **Équipe favorite** n'apparaît plus sur le profil qu'**avant le choix** (le lien
+  « Choisis ton équipe favorite » de l'accueil y mène toujours). Une fois choisie, elle se voit sur
+  l'accueil et dans « Ma saison ».
+- **Suggérer une modification** (repris de VéloPronos) : Profil > Suggérer une modification ouvre
+  `/compte/messages`, une conversation unique entre le joueur et l'équipe Biathlonpronos. Les admins
+  lisent et répondent dans `/admin/messages` (non lus en premier). Table `support_messages`
+  (migration **0037**), réservée au serveur comme `notification_preferences` : pas de policy, les
+  pages vérifient qui est connecté. Effacée avec le compte (cascade).
+  - Le joueur voit une pastille rouge (nombre de réponses non lues) sur la ligne du profil ; elle
+    disparaît quand il ouvre la conversation.
+  - Une réponse de l'admin part aussi en notification sur le téléphone du joueur, dans sa langue,
+    **même s'il a coupé « Nouvelles du jeu »** (c'est la réponse à sa propre demande). À confirmer.
+  - Un message de joueur envoie une notification aux admins qui ont l'appli (en français), lien vers
+    la conversation dans `/admin/messages`.
+  - Garde-fou : 2000 caractères par message, 20 messages par heure et par joueur.
+  - Pas de pastille sur le rond « profil » en haut à droite pour l'instant (une requête de plus sur
+    chaque onglet) : à ajouter si Guillaume le souhaite.
