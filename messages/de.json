@@ -409,6 +409,8 @@
     "streakTitle": "Beste laufende Serien",
     "streakCardTitle": "Laufende Serie",
     "streakCardRemaining": "{count, plural, one {Noch ein Rennen bis zur Bonuskarte} other {Noch # Rennen bis zur Bonuskarte}}",
+    "playerStageRankLabel": "in der Etappenwertung",
+    "playerRaceRankLabel": "in der Rennwertung",
     "playerTitle": "Spieler",
     "close": "Schließen",
     "playerLoading": "Wird geladen…",

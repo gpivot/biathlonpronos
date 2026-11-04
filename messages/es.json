@@ -409,6 +409,8 @@
     "streakTitle": "Mejores rachas en curso",
     "streakCardTitle": "Racha en curso",
     "streakCardRemaining": "{count, plural, one {Solo una carrera para una carta bonus} other {Solo # carreras para una carta bonus}}",
+    "playerStageRankLabel": "en la clasificación de la etapa",
+    "playerRaceRankLabel": "en la clasificación de la carrera",
     "playerTitle": "Jugador",
     "close": "Cerrar",
     "playerLoading": "Cargando…",
