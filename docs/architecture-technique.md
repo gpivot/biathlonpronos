@@ -1302,3 +1302,5 @@ Supabase étant un aller-retour réseau. Changements :
 Piste hors code : la région des fonctions Vercel (Settings > Functions) doit être la plus proche
 de la région de la base Supabase (Project Settings > General), sinon chaque lecture traverse
 l'Atlantique (Vercel est par défaut à Washington, `iad1`).
+Base Supabase en `eu-west-1` (Irlande) : région Vercel conseillée `dub1` (Dublin), réglée par
+Guillaume le 04/11/2026 (forfait Hobby : une seule région).
