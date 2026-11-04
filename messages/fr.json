@@ -339,7 +339,9 @@
     "deleteConfirmButton": "Supprimer mon compte",
     "deleteCancel": "Annuler",
     "deleting": "Suppression…",
-    "deleteError": "La suppression a échoué. Réessaie, ou écris-nous à contact@biathlonpronos.fr."
+    "deleteError": "La suppression a échoué. Réessaie, ou écris-nous à contact@biathlonpronos.fr.",
+    "suggestChange": "Suggérer une modification",
+    "suggestChangeHint": "Une erreur, une idée ? Écris-nous, on te répond ici"
   },
   "Globes": {
     "back": "← Retour",
@@ -648,6 +650,18 @@
       "Ton compte et tes données sont supprimés immédiatement (sous 30 jours au plus pour une demande par e-mail)."
     ],
     "deleteData": "Sont supprimés : ton compte (e-mail, prénom, nom, pseudo), tes pronostics et tes points, ta participation aux ligues, tes réglages et tes jetons de notification. Aucune donnée personnelle n'est conservée après ce délai."
+  },
+  "SupportMessages": {
+    "title": "Conversation avec Biathlonpronos",
+    "loginRequired": "Connecte-toi pour écrire à l'équipe Biathlonpronos.",
+    "emptyTitle": "Suggérer une modification",
+    "emptyBody": "Une erreur dans un résultat, une cote, un nom ? Une idée pour améliorer le jeu ? Écris-nous ici : on te répond dans l'appli, et tu reçois une notification si tu l'as sur ton téléphone.",
+    "placeholderFirst": "Écris ton message…",
+    "placeholderReply": "Réponds à Biathlonpronos…",
+    "send": "Envoyer",
+    "invalid": "Message vide ou trop long (2000 caractères maximum).",
+    "tooMany": "Beaucoup de messages en peu de temps : réessaie dans une heure.",
+    "error": "Message non envoyé, réessaie."
   },
   "Privacy": {
     "title": "Politique de confidentialité",
@@ -980,7 +994,8 @@
     "newsButton": "Ouvrir Biathlonpronos",
     "footer": "Tu reçois cet e-mail parce que tu joues à Biathlonpronos.",
     "manage": "Gérer mes notifications",
-    "unsubscribe": "Ne plus recevoir ces e-mails"
+    "unsubscribe": "Ne plus recevoir ces e-mails",
+    "supportReplyPushTitle": "💬 Biathlonpronos t'a répondu"
   },
   "Unsubscribe": {
     "title": "Se désabonner",
