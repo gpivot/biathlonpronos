@@ -92,7 +92,7 @@ export function PredictionBreakdown({
               <div className="flex min-w-0 items-center gap-1 truncate font-semibold">
                 <span className="truncate">{pick.name}</span>
                 {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
-                {pick.nationalDay && <span className="text-[11px] text-gold">🎉×2</span>}
+                {pick.nationalDay && <span className="rounded bg-gold-soft px-1 font-display text-[10px] font-bold text-gold">×2</span>}
                 <FuseeGachetteBadges skiRank={pick.skiRank} gachette={pick.gachette} />
               </div>
               {showCalc && <CalcDetail odds={pick.odds} rankMultiplier={pick.rankMultiplier} cardBonus={pick.cardBonus} />}
