@@ -36,9 +36,11 @@ export function HiddenPepiteCard({ pepites }: { pepites: HiddenPepite[] }) {
                   // Révélée : renvoie au résultat de la course où elle a été révélée.
                   <Link
                     href={`/courses/${p.revealedRaceId}`}
+                    title={t("pepiteSeeRace")}
+                    aria-label={`${t("pepiteRevealed")} : ${t("pepiteSeeRace")}`}
                     className="whitespace-nowrap rounded-full bg-ice px-2.5 py-1 font-display text-[11px] font-bold text-on-ice"
                   >
-                    {t("pepiteRevealed")} · {t("pepiteSeeRace")} →
+                    {t("pepiteRevealed")} ›
                   </Link>
                 ) : (
                   <div

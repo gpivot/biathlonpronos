@@ -88,7 +88,7 @@ export async function getSeasonView(
       ? supabase.from("predictions").select("race_id, athlete_ids, nation_code, bonus_x2_used").eq("user_id", userId)
       : Promise.resolve({ data: [] as any[] }),
     userId
-      ? supabase.from("score_ledger").select("race_id, points").eq("user_id", userId).eq("season_id", season.id)
+      ? supabase.from("score_ledger").select("race_id, points, breakdown").eq("user_id", userId).eq("season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
     userId && showSeasonPicks
       ? supabase
@@ -168,6 +168,18 @@ export async function getSeasonView(
         })
     : null;
 
+  // Pépite révélée avant l'enregistrement de revealed_race_id (migration 0040) : la course est
+  // retrouvée dans les points du joueur (ligne avec un bonus Pépite sur une course du même sexe).
+  const raceSexById = new Map(
+    (stages ?? []).flatMap((st: any) => ((st.races ?? []) as any[]).map((r) => [r.id as string, r.sex as string | null]))
+  );
+  const pepiteRaceFromLedger = (sex: "F" | "H", athleteId: string): string | null => {
+    const rows = ((ledger ?? []) as any[]).filter((l) => l.race_id && Number(l.breakdown?.pepiteBonus ?? 0) > 0);
+    const exact = rows.find((l) => l.breakdown?.pepiteAthleteId === athleteId);
+    if (exact) return exact.race_id;
+    return rows.find((l) => !l.breakdown?.pepiteAthleteId && raceSexById.get(l.race_id) === sex)?.race_id ?? null;
+  };
+
   const hiddenPepites: HiddenPepite[] | null = userId
     ? (["F", "H"] as const).map((sex) => {
         const pepite = pepites.find((p: any) => p.sex === sex);
@@ -177,7 +189,7 @@ export async function getSeasonView(
           name: athlete ? shortName(athlete) : null,
           nationCode: athlete?.nation_code ?? null,
           revealed: !!pepite?.bonus_claimed,
-          revealedRaceId: pepite?.bonus_claimed ? pepite?.revealed_race_id ?? null : null,
+          revealedRaceId: pepite?.bonus_claimed ? pepite?.revealed_race_id ?? pepiteRaceFromLedger(sex, pepite.athlete_id) : null,
         };
       })
     : null;
