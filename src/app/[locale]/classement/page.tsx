@@ -21,35 +21,10 @@ import {
 } from "@/lib/standings";
 import { PlayerSeasonButton } from "./PlayerSeasonButton";
 import { StandingsFilters, type StandingsFilterOptions, type StandingsFilterState } from "./StandingsFilters";
-import { seasonHasFinishedRace } from "@/lib/streakCounter";
 import { getPlayerJokers } from "@/lib/seasonView";
 import { JokersCard } from "@/components/JokersCard";
 
 export const dynamic = "force-dynamic";
-
-interface StreakRow {
-  userId: string;
-  pseudo: string;
-  currentStreak: number;
-}
-
-async function getStreakLeaderboard(supabase: ReturnType<typeof createClient>, seasonId: string): Promise<StreakRow[]> {
-  // Pas de séries avant la 1re course notée de la saison (cf. getCurrentStreak).
-  if (!(await seasonHasFinishedRace(supabase, seasonId))) return [];
-  const { data: streaks } = await supabase
-    .from("streak_counters")
-    .select("user_id, current_streak, profiles(pseudo)")
-    .eq("season_id", seasonId)
-    .gt("current_streak", 0)
-    .order("current_streak", { ascending: false })
-    .limit(10);
-
-  return (streaks ?? []).map((s) => ({
-    userId: s.user_id,
-    pseudo: (s.profiles as any)?.pseudo ?? "?",
-    currentStreak: s.current_streak,
-  }));
-}
 
 type SearchParams = { portee?: string; ligue?: string; periode?: string; etape?: string; course?: string };
 
@@ -112,13 +87,10 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const noLeague = scope === "league" && !leagueId;
   let rows: StandingsRow[] = [];
   let showPicks = false;
-  let streakLeaderboard: StreakRow[] = [];
   if (season && !noLeague) {
     const members = leagueId ? await getLeagueMembers(supabase, leagueId) : null;
     if (period === "season") {
-      const streaks = scope === "general" ? await getStreakLeaderboard(supabase, season.id) : [];
       rows = buildStandings(leaderboard, members, null);
-      streakLeaderboard = streaks;
     } else if (stage) {
       // Pronostics visibles : sur une course déjà partie, ou sur l'étape entière quand elle est en cours.
       showPicks = race ? race.displayStatus !== "upcoming" : isStageOngoing(stage);
@@ -229,25 +201,6 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                     ))}
                 </div>
                 <div className="whitespace-nowrap font-display text-sm font-bold text-ice">{row.points} pts</div>
-              </PlayerSeasonButton>
-            ))}
-          </div>
-        )}
-
-        {streakLeaderboard.length > 0 && (
-          <div className="flex flex-col gap-2">
-            <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("streakTitle")}</div>
-            {streakLeaderboard.map((row, index) => (
-              <PlayerSeasonButton
-                key={row.userId}
-                userId={row.userId}
-                className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3"
-              >
-                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-ice-soft font-display text-xs font-bold text-ice">
-                  {index + 1}
-                </div>
-                <div className="flex-1 text-sm font-semibold">{row.pseudo}</div>
-                <div className="font-display text-sm font-bold text-ice">🔥 {row.currentStreak}/10</div>
               </PlayerSeasonButton>
             ))}
           </div>

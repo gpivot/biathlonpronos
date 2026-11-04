@@ -443,7 +443,8 @@
     "jokersHelp": "En fin de saison, tes 3 plus mauvais résultats de courses individuelles et tes 2 plus mauvais relais sont effacés (jamais les Mondiaux ni les JO). Une course non jouée est effacée en priorité. Effacer un résultat retire ses points : un 0 ne coûte rien, un malus est annulé.",
     "jokersNone": "Aucun résultat à effacer pour l'instant.",
     "jokersPoints": "{points} pts",
-    "jokersNotPlayed": "Non jouée"
+    "jokersNotPlayed": "Non jouée",
+    "jokersDiscover": "Découvre tes jokers de fin de saison"
   },
   "RaceFormat": {
     "sprint": "Sprint",

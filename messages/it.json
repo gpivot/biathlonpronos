@@ -443,7 +443,8 @@
     "jokersHelp": "A fine stagione vengono cancellati i tuoi 3 peggiori risultati nelle gare individuali e le tue 2 peggiori staffette (mai Mondiali né Olimpiadi). Una gara non giocata viene cancellata per prima. Cancellare un risultato toglie i suoi punti: uno 0 non costa nulla, un malus viene annullato.",
     "jokersNone": "Ancora niente da cancellare.",
     "jokersPoints": "{points} pt",
-    "jokersNotPlayed": "Non giocata"
+    "jokersNotPlayed": "Non giocata",
+    "jokersDiscover": "Scopri i tuoi jolly di fine stagione"
   },
   "RaceFormat": {
     "sprint": "Sprint",

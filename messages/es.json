@@ -443,7 +443,8 @@
     "jokersHelp": "Al final de la temporada se borran tus 3 peores resultados en carreras individuales y tus 2 peores relevos (nunca Mundiales ni JJ. OO.). Una carrera no jugada se borra primero. Borrar un resultado quita sus puntos: un 0 no cuesta nada, un malus se anula.",
     "jokersNone": "Nada que borrar por ahora.",
     "jokersPoints": "{points} pts",
-    "jokersNotPlayed": "No jugada"
+    "jokersNotPlayed": "No jugada",
+    "jokersDiscover": "Descubre tus comodines de fin de temporada"
   },
   "RaceFormat": {
     "sprint": "Sprint",

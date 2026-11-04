@@ -15,19 +15,18 @@ export function JokersCard({ jokers }: { jokers: SeasonJokers }) {
   const signed = (n: number) => (n > 0 ? `+${n}` : `${n}`);
 
   return (
-    <details className="group rounded-2xl border border-border bg-card">
-      <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3.5">
-        <span className="text-lg">🃏</span>
-        <span className="flex flex-1 flex-col">
-          <span className="font-display text-[13px] font-bold">{t("jokersTitle")}</span>
-          <span className="text-[11px] text-text-dim">{jokers.applied ? t("jokersApplied") : t("jokersPreview")}</span>
-        </span>
-        <span className={`whitespace-nowrap font-display text-sm font-bold ${jokers.delta < 0 ? "text-red" : "text-ice"}`}>
-          {t("jokersDelta", { points: signed(jokers.delta) })}
-        </span>
+    <details className="group border-t border-border pt-3">
+      <summary className="flex cursor-pointer list-none items-center gap-2 text-[12px] text-text-dim">
+        <span>🃏</span>
+        <span className="flex-1">{t("jokersDiscover")}</span>
+        <span className="inline-block transition-transform group-open:rotate-90">›</span>
       </summary>
-      <div className="flex flex-col gap-2 border-t border-border px-4 pb-4 pt-3">
+      <div className="flex flex-col gap-2 pt-3">
         <p className="text-[12px] leading-relaxed text-text-dim">{t("jokersHelp")}</p>
+        <div className="text-[12px] text-text-dim">
+          {jokers.applied ? t("jokersApplied") : t("jokersPreview")} :{" "}
+          <span className={`font-bold ${jokers.delta < 0 ? "text-red" : "text-ice"}`}>{t("jokersDelta", { points: signed(jokers.delta) })}</span>
+        </div>
         {jokers.erased.length === 0 ? (
           <div className="text-[12px] text-text-dim">{t("jokersNone")}</div>
         ) : (

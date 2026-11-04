@@ -443,7 +443,8 @@
     "jokersHelp": "Am Saisonende werden deine 3 schlechtesten Einzelrennen und deine 2 schlechtesten Staffeln gestrichen (nie WM oder Olympia). Ein nicht gespieltes Rennen wird zuerst gestrichen. Ein gestrichenes Ergebnis zieht seine Punkte ab: eine 0 kostet nichts, ein Malus wird aufgehoben.",
     "jokersNone": "Noch nichts zu streichen.",
     "jokersPoints": "{points} Pkt.",
-    "jokersNotPlayed": "Nicht gespielt"
+    "jokersNotPlayed": "Nicht gespielt",
+    "jokersDiscover": "Entdecke deine Joker zum Saisonende"
   },
   "RaceFormat": {
     "sprint": "Sprint",

@@ -443,7 +443,8 @@
     "jokersHelp": "At the end of the season, your 3 worst individual race results and your 2 worst relays are wiped (never the World Championships or Olympics). A race you didn't play is wiped first. Wiping a result removes its points: a 0 costs nothing, a malus is cancelled.",
     "jokersNone": "Nothing to wipe yet.",
     "jokersPoints": "{points} pts",
-    "jokersNotPlayed": "Not played"
+    "jokersNotPlayed": "Not played",
+    "jokersDiscover": "Discover your end-of-season jokers"
   },
   "RaceFormat": {
     "sprint": "Sprint",
