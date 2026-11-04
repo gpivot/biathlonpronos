@@ -79,12 +79,14 @@ export default async function ComptePage() {
           <ThemeToggle />
         </Card>
 
-        {season && (nations ?? []).length > 0 && (
+        {/* Équipe favorite : visible seulement tant qu'elle reste à choisir (lien depuis l'accueil). Une fois
+            choisie, elle s'affiche sur l'accueil et dans « Ma saison », plus ici. */}
+        {season && (nations ?? []).length > 0 && !favoriteTeam && !equipeActive && (
           <FavoriteTeamForm
             seasonId={season.id}
             nations={nations!}
-            initial={favoriteTeam ? { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex } : null}
-            locked={equipeActive}
+            initial={null}
+            locked={false}
           />
         )}
 
