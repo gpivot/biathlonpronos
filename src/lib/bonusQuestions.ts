@@ -193,3 +193,30 @@ export async function getBonusQuestionLedger(
   }
   return ((data ?? []) as any[]).map((l) => ({ userId: l.user_id, pseudo: l.profiles?.pseudo ?? "?", points: Number(l.points) }));
 }
+
+/**
+ * Points des questions bonus d'un joueur, par course : ils s'ajoutent au total de la course
+ * (page de la course, accueil, Ma saison), comme dans les classements.
+ */
+export async function getUserBonusQuestionPointsByRace(
+  supabase: SupabaseClient,
+  userId: string,
+  raceIds: string[]
+): Promise<Map<string, number>> {
+  const byRace = new Map<string, number>();
+  if (raceIds.length === 0) return byRace;
+  const { data, error } = await supabase
+    .from("score_ledger")
+    .select("points, bonus_questions!inner(race_id)")
+    .eq("user_id", userId)
+    .in("bonus_questions.race_id", raceIds);
+  if (error) {
+    console.error("getUserBonusQuestionPointsByRace:", error.message);
+    return byRace;
+  }
+  for (const row of (data ?? []) as any[]) {
+    const raceId = row.bonus_questions?.race_id as string | undefined;
+    if (raceId) byRace.set(raceId, (byRace.get(raceId) ?? 0) + Number(row.points));
+  }
+  return byRace;
+}

@@ -1194,6 +1194,12 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   les effacent pas (ils ne portent que sur les lignes de course). **À confirmer.**
 - **Affichage** : encadré par question sur la page de la course (bonne réponse en vert, mauvaise en
   rouge) ; course notée : ligne verte « ❓ Questions bonus +20 pts » sous les points du pronostic.
+- **Total de la course (04/11/2026)** : les points des questions bonus s'ajoutent au total de la
+  course partout où il est affiché (« Tes points sur cette course », accueil, Ma saison, pop-up d'un
+  joueur) via `getUserBonusQuestionPointsByRace` ; `prediction.points` de `getRaceResult` est ce
+  total, `bonusQuestionPoints` en donne la part. La place du joueur sur la course suit
+  `getRacePlayers` (questions comprises). Aucune donnée ni migration modifiée : le classement
+  général les comptait déjà.
 - **Questions live côté joueur** : encadré rouge en tête de l'accueil et pop-up sur les autres pages
   (`LiveQuestionPopup` dans le layout, relu à chaque page et toutes les minutes, « Plus tard » le
   masque pour cette question), avec le temps restant et un bouton vers la course.

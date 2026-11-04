@@ -11,6 +11,8 @@ import { totalMisses } from "./shootings";
 import { RELAY_FORMATS } from "./grilling";
 import { applyFuseeGachetteRules } from "./scoring/fuseeGachette";
 import { shortAthleteName } from "./athleteName";
+import { getUserBonusQuestionPointsByRace } from "./bonusQuestions";
+import { getRacePlayers } from "./racePlayers";
 
 /**
  * Encart « Dernier résultat » de l'accueil (inspiré de VéloPronos) : la
@@ -81,7 +83,10 @@ export interface LastResult {
   results: RaceResultRow[];
   /** null : le joueur n'avait pas pronostiqué cette course. */
   prediction: {
+    /** Total de la course : pronostic + questions bonus. */
     points: number;
+    /** Points des questions bonus de la course, déjà compris dans `points`. */
+    bonusQuestionPoints: number;
     /** Points de chaque choix, sans le bonus ×2 ni le coefficient Mondiaux/JO (affichés à part, cf. multiplier). */
     picks: LastResultPick[];
     /** Bonus ×2 perso ou coefficient ×2 de l'étape, et ce qu'il a rapporté en plus. */
@@ -266,7 +271,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const stage = race.stages as any as { location: string; country_code: string; coefficient: number; season_id: string };
   const relay = RELAY_FORMATS.includes(race.format);
 
-  const [{ data: results }, { data: prediction }, { data: ledger }, { data: odds }] = await Promise.all([
+  const [{ data: results }, { data: prediction }, { data: ledger }, { data: odds }, bonusByRace] = await Promise.all([
     supabase
       .from("race_results")
       .select("rank, athlete_id, nation_code, is_fusee, is_gachette, shootings, penalty_laps, athletes(first_name, last_name, nation_code), nations(name)")
@@ -290,6 +295,8 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
       .eq("season_id", stage.season_id)
       .eq("format", race.format)
       .is("valid_until", null),
+    // Questions bonus de la course : leurs points s'ajoutent au total de la course.
+    userId ? getUserBonusQuestionPointsByRace(supabase, userId, [race.id]) : Promise.resolve(new Map<string, number>()),
   ]);
 
   const resultRows = ((results ?? []) as any[]).map((r) => applyFuseeGachetteRules(race.format, r));
@@ -340,14 +347,14 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const hasPrediction = prediction && ((prediction.athlete_ids?.length ?? 0) > 0 || prediction.nation_code);
   if (!hasPrediction) return { ...base, prediction: null };
 
+  // Points du pronostic seul (le détail par choix et le gain du ×2 en dépendent).
   const points = Number(ledger?.points ?? 0);
+  const bonusQuestionPoints = bonusByRace.get(race.id) ?? 0;
   const breakdown = (ledger?.breakdown ?? {}) as IndividualBreakdown;
 
-  // Place du joueur : 1 + nombre de pronostiqueurs ayant fait strictement mieux.
-  const [{ count: betterCount }, { count: playerCount }] = await Promise.all([
-    supabase.from("score_ledger").select("id", { count: "exact", head: true }).eq("race_id", race.id).gt("points", points),
-    supabase.from("score_ledger").select("id", { count: "exact", head: true }).eq("race_id", race.id),
-  ]);
+  // Place du joueur au classement de la course, questions bonus comprises (comme getRacePlayers).
+  const players = await getRacePlayers(supabase, race.id);
+  const myRow = players.find((p) => p.userId === userId);
 
   let picks: LastResultPick[];
   let extras: LastResultExtra[] = [];
@@ -431,14 +438,15 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   return {
     ...base,
     prediction: {
-      points,
+      points: Math.round((points + bonusQuestionPoints) * 10) / 10,
+      bonusQuestionPoints,
       picks,
       multiplier: multiplierKind && multiplierGain !== 0 ? { kind: multiplierKind, gain: multiplierGain } : null,
       extras,
       bonusX2: prediction.bonus_x2_used,
       card: prediction.bonus_card_used ?? null,
-      playerRank: ledger ? (betterCount ?? 0) + 1 : null,
-      playerCount: playerCount ?? 0,
+      playerRank: ledger && myRow ? myRow.rank : null,
+      playerCount: players.length,
     },
   };
 }
