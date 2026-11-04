@@ -52,7 +52,8 @@ function expectSameAsEngine(input: IndividualRaceScoringInput) {
   });
   for (const id of input.predictedAthleteIds) {
     const cards = (engine.breakdown.fuseeByAthlete?.[id] ?? 0) + (engine.breakdown.gachetteByAthlete?.[id] ?? 0);
-    expect(rebuilt[id]).toBe(id in engine.perAthlete ? engine.perAthlete[id] + cards : null);
+    const cardPoints = cards * (input.bonusX2Active ? 2 : 1);
+    expect(rebuilt[id]).toBe(id in engine.perAthlete ? engine.perAthlete[id] + cardPoints : null);
   }
   const extras = computeIndividualExtras(engine.breakdown).reduce((s, e) => s + e.points, 0);
   const picks = Object.values(rebuilt).reduce<number>((s, v) => s + (v ?? 0), 0);
@@ -62,6 +63,8 @@ function expectSameAsEngine(input: IndividualRaceScoringInput) {
 describe("encart Dernier résultat : points par athlète", () => {
   it("course simple", () => expectSameAsEngine(baseInput({})));
   it("cartes Fusée et Gâchette (points fixes)", () =>
+    expectSameAsEngine(baseInput({ raceFormat: "poursuite", stageCards: { fusee: true, gachette: true } })));
+  it("cartes Fusée et Gâchette avec le bonus ×2 (doublées)", () =>
     expectSameAsEngine(baseInput({ raceFormat: "poursuite", stageCards: { fusee: true, gachette: true }, bonusX2Active: true })));
   it("Tour de péna, pronostic incomplet", () =>
     expectSameAsEngine(baseInput({ predictedAthleteIds: ["a"], specialRule: "tour_de_pena" })));

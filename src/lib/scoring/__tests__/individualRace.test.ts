@@ -232,7 +232,27 @@ describe("computeIndividualRaceScore — cartes Fusée & Gâchette", () => {
     expect(result.breakdown.fuseeCardBonus).toBe(100);
   });
 
-  it("jamais multipliés : ni ×2, ni Mondiaux, ni Ça farte", () => {
+  it("doublées par le bonus ×2 perso : 100 devient 200", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b"],
+        results: [
+          { athleteId: "a", rank: 1, skiRank: 1, isGachette: true },
+          { athleteId: "b", rank: 2, skiRank: 3 },
+        ],
+        oddsByAthleteId: { a: 10, b: 1 },
+        raceFormat: "sprint",
+        bonusX2Active: true,
+        stageCards: { fusee: true, gachette: true },
+      })
+    );
+    // Fusée 100 + 20, Gâchette 50 (10/10 au sprint) : 170, ×2 = 340.
+    expect(result.breakdown.fuseeGachetteBonus).toBe(340);
+    expect(result.breakdown.fuseeByAthlete).toEqual({ a: 100, b: 20 });
+    expect(result.total).toBe(250 * 2 + 18 * 2 + 340);
+  });
+
+  it("jamais multipliés par les Mondiaux ni par Ça farte", () => {
     const result = computeIndividualRaceScore(
       baseInput({
         predictedAthleteIds: ["a", "b"],

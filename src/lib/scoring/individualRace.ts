@@ -48,8 +48,9 @@ export function computeIndividualRaceScore(
     );
   }
 
-  // Cartes Fusée / Gâchette posées sur l'étape (04/11/2026) : points fixes par biathlète, jamais
-  // multipliés (ni ×2, ni Mondiaux/JO, ni Fête nationale, ni Ça farte). Pas besoin d'être dans le Top 10.
+  // Cartes Fusée / Gâchette posées sur l'étape (04/11/2026) : points fixes par biathlète, doublés
+  // seulement par le bonus ×2 perso (ni Mondiaux/JO, où les cartes n'existent pas, ni Fête nationale,
+  // ni Team Nation ; Ça farte n'est pas cumulable). Pas besoin d'être dans le Top 10.
   const fuseeByAthlete: Record<string, number> = {};
   const gachetteByAthlete: Record<string, number> = {};
   for (const athleteId of input.predictedAthleteIds) {
@@ -69,6 +70,7 @@ export function computeIndividualRaceScore(
 
   // 6. Coefficient ×2 Mondiaux/JO, non cumulable avec le bonus ×2 personnel.
   const globalMultiplier = input.stageCoefficient === 2 ? 2 : input.bonusX2Active ? 2 : 1;
+  const cardMultiplier = input.bonusX2Active ? 2 : 1;
   const caFarteTargetId =
     input.card.type === "ca_farte"
       ? input.card.targetAthleteId
@@ -91,7 +93,7 @@ export function computeIndividualRaceScore(
     rawScore,
     input.card,
     (id) => (id === caFarteTargetId ? 3 : isNationalDayBoosted(id) ? 2 : globalMultiplier),
-    cardBonusOf
+    (id) => cardBonusOf(id) * cardMultiplier
   );
 
   // 5a. Carte "Ça farte" (×3) et 7. Bonus Team Nation (×2). Confirmé par
@@ -147,7 +149,9 @@ export function computeIndividualRaceScore(
 
   const fuseeCardBonus = counted.reduce((sum, id) => sum + fuseeByAthlete[id], 0);
   const gachetteCardBonus = counted.reduce((sum, id) => sum + gachetteByAthlete[id], 0);
-  const fuseeGachetteBonus = fuseeCardBonus + gachetteCardBonus;
+  // Points des cartes doublés par le bonus ×2 perso (Guillaume, 04/11/2026 : « 100 peut devenir 200 »).
+  // Les valeurs par biathlète du breakdown restent brutes ; le total, lui, est multiplié.
+  const fuseeGachetteBonus = (fuseeCardBonus + gachetteCardBonus) * cardMultiplier;
 
   const total =
     Object.values(perAthlete).reduce((sum, v) => sum + v, 0) +

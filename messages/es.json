@@ -231,7 +231,7 @@
     "worldsAuto": "×2 automático",
     "worldsNever": "nunca ×4",
     "fgTitle": "Cohete y Gatillo",
-    "fgBody": "Dos cartas bonus del 10/10 que premian la esencia del biatlón: el esquí y el tiro. Colocadas en una etapa antes de su 1.ª carrera, valen en todas sus carreras individuales. Puntos fijos, acumulables entre tus 3 biatletas, incluso fuera del Top 10. No con Turbo, ni en el Mundial/JJOO.",
+    "fgBody": "Dos cartas bonus del 10/10 que premian la esencia del biatlón: el esquí y el tiro. Colocadas en una etapa antes de su 1.ª carrera, valen en todas sus carreras individuales. Puntos fijos (duplicados por tu bonus ×2), acumulables entre tus 3 biatletas, incluso fuera del Top 10. No con Turbo, ni en el Mundial/JJOO.",
     "fuseeName": "Cohete",
     "fuseeDesc": "Por biatleta con un top 3 en tiempo de esquí: +100, +50 o +20.",
     "fuseeFormats": "Carta · toda una etapa",

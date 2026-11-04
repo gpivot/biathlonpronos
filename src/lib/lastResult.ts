@@ -138,7 +138,7 @@ interface IndividualBreakdown {
 /**
  * Reconstitue les points de chaque athlète pronostiqué à partir du détail
  * enregistré dans score_ledger.breakdown, en rejouant les multiplicateurs du
- * moteur (cf. computeIndividualRaceScore) : Balle de pioche, cartes Fusée/Gâchette (fixes, non multipliées),
+ * moteur (cf. computeIndividualRaceScore) : Balle de pioche, cartes Fusée/Gâchette (fixes, doublées par le bonus ×2 seulement),
  * Ça farte ×3, coefficient Mondiaux/JO ou bonus ×2 perso, Team Nation ×2, Fête nationale ×2 (jamais
  * cumulée avec un autre ×2 : elle reste dans les points du choix, hors du gain du bonus ×2 affiché à part).
  */
@@ -163,8 +163,9 @@ export function computeIndividualPickPoints(params: {
     }
     const raw = breakdown.base?.[id] ?? 0;
     const cards = (breakdown.fuseeByAthlete?.[id] ?? 0) + (breakdown.gachetteByAthlete?.[id] ?? 0);
+    // Cartes Fusée / Gâchette : points bruts dans le breakdown, doublés par le bonus ×2 perso.
     points[id] =
-      cards +
+      cards * (bonusX2 ? 2 : 1) +
       (id === caFarteTargetId
         ? raw * 3
         : nationalDay.has(id)

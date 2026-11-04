@@ -231,7 +231,7 @@
     "worldsAuto": "×2 automatico",
     "worldsNever": "mai ×4",
     "fgTitle": "Razzo & Grilletto",
-    "fgBody": "Due carte bonus del 10/10 che premiano l'essenza del biathlon: lo sci e il tiro. Posate su una tappa prima della sua 1ª gara, valgono in tutte le sue gare individuali. Punti fissi, cumulabili tra i tuoi 3 biatleti, anche fuori dalla Top 10. Non con Sciolina magica, né ai Mondiali/Olimpiadi.",
+    "fgBody": "Due carte bonus del 10/10 che premiano l'essenza del biathlon: lo sci e il tiro. Posate su una tappa prima della sua 1ª gara, valgono in tutte le sue gare individuali. Punti fissi (raddoppiati dal tuo bonus ×2), cumulabili tra i tuoi 3 biatleti, anche fuori dalla Top 10. Non con Sciolina magica, né ai Mondiali/Olimpiadi.",
     "fuseeName": "Razzo",
     "fuseeDesc": "Per biatleta con un top 3 nel tempo sugli sci: +100, +50 o +20.",
     "fuseeFormats": "Carta · un'intera tappa",

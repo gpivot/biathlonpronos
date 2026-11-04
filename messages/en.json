@@ -231,7 +231,7 @@
     "worldsAuto": "automatic ×2",
     "worldsNever": "never ×4",
     "fgTitle": "Rocket & Trigger",
-    "fgBody": "Two 10/10 bonus cards that reward the essence of biathlon: skiing and shooting. Play them on a stage before its 1st race and they count in all its individual races. Fixed points, stackable across your 3 biathletes, even outside the Top 10. Not with Boost, nor at the Worlds/Olympics.",
+    "fgBody": "Two 10/10 bonus cards that reward the essence of biathlon: skiing and shooting. Play them on a stage before its 1st race and they count in all its individual races. Fixed points (doubled by your ×2 bonus), stackable across your 3 biathletes, even outside the Top 10. Not with Boost, nor at the Worlds/Olympics.",
     "fuseeName": "Rocket",
     "fuseeDesc": "Per biathlete with a top 3 ski time: +100, +50 or +20.",
     "fuseeFormats": "Card · a whole stage",

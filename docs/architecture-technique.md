@@ -53,7 +53,7 @@ retenus dans `src/lib/scoring/individualRace.ts`, confirmés par Guillaume le 20
   Top 10 » (le palier est retrouvé à partir du montant enregistré). Les courses déjà notées avant
   ce changement gardent leurs points tant qu'elles ne sont pas renotées.
 - *(Depuis le 04/11/2026, Fusée et Gâchette sont des cartes à points fixes, hors Prono parfait et
-  jamais multipliées : voir « Cartes Fusée, Gâchette et Talent » en fin de document. Les trois
+  doublées par le seul bonus ×2 perso : voir « Cartes Fusée, Gâchette et Talent » en fin de document. Les trois
   points ci-dessous qui les citent décrivent l'ancien bonus automatique.)*
 - **Fusée / Gâchette** : attribués par athlète (et non plus comme un bonus global de fin de
   calcul), sur l'ensemble des biathlètes réellement pronostiqués. Le filtrage "3 meilleurs sur
@@ -1377,11 +1377,11 @@ est remplacé par le §13 du règlement).
   la colonne « Rang ski » de l'admin, lu dans l'analyse IBU `CRST`, ou case Fusée des anciens CSV =
   rang 1). Gâchette : 100 pts par 20/20, 50 par 10/10 au sprint (`is_gachette`). 4 formats
   individuels. Pas besoin d'être dans le Top 10 (« pour sauver sa série »).
-- **Points fixes, jamais multipliés** (ni ×2 perso, ni Fête nationale, ni Team Nation), ajoutés au
-  total : `breakdown.fuseeCardBonus / gachetteCardBonus` et le détail par athlète `fuseeByAthlete /
-  gachetteByAthlete` (l'encart Dernier résultat les remet dans les points du choix, `cardBonus`).
-  « Cumulable avec bonus ×2 » = jouable sur une course où le ×2 est activé (lecture retenue : les
-  points de carte ne sont pas doublés, à confirmer).
+- **Points fixes, doublés par le bonus ×2 perso** (confirmé par Guillaume le 04/11/2026 : « le 100
+  peut devenir 200 »), jamais par la Fête nationale ni Team Nation (et pas de cartes aux Mondiaux/JO).
+  `breakdown.fuseeCardBonus / gachetteCardBonus` et le détail par athlète `fuseeByAthlete /
+  gachetteByAthlete` restent bruts ; `fuseeGachetteBonus` et le total intègrent le ×2. L'encart
+  Dernier résultat remet les points bruts dans le choix (`cardBonus`) et le doublement dans le gain du ×2.
 - **Pas de cumul avec Ça farte** : pas de Ça farte sur une course d'une étape où Fusée/Gâchette
   est posée, et pas de Fusée/Gâchette sur une étape où un Ça farte est déjà posé (`canPlayCard`,
   `canPlayStageCard`, `play_bonus_card`, `play_stage_card`). Cumul avec Aspiration, 4e choix, Équipe.

@@ -231,7 +231,7 @@
     "worldsAuto": "automatisch ×2",
     "worldsNever": "nie ×4",
     "fgTitle": "Rakete & Abzug",
-    "fgBody": "Zwei Bonuskarten des 10/10, die das Wesen des Biathlons belohnen: Laufen und Schießen. Vor dem 1. Rennen auf eine Etappe gelegt, zählen sie in all ihren Einzelrennen. Feste Punkte, kombinierbar für deine 3 Biathleten, auch außerhalb der Top 10. Nicht mit Turbowachs und nicht bei WM/Olympia.",
+    "fgBody": "Zwei Bonuskarten des 10/10, die das Wesen des Biathlons belohnen: Laufen und Schießen. Vor dem 1. Rennen auf eine Etappe gelegt, zählen sie in all ihren Einzelrennen. Feste Punkte (durch deinen ×2-Bonus verdoppelt), kombinierbar für deine 3 Biathleten, auch außerhalb der Top 10. Nicht mit Turbowachs und nicht bei WM/Olympia.",
     "fuseeName": "Rakete",
     "fuseeDesc": "Pro Biathlet mit einer Top-3-Laufzeit: +100, +50 oder +20.",
     "fuseeFormats": "Karte · eine ganze Etappe",
