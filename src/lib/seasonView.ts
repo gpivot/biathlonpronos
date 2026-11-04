@@ -3,6 +3,7 @@ import { getRaceDisplayStatus } from "./raceStatus";
 import type { CalendarStage } from "../app/[locale]/courses/CalendarAccordion";
 import type { SeasonPick } from "../app/[locale]/courses/SeasonPredictionsAccordion";
 import { shortAthleteName } from "./athleteName";
+import { getUserBonusQuestionPointsByRace } from "./bonusQuestions";
 import { getCurrentStreak } from "./streakCounter";
 import { isPredictionOpen, predictionOpensOn } from "./predictionWindow";
 import { getPlayerCards, type PlayerCards } from "./bonusCards";
@@ -104,6 +105,14 @@ export async function getSeasonView(
 
   const predictionByRaceId = new Map(predictions.map((p: any) => [p.race_id as string, p]));
   const pointsByRaceId = new Map((ledger ?? []).map((l: any) => [l.race_id as string, Number(l.points)]));
+  // Questions bonus : leurs points s'ajoutent au total de leur course.
+  if (userId) {
+    const allRaceIds = (stages ?? []).flatMap((s: any) => ((s.races ?? []) as any[]).map((r) => r.id as string));
+    const bonusByRace = await getUserBonusQuestionPointsByRace(supabase, userId, allRaceIds);
+    for (const [raceId, bonus] of Array.from(bonusByRace)) {
+      pointsByRaceId.set(raceId, Math.round(((pointsByRaceId.get(raceId) ?? 0) + bonus) * 10) / 10);
+    }
+  }
 
   const athleteIds = Array.from(
     new Set([

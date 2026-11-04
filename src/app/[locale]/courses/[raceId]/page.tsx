@@ -219,7 +219,7 @@ export default async function RacePage({
   // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
   const raceResult = displayStatus === "finished" ? await getRaceResult(supabase, race.id, user?.id ?? null) : null;
   const results = raceResult?.results ?? [];
-  const pointsEarned = raceResult?.prediction?.points ?? 0;
+  const resultsTopCount = isRelay ? 5 : 10;
   const multiplier = raceResult?.prediction?.multiplier ?? null;
   const players = displayStatus === "finished" ? await getRacePlayers(supabase, race.id) : [];
   // Après la course : un joueur qui a pronostiqué mais n'est dans aucune ligue est invité à se
@@ -250,6 +250,9 @@ export default async function RacePage({
     myBonusPoints = (bonusLedger ?? []).reduce((sum: number, row: any) => sum + Number(row.points), 0);
   }
   // Avant le départ : seulement les questions « avant le départ », une fois les pronostics ouverts.
+  // Total de la course : pronostic + questions bonus (déjà additionnés par getRaceResult).
+  const pointsEarned = raceResult?.prediction?.points ?? myBonusPoints;
+
   const visibleBonusQuestions =
     displayStatus === "upcoming" ? (predictionsOpen ? bonusQuestions.filter((q) => q.kind === "pre_race") : []) : bonusQuestions;
   const bonusQuestionsBlock = (
@@ -563,11 +566,12 @@ export default async function RacePage({
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  {/* Top 10 + les choix du joueur classés plus loin ; le reste dans le déroulant. */}
-                  {results.length > 10 ? (
+                  {/* Top 10 (Top 5 en relais, seuls à marquer des points) + les choix du joueur classés plus
+                      loin ; le reste dans le déroulant. */}
+                  {results.length > resultsTopCount ? (
                     <ShowMore
                       label={t("showFullRanking")}
-                      collapsed={results.filter((r) => r.rank <= 10 || r.mine).map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
+                      collapsed={results.filter((r) => r.rank <= resultsTopCount || r.mine).map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
                       expanded={results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
                     />
                   ) : (
