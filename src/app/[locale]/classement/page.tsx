@@ -27,14 +27,13 @@ import { JokersCard } from "@/components/JokersCard";
 
 export const dynamic = "force-dynamic";
 
-/** Séries en cours (10/10) de tous les joueurs : rien avant la 1re course notée (cf. getCurrentStreak). */
+/** Séries en cours (10/10) de tous les joueurs, 0 compris (série retombée) : rien avant la 1re course notée (cf. getCurrentStreak). */
 async function getCurrentStreaks(supabase: ReturnType<typeof createClient>, seasonId: string): Promise<Map<string, number>> {
   if (!(await seasonHasFinishedRace(supabase, seasonId))) return new Map();
   const { data } = await supabase
     .from("streak_counters")
     .select("user_id, current_streak")
-    .eq("season_id", seasonId)
-    .gt("current_streak", 0);
+    .eq("season_id", seasonId);
   return new Map((data ?? []).map((s: any) => [s.user_id as string, Number(s.current_streak)]));
 }
 
@@ -212,7 +211,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                       stageLeader={
                         period === "stages" ? !race && row.rank === 1 && row.points > 0 : ongoingStageLeaders.has(row.userId)
                       }
-                      streak={period === "season" ? streaks.get(row.userId) ?? 0 : 0}
+                      streak={period === "season" ? streaks.get(row.userId) ?? null : null}
                     />
                   </div>
                   {showPicks &&

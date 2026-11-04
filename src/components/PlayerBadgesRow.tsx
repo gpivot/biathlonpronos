@@ -42,19 +42,20 @@ export function PlayerBadgesRow({
   badges,
   leader = false,
   stageLeader = false,
-  streak = 0,
+  streak = null,
 }: {
   badges: PlayerBadges | undefined;
   /** En tête du classement de la saison : dossard jaune. */
   leader?: boolean;
   /** En tête de l'étape affichée (classement « Par étapes ») : dossard rouge. */
   stageLeader?: boolean;
-  /** Série en cours (10/10) : 🔥 et le nombre, sur le classement de la saison. */
-  streak?: number;
+  /** Série en cours (10/10) : 🔥 et le nombre, sur le classement de la saison ; à 0 (série
+   * retombée), le picto passe en noir et blanc. null : rien. */
+  streak?: number | null;
 }) {
   const t = useTranslations("Badges");
   const b = { ...NO_BADGES, ...badges };
-  if (!leader && !stageLeader && !streak && !b.x2Used && !b.raceWins && !b.stageWins && !b.perfectPicks && !b.pepites) return null;
+  if (!leader && !stageLeader && streak == null && !b.x2Used && !b.raceWins && !b.stageWins && !b.perfectPicks && !b.pepites) return null;
   return (
     <span className="flex flex-shrink-0 items-center gap-1.5 font-display text-[12px] font-bold">
       {leader && <LeaderBib />}
@@ -64,9 +65,9 @@ export function PlayerBadgesRow({
           number={Math.max(1, b.stageWins)}
         />
       )}
-      {streak > 0 && (
-        <span title={t("streak", { count: streak })} className="whitespace-nowrap text-frost">
-          <span className="text-[14px]">🔥</span>{streak}
+      {streak != null && (
+        <span title={t("streak", { count: streak })} className={`whitespace-nowrap ${streak > 0 ? "text-frost" : "text-text-dim"}`}>
+          <span className={`text-[14px] ${streak > 0 ? "" : "grayscale"}`}>🔥</span>{streak}
         </span>
       )}
       {b.x2Used > 0 && (
