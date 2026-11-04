@@ -96,9 +96,9 @@ export function PlayerBadgesRow({
           <span className="text-[14px]">❄️</span>
           {b.pepiteSexes?.length ? (
             // Mini ♀ / ♂ à droite du cristal : quelle(s) Pépite(s) ont été révélées (les deux empilées).
-            <span className="ml-px flex flex-col justify-center text-[10px] font-bold leading-[9px]">
-              {b.pepiteSexes.includes("F") && <span aria-label={t("pepiteF")}>♀</span>}
-              {b.pepiteSexes.includes("H") && <span aria-label={t("pepiteH")}>♂</span>}
+            <span className="ml-0.5 flex flex-col justify-center gap-px">
+              {b.pepiteSexes.includes("F") && <SexIcon sex="F" label={t("pepiteF")} />}
+              {b.pepiteSexes.includes("H") && <SexIcon sex="H" label={t("pepiteH")} />}
             </span>
           ) : (
             b.pepites > 1 && b.pepites
@@ -106,5 +106,28 @@ export function PlayerBadgesRow({
         </span>
       )}
     </span>
+  );
+}
+
+/**
+ * Mini ♀ / ♂ dessinés en SVG (et non en caractères : selon la police du système, les glyphes
+ * débordaient et se chevauchaient une fois empilés).
+ */
+function SexIcon({ sex, label }: { sex: "F" | "H"; label: string }) {
+  return (
+    <svg viewBox="0 0 10 10" role="img" aria-label={label} className="h-[8px] w-[8px]" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round">
+      <title>{label}</title>
+      {sex === "F" ? (
+        <>
+          <circle cx="5" cy="3.6" r="2.6" />
+          <path d="M5 6.2v3.3M3.3 8h3.4" />
+        </>
+      ) : (
+        <>
+          <circle cx="4" cy="6" r="2.6" />
+          <path d="M5.9 4.1 9.2 0.8M6.4 0.8h2.8v2.8" />
+        </>
+      )}
+    </svg>
   );
 }
