@@ -1363,9 +1363,7 @@ retrouver : `git show 91420f9:src/lib/grilling.ts`.
 ## Page Profil : notifications repliées, « Suggérer une modification » (04/11/2026)
 
 - La carte **Notifications** du profil est un accordéon, fermé par défaut (comme la FAQ).
-- L'encadré **Équipe favorite** n'apparaît plus sur le profil qu'**avant le choix** (le lien
-  « Choisis ton équipe favorite » de l'accueil y mène toujours). Une fois choisie, elle se voit sur
-  l'accueil et dans « Ma saison ».
+- L'encadré **Équipe favorite** a quitté le profil : voir la section suivante.
 - **Suggérer une modification** (repris de VéloPronos) : Profil > Suggérer une modification ouvre
   `/compte/messages`, une conversation unique entre le joueur et l'équipe Biathlonpronos. Les admins
   lisent et répondent dans `/admin/messages` (non lus en premier). Table `support_messages`
@@ -1380,3 +1378,10 @@ retrouver : `git show 91420f9:src/lib/grilling.ts`.
   - Garde-fou : 2000 caractères par message, 20 messages par heure et par joueur.
   - Pas de pastille sur le rond « profil » en haut à droite pour l'instant (une requête de plus sur
     chaque onglet) : à ajouter si Guillaume le souhaite.
+## Équipe favorite avec les pronostics de saison (04/11/2026)
+
+Demande de Guillaume : le choix de l'équipe favorite quitte le Profil et se fait sur la page des
+pronostics de saison (`/globes`), avec les globes et la Pépite, puisque tout se décide au même
+moment. Il reste possible après le début de saison (seule la carte Équipe active le bloque).
+Dans « Ma saison », l'accordéon « Mes pronostics de saison » a une ligne ❤️ Équipe favorite (l'équipe
+choisie, ou un bouton « Choisir » vers `/globes#equipe-favorite`). Le lien de l'accueil y mène aussi.

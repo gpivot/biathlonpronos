@@ -8,8 +8,6 @@ import { PseudoEditor } from "./PseudoEditor";
 import { ThemeToggle } from "./ThemeToggle";
 import { NotificationsCard } from "./NotificationsCard";
 import { withDefaults } from "@/lib/notifications/preferences";
-import { FavoriteTeamForm } from "./FavoriteTeamForm";
-import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { SignOutButton } from "./SignOutButton";
 import { DeleteAccountButton } from "./DeleteAccountButton";
 import { FaqList } from "@/components/FaqList";
@@ -38,26 +36,13 @@ export default async function ComptePage() {
 
   // Réglages de notification et téléphones : tables réservées au serveur (migrations 0021, 0034).
   const admin = createAdminClient();
-  const [{ data: profile }, { data: season }, { data: nations }, { data: notificationRow }, { count: phoneCount }, unreadReplies] = await Promise.all([
+  const [{ data: profile }, { data: notificationRow }, { count: phoneCount }, unreadReplies] = await Promise.all([
     supabase.from("profiles").select("pseudo").eq("id", user.id).single(),
-    supabase.from("seasons").select("id").eq("status", "active").maybeSingle(),
-    supabase.from("nations").select("code, name").order("name"),
     admin.from("notification_preferences").select("*").eq("user_id", user.id).maybeSingle(),
     admin.from("push_tokens").select("token", { count: "exact", head: true }).eq("user_id", user.id),
     // Messagerie « Suggérer une modification » (migration 0037) : 0 tant que la table n'existe pas.
     unreadRepliesCount(admin, user.id).catch(() => 0),
   ]);
-
-  let favoriteTeam: { nation_code: string; sex: "H" | "F" } | null = null;
-  let equipeActive = false;
-  if (season) {
-    const [{ data: favorite }, active] = await Promise.all([
-      supabase.from("favorite_teams").select("nation_code, sex").eq("user_id", user.id).eq("season_id", season.id).maybeSingle(),
-      isEquipeCardActive(supabase, user.id, season.id),
-    ]);
-    favoriteTeam = favorite ?? null;
-    equipeActive = active;
-  }
 
   const tGlobal = await getTranslations("Landing");
   const pseudo = profile?.pseudo ?? "";
@@ -81,17 +66,6 @@ export default async function ComptePage() {
         <Card>
           <ThemeToggle />
         </Card>
-
-        {/* Équipe favorite : visible seulement tant qu'elle reste à choisir (lien depuis l'accueil). Une fois
-            choisie, elle s'affiche sur l'accueil et dans « Ma saison », plus ici. */}
-        {season && (nations ?? []).length > 0 && !favoriteTeam && !equipeActive && (
-          <FavoriteTeamForm
-            seasonId={season.id}
-            nations={nations!}
-            initial={null}
-            locked={false}
-          />
-        )}
 
         <Card>
           <SectionLabel>🌐 {t("languageTitle")}</SectionLabel>

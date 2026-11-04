@@ -4,6 +4,8 @@ import { Link } from "@/i18n/navigation";
 import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { GlobesForm, type GlobeCategoryConfig } from "./GlobesForm";
 import { PepiteForm } from "./PepiteForm";
+import { FavoriteTeamForm } from "./FavoriteTeamForm";
+import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { getClock } from "@/lib/clock";
 import { isPepiteEligibleOdds } from "@/lib/scoring";
 import { fetchAll } from "@/lib/admin/fetchAll";
@@ -59,7 +61,7 @@ export default async function GlobesPage() {
     );
   }
 
-  const [{ data: existingPicks }, { data: nations }, { data: pepites }, pepiteOdds] = await Promise.all([
+  const [{ data: existingPicks }, { data: nations }, { data: pepites }, pepiteOdds, { data: favoriteTeam }, equipeActive] = await Promise.all([
     supabase
       .from("season_predictions")
       .select("category, athlete_id, nation_code")
@@ -78,6 +80,8 @@ export default async function GlobesPage() {
         .order("id")
         .range(from, to)
     ),
+    supabase.from("favorite_teams").select("nation_code, sex").eq("user_id", user.id).eq("season_id", season.id).maybeSingle(),
+    isEquipeCardActive(supabase, user.id, season.id),
   ]);
   const nameByNationCode = new Map((nations ?? []).map((n) => [n.code, n.name]));
   const pepiteBySex = new Map((pepites ?? []).map((p) => [p.sex, p]));
@@ -176,6 +180,16 @@ export default async function GlobesPage() {
           options={pepiteOptionsFor("H")}
         />
       </div>
+
+      {/* Équipe favorite : pas verrouillée au début de saison, seulement par la carte Équipe. */}
+      {(nations ?? []).length > 0 && (
+        <FavoriteTeamForm
+          seasonId={season.id}
+          nations={[...nations!].sort((a, b) => a.name.localeCompare(b.name))}
+          initial={favoriteTeam ? { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex as "H" | "F" } : null}
+          locked={equipeActive}
+        />
+      )}
     </div>
   );
 }

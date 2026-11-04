@@ -448,7 +448,8 @@
     "pepiteRevealed": "Revelado",
     "pepiteNotRevealed": "Aún no revelado",
     "pepiteNone": "Aún no elegido",
-    "pepiteChoose": "Elegir"
+    "pepiteChoose": "Elegir",
+    "favoriteTeamChoose": "Elegir"
   },
   "RaceFormat": {
     "sprint": "Sprint",

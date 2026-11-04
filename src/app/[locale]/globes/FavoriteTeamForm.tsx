@@ -9,6 +9,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 /**
  * Équipe favorite (nation + sexe) : choix définitif pour la saison, possible à tout moment tant que
  * la carte Équipe n'est pas active (`locked`). Une fois choisie, elle n'est plus modifiable.
+ * Sur la page des pronostics de saison (/globes), où se font tous les choix de début de saison.
  */
 export function FavoriteTeamForm({
   seasonId,
