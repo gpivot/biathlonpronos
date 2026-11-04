@@ -75,6 +75,8 @@ function BonusQuestionCard({
   const [answer, setAnswer] = useState<number | null>(question.myAnswer);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  // Passe à vrai après un enregistrement réussi dans cette visite : l'encart de confirmation « saute » pour être remarqué.
+  const [justSaved, setJustSaved] = useState(0);
   const remaining = useRemaining(question.kind === "live" && question.state === "open" ? remainingMs : null);
   const open = question.state === "open" && (remaining == null || remaining > 0);
   const live = question.kind === "live";
@@ -84,12 +86,14 @@ function BonusQuestionCard({
     const previous = answer;
     setAnswer(index);
     setError(null);
+    setJustSaved(0);
     startTransition(async () => {
       const result = await answerBonusQuestion(question.id, index);
       if (!result.ok) {
         setAnswer(previous);
         setError(t(`error_${result.error}`));
       } else {
+        setJustSaved((n) => n + 1);
         router.refresh();
       }
     });
@@ -164,8 +168,29 @@ function BonusQuestionCard({
         ) : (
           <div className="text-[12px] font-semibold text-text-dim">{answer === null ? t("notAnswered") : t("wrong")}</div>
         )
+      ) : answer !== null && pending ? (
+        <div role="status" className="flex items-center gap-3 rounded-2xl border border-border bg-card px-3.5 py-3 text-sm font-semibold text-text-dim">
+          <span className="h-5 w-5 shrink-0 animate-spin rounded-full border-2 border-ice border-t-transparent" />
+          {t("saving")}
+        </div>
       ) : answer !== null ? (
-        <div className="text-[12px] text-text-dim">{open ? t("answeredCanChange", { points: BONUS_QUESTION_POINTS }) : t("pendingResult")}</div>
+        // Confirmation bien visible que le choix est enregistré (même encart que « Ton pronostic est validé ! »).
+        <div
+          key={justSaved}
+          role="status"
+          className={`flex items-center gap-3 rounded-2xl border border-ice bg-ice-soft px-3.5 py-3 ${justSaved ? "animate-save-pop" : ""}`}
+        >
+          <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ice">
+            <CheckIcon className="h-4 w-4 text-on-ice" />
+          </div>
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-sm font-bold text-frost">{t("savedTitle")}</span>
+            <span className="text-[12px] text-text-dim">
+              {t("savedChoice", { option: question.options[answer] ?? "" })}{" "}
+              {open ? t("canChange", { points: BONUS_QUESTION_POINTS }) : t("resultSoon")}
+            </span>
+          </div>
+        </div>
       ) : !signedIn ? (
         <div className="text-[12px] text-text-dim">{t("signInToAnswer")}</div>
       ) : open ? (

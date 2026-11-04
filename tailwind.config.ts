@@ -5,6 +5,15 @@ const config: Config = {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      // Confirmation d'enregistrement (questions bonus) : petit rebond pour attirer l'œil.
+      keyframes: {
+        "save-pop": {
+          "0%": { transform: "scale(0.94)", opacity: "0" },
+          "60%": { transform: "scale(1.03)", opacity: "1" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+      },
+      animation: { "save-pop": "save-pop 0.35s ease-out" },
       // Couleurs définies par des variables CSS (src/app/globals.css) pour permettre le thème clair
       // (classe `light` sur <html>) ; `<alpha-value>` garde les modificateurs d'opacité (bg-card/70).
       colors: {
