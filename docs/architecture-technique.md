@@ -726,6 +726,16 @@ sa place et ses points au classement général et son équipe favorite, puis ses
 saison, sa série en cours, et ses étapes. Migration **0019** : lecture des équipes favorites
 ouverte à tous (rien à copier), à coller par Guillaume.
 
+**Série remise à zéro à chaque saison (04/11/2026).** Le compteur `streak_counters` est propre à
+chaque saison (clé `user_id, season_id`) : une nouvelle saison part toujours de zéro. Mais un
+compteur peut rester en base alors qu'aucune course de la saison n'est plus notée (course de test
+notée puis supprimée ou repassée « à venir » hors de l'admin, directement dans Supabase), d'où une
+série 1/10 affichée avant le début de saison. Désormais `getCurrentStreak` renvoie `null` tant
+qu'aucune course de la saison n'a le statut « finished » (`seasonHasFinishedRace`) : la carte
+« Série en cours » (accueil, Ma saison, pop-up joueur) et « Meilleures séries en cours » du
+Classement n'apparaissent qu'après la 1re course notée. La 1re notation recalcule ensuite toutes
+les séries de la saison (`recomputeSeasonStreaks`) et remet les compteurs périmés à zéro.
+
 ## Courses malus et titre « Ma saison » (fin octobre 2026)
 
 - **Admin** : « Brouillard » ne peut être choisi que pour un sprint ou une individuelle (option
