@@ -254,7 +254,7 @@ En fin de saison, chaque joueur efface automatiquement :
 - ses **3 plus mauvais résultats de courses individuelles** ;
 - ses **2 plus mauvais relais**.
 
-Les courses des Mondiaux et des Jeux Olympiques ne sont jamais effacées. Une course **non jouée** compte comme un résultat à effacer en priorité : les jokers servent d'abord à couvrir les absences. Effacer un résultat retire ses points du total (un 0 ne coûte rien, un malus est annulé, un petit score est retiré).
+Les courses des Mondiaux et des Jeux Olympiques ne sont jamais effacées, pas plus que les **courses malus et bonus** (Tour de péna, Brouillard, T'es collé, Fête nationale… ; précisé le 04/11/2026). Une course **non jouée** compte comme un résultat à effacer en priorité : les jokers servent d'abord à couvrir les absences. Effacer un résultat retire ses points du total (un 0 ne coûte rien, un petit score est retiré).
 
 Les jokers ne s'appliquent qu'en fin de saison. Pendant la saison, l'encadré « Mon classement » de la page Classement montre un aperçu : les résultats qui seraient effacés si la saison s'arrêtait aujourd'hui.
 

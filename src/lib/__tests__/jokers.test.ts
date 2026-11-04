@@ -48,6 +48,36 @@ describe("jokers de fin de saison", () => {
     expect(erased.map((c) => c.raceId)).toEqual(["s1"]);
   });
 
+  it("ne touche jamais aux courses malus ni bonus", () => {
+    const { erased } = selectJokers([
+      race("m1", -300, { special: true }),
+      race("b1", 0, { special: true, played: false }),
+      race("mr", 0, { special: true, relay: true, played: false }),
+      race("s1", 80),
+    ]);
+    expect(erased.map((c) => c.raceId)).toEqual(["s1"]);
+  });
+
+  it("exclut les courses à règle spéciale dans le calcul par joueur", () => {
+    const jokers = computeSeasonJokers(
+      [
+        { id: "m1", format: "sprint", coefficient: 1, finished: true, specialRule: "tour_de_pena" },
+        { id: "s1", format: "sprint", coefficient: 1, finished: true, specialRule: null },
+      ],
+      [
+        { userId: "u", raceId: "m1", points: -50 },
+        { userId: "u", raceId: "s1", points: 20 },
+      ],
+      [
+        { userId: "u", raceId: "m1", played: true },
+        { userId: "u", raceId: "s1", played: true },
+      ],
+      ["u"]
+    );
+    expect(jokers.get("u")!.erased.map((c) => c.raceId)).toEqual(["s1"]);
+    expect(jokers.get("u")!.delta).toBe(-20);
+  });
+
   it("à égalité, efface la course la plus ancienne", () => {
     const { erased } = selectJokers([race("a", 0), race("b", 0), race("c", 0), race("d", 0)]);
     expect(erased.map((c) => c.raceId)).toEqual(["a", "b", "c"]);
