@@ -895,8 +895,10 @@
     "stageLeader": "Rotes Trikot: Führender der Etappe",
     "stageWins": "Rotes Trikot: {count, plural, one {# Etappe gewonnen} other {# Etappen gewonnen}}",
     "perfectPicks": "{count, plural, one {# perfekter Tipp} other {# perfekte Tipps}}",
-    "helpStageLeader": "Rotes Trikot: Führender der angezeigten Etappe (Wertung „Nach Etappen“), mit der Zahl der gewonnenen Etappen.",
-    "helpPerfect": "Perfekte Tipps: die 3 punktstärksten Biathleten des Rennens."
+    "helpStageLeader": "Rotes Trikot: der Führende der laufenden Etappe, danach gewonnene Etappen (die Zahl auf dem Trikot).",
+    "helpPerfect": "Perfekte Tipps: die 3 punktstärksten Biathleten des Rennens.",
+    "streak": "{count, plural, one {Aktuelle Serie: # Rennen} other {Aktuelle Serie: # Rennen}}",
+    "helpStreak": "Aktuelle Serie: 🔥 und die Anzahl Rennen in Folge, in denen der Spieler gepunktet hat (Bonuskarte bei 10)."
   },
   "Guest": {
     "title": "Erstelle dein Konto zum Bestätigen",

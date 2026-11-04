@@ -895,8 +895,10 @@
     "stageLeader": "Dorsal rojo: líder de la etapa",
     "stageWins": "Dorsal rojo: {count, plural, one {# etapa ganada} other {# etapas ganadas}}",
     "perfectPicks": "{count, plural, one {# pronóstico perfecto} other {# pronósticos perfectos}}",
-    "helpStageLeader": "Dorsal rojo: el líder de la etapa mostrada (clasificación «Por etapas»), con el número de etapas ganadas.",
-    "helpPerfect": "Pronósticos perfectos: los 3 biatletas que más puntos daban en la carrera."
+    "helpStageLeader": "Dorsal rojo: el líder de la etapa en curso y luego las etapas ganadas (la cifra del dorsal).",
+    "helpPerfect": "Pronósticos perfectos: los 3 biatletas que más puntos daban en la carrera.",
+    "streak": "{count, plural, one {Racha actual: # carrera} other {Racha actual: # carreras}}",
+    "helpStreak": "Racha actual: 🔥 y el número de carreras seguidas en las que el jugador sumó puntos (carta bonus a las 10)."
   },
   "Guest": {
     "title": "Crea tu cuenta para validar",

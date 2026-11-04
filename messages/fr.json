@@ -895,8 +895,10 @@
     "stageLeader": "Dossard rouge : leader de l'étape",
     "stageWins": "Dossard rouge : {count, plural, one {# étape gagnée} other {# étapes gagnées}}",
     "perfectPicks": "{count, plural, one {# prono parfait} other {# pronos parfaits}}",
-    "helpStageLeader": "Dossard rouge : le leader de l'étape affichée (classement « Par étapes »), et le nombre d'étapes gagnées.",
-    "helpPerfect": "Pronos parfaits : les 3 biathlètes qui rapportaient le plus sur la course."
+    "helpStageLeader": "Dossard rouge : le leader de l'étape en cours, puis les étapes gagnées (le chiffre sur le dossard).",
+    "helpPerfect": "Pronos parfaits : les 3 biathlètes qui rapportaient le plus sur la course.",
+    "streak": "{count, plural, one {Série en cours : # course} other {Série en cours : # courses}}",
+    "helpStreak": "Série en cours : 🔥 et le nombre de courses d'affilée où le joueur a marqué des points (carte bonus à 10)."
   },
   "Guest": {
     "title": "Crée ton compte pour valider",

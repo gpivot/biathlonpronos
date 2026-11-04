@@ -895,8 +895,10 @@
     "stageLeader": "Red bib: stage leader",
     "stageWins": "Red bib: {count, plural, one {# stage won} other {# stages won}}",
     "perfectPicks": "{count, plural, one {# perfect pick} other {# perfect picks}}",
-    "helpStageLeader": "Red bib: leader of the stage shown (\"By stage\" standings), with the number of stages won.",
-    "helpPerfect": "Perfect picks: the 3 highest-scoring biathletes of the race."
+    "helpStageLeader": "Red bib: the leader of the current stage, then stages won (the number on the bib).",
+    "helpPerfect": "Perfect picks: the 3 highest-scoring biathletes of the race.",
+    "streak": "{count, plural, one {Current streak: # race} other {Current streak: # races}}",
+    "helpStreak": "Current streak: 🔥 and the number of races in a row where the player scored points (bonus card at 10)."
   },
   "Guest": {
     "title": "Create your account to confirm",

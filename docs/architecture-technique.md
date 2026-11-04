@@ -1085,12 +1085,17 @@ Décisions de Guillaume du 01/11/2026 :
   filtré « Par étapes » sur « Toute l'étape », le 1er (avec des points) porte le dossard rouge au lieu
   du jaune. Le **dossard jaune est réservé au classement de la saison** (général, ou ligue sur la
   saison) ; sur une seule course, ni jaune ni rouge (le 🍾 désigne déjà le vainqueur).
-- **Étapes gagnées** (`countStageWins`, testé) : dossard rouge suivi du nombre, à côté du pseudo
+- **Étapes gagnées** (`countStageWins`, testé) : dossard rouge avec le nombre d'étapes gagnées
+  écrit sur le dossard (1, 2, 3…, demande du 04/11/2026), à côté du pseudo
   (Classement, pop-up joueur, carte de rang et Top 5 de l'accueil). Une étape compte quand **toutes
   ses courses sont notées** ; le vainqueur est le joueur qui a le plus de points sur l'ensemble de
   ses courses (bonus Pépite compris, comme pour les courses gagnées), ex æquo tous vainqueurs.
-  **À confirmer** : l'étape en cours ne compte pas encore (son leader porte le rouge seulement dans
-  le classement « Par étapes »).
+  Depuis le 04/11/2026, le leader de l'étape en cours porte aussi le rouge sur le classement
+  « Saison » (Classement uniquement), à côté d'un 🔥 n pour la série en cours (10/10).
+  **À confirmer** : l'étape en cours ne compte pas dans le nombre d'étapes gagnées tant que toutes ses
+  courses ne sont pas notées ; le leader d'étape est calculé sur le général, même en vue Ligue.
+- **Par étapes** : sur « Toute l'étape », plus de pronostics dans les lignes (ils restent dans le
+  pop-up du joueur) ; sur une course choisie et partie, une seule ligne de pronostic sous le pseudo.
 - **⭐ n pronos parfaits** : nombre de lignes de `score_ledger` avec `breakdown.pronoParfaitBonus`
   positif. Pictos conservés : ⚡ ×2 (avec le nombre), 🍾 courses gagnées, ❄️ Pépite.
 - **Chat noir retirée** (réservée au vélo) : supprimée du règlement, des textes et du type

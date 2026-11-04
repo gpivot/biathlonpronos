@@ -895,8 +895,10 @@
     "stageLeader": "Pettorale rosso: leader della tappa",
     "stageWins": "Pettorale rosso: {count, plural, one {# tappa vinta} other {# tappe vinte}}",
     "perfectPicks": "{count, plural, one {# pronostico perfetto} other {# pronostici perfetti}}",
-    "helpStageLeader": "Pettorale rosso: il leader della tappa mostrata (classifica «Per tappe»), con il numero di tappe vinte.",
-    "helpPerfect": "Pronostici perfetti: i 3 biatleti che valevano più punti nella gara."
+    "helpStageLeader": "Pettorale rosso: il leader della tappa in corso, poi le tappe vinte (la cifra sul pettorale).",
+    "helpPerfect": "Pronostici perfetti: i 3 biatleti che valevano più punti nella gara.",
+    "streak": "{count, plural, one {Serie in corso: # gara} other {Serie in corso: # gare}}",
+    "helpStreak": "Serie in corso: 🔥 e il numero di gare di fila in cui il giocatore ha fatto punti (carta bonus a 10)."
   },
   "Guest": {
     "title": "Crea il tuo account per confermare",

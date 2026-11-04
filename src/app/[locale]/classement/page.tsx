@@ -21,10 +21,22 @@ import {
 } from "@/lib/standings";
 import { PlayerSeasonButton } from "./PlayerSeasonButton";
 import { StandingsFilters, type StandingsFilterOptions, type StandingsFilterState } from "./StandingsFilters";
+import { seasonHasFinishedRace } from "@/lib/streakCounter";
 import { getPlayerJokers } from "@/lib/seasonView";
 import { JokersCard } from "@/components/JokersCard";
 
 export const dynamic = "force-dynamic";
+
+/** Séries en cours (10/10) de tous les joueurs : rien avant la 1re course notée (cf. getCurrentStreak). */
+async function getCurrentStreaks(supabase: ReturnType<typeof createClient>, seasonId: string): Promise<Map<string, number>> {
+  if (!(await seasonHasFinishedRace(supabase, seasonId))) return new Map();
+  const { data } = await supabase
+    .from("streak_counters")
+    .select("user_id, current_streak")
+    .eq("season_id", seasonId)
+    .gt("current_streak", 0);
+  return new Map((data ?? []).map((s: any) => [s.user_id as string, Number(s.current_streak)]));
+}
 
 type SearchParams = { portee?: string; ligue?: string; periode?: string; etape?: string; course?: string };
 
@@ -87,13 +99,24 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const noLeague = scope === "league" && !leagueId;
   let rows: StandingsRow[] = [];
   let showPicks = false;
+  let streaks = new Map<string, number>();
+  let ongoingStageLeaders = new Set<string>();
   if (season && !noLeague) {
     const members = leagueId ? await getLeagueMembers(supabase, leagueId) : null;
     if (period === "season") {
+      // Dossard rouge sur le classement Saison : le(s) leader(s) de l'étape en cours.
+      const ongoingStage = stages.find(isStageOngoing);
+      const [currentStreaks, ongoingRows] = await Promise.all([
+        getCurrentStreaks(supabase, season.id),
+        ongoingStage ? getRacesStandings(supabase, ongoingStage.races, null, false) : Promise.resolve([]),
+      ]);
+      streaks = currentStreaks;
+      ongoingStageLeaders = new Set(ongoingRows.filter((r) => r.rank === 1 && r.points > 0).map((r) => r.userId));
       rows = buildStandings(leaderboard, members, null);
     } else if (stage) {
-      // Pronostics visibles : sur une course déjà partie, ou sur l'étape entière quand elle est en cours.
-      showPicks = race ? race.displayStatus !== "upcoming" : isStageOngoing(stage);
+      // Pronostics affichés (une ligne sous le pseudo) seulement pour une course choisie et déjà partie ;
+      // sur l'étape entière, ils restent dans le pop-up du joueur pour garder des lignes compactes.
+      showPicks = Boolean(race && race.displayStatus !== "upcoming");
       rows = await getRacesStandings(supabase, race ? [race] : stage.races, members, showPicks);
     }
   }
@@ -118,6 +141,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
             items={[
               { icon: <LeaderBib className="h-5 w-5" />, text: tBadges("helpLeader") },
               { icon: <StageLeaderBib className="h-5 w-5" />, text: tBadges("helpStageLeader") },
+              { icon: "🔥", text: tBadges("helpStreak") },
               { icon: "⚡", text: tBadges("helpX2") },
               { icon: "🍾", text: tBadges("helpWins") },
               { icon: "⭐", text: tBadges("helpPerfect") },
@@ -185,14 +209,16 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                     <PlayerBadgesRow
                       badges={badges.get(row.userId)}
                       leader={period === "season" && row.rank === 1 && row.points > 0}
-                      stageLeader={period === "stages" && !race && row.rank === 1 && row.points > 0}
+                      stageLeader={
+                        period === "stages" ? !race && row.rank === 1 && row.points > 0 : ongoingStageLeaders.has(row.userId)
+                      }
+                      streak={period === "season" ? streaks.get(row.userId) ?? 0 : 0}
                     />
                   </div>
                   {showPicks &&
                     (row.picks && row.picks.length > 0 ? (
                       row.picks.map((pick) => (
-                        <div key={pick.raceId} className="text-xs leading-snug text-frost">
-                          {!race && <div className="text-[11px] text-text-dim">{raceLabel(pick)}</div>}
+                        <div key={pick.raceId} className="truncate text-xs leading-snug text-frost">
                           {pick.names}
                         </div>
                       ))
