@@ -214,7 +214,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
             {canChooseFavoriteTeam && (
               <Link
-                href="/compte#equipe-favorite"
+                href="/globes#equipe-favorite"
                 className="flex items-center gap-3 rounded-xl border border-ice/40 bg-ice-soft px-3 py-2.5"
               >
                 <span className="text-lg">❤️</span>

@@ -344,7 +344,11 @@
     "deleting": "Eliminazione…",
     "deleteError": "Eliminazione non riuscita. Riprova o scrivi a contact@biathlonpronos.fr.",
     "suggestChange": "Suggerisci una modifica",
-    "suggestChangeHint": "Un errore, un'idea? Scrivici, ti rispondiamo qui"
+    "suggestChangeHint": "Un errore, un'idea? Scrivici, ti rispondiamo qui",
+    "avatarChange": "Cambia icona",
+    "avatarTitle": "Scegli la tua icona",
+    "avatarNone": "Nessuna (iniziale del nickname)",
+    "avatarError": "Icona non salvata, riprova."
   },
   "Globes": {
     "back": "← Indietro",
@@ -459,7 +463,8 @@
     "pepiteNotRevealed": "Non ancora rivelata",
     "pepiteNone": "Non ancora scelta",
     "pepiteChoose": "Scegli",
-    "pepiteSeeRace": "vedi la gara"
+    "pepiteSeeRace": "vedi la gara",
+    "favoriteTeamChoose": "Scegli"
   },
   "RaceFormat": {
     "sprint": "Sprint",

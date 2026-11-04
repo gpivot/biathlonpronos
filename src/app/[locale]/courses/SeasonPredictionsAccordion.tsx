@@ -24,15 +24,22 @@ export function SeasonPredictionsAccordion({
   picks,
   readOnly = false,
   open: picksOpen = false,
+  favoriteTeam,
 }: {
   picks: SeasonPick[];
   readOnly?: boolean;
+  /**
+   * Équipe favorite du joueur (sa propre saison seulement) : « France Femmes », ou null si pas encore
+   * choisie (bouton « Choisir » vers /globes tant que c'est possible). Absent : pas de ligne.
+   */
+  favoriteTeam?: { label: string; nationCode: string } | { label: null; choosable: boolean };
   /** Encore modifiables : un bouton « Compléter » remplace « Pas encore choisi » sur les lignes vides. */
   open?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("Courses");
   const tGlobes = useTranslations("Globes");
+  const tCompte = useTranslations("Compte");
   const chosen = picks.filter((p) => p.name).length;
 
   return (
@@ -71,6 +78,29 @@ export function SeasonPredictionsAccordion({
               )}
             </div>
           ))}
+          {favoriteTeam && (
+            <div className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-2.5">
+              <div className="flex flex-1 items-center gap-2 text-[13px] text-text-dim">
+                <span className="w-5 flex-shrink-0 text-center">❤️</span>
+                {tCompte("favoriteTeamTitle")}
+              </div>
+              {favoriteTeam.label !== null ? (
+                <div className="flex items-center gap-1.5 text-[13px] font-semibold">
+                  <span>{nationFlagEmoji(favoriteTeam.nationCode)}</span>
+                  {favoriteTeam.label}
+                </div>
+              ) : favoriteTeam.choosable ? (
+                <Link
+                  href="/globes#equipe-favorite"
+                  className="whitespace-nowrap rounded-full bg-gold px-3 py-1 font-display text-[12px] font-bold text-on-gold"
+                >
+                  {t("favoriteTeamChoose")}
+                </Link>
+              ) : (
+                <div className="text-[12px] text-text-dim">{t("seasonPredictionsNone")}</div>
+              )}
+            </div>
+          )}
           {!readOnly && (
             <Link
               href="/globes"

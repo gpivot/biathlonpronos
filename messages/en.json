@@ -344,7 +344,11 @@
     "deleting": "Deleting…",
     "deleteError": "Deletion failed. Try again, or write to contact@biathlonpronos.fr.",
     "suggestChange": "Suggest a change",
-    "suggestChangeHint": "Spotted a mistake or have an idea? Write to us, we reply here"
+    "suggestChangeHint": "Spotted a mistake or have an idea? Write to us, we reply here",
+    "avatarChange": "Change picture",
+    "avatarTitle": "Pick your icon",
+    "avatarNone": "None (first letter of your username)",
+    "avatarError": "Icon not saved, please try again."
   },
   "Globes": {
     "back": "← Back",
@@ -459,7 +463,8 @@
     "pepiteNotRevealed": "Not revealed yet",
     "pepiteNone": "Not chosen yet",
     "pepiteChoose": "Choose",
-    "pepiteSeeRace": "see the race"
+    "pepiteSeeRace": "see the race",
+    "favoriteTeamChoose": "Choose"
   },
   "RaceFormat": {
     "sprint": "Sprint",
