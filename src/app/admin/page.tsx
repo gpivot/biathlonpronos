@@ -256,7 +256,7 @@ export default async function AdminCalendarResultsPage() {
                         title="Heure de départ (= verrouillage), en UTC"
                         className={inputClass}
                       />
-                      <SpecialRuleSelect defaultFormat={RACE_FORMATS[0].value} className={inputClass} />
+                      <SpecialRuleSelect defaultFormat={RACE_FORMATS[0].value} championship={stage.coefficient === 2} className={inputClass} />
                       <button type="submit" className="rounded border border-border px-3 py-1.5 text-xs">
                         Ajouter la course
                       </button>

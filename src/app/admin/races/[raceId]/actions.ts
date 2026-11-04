@@ -183,10 +183,15 @@ export async function updateRace(formData: FormData) {
   const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
   if (!isSpecialRuleAllowed(format, specialRule)) throw new Error("Brouillard : seulement sur un sprint ou une individuelle ; Fête nationale : seulement sur une course individuelle.");
+  const admin = createAdminClient();
+  if (specialRule !== "") {
+    const { data: race } = await admin.from("races").select("stages(coefficient)").eq("id", raceId).single();
+    if ((race?.stages as unknown as { coefficient: number } | null)?.coefficient === 2) throw new Error("Pas de course malus ni de Fête nationale sur les Mondiaux / JO (étape à coefficient 2).");
+  }
   // relais_h/f portent le sexe dans le format, les relais mixtes n'en ont pas.
   const sexless = format.startsWith("relais_");
 
-  const { error } = await createAdminClient()
+  const { error } = await admin
     .from("races")
     .update({
       format,
