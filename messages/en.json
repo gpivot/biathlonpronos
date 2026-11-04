@@ -441,6 +441,8 @@
     "importLoading": "Importing...",
     "importSummary": "{stagesCreated} stage(s) created, {stagesUpdated} updated · {racesCreated} race(s) created, {racesUpdated} updated.",
     "worldChampionships": "World Championships",
+    "worldCup": "World Cup",
+    "offStandingsStageNote": "This stage does not count towards the overall standings.",
     "toPlayCount": "{count} to play",
     "toPlayButton": "Play",
     "seasonPredictionsTitle": "My season predictions",

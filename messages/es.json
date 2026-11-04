@@ -441,6 +441,8 @@
     "importLoading": "Importando...",
     "importSummary": "{stagesCreated} etapa(s) creada(s), {stagesUpdated} actualizada(s) · {racesCreated} carrera(s) creada(s), {racesUpdated} actualizada(s).",
     "worldChampionships": "Mundiales",
+    "worldCup": "Copa del Mundo",
+    "offStandingsStageNote": "Esta etapa no cuenta para la clasificación general.",
     "toPlayCount": "{count} por jugar",
     "toPlayButton": "Por jugar",
     "seasonPredictionsTitle": "Mis pronósticos de temporada",

@@ -168,7 +168,7 @@ export default async function AdminCalendarResultsPage() {
                         {nationFlagEmoji(stage.country_code)} {stage.location}
                         {stage.coefficient === 2 && <span className="ml-2 text-xs text-gold">×2</span>}
                         {stage.counts_in_standings === false && (
-                          <span className="ml-2 text-xs text-text-dim">×0 · hors classement</span>
+                          <span className="ml-2 text-xs text-text-dim">×0 · hors classement{stage.label ? ` · ${stage.label}` : ""}</span>
                         )}
                       </div>
                       <div className="text-xs text-text-dim">{formatDateRange(stage.starts_on, stage.ends_on)}</div>
@@ -296,6 +296,7 @@ export default async function AdminCalendarResultsPage() {
                   </option>
                 ))}
               </select>
+              <input name="label" maxLength={40} placeholder="Mention (ex. Pré-saison)" className={inputClass} />
               <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
                 Créer
               </button>

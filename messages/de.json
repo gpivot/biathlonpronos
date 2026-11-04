@@ -441,6 +441,8 @@
     "importLoading": "Wird importiert...",
     "importSummary": "{stagesCreated} Station(en) erstellt, {stagesUpdated} aktualisiert · {racesCreated} Rennen erstellt, {racesUpdated} aktualisiert.",
     "worldChampionships": "Weltmeisterschaften",
+    "worldCup": "Weltcup",
+    "offStandingsStageNote": "Diese Etappe zählt nicht für die Gesamtwertung.",
     "toPlayCount": "{count} offen",
     "toPlayButton": "Jetzt tippen",
     "seasonPredictionsTitle": "Meine Saisontipps",

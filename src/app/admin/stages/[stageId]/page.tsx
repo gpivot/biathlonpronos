@@ -58,6 +58,14 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
               </option>
             ))}
           </select>
+          <input
+            name="label"
+            maxLength={40}
+            defaultValue={stage.label ?? ""}
+            placeholder="Mention (ex. Pré-saison)"
+            title="Texte affiché au-dessus du lieu dans le Calendrier. Vide : Coupe du Monde / Championnats du monde, rien pour une étape hors classement."
+            className={inputClass}
+          />
           <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Enregistrer
           </button>
