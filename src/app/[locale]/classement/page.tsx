@@ -190,6 +190,11 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
               <PlayerSeasonButton
                 key={row.userId}
                 userId={row.userId}
+                stage={
+                  period === "stages" && stage
+                    ? { stageId: stage.id, rank: row.rank, points: row.points, leader: !race && row.rank === 1 && row.points > 0, singleRace: !!race }
+                    : null
+                }
                 className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3.5 ${
                   row.userId === userId ? "border-ice/60 bg-ice-soft" : "border-border bg-card"
                 }`}

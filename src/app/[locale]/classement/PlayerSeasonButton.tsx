@@ -11,11 +11,34 @@ import { CalendarAccordion } from "../courses/CalendarAccordion";
 import { SeasonPredictionsAccordion } from "../courses/SeasonPredictionsAccordion";
 import { getPlayerSeason, type PlayerSeason } from "./actions";
 
+/** Classement « Par étapes » : le pop-up se limite à cette étape (demande de Guillaume, 04/11/2026). */
+export interface PlayerStageScope {
+  stageId: string;
+  rank: number;
+  points: number;
+  /** En tête de l'étape : dossard rouge. */
+  leader: boolean;
+  /** Classement d'une seule course de l'étape (rang et points de cette course). */
+  singleRace: boolean;
+}
+
 /**
  * Ligne du Classement cliquable : ouvre un pop-up avec la page « Ma saison » du joueur
  * (pronostics de saison repliés, puis ses pronostics d'étapes), en lecture seule.
+ * Avec `stage` (classement par étapes), seuls ses pronostics, ses points et sa place sur
+ * cette étape sont montrés.
  */
-export function PlayerSeasonButton({ userId, className, children }: { userId: string; className: string; children: ReactNode }) {
+export function PlayerSeasonButton({
+  userId,
+  className,
+  children,
+  stage = null,
+}: {
+  userId: string;
+  className: string;
+  children: ReactNode;
+  stage?: PlayerStageScope | null;
+}) {
   const t = useTranslations("Classement");
   const tHome = useTranslations("Home");
   const tSex = useTranslations("Sex");
@@ -59,7 +82,12 @@ export function PlayerSeasonButton({ userId, className, children }: { userId: st
             <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-2">
                 <div className="truncate font-display text-base font-bold">{data?.pseudo ?? t("playerTitle")}</div>
-                {data && <PlayerBadgesRow badges={data.badges} leader={data.leader} />}
+                {data &&
+                  (stage ? (
+                    stage.leader && <PlayerBadgesRow badges={undefined} stageLeader />
+                  ) : (
+                    <PlayerBadgesRow badges={data.badges} leader={data.leader} />
+                  ))}
               </div>
               <button
                 type="button"
@@ -74,7 +102,28 @@ export function PlayerSeasonButton({ userId, className, children }: { userId: st
             <div className="flex flex-col gap-3 overflow-y-auto">
               {state === "loading" && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerLoading")}</div>}
               {state === "error" && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerError")}</div>}
-              {data && (
+              {data && stage && (
+                <>
+                  <div className="flex items-end justify-between rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-4">
+                    <div>
+                      <div className="font-display text-xl font-extrabold text-frost">#{stage.rank}</div>
+                      <div className="text-xs text-text-dim">{t(stage.singleRace ? "playerRaceRankLabel" : "playerStageRankLabel")}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-display text-xl font-extrabold text-ice">{Math.round(stage.points * 10) / 10} pts</div>
+                      <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
+                    </div>
+                  </div>
+                  <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
+                  <CalendarAccordion
+                    stages={data.stages.filter((s) => s.id === stage.stageId)}
+                    defaultOpenStageId={stage.stageId}
+                    locale={locale}
+                    readOnly
+                  />
+                </>
+              )}
+              {data && !stage && (
                 <>
                   <div className="flex flex-col gap-2 rounded-2xl border border-border bg-gradient-to-br from-card2 to-card p-4">
                     <div className="flex items-end justify-between">
