@@ -52,6 +52,9 @@ retenus dans `src/lib/scoring/individualRace.ts`, confirmés par Guillaume le 20
   Top 3/Top 5/Top 10, il ne s'y ajoute pas.** Les bonus sont affichés « Bonus Top 3 / Top 5 /
   Top 10 » (le palier est retrouvé à partir du montant enregistré). Les courses déjà notées avant
   ce changement gardent leurs points tant qu'elles ne sont pas renotées.
+- *(Depuis le 04/11/2026, Fusée et Gâchette sont des cartes à points fixes, hors Prono parfait et
+  jamais multipliées : voir « Cartes Fusée, Gâchette et Talent » en fin de document. Les trois
+  points ci-dessous qui les citent décrivent l'ancien bonus automatique.)*
 - **Fusée / Gâchette** : attribués par athlète (et non plus comme un bonus global de fin de
   calcul), sur l'ensemble des biathlètes réellement pronostiqués. Le filtrage "3 meilleurs sur
   4" de la carte "Balle de pioche" s'applique **après** l'ajout de ce bonus — un athlète
@@ -1359,3 +1362,64 @@ restent disponibles d'une course à l'autre.
 `src/app/[locale]/courses/[raceId]/FondueButton.tsx`, le calcul des grillés dans
 `courses/[raceId]/page.tsx` et la prop `grilledAthleteIds` de `PredictionForm.tsx`. Pour les
 retrouver : `git show 91420f9:src/lib/grilling.ts`.
+
+## Cartes Fusée, Gâchette et Talent, réglages des cartes, Tour de péna vide (04/11/2026)
+
+Demande de Guillaume ; décisions validées par lui le 04/11/2026 sauf mention « à confirmer ».
+
+**Fusée et Gâchette deviennent des cartes bonus du 10/10** (plus de bonus automatique, l'ancien §15
+est remplacé par le §13 du règlement).
+- Posées sur une **étape** avant sa 1re course (relais compris), RPC `play_stage_card` ;
+  `bonus_cards.used_on_stage_id`. Elles couvrent toutes les courses individuelles de l'étape, H et F
+  (`coveredRaceIds`, `cardsOnRace().fusee/.gachette`). La même carte une seule fois par étape ;
+  Fusée et Gâchette peuvent être posées sur la même étape.
+- Fusée : 100 / 50 / 20 pts pour le 1er / 2e / 3e temps de ski (`race_results.ski_rank`, saisi dans
+  la colonne « Rang ski » de l'admin, lu dans l'analyse IBU `CRST`, ou case Fusée des anciens CSV =
+  rang 1). Gâchette : 100 pts par 20/20, 50 par 10/10 au sprint (`is_gachette`). 4 formats
+  individuels. Pas besoin d'être dans le Top 10 (« pour sauver sa série »).
+- **Points fixes, jamais multipliés** (ni ×2 perso, ni Fête nationale, ni Team Nation), ajoutés au
+  total : `breakdown.fuseeCardBonus / gachetteCardBonus` et le détail par athlète `fuseeByAthlete /
+  gachetteByAthlete` (l'encart Dernier résultat les remet dans les points du choix, `cardBonus`).
+  « Cumulable avec bonus ×2 » = jouable sur une course où le ×2 est activé (lecture retenue : les
+  points de carte ne sont pas doublés, à confirmer).
+- **Pas de cumul avec Ça farte** : pas de Ça farte sur une course d'une étape où Fusée/Gâchette
+  est posée, et pas de Fusée/Gâchette sur une étape où un Ça farte est déjà posé (`canPlayCard`,
+  `canPlayStageCard`, `play_bonus_card`, `play_stage_card`). Cumul avec Aspiration, 4e choix, Équipe.
+- 4e choix : la carte s'applique aux 4 biathlètes, les points de carte entrent dans le choix des
+  3 meilleurs, seuls les 3 comptés les gardent.
+- Prono parfait : uniquement cote × place (Fusée/Gâchette retirées de `computeBestPossibleTrio` et
+  de `markPronoParfait`). Barème du classement de la course : cote × rang seulement.
+- Série 10/10 : les points de ces cartes comptent (comme Équipe).
+- Pictos conservés : 🚀 pour le top 3 du temps de ski (avec le rang en exposant si 2e ou 3e), 🎯
+  pour le sans-faute.
+
+**Mondiaux / JO : aucune carte bonus.** Une étape au coefficient 2 n'accepte ni Ça farte, ni
+Aspiration, ni Fusée/Gâchette ; le 4e choix saute ses courses (fenêtre et activation,
+`quatriemeChoixWindow`, `next_individual_race`, `quatrieme_choix_window`) ; à la notation, toutes
+les cartes (Équipe comprise) sont ignorées sur ces courses (`scoreIndividualPredictions`,
+`scoreRelayPredictions`).
+
+**Carte Talent.** Proposée au 10/10 seulement si une pépite du joueur est révélée. Se joue sur
+`/globes` (RPC `play_talent_card`) : réactiver la pépite révélée (sans contrôle de cote) ou en
+choisir une nouvelle (toutes cotes ≥ 30), pour un sexe. Refusée si le biathlète est dans un prono
+de course pas encore partie. La pépite ne marque qu'à partir des courses parties après
+(`pepites.active_from`) et reste définitive ensuite (trigger `pepites_check`). La course de la
+révélation est gardée (`pepites.revealed_race_id`) : si cette course est renotée ou réinitialisée
+alors que la pépite a été réactivée ou remplacée, les points de la 1re révélation restent acquis
+(`clearRaceScores` renvoie ces bonus « gelés », `restoreFrozenPepiteBonuses` les remet). Le picto ❄️
+disparaît tant que la pépite réactivée n'est pas de nouveau révélée (à confirmer).
+
+**Réglages des cartes dans l'admin** (`/admin/cartes`, table `bonus_card_settings`) : pour chaque
+carte et la saison active, interrupteur, période (du / au, jours de Paris) et, pour Aspiration et
+Équipe, « débloquer tout de suite » (ignore l'attente de la 4e étape / de l'après-Mondiaux). Pas de
+ligne = carte active sans limite. Désactivée : absente du pop-up du 10/10 ; hors période : grisée
+« Pas en ce moment ». Ne touche que le choix au 10/10 : une carte en main reste jouable.
+
+**Tour de péna, pronostic vide.** Chaque biathlète manquant compte 5 tours d'office (-100 pts),
+`breakdown.missingPicks` + `specialMalus`. Un joueur sans pronostic prend -300 s'il a déjà
+pronostiqué au moins une course de la saison avant celle-ci (`applyTourDePenaAbsences` écrit une
+ligne `score_ledger` avec `breakdown.absent`). Pas de cumul avec les jokers : les courses malus ne
+sont jamais effacées.
+
+**Migrations** : **0037** (nouvelles valeurs d'enum, à exécuter seule) puis **0038** (colonnes,
+table des réglages, fonctions). Les deux sont à coller avant la fusion de la PR.

@@ -120,15 +120,18 @@ export function pickCompetition(
 /**
  * Classement IBU → CSV de résultats. Tirs = fautes tir par tir, et leur somme en Tours de péna
  * (nombre de fautes au tir, compté à la course « Tour de péna ») ; Gâchette = 0 faute au tir ;
- * Fusée = meilleur temps de ski (`fastestSkiIbuId`, lu dans l'analyse « temps de course » quand
- * elle est disponible). `format` : format de la course, pour le nombre de tirs (2 ou 4).
+ * Rang ski = rang au temps de ski (`skiRankByIbuId`, lu dans l'analyse « temps de course » quand
+ * elle est disponible ; seul le top 3 compte pour la carte Fusée). Une chaîne seule = l'IBUId du
+ * meilleur temps (rang 1). `format` : format de la course, pour le nombre de tirs (2 ou 4).
  */
 export function ibuResultsToCsv(
   mode: "athlete" | "nation",
   rows: IbuResultRow[],
-  fastestSkiIbuId?: string | null,
+  skiRankByIbuId?: Map<string, number> | string | null,
   format?: string
 ): string {
+  const skiRanks =
+    typeof skiRankByIbuId === "string" ? new Map([[skiRankByIbuId, 1]]) : skiRankByIbuId ?? new Map<string, number>();
   const count = format ? shootingCount(format) : undefined;
   const ranked = rows.filter((r) => {
     const rank = Number(r.Rank);
@@ -167,7 +170,7 @@ export function ibuResultsToCsv(
         Number(r.Rank) === 1 ? "0" : (r.Behind ?? ""),
         formatShootings(shots),
         misses ?? "",
-        fastestSkiIbuId && r.IBUId === fastestSkiIbuId ? "oui" : "",
+        (r.IBUId && skiRanks.get(r.IBUId)) || "",
         misses === 0 ? "oui" : "",
       ];
     })
@@ -229,21 +232,24 @@ export async function fetchIbuResults(params: IbuRaceLookup & { mode: "athlete" 
   if (rows.length === 0) throw new Error(`Pas encore de résultats publiés par l'IBU pour ${raceId}.`);
   if (forcedRaceId) description = data.Competition?.ShortDescription ?? raceId;
 
-  let fastestSkiIbuId: string | null = null;
-  // La Fusée ne compte qu'au sprint et à l'individuel (§15) : inutile de chercher le temps de ski sinon.
+  const skiRankByIbuId = new Map<string, number>();
+  // Carte Fusée : top 3 du temps de ski, sur toutes les courses individuelles.
   if (mode === "athlete" && fuseeGachetteEligibility(race.format).fusee) {
     try {
       const analysis = await getJson<{ Results?: IbuResultRow[] }>(
         `AnalyticResults?RaceId=${encodeURIComponent(raceId)}&TypeId=CRST`
       );
-      fastestSkiIbuId = analysis.Results?.find((r) => Number(r.Rank) === 1)?.IBUId ?? null;
+      for (const r of analysis.Results ?? []) {
+        const rank = Number(r.Rank);
+        if (r.IBUId && Number.isInteger(rank) && rank >= 1 && rank <= 3) skiRankByIbuId.set(r.IBUId, rank);
+      }
     } catch {
-      // Analyse parfois publiée plus tard : on laisse la Fusée à cocher à la main.
+      // Analyse parfois publiée plus tard : on laisse le rang ski à saisir à la main.
     }
-    if (!fastestSkiIbuId) warnings.push("Temps de ski indisponible : coche la Fusée à la main.");
+    if (skiRankByIbuId.size === 0) warnings.push("Temps de ski indisponible : saisis le rang ski (1, 2, 3) à la main.");
   }
 
-  return { raceId, description, csv: ibuResultsToCsv(mode, rows, fastestSkiIbuId, race.format), warnings };
+  return { raceId, description, csv: ibuResultsToCsv(mode, rows, skiRankByIbuId, race.format), warnings };
 }
 
 export interface IbuStartEntry {

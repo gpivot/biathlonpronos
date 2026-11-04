@@ -24,7 +24,7 @@ export interface CandidateRow extends ResultsCsvCandidate {
     timeGapSeconds: number | null;
     penaltyLaps: number;
     shootings: number[] | null;
-    isFusee: boolean;
+    skiRank: number | null;
     isGachette: boolean;
   };
 }
@@ -34,7 +34,8 @@ interface RowState {
   timeGapSeconds: string;
   shootings: string;
   penaltyLaps: string;
-  isFusee: boolean;
+  /** Rang au temps de ski (carte Fusée : 1er, 2e, 3e). */
+  skiRank: string;
   isGachette: boolean;
 }
 
@@ -45,7 +46,7 @@ function initialRowState(candidate: CandidateRow): RowState {
     timeGapSeconds: r?.timeGapSeconds != null ? String(r.timeGapSeconds) : "",
     shootings: formatShootings(r?.shootings),
     penaltyLaps: r?.penaltyLaps ? String(r.penaltyLaps) : "",
-    isFusee: r?.isFusee ?? false,
+    skiRank: r?.skiRank != null ? String(r.skiRank) : "",
     isGachette: r?.isGachette ?? false,
   };
 }
@@ -74,7 +75,7 @@ export function ResultsForm({
   const isAthleteMode = mode === "athlete";
   const showTimeGap = isAthleteMode && format === "sprint";
   const showPenaltyLaps = isAthleteMode && specialRule === "tour_de_pena";
-  // §15 — Fusée au sprint/individuel, Gâchette en poursuite/mass start.
+  // §15 — cartes Fusée (top 3 du temps de ski) et Gâchette (sans-faute) : tous les formats individuels.
   const showFusee = isAthleteMode && fuseeGachetteEligibility(format).fusee;
   const showGachette = isAthleteMode && fuseeGachetteEligibility(format).gachette;
 
@@ -89,7 +90,7 @@ export function ResultsForm({
   function applyCsv(csvText: string, source: string, extraWarnings: string[] = []) {
     try {
       const parsed = parseResultsCsv(csvText, mode, candidates);
-      const empty: RowState = { rank: "", timeGapSeconds: "", shootings: "", penaltyLaps: "", isFusee: false, isGachette: false };
+      const empty: RowState = { rank: "", timeGapSeconds: "", shootings: "", penaltyLaps: "", skiRank: "", isGachette: false };
       setRows(Object.fromEntries(candidates.map((c) => [c.id, parsed.rows[c.id] ?? empty])));
       setResult(null);
       setCsvReport({
@@ -147,7 +148,7 @@ export function ResultsForm({
         timeGapSeconds: parseTimeGap(row.timeGapSeconds) ?? undefined,
         shootings: parseShootings(row.shootings, shootingCount(format)) ?? undefined,
         penaltyLaps: row.penaltyLaps.trim() !== "" ? Number(row.penaltyLaps) : undefined,
-        isFusee: row.isFusee,
+        skiRank: Number(row.skiRank) > 0 ? Number(row.skiRank) : null,
         isGachette: row.isGachette,
       }));
 
@@ -228,7 +229,11 @@ export function ResultsForm({
                 Tirs
               </th>
               {showPenaltyLaps && <th className="px-3 py-2" title="Vide : nombre de fautes au tir">Tours de péna</th>}
-              {showFusee && <th className="px-3 py-2">Fusée</th>}
+              {showFusee && (
+                <th className="px-3 py-2" title="Rang au temps de ski : 1, 2 ou 3 (carte Fusée : 100 / 50 / 20 pts)">
+                  Rang ski
+                </th>
+              )}
               {showGachette && <th className="px-3 py-2">Gâchette</th>}
             </tr>
           </thead>
@@ -287,9 +292,11 @@ export function ResultsForm({
                   {showFusee && (
                     <td className="px-3 py-2 text-center">
                       <input
-                        type="checkbox"
-                        checked={row.isFusee}
-                        onChange={(e) => updateRow(candidate.id, { isFusee: e.target.checked })}
+                        type="number"
+                        min={1}
+                        value={row.skiRank}
+                        onChange={(e) => updateRow(candidate.id, { skiRank: e.target.value })}
+                        className="w-14 rounded border border-border bg-card px-2 py-1"
                       />
                     </td>
                   )}

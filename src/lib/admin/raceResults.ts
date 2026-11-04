@@ -10,6 +10,7 @@ import {
   type AthleteRaceResult,
   type NationRaceResult,
 } from "@/lib/scoring";
+import { TOUR_DE_PENA_EMPTY_PICK_LAPS, TOUR_DE_PENA_MALUS_PER_LAP } from "@/lib/scoring/constants";
 import { clearCurrentOdds, setCurrentOdds } from "./odds";
 import { totalMisses } from "@/lib/shootings";
 import { fetchAll } from "./fetchAll";
@@ -34,6 +35,8 @@ export interface ResultEntryInput {
   penaltyLaps?: number;
   /** Fautes au tir, une valeur par tir. */
   shootings?: number[];
+  /** Rang au temps de ski (1, 2, 3…), pour la carte Fusée. */
+  skiRank?: number | null;
   isFusee?: boolean;
   isGachette?: boolean;
 }
@@ -65,9 +68,10 @@ export async function saveRaceResults(
     const { error } = await admin.from("race_results").insert(
       entries.map((e) => ({
         race_id: raceId,
-        // Fusée seulement au sprint/individuel, Gâchette seulement en poursuite/mass start (§15).
-        is_fusee: fuseeGachetteEligibility(race.format).fusee && (e.isFusee ?? false),
+        // Fusée (temps de ski) et Gâchette (sans-faute) : courses individuelles seulement (§15).
+        is_fusee: fuseeGachetteEligibility(race.format).fusee && ((e.isFusee ?? false) || e.skiRank === 1),
         is_gachette: fuseeGachetteEligibility(race.format).gachette && (e.isGachette ?? false),
+        ski_rank: fuseeGachetteEligibility(race.format).fusee && e.skiRank != null && e.skiRank > 0 ? e.skiRank : null,
         athlete_id: e.athleteId ?? null,
         nation_code: e.nationCode ?? null,
         rank: e.rank,
@@ -189,7 +193,7 @@ export interface ScoreRaceSummary {
 export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<ScoreRaceSummary> {
   const { data: race, error: raceError } = await admin
     .from("races")
-    .select("id, sex, format, special_rule, stages(id, season_id, country_code, coefficient)")
+    .select("id, sex, format, special_rule, locks_at, stages(id, season_id, country_code, coefficient)")
     .eq("id", raceId)
     .single();
   if (raceError || !race) throw new Error(raceError?.message ?? "Course introuvable.");
@@ -197,7 +201,7 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
   const stage = race.stages as any;
 
   // Notation rejouable : les points déjà attribués sur cette course sont effacés d'abord.
-  await clearRaceScores(admin, raceId, stage.season_id, race.sex);
+  const frozenPepites = await clearRaceScores(admin, raceId, stage.season_id, race.sex);
 
   const [{ data: results }, { data: predictions }] = await Promise.all([
     admin.from("race_results").select("*").eq("race_id", raceId),
@@ -212,9 +216,17 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
     scoredPredictions = pointsByUserId.size;
   }
 
+  // Tour de péna : un joueur absent prend 5 tours d'office par biathlète, soit -300 (04/11/2026).
+  if (race.special_rule === "tour_de_pena" && !RELAY_FORMATS.includes(race.format)) {
+    await applyTourDePenaAbsences(admin, race, stage.season_id, predictions ?? []);
+  }
+
+  // Pépites révélées sur cette course puis remplacées ou réactivées par une carte Talent : leurs points restent acquis.
+  await restoreFrozenPepiteBonuses(admin, stage.season_id, raceId, frozenPepites);
+
   // §14 — la Pépite est indépendante du pronostic du joueur sur cette course précise : à vérifier
   // même si personne n'a pronostiqué dessus. Après les pronostics, pour s'ajouter à leurs points.
-  await applyPepiteBonuses(admin, stage.season_id, raceId, race.format, results ?? []);
+  await applyPepiteBonuses(admin, stage.season_id, race, results ?? []);
 
   await admin.from("races").update({ status: "finished" }).eq("id", raceId);
   await recomputeSeasonStreaks(admin, stage.season_id);
@@ -222,25 +234,130 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
   return { scoredPredictions };
 }
 
+interface FrozenPepiteBonus {
+  userId: string;
+  points: number;
+  athleteId: string | null;
+}
+
 /**
  * Efface les points d'une course (score_ledger) et rend le bonus Pépite à ceux qui l'avaient
- * gagné dessus, pour pouvoir la renoter ou la réinitialiser.
+ * gagné dessus, pour pouvoir la renoter ou la réinitialiser. Exception : une Pépite révélée sur
+ * cette course puis réactivée ou remplacée par une carte Talent n'est plus la Pépite en jeu ; ses
+ * points restent acquis et sont renvoyés pour être remis après la notation.
  */
-async function clearRaceScores(admin: SupabaseClient, raceId: string, seasonId: string, sex: string | null): Promise<void> {
+async function clearRaceScores(
+  admin: SupabaseClient,
+  raceId: string,
+  seasonId: string,
+  sex: string | null
+): Promise<FrozenPepiteBonus[]> {
   const { data: ledger } = await admin.from("score_ledger").select("user_id, breakdown").eq("race_id", raceId);
-  const pepiteUserIds = (ledger ?? [])
-    .filter((row) => (row.breakdown as any)?.pepiteBonus)
-    .map((row) => row.user_id as string);
-  if (pepiteUserIds.length > 0 && sex) {
-    await admin
+  const withPepite = (ledger ?? []).filter((row) => (row.breakdown as any)?.pepiteBonus);
+  const frozen: FrozenPepiteBonus[] = [];
+  if (withPepite.length > 0 && sex) {
+    const { data: current } = await admin
       .from("pepites")
-      .update({ bonus_claimed: false })
+      .select("user_id, athlete_id, bonus_claimed, revealed_race_id")
       .eq("season_id", seasonId)
       .eq("sex", sex)
-      .in("user_id", pepiteUserIds);
+      .in("user_id", withPepite.map((row) => row.user_id as string));
+    const currentByUser = new Map((current ?? []).map((p) => [p.user_id as string, p]));
+    const toReset: string[] = [];
+    for (const row of withPepite) {
+      const breakdown = row.breakdown as any;
+      const pepite = currentByUser.get(row.user_id as string);
+      const revealedHere =
+        !!pepite &&
+        (pepite.revealed_race_id === raceId ||
+          // Révélées avant la migration 0037 (sans revealed_race_id).
+          (pepite.revealed_race_id == null && pepite.bonus_claimed && (!breakdown.pepiteAthleteId || breakdown.pepiteAthleteId === pepite.athlete_id)));
+      if (revealedHere) toReset.push(row.user_id as string);
+      else frozen.push({ userId: row.user_id as string, points: Number(breakdown.pepiteBonus), athleteId: breakdown.pepiteAthleteId ?? null });
+    }
+    if (toReset.length > 0) {
+      await admin
+        .from("pepites")
+        .update({ bonus_claimed: false, revealed_race_id: null })
+        .eq("season_id", seasonId)
+        .eq("sex", sex)
+        .in("user_id", toReset);
+    }
   }
 
   const { error } = await admin.from("score_ledger").delete().eq("race_id", raceId);
+  if (error) throw new Error(error.message);
+  return frozen;
+}
+
+/** Remet sur la course les points des Pépites révélées dessus puis remplacées par une carte Talent. */
+async function restoreFrozenPepiteBonuses(
+  admin: SupabaseClient,
+  seasonId: string,
+  raceId: string,
+  frozen: FrozenPepiteBonus[]
+): Promise<void> {
+  for (const item of frozen) {
+    const { data: existing } = await admin
+      .from("score_ledger")
+      .select("points, breakdown")
+      .eq("user_id", item.userId)
+      .eq("race_id", raceId)
+      .maybeSingle();
+    await admin.from("score_ledger").upsert(
+      {
+        user_id: item.userId,
+        season_id: seasonId,
+        race_id: raceId,
+        points: Number(existing?.points ?? 0) + item.points,
+        breakdown: {
+          ...((existing?.breakdown as object) ?? {}),
+          pepiteBonus: item.points,
+          ...(item.athleteId ? { pepiteAthleteId: item.athleteId } : {}),
+        },
+      },
+      { onConflict: "user_id,race_id" }
+    );
+  }
+}
+
+/**
+ * Tour de péna (Guillaume, 04/11/2026) : un joueur qui n'a pas pronostiqué la course prend 5 tours
+ * d'office pour chacun de ses 3 biathlètes, soit -300. Seuls les joueurs qui ont déjà pronostiqué au
+ * moins une course de la saison avant celle-ci sont concernés (pas les comptes dormants, à confirmer).
+ */
+async function applyTourDePenaAbsences(
+  admin: SupabaseClient,
+  race: { id: string; locks_at: string },
+  seasonId: string,
+  predictions: any[]
+): Promise<void> {
+  const { data: earlierRaces } = await admin
+    .from("races")
+    .select("id, stages!inner(season_id)")
+    .eq("stages.season_id", seasonId)
+    .lt("locks_at", race.locks_at);
+  const earlierIds = (earlierRaces ?? []).map((r) => r.id as string);
+  if (earlierIds.length === 0) return;
+
+  const earlierPredictions = await fetchAll((from, to) =>
+    admin.from("predictions").select("user_id").in("race_id", earlierIds).order("id").range(from, to)
+  );
+  const present = new Set(predictions.map((p) => p.user_id as string));
+  const absent = [...new Set(earlierPredictions.map((p) => p.user_id as string))].filter((id) => !present.has(id));
+  if (absent.length === 0) return;
+
+  const malus = 3 * TOUR_DE_PENA_EMPTY_PICK_LAPS * TOUR_DE_PENA_MALUS_PER_LAP;
+  const { error } = await admin.from("score_ledger").upsert(
+    absent.map((userId) => ({
+      user_id: userId,
+      season_id: seasonId,
+      race_id: race.id,
+      points: malus,
+      breakdown: { specialMalus: malus, missingPicks: 3, absent: true },
+    })),
+    { onConflict: "user_id,race_id" }
+  );
   if (error) throw new Error(error.message);
 }
 
@@ -313,15 +430,17 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
  * §14 — la Pépite est un pronostic caché : sur chaque course individuelle
  * où elle termine dans le Top 10 pour la 1re fois de la saison, son score
  * (cote de la course × multiplicateur de rang, §1) s'ajoute en bonus. Elle
- * n'est ensuite plus jamais réévaluée (bonus_claimed = true).
+ * n'est ensuite plus réévaluée (bonus_claimed = true), sauf carte Talent : une Pépite réactivée
+ * ou choisie avec Talent ne compte qu'à partir des courses parties après (active_from).
  */
 async function applyPepiteBonuses(
   admin: SupabaseClient,
   seasonId: string,
-  raceId: string,
-  raceFormat: string,
+  race: { id: string; format: string; locks_at: string },
   results: any[]
 ): Promise<void> {
+  const raceId = race.id;
+  const raceFormat = race.format;
   const top10Results = results.filter((r) => r.athlete_id && r.rank <= 10);
   if (top10Results.length === 0) return;
 
@@ -329,11 +448,12 @@ async function applyPepiteBonuses(
 
   const { data: pepites } = await admin
     .from("pepites")
-    .select("user_id, sex, athlete_id")
+    .select("user_id, sex, athlete_id, active_from")
     .eq("season_id", seasonId)
     .eq("bonus_claimed", false)
     .in("athlete_id", athleteIds);
-  if (!pepites || pepites.length === 0) return;
+  const inPlay = (pepites ?? []).filter((p) => !p.active_from || new Date(p.active_from) <= new Date(race.locks_at));
+  if (inPlay.length === 0) return;
 
   const { data: odds } = await admin
     .from("odds")
@@ -345,7 +465,7 @@ async function applyPepiteBonuses(
   const oddsByAthleteId = new Map((odds ?? []).map((o) => [o.athlete_id as string, o.value as number]));
   const rankByAthleteId = new Map(top10Results.map((r) => [r.athlete_id as string, r.rank as number]));
 
-  for (const pepite of pepites) {
+  for (const pepite of inPlay) {
     const rank = rankByAthleteId.get(pepite.athlete_id);
     const oddsAtRace = oddsByAthleteId.get(pepite.athlete_id);
     if (rank == null || oddsAtRace == null) continue;
@@ -373,7 +493,7 @@ async function applyPepiteBonuses(
 
     await admin
       .from("pepites")
-      .update({ bonus_claimed: true })
+      .update({ bonus_claimed: true, revealed_race_id: raceId })
       .eq("user_id", pepite.user_id)
       .eq("season_id", seasonId)
       .eq("sex", pepite.sex);
@@ -395,10 +515,10 @@ async function loadPlayedCards(
   const [{ data: playedCards }, seasonRaces, { data: favoriteTeams }] = await Promise.all([
     admin
       .from("bonus_cards")
-      .select("id, user_id, card_type, status, used_on_race_id")
+      .select("id, user_id, card_type, status, used_on_race_id, used_on_stage_id")
       .eq("season_id", seasonId)
       .eq("status", "used")
-      .in("card_type", ["ca_farte", "balle_de_pioche", "aspiration", "equipe"]),
+      .in("card_type", ["ca_farte", "balle_de_pioche", "aspiration", "equipe", "fusee", "gachette"]),
     getSeasonCardRaces(admin, seasonId),
     admin.from("favorite_teams").select("user_id, nation_code, sex").eq("season_id", seasonId),
   ]);
@@ -449,6 +569,7 @@ async function scoreIndividualPredictions(
       rank: r.rank,
       // Résultats où seuls les tirs ont été saisis : leurs fautes comptent comme tours de péna.
       penaltyLaps: r.penalty_laps || totalMisses(r.shootings) || 0,
+      skiRank: r.ski_rank ?? null,
       isFusee: r.is_fusee,
       isGachette: r.is_gachette,
     }));
@@ -457,12 +578,10 @@ async function scoreIndividualPredictions(
   const pointsByUserId = new Map<string, number>();
 
   for (const prediction of predictions) {
-    const { athleteIds: predictedAthleteIds, card } = resolvePredictionCard(
-      race.id,
-      prediction,
-      cardsByUserId.get(prediction.user_id) ?? [],
-      seasonRaces
-    );
+    // Mondiaux / JO : aucune carte bonus, seul le ×2 de l'événement compte (Guillaume, 04/11/2026).
+    const userCards = stage.coefficient === 2 ? [] : cardsByUserId.get(prediction.user_id) ?? [];
+    const { athleteIds: predictedAthleteIds, card } = resolvePredictionCard(race.id, prediction, userCards, seasonRaces);
+    const onRace = cardsOnRace(race.id, userCards, seasonRaces);
 
     const result = computeIndividualRaceScore({
       predictedAthleteIds,
@@ -482,10 +601,13 @@ async function scoreIndividualPredictions(
         race.special_rule === "fete_nationale"
           ? (favoriteTeamByUserId.get(prediction.user_id) as { nationCode: string; sex: "H" | "F" } | undefined) ?? null
           : null,
+      // Cartes Fusée / Gâchette posées sur l'étape (04/11/2026).
+      raceFormat: race.format,
+      stageCards: { fusee: !!onRace.fusee, gachette: !!onRace.gachette },
     });
 
     // Carte Équipe : la cote de chaque biathlète de l'équipe favorite dans le Top 10, en plus.
-    const equipeBonus = cardsOnRace(race.id, cardsByUserId.get(prediction.user_id) ?? [], seasonRaces).equipe
+    const equipeBonus = onRace.equipe
       ? computeEquipeBonus(
           favoriteTeamByUserId.get(prediction.user_id) ?? null,
           race,
@@ -565,7 +687,8 @@ async function scoreRelayPredictions(
     });
 
     // Carte Équipe : la cote du relais si la nation favorite finit dans le Top 10 (relais de son sexe).
-    const equipeBonus = cardsOnRace(race.id, cardsByUserId.get(prediction.user_id) ?? [], seasonRaces).equipe
+    // Jamais aux Mondiaux / JO.
+    const equipeBonus = stage.coefficient !== 2 && cardsOnRace(race.id, cardsByUserId.get(prediction.user_id) ?? [], seasonRaces).equipe
       ? computeEquipeBonus(
           favoriteTeamByUserId.get(prediction.user_id) ?? null,
           race,
@@ -609,7 +732,8 @@ export async function resetRaceResults(admin: SupabaseClient, raceId: string): P
   const seasonId = (race.stages as any).season_id as string;
 
   if (race.format === "sprint") await restorePursuitOdds(admin, race, seasonId);
-  await clearRaceScores(admin, raceId, seasonId, race.sex);
+  const frozenPepites = await clearRaceScores(admin, raceId, seasonId, race.sex);
+  await restoreFrozenPepiteBonuses(admin, seasonId, raceId, frozenPepites);
 
   const { error: resultsError } = await admin.from("race_results").delete().eq("race_id", raceId);
   if (resultsError) throw new Error(resultsError.message);

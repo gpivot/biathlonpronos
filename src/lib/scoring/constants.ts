@@ -56,6 +56,11 @@ export const PETIT_GLOBE_MULTIPLIERS: Record<number, number> = {
 
 /** §9 — courses spéciales. */
 export const TOUR_DE_PENA_MALUS_PER_LAP = -20;
+/**
+ * Tour de péna : un biathlète non pronostiqué compte 5 tours d'office (-100 pts). Un joueur absent
+ * (aucun prono) prend donc -300 (Guillaume, 04/11/2026).
+ */
+export const TOUR_DE_PENA_EMPTY_PICK_LAPS = 5;
 
 export const TES_COLLE_MALUS = {
   oneOutOfTop10: -30,
@@ -74,9 +79,13 @@ export const ASPIRATION_BONUS_BY_COUNT: Record<number, number> = {
 /** §12 — série de courses consécutives où au moins un choix marque des points. */
 export const STREAK_TARGET = 10;
 
-/** §15 — Fusée (meilleur ski) et Gâchette (sans-faute au tir). */
-export const FUSEE_BONUS = 50;
-export const GACHETTE_BONUS = 20;
+/**
+ * §15 — cartes Fusée et Gâchette (cartes bonus depuis le 04/11/2026, plus de bonus automatique).
+ * Fusée : selon le rang au temps de ski (1er, 2e, 3e meilleur temps). Gâchette : 10/10 au sprint,
+ * 20/20 en poursuite, individuel et mass start. Points fixes, jamais multipliés.
+ */
+export const FUSEE_CARD_BONUS_BY_SKI_RANK: Record<number, number> = { 1: 100, 2: 50, 3: 20 };
+export const GACHETTE_CARD_BONUS = { sprint: 50, other: 100 } as const;
 
 /** §14 — cote minimale pour être éligible comme Pépite. */
 export const PEPITE_MIN_ODDS = 30;

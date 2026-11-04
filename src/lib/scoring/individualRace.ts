@@ -1,12 +1,12 @@
 import {
   ASPIRATION_BONUS_BY_COUNT,
   COMBINATION_BONUS,
-  FUSEE_BONUS,
-  GACHETTE_BONUS,
   RANK_MULTIPLIERS,
   TES_COLLE_MALUS,
+  TOUR_DE_PENA_EMPTY_PICK_LAPS,
   TOUR_DE_PENA_MALUS_PER_LAP,
 } from "./constants";
+import { fuseeCardPoints, gachetteCardPoints } from "./fuseeGachette";
 import type {
   AthleteRaceResult,
   FavoriteTeam,
@@ -48,17 +48,23 @@ export function computeIndividualRaceScore(
     );
   }
 
-  // Bonus Fusée/Gâchette attribués par athlète (confirmé par Guillaume :
-  // le "3 meilleurs sur 4" de la Balle de pioche s'applique après ce bonus,
-  // et le doublement Team Nation doit pouvoir en tenir compte).
-  const fuseeGachetteByAthlete: Record<string, number> = {};
+  // Cartes Fusée / Gâchette posées sur l'étape (04/11/2026) : points fixes par biathlète, jamais
+  // multipliés (ni ×2, ni Mondiaux/JO, ni Fête nationale, ni Ça farte). Pas besoin d'être dans le Top 10.
+  const fuseeByAthlete: Record<string, number> = {};
+  const gachetteByAthlete: Record<string, number> = {};
   for (const athleteId of input.predictedAthleteIds) {
-    fuseeGachetteByAthlete[athleteId] = computeAthleteFuseeGachetteBonus(resultsByAthleteId.get(athleteId));
+    const result = resultsByAthleteId.get(athleteId);
+    const skiRank = result?.skiRank ?? (result?.isFusee ? 1 : null);
+    fuseeByAthlete[athleteId] = input.stageCards?.fusee ? fuseeCardPoints(skiRank) : 0;
+    gachetteByAthlete[athleteId] = input.stageCards?.gachette
+      ? gachetteCardPoints(input.raceFormat ?? "", result?.isGachette)
+      : 0;
   }
+  const cardBonusOf = (athleteId: string) => fuseeByAthlete[athleteId] + gachetteByAthlete[athleteId];
 
   const rawScore: Record<string, number> = {};
   for (const athleteId of input.predictedAthleteIds) {
-    rawScore[athleteId] = base[athleteId] + fuseeGachetteByAthlete[athleteId];
+    rawScore[athleteId] = base[athleteId];
   }
 
   // 6. Coefficient ×2 Mondiaux/JO, non cumulable avec le bonus ×2 personnel.
@@ -79,8 +85,13 @@ export function computeIndividualRaceScore(
 
   // 5b. Carte "Balle de pioche" — 4 choix, seuls les 3 meilleurs comptent. Avec Ça farte posé sur
   // un des 4, le ×3 est pris en compte pour désigner les 3 meilleurs (confirmé).
-  const { counted, dropped } = selectCountedAthletes(input.predictedAthleteIds, rawScore, input.card, (id) =>
-    id === caFarteTargetId ? 3 : isNationalDayBoosted(id) ? 2 : globalMultiplier
+  // Les cartes Fusée / Gâchette comptent aussi pour désigner les 3 meilleurs (comme l'ancien bonus).
+  const { counted, dropped } = selectCountedAthletes(
+    input.predictedAthleteIds,
+    rawScore,
+    input.card,
+    (id) => (id === caFarteTargetId ? 3 : isNationalDayBoosted(id) ? 2 : globalMultiplier),
+    cardBonusOf
   );
 
   // 5a. Carte "Ça farte" (×3) et 7. Bonus Team Nation (×2). Confirmé par
@@ -125,15 +136,22 @@ export function computeIndividualRaceScore(
 
   // 4. Malus "t'es collé(e)" — lu sur l'ensemble du pronostic, pas par
   // athlète ("tour de péna" et "brouillard" sont déjà inclus au point 2).
+  // Tour de péna : chaque biathlète non pronostiqué compte 5 tours d'office (Guillaume, 04/11/2026).
+  const missingPicks = input.specialRule === "tour_de_pena" ? Math.max(0, 3 - input.predictedAthleteIds.length) : 0;
   const specialMalus =
     input.specialRule === "tes_colle"
       ? computeTesColleMalus(input.predictedAthleteIds, resultsByAthleteId)
-      : 0;
+      : missingPicks > 0
+        ? missingPicks * TOUR_DE_PENA_EMPTY_PICK_LAPS * TOUR_DE_PENA_MALUS_PER_LAP
+        : 0;
 
-  const fuseeGachetteBonus = counted.reduce((sum, id) => sum + fuseeGachetteByAthlete[id], 0);
+  const fuseeCardBonus = counted.reduce((sum, id) => sum + fuseeByAthlete[id], 0);
+  const gachetteCardBonus = counted.reduce((sum, id) => sum + gachetteByAthlete[id], 0);
+  const fuseeGachetteBonus = fuseeCardBonus + gachetteCardBonus;
 
   const total =
     Object.values(perAthlete).reduce((sum, v) => sum + v, 0) +
+    fuseeGachetteBonus +
     combinationBonus +
     pronoParfaitBonus +
     specialMalus;
@@ -146,7 +164,10 @@ export function computeIndividualRaceScore(
       combinationBonus,
       pronoParfaitBonus,
       specialMalus,
+      ...(missingPicks > 0 ? { missingPicks } : {}),
       fuseeGachetteBonus,
+      ...(fuseeCardBonus ? { fuseeCardBonus, fuseeByAthlete: pickNonZero(fuseeByAthlete, counted) } : {}),
+      ...(gachetteCardBonus ? { gachetteCardBonus, gachetteByAthlete: pickNonZero(gachetteByAthlete, counted) } : {}),
       droppedByBalleDePioche: dropped,
       teamNationBoostedAthleteIds,
       nationalDayBoostedAthleteIds,
@@ -176,23 +197,25 @@ function computeBaseAthletePoints(
   return points;
 }
 
-/** §15 — Fusée (une fois) et Gâchette (cumulable), attribués à l'athlète concerné. */
-function computeAthleteFuseeGachetteBonus(result: AthleteRaceResult | undefined): number {
-  if (!result) return 0;
-  return (result.isFusee ? FUSEE_BONUS : 0) + (result.isGachette ? GACHETTE_BONUS : 0);
+function pickNonZero(values: Record<string, number>, ids: string[]): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const id of ids) if (values[id]) out[id] = values[id];
+  return out;
 }
 
 function selectCountedAthletes(
   predictedAthleteIds: string[],
   rawScore: Record<string, number>,
   card: IndividualRaceScoringInput["card"],
-  multiplierOf: (athleteId: string) => number
+  multiplierOf: (athleteId: string) => number,
+  flatBonusOf: (athleteId: string) => number
 ): { counted: string[]; dropped: string[] } {
   if (card.type !== "balle_de_pioche" || predictedAthleteIds.length <= 3) {
     return { counted: predictedAthleteIds, dropped: [] };
   }
 
-  const sorted = [...predictedAthleteIds].sort((a, b) => rawScore[b] * multiplierOf(b) - rawScore[a] * multiplierOf(a));
+  const value = (id: string) => rawScore[id] * multiplierOf(id) + flatBonusOf(id);
+  const sorted = [...predictedAthleteIds].sort((a, b) => value(b) - value(a));
   return { counted: sorted.slice(0, 3), dropped: sorted.slice(3) };
 }
 
@@ -237,12 +260,9 @@ function computeCombinationBonus(
 }
 
 function computeAthletePotentialScore(result: AthleteRaceResult, odds: number): number {
+  // Fusée et Gâchette n'entrent plus dans le Prono parfait : ce sont des cartes propres à chaque joueur.
   if (result.rank > 10) return -Infinity;
-  return (
-    RANK_MULTIPLIERS[result.rank] * odds +
-    (result.isFusee ? FUSEE_BONUS : 0) +
-    (result.isGachette ? GACHETTE_BONUS : 0)
-  );
+  return RANK_MULTIPLIERS[result.rank] * odds;
 }
 
 /** La combinaison des 3 athlètes qui rapportent objectivement le plus de points dans le Top 10. */

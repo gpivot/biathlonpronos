@@ -31,6 +31,7 @@ export function PredictionForm({
   playableCards,
   activeCard,
   quatriemeChoixActive,
+  stageCards = [],
   initialBonusX2,
   initialCardTarget,
   x2Eligible,
@@ -50,6 +51,8 @@ export function PredictionForm({
   activeCard: "ca_farte" | "aspiration" | null;
   /** 4e choix actif sur cette course : jusqu'à 4 biathlètes, cumulable avec Ça farte. */
   quatriemeChoixActive: boolean;
+  /** Cartes Fusée / Gâchette posées sur l'étape : s'appliquent à cette course. */
+  stageCards?: ("fusee" | "gachette")[];
   initialBonusX2: boolean;
   initialCardTarget: string | null;
   x2Eligible: boolean;
@@ -202,6 +205,12 @@ export function PredictionForm({
           <span className="font-display font-bold text-gold">🃏 {t("cardBalleDePioche")}</span> · {t("quatriemeChoixActive")}
         </div>
       )}
+      {stageCards.map((card) => (
+        <div key={card} className="rounded-2xl border border-gold/40 bg-gold-soft p-3.5 text-[13px] leading-relaxed text-frost">
+          <span className="font-display font-bold text-gold">🃏 {t(card === "fusee" ? "cardFusee" : "cardGachette")}</span> ·{" "}
+          {t(card === "fusee" ? "fuseeActive" : "gachetteActive")}
+        </div>
+      ))}
       {activeCard ? (
         <div className="rounded-2xl border border-gold/40 bg-gold-soft p-3.5 text-[13px] leading-relaxed text-frost">
           <span className="font-display font-bold text-gold">

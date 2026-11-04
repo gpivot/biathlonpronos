@@ -71,7 +71,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
                 timeGapSeconds: existing.time_gap_seconds,
                 penaltyLaps: existing.penalty_laps,
                 shootings: existing.shootings ?? null,
-                isFusee: existing.is_fusee,
+                skiRank: existing.ski_rank ?? (existing.is_fusee ? 1 : null),
                 isGachette: existing.is_gachette,
               }
             : undefined,
@@ -106,7 +106,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
                 timeGapSeconds: existing.time_gap_seconds,
                 penaltyLaps: existing.penalty_laps,
                 shootings: existing.shootings ?? null,
-                isFusee: existing.is_fusee,
+                skiRank: existing.ski_rank ?? (existing.is_fusee ? 1 : null),
                 isGachette: existing.is_gachette,
               }
             : undefined,

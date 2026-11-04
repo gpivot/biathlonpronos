@@ -44,7 +44,7 @@ describe("pickEvent / pickCompetition", () => {
 });
 
 describe("ibuResultsToCsv", () => {
-  it("athlètes : rang, écart, Gâchette (0 faute), Fusée, DNF ignoré", () => {
+  it("athlètes : rang, écart, Gâchette (0 faute), rang ski, DNF ignoré", () => {
     const csv = ibuResultsToCsv(
       "athlete",
       [
@@ -52,15 +52,18 @@ describe("ibuResultsToCsv", () => {
         { Rank: "2", FamilyName: "OEBERG", GivenName: "Elvira", Nat: "SWE", Behind: "+12.4", ShootingTotal: "1", IBUId: "X2" },
         { Rank: null, IRM: "DNF", FamilyName: "JEANMONNOT", GivenName: "Lou", Nat: "FRA", IBUId: "X3" },
       ],
-      "X2"
+      new Map([
+        ["X2", 1],
+        ["X1", 3],
+      ])
     );
     const parsed = parseResultsCsv(csv, "athlete", [
       { id: "a1", firstName: "Julia", lastName: "Simon", nationCode: "FRA" },
       { id: "a2", firstName: "Elvira", lastName: "Öberg", nationCode: "SWE" },
       { id: "a3", firstName: "Lou", lastName: "Jeanmonnot", nationCode: "FRA" },
     ]);
-    expect(parsed.rows.a1).toMatchObject({ rank: "1", timeGapSeconds: "0", isGachette: true, isFusee: false });
-    expect(parsed.rows.a2).toMatchObject({ rank: "2", timeGapSeconds: "12.4", isGachette: false, isFusee: true });
+    expect(parsed.rows.a1).toMatchObject({ rank: "1", timeGapSeconds: "0", isGachette: true, skiRank: "3" });
+    expect(parsed.rows.a2).toMatchObject({ rank: "2", timeGapSeconds: "12.4", isGachette: false, skiRank: "1" });
     expect(parsed.rows.a3).toBeUndefined();
   });
 

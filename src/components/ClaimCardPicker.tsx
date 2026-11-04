@@ -11,7 +11,7 @@ const AUTO_OPEN_KEY = "bp-claim-card-shown";
 
 /**
  * 10/10 atteint : bouton doré dans l'encadré « Série en cours » qui ouvre le pop-up de choix de
- * la carte (Ça farte ou 4e choix). `autoOpen` (accueil) l'ouvre de lui-même, une fois par visite.
+ * la carte. `autoOpen` (accueil) l'ouvre de lui-même, une fois par visite.
  */
 export function ClaimCardPicker({
   seasonId,
@@ -109,7 +109,13 @@ export function ClaimCardPicker({
                       <span className="text-lg">🃏</span>
                       <span className="flex-1 font-display text-[15px] font-extrabold text-gold">{t(`name_${type}`)}</span>
                       <span className="font-display text-[12px] font-bold text-text-dim">
-                        {state === "locked" ? t(`lockedUntil_${type}`) : state === "justTaken" ? t("justTaken") : t("choose")}
+                        {state === "locked"
+                          ? t(`lockedUntil_${type}`)
+                          : state === "unavailable"
+                            ? t("unavailable")
+                            : state === "justTaken"
+                              ? t("justTaken")
+                              : t("choose")}
                       </span>
                     </div>
                     <div className="text-[13px] leading-relaxed text-frost">{t(`desc_${type}`)}</div>

@@ -54,6 +54,8 @@ export interface HiddenPepite {
   name: string | null;
   nationCode: string | null;
   revealed: boolean;
+  /** Course où elle a été révélée (lien « Voir la course » de Ma saison). */
+  revealedRaceId: string | null;
 }
 
 export interface SeasonView {
@@ -96,7 +98,7 @@ export async function getSeasonView(
           .eq("season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
     userId
-      ? supabase.from("pepites").select("sex, athlete_id, bonus_claimed").eq("user_id", userId).eq("season_id", season.id)
+      ? supabase.from("pepites").select("sex, athlete_id, bonus_claimed, revealed_race_id").eq("user_id", userId).eq("season_id", season.id)
       : Promise.resolve({ data: [] as any[] }),
     userId ? getCurrentStreak(supabase, season.id, userId) : Promise.resolve(null),
     userId ? getPlayerCards(supabase, season.id, userId, now) : Promise.resolve(null),
@@ -175,6 +177,7 @@ export async function getSeasonView(
           name: athlete ? shortName(athlete) : null,
           nationCode: athlete?.nation_code ?? null,
           revealed: !!pepite?.bonus_claimed,
+          revealedRaceId: pepite?.bonus_claimed ? pepite?.revealed_race_id ?? null : null,
         };
       })
     : null;

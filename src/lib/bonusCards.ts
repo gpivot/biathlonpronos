@@ -11,21 +11,47 @@ import type { BonusCardEffect } from "./scoring/types";
  * - « Équipe » (à partir de l'étape qui suit les Mondiaux/JO) : jusqu'à la fin de la saison, chaque
  *   biathlète de l'équipe favorite dans le Top 10 (ou sa nation dans le Top 10 du relais de son
  *   sexe) ajoute une fois sa cote aux points de la course.
+ * - « Fusée » et « Gâchette » (04/11/2026, à la place des anciens bonus automatiques) : à poser sur une
+ *   étape avant sa 1re course ; sur toutes les courses individuelles de l'étape (hommes et femmes),
+ *   points fixes par biathlète compté (Fusée : 100/50/20 pour le 1er/2e/3e temps de ski ; Gâchette :
+ *   100 par 20/20, 50 par 10/10 au sprint). Se cumulent avec toutes les autres cartes ;
+ * - « Talent » (04/11/2026) : seulement après la révélation d'une de tes pépites ; réactive cette
+ *   pépite (de nouveau cachée) ou en désigne une nouvelle, pour un sexe.
+ * L'admin peut désactiver une carte ou limiter la période où elle est proposée au 10/10
+ * (bonus_card_settings, migration 0037).
  * Une même carte ne se prend pas sur deux 10/10 d'affilée. Sur une même course, Ça farte et
  * Aspiration s'excluent, Aspiration et 4e choix aussi ; Ça farte se pose sur un des 4 choix d'un
  * 4e choix. Équipe se cumule avec tout. La carte « Fondue » (dégrillage) a été supprimée avec la
  * règle des biathlètes grillés le 04/11/2026 (elle reste prévue pour VéloPronos).
  */
 
-export const CLAIMABLE_CARD_TYPES = ["ca_farte", "balle_de_pioche", "aspiration", "equipe"] as const;
+export const CLAIMABLE_CARD_TYPES = [
+  "ca_farte",
+  "balle_de_pioche",
+  "aspiration",
+  "equipe",
+  "fusee",
+  "gachette",
+  "talent",
+] as const;
 export type ClaimableCardType = (typeof CLAIMABLE_CARD_TYPES)[number];
 /** Cartes jouées par le joueur sur une course de son choix depuis le formulaire de pronostic. */
 export type RaceCardType = "ca_farte" | "aspiration";
+/** Cartes posées sur une étape entière (avant sa 1re course). */
+export const STAGE_CARD_TYPES = ["fusee", "gachette"] as const;
+export type StageCardType = (typeof STAGE_CARD_TYPES)[number];
+export function isStageCardType(type: string): type is StageCardType {
+  return (STAGE_CARD_TYPES as readonly string[]).includes(type);
+}
 /** Nombre de courses individuelles couvertes par le 4e choix, par sexe. */
 export const QUATRIEME_CHOIX_RACES_PER_SEX = 2;
 
 export interface CardRace {
   id: string;
+  /** Étape de la course (cartes Fusée / Gâchette). */
+  stage_id?: string;
+  /** Coefficient de l'étape : 2 aux Mondiaux/JO, où aucune carte ne se joue (Guillaume, 04/11/2026). */
+  coefficient?: number;
   format: string;
   sex: string | null;
   locks_at: string;
@@ -36,18 +62,24 @@ export function isRelayFormat(format: string): boolean {
   return format.startsWith("relais");
 }
 
+/** Mondiaux / JO (coefficient 2) : aucune carte bonus, l'événement garde son seul ×2. */
+export function isChampionshipRace(race: { coefficient?: number } | undefined): boolean {
+  return race?.coefficient === 2;
+}
+
 /**
  * Courses couvertes par un 4e choix activé sur `activationRaceId` : cette course puis les suivantes
  * de la saison (ordre des départs), relais exclus, jusqu'à 2 par sexe. Moins de 4 en fin de saison.
  */
 export function quatriemeChoixWindow(activationRaceId: string, seasonRaces: CardRace[]): string[] {
   const activation = seasonRaces.find((r) => r.id === activationRaceId);
-  if (!activation || isRelayFormat(activation.format)) return [];
+  if (!activation || isRelayFormat(activation.format) || isChampionshipRace(activation)) return [];
   const start = new Date(activation.locks_at).getTime();
   const countBySex = new Map<string, number>();
   const window: string[] = [];
+  // Les courses des Mondiaux/JO ne consomment pas le 4e choix : il reprend à l'étape suivante.
   const sorted = seasonRaces
-    .filter((r) => !isRelayFormat(r.format) && new Date(r.locks_at).getTime() >= start)
+    .filter((r) => !isRelayFormat(r.format) && !isChampionshipRace(r) && new Date(r.locks_at).getTime() >= start)
     .sort(
       (a, b) =>
         new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime() ||
@@ -68,6 +100,8 @@ export interface CardRow {
   card_type: string;
   status: string;
   used_on_race_id: string | null;
+  /** Fusée / Gâchette : étape où la carte est posée. */
+  used_on_stage_id?: string | null;
   earned_at?: string;
 }
 
@@ -88,6 +122,8 @@ export interface BonusCardView {
  */
 export function describeCard(card: CardRow, seasonRaces: CardRace[], now: Date): BonusCardView {
   if (card.status === "available") return { id: card.id, type: card.card_type, state: "available" };
+  // Talent : effet immédiat (la pépite est réactivée ou remplacée), rien ne reste « actif ».
+  if (card.card_type === "talent") return { id: card.id, type: card.card_type, state: "used" };
   const raceById = new Map(seasonRaces.map((r) => [r.id, r]));
   const raceIds = coveredRaceIds(card, seasonRaces);
   const races = raceIds.map((id) => raceById.get(id)).filter((r): r is CardRace => !!r);
@@ -106,6 +142,10 @@ export function describeCard(card: CardRow, seasonRaces: CardRace[], now: Date):
  * a été jouée.
  */
 export function coveredRaceIds(card: CardRow, seasonRaces: CardRace[]): string[] {
+  if (isStageCardType(card.card_type)) {
+    if (!card.used_on_stage_id) return [];
+    return seasonRaces.filter((r) => r.stage_id === card.used_on_stage_id && !isRelayFormat(r.format)).map((r) => r.id);
+  }
   if (!card.used_on_race_id) return [];
   if (card.card_type === "balle_de_pioche") return quatriemeChoixWindow(card.used_on_race_id, seasonRaces);
   if (card.card_type === "equipe") {
@@ -122,10 +162,26 @@ export function cardsOnRace(
   raceId: string,
   cards: CardRow[],
   seasonRaces: CardRace[]
-): { quatriemeChoix: CardRow | null; caFarte: CardRow | null; aspiration: CardRow | null; equipe: CardRow | null } {
-  const found = { quatriemeChoix: null as CardRow | null, caFarte: null as CardRow | null, aspiration: null as CardRow | null, equipe: null as CardRow | null };
+): {
+  quatriemeChoix: CardRow | null;
+  caFarte: CardRow | null;
+  aspiration: CardRow | null;
+  equipe: CardRow | null;
+  fusee: CardRow | null;
+  gachette: CardRow | null;
+} {
+  const found = {
+    quatriemeChoix: null as CardRow | null,
+    caFarte: null as CardRow | null,
+    aspiration: null as CardRow | null,
+    equipe: null as CardRow | null,
+    fusee: null as CardRow | null,
+    gachette: null as CardRow | null,
+  };
   for (const card of cards) {
     if (card.status !== "used" || !coveredRaceIds(card, seasonRaces).includes(raceId)) continue;
+    if (card.card_type === "fusee") found.fusee = card;
+    if (card.card_type === "gachette") found.gachette = card;
     if (card.card_type === "ca_farte") found.caFarte = card;
     if (card.card_type === "aspiration") found.aspiration = card;
     if (card.card_type === "balle_de_pioche") found.quatriemeChoix = card;
@@ -145,10 +201,11 @@ export function canPlayCard(
   seasonRaces: CardRace[]
 ): boolean {
   const race = seasonRaces.find((r) => r.id === raceId);
-  if (!race || isRelayFormat(race.format)) return false;
+  if (!race || isRelayFormat(race.format) || isChampionshipRace(race)) return false;
   if (!cards.some((c) => c.card_type === type && c.status === "available")) return false;
   const current = cardsOnRace(raceId, cards, seasonRaces);
-  if (type === "ca_farte") return !current.caFarte && !current.aspiration;
+  // Ça farte ne se cumule pas avec Fusée / Gâchette (Guillaume, 04/11/2026).
+  if (type === "ca_farte") return !current.caFarte && !current.aspiration && !current.fusee && !current.gachette;
   if (type === "aspiration") return !current.caFarte && !current.aspiration && !current.quatriemeChoix;
   // 4e choix : pas d'Aspiration déjà posée sur une des courses qu'il couvrirait.
   if (current.quatriemeChoix) return false;
@@ -156,6 +213,43 @@ export function canPlayCard(
   return !cards.some(
     (c) => c.card_type === "aspiration" && c.status === "used" && !!c.used_on_race_id && window.includes(c.used_on_race_id)
   );
+}
+
+/**
+ * Une carte Fusée / Gâchette peut-elle être posée sur cette étape ? La carte est en main, l'étape a
+ * des courses individuelles et aucune course de l'étape (relais compris) n'est encore partie, et la
+ * même carte n'y est pas déjà posée. Même règle que play_stage_card (migration 0037).
+ */
+export function canPlayStageCard(
+  type: StageCardType,
+  stageId: string,
+  cards: CardRow[],
+  seasonRaces: CardRace[],
+  now: Date
+): boolean {
+  if (!cards.some((c) => c.card_type === type && c.status === "available")) return false;
+  const stageRaces = seasonRaces.filter((r) => r.stage_id === stageId);
+  if (!stageRaces.some((r) => !isRelayFormat(r.format))) return false;
+  if (stageRaces.some((r) => isChampionshipRace(r))) return false;
+  if (stageRaces.some((r) => new Date(r.locks_at) <= now)) return false;
+  if (cards.some((c) => c.card_type === type && c.status === "used" && c.used_on_stage_id === stageId)) return false;
+  // Pas de cumul avec un Ça farte déjà posé sur une course de l'étape.
+  const raceIds = new Set(stageRaces.map((r) => r.id));
+  return !cards.some((c) => c.card_type === "ca_farte" && c.status === "used" && !!c.used_on_race_id && raceIds.has(c.used_on_race_id));
+}
+
+/** Étapes où une carte Fusée / Gâchette peut encore être posée (pas encore commencées), dans l'ordre. */
+export function playableStageIds(type: StageCardType, cards: CardRow[], seasonRaces: CardRace[], now: Date): string[] {
+  const firstLock = new Map<string, number>();
+  for (const r of seasonRaces) {
+    if (!r.stage_id) continue;
+    const t = new Date(r.locks_at).getTime();
+    firstLock.set(r.stage_id, Math.min(firstLock.get(r.stage_id) ?? Infinity, t));
+  }
+  return [...firstLock.entries()]
+    .sort((a, b) => a[1] - b[1])
+    .map(([id]) => id)
+    .filter((id) => canPlayStageCard(type, id, cards, seasonRaces, now));
 }
 
 /** Crédits de carte pas encore choisis : cartes gagnées au 10/10 moins cartes déjà prises. */
@@ -168,15 +262,47 @@ export interface PlayerCards {
   cards: BonusCardView[];
   /** Cartes du pop-up du 10/10 (proposées, verrouillées, ou prises au 10/10 précédent). */
   offers: { type: ClaimableCardType; state: OfferState }[];
+  /** Cartes Fusée / Gâchette en main et les étapes où elles peuvent encore être posées. */
+  stagePlays?: { cardId: string; type: StageCardType; stages: { id: string; location: string; startsOn: string }[] }[];
+  /** Carte Talent en main (à jouer depuis la page des pronostics de saison). */
+  talentCardId?: string | null;
+}
+
+/** Réglage admin d'une carte pour la saison (table bonus_card_settings). Pas de ligne : carte active, sans limite. */
+export interface CardSetting {
+  card_type: string;
+  enabled: boolean;
+  available_from: string | null;
+  available_until: string | null;
+  /** Débloquée tout de suite, sans attendre son étape (Aspiration : 4e étape ; Équipe : après les Mondiaux). */
+  force_unlock?: boolean;
+}
+
+/** La carte est-elle proposée au 10/10 selon les réglages de l'admin (interrupteur et période) ? */
+export function isOfferedBySettings(type: string, settings: CardSetting[], now: Date): "yes" | "disabled" | "outOfPeriod" {
+  const setting = settings.find((s) => s.card_type === type);
+  if (!setting) return "yes";
+  if (!setting.enabled) return "disabled";
+  if (setting.available_from && new Date(setting.available_from) > now) return "outOfPeriod";
+  if (setting.available_until && new Date(setting.available_until) < now) return "outOfPeriod";
+  return "yes";
 }
 
 /** Toutes les courses de la saison, au format utilisé ici. */
 export async function getSeasonCardRaces(supabase: SupabaseClient, seasonId: string): Promise<CardRace[]> {
   const { data } = await supabase
     .from("races")
-    .select("id, format, sex, locks_at, status, stages!inner(season_id)")
+    .select("id, stage_id, format, sex, locks_at, status, stages!inner(season_id, coefficient)")
     .eq("stages.season_id", seasonId);
-  return ((data ?? []) as any[]).map((r) => ({ id: r.id, format: r.format, sex: r.sex, locks_at: r.locks_at, status: r.status }));
+  return ((data ?? []) as any[]).map((r) => ({
+    id: r.id,
+    stage_id: r.stage_id,
+    coefficient: r.stages?.coefficient,
+    format: r.format,
+    sex: r.sex,
+    locks_at: r.locks_at,
+    status: r.status,
+  }));
 }
 
 /**
@@ -184,16 +310,26 @@ export async function getSeasonCardRaces(supabase: SupabaseClient, seasonId: str
  * d'un autre joueur sont lisibles grâce à la migration 0022.
  */
 export async function getPlayerCards(supabase: SupabaseClient, seasonId: string, userId: string, now: Date): Promise<PlayerCards> {
-  const [{ data: cards }, { data: streak }, races, { data: stages }] = await Promise.all([
+  const [{ data: cards }, { data: streak }, races, { data: stages }, { data: settings }, { count: revealedPepites }] = await Promise.all([
     supabase
       .from("bonus_cards")
-      .select("id, card_type, status, used_on_race_id, earned_at")
+      .select("id, card_type, status, used_on_race_id, used_on_stage_id, earned_at")
       .eq("user_id", userId)
       .eq("season_id", seasonId)
       .order("earned_at", { ascending: true }),
     supabase.from("streak_counters").select("cards_earned").eq("user_id", userId).eq("season_id", seasonId).maybeSingle(),
     getSeasonCardRaces(supabase, seasonId),
-    supabase.from("stages").select("starts_on, coefficient, races(locks_at)").eq("season_id", seasonId),
+    supabase.from("stages").select("id, location, starts_on, coefficient, races(locks_at)").eq("season_id", seasonId),
+    supabase
+      .from("bonus_card_settings")
+      .select("card_type, enabled, available_from, available_until, force_unlock")
+      .eq("season_id", seasonId),
+    supabase
+      .from("pepites")
+      .select("sex", { count: "exact", head: true })
+      .eq("user_id", userId)
+      .eq("season_id", seasonId)
+      .eq("bonus_claimed", true),
   ]);
   const rows = (cards ?? []) as CardRow[];
   const cardStages: CardStage[] = ((stages ?? []) as any[]).map((st) => ({
@@ -201,10 +337,27 @@ export async function getPlayerCards(supabase: SupabaseClient, seasonId: string,
     coefficient: st.coefficient,
     firstLocksAt: ((st.races ?? []) as { locks_at: string }[]).map((r) => r.locks_at).sort()[0] ?? null,
   }));
+  const stageById = new Map(((stages ?? []) as any[]).map((st) => [st.id as string, st]));
+  const stagePlays = rows
+    .filter((c) => c.status === "available" && isStageCardType(c.card_type))
+    .map((c) => ({
+      cardId: c.id,
+      type: c.card_type as StageCardType,
+      stages: playableStageIds(c.card_type as StageCardType, rows, races, now).map((id) => ({
+        id,
+        location: stageById.get(id)?.location ?? "",
+        startsOn: stageById.get(id)?.starts_on ?? "",
+      })),
+    }));
   return {
     unclaimed: unclaimedCredits(streak?.cards_earned ?? 0, rows.length),
+    stagePlays,
+    talentCardId: rows.find((c) => c.card_type === "talent" && c.status === "available")?.id ?? null,
     cards: rows.map((c) => describeCard(c, races, now)),
-    offers: offeredCards(rows[rows.length - 1]?.card_type ?? null, cardStages, now),
+    offers: offeredCards(rows[rows.length - 1]?.card_type ?? null, cardStages, now, {
+      settings: (settings ?? []) as CardSetting[],
+      hasRevealedPepite: (revealedPepites ?? 0) > 0,
+    }),
   };
 }
 
@@ -278,20 +431,32 @@ export function isCardUnlocked(type: string, stages: CardStage[], now: Date): bo
   return !!stage?.firstLocksAt && new Date(stage.firstLocksAt) <= now;
 }
 
-export type OfferState = "offered" | "locked" | "justTaken";
+export type OfferState = "offered" | "locked" | "justTaken" | "unavailable";
 
 /**
- * Cartes du pop-up du 10/10 : verrouillées tant que leur étape n'a pas commencé, et grisées si
- * c'est la carte prise au 10/10 précédent (une même carte pas deux fois d'affilée).
+ * Cartes du pop-up du 10/10 : masquées si l'admin les a désactivées, grisées hors de leur période
+ * (« unavailable »), verrouillées tant que leur étape n'a pas commencé (Talent : tant qu'aucune
+ * pépite n'est révélée), et grisées si c'est la carte prise au 10/10 précédent (une même carte pas
+ * deux fois d'affilée). Même règle que claim_bonus_card (migration 0037).
  */
 export function offeredCards(
   previousClaimedType: string | null,
   stages: CardStage[],
-  now: Date
+  now: Date,
+  options: { settings?: CardSetting[]; hasRevealedPepite?: boolean } = {}
 ): { type: ClaimableCardType; state: OfferState }[] {
-  return CLAIMABLE_CARD_TYPES.map((type) => ({
+  const settings = options.settings ?? [];
+  return CLAIMABLE_CARD_TYPES.filter((type) => isOfferedBySettings(type, settings, now) !== "disabled").map((type) => ({
     type,
-    state: !isCardUnlocked(type, stages, now) ? "locked" : type === previousClaimedType ? "justTaken" : "offered",
+    state:
+      isOfferedBySettings(type, settings, now) === "outOfPeriod"
+        ? "unavailable"
+        : (!isCardUnlocked(type, stages, now) && !settings.find((x) => x.card_type === type)?.force_unlock) ||
+            (type === "talent" && !options.hasRevealedPepite)
+          ? "locked"
+          : type === previousClaimedType
+            ? "justTaken"
+            : "offered",
   }));
 }
 

@@ -11,7 +11,11 @@ export interface AthleteRaceResult {
   athleteId: string;
   rank: number;
   penaltyLaps?: number;
+  /** Rang au temps de ski (1 = meilleur temps), pour la carte Fusée. */
+  skiRank?: number | null;
+  /** Ancienne case « Fusée » (meilleur temps de ski) : vaut skiRank 1 si skiRank n'est pas saisi. */
   isFusee?: boolean;
+  /** Sans-faute au tir (10/10 au sprint, 20/20 sinon), pour la carte Gâchette. */
   isGachette?: boolean;
 }
 
@@ -52,6 +56,13 @@ export interface IndividualRaceScoringInput {
    * un autre ×2 (bonus perso, Mondiaux/JO) ni avec Ça farte (×3 seul).
    */
   nationalDayTeam?: FavoriteTeam | null;
+  /** Format de la course (Gâchette : 50 pts au sprint, 100 sinon). */
+  raceFormat?: string;
+  /**
+   * Cartes Fusée / Gâchette posées par le joueur sur l'étape de cette course (04/11/2026). Points
+   * fixes par biathlète compté, ajoutés au total sans aucun multiplicateur.
+   */
+  stageCards?: { fusee: boolean; gachette: boolean };
 }
 
 export interface IndividualRaceScoringResult {
@@ -64,7 +75,16 @@ export interface IndividualRaceScoringResult {
     combinationBonus: number;
     pronoParfaitBonus: number;
     specialMalus: number;
+    /** Tour de péna : biathlètes non pronostiqués (5 tours d'office chacun), déjà compris dans specialMalus. */
+    missingPicks?: number;
+    /** Cartes Fusée + Gâchette (total des deux). */
     fuseeGachetteBonus: number;
+    /** Carte Fusée : points par biathlète compté (100/50/20 selon le temps de ski). */
+    fuseeCardBonus?: number;
+    fuseeByAthlete?: Record<string, number>;
+    /** Carte Gâchette : points par biathlète compté (50 au sprint, 100 sinon). */
+    gachetteCardBonus?: number;
+    gachetteByAthlete?: Record<string, number>;
     /** Athlètes exclus du score car carte "balle de pioche" retient les 3 meilleurs sur 4. */
     droppedByBalleDePioche: string[];
     /** Athlète(s) dont les points ont été doublés par le bonus Team Nation. */

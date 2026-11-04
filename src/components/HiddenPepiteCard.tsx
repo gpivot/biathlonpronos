@@ -32,13 +32,23 @@ export function HiddenPepiteCard({ pepites }: { pepites: HiddenPepite[] }) {
                   {p.nationCode && <span>{nationFlagEmoji(p.nationCode)}</span>}
                   <span className="truncate">{p.name}</span>
                 </div>
-                <div
-                  className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${
-                    p.revealed ? "bg-ice text-on-ice" : "border border-border text-text-dim"
-                  }`}
-                >
-                  {p.revealed ? t("pepiteRevealed") : t("pepiteNotRevealed")}
-                </div>
+                {p.revealed && p.revealedRaceId ? (
+                  // Révélée : renvoie au résultat de la course où elle a été révélée.
+                  <Link
+                    href={`/courses/${p.revealedRaceId}`}
+                    className="whitespace-nowrap rounded-full bg-ice px-2.5 py-1 font-display text-[11px] font-bold text-on-ice"
+                  >
+                    {t("pepiteRevealed")} · {t("pepiteSeeRace")} →
+                  </Link>
+                ) : (
+                  <div
+                    className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${
+                      p.revealed ? "bg-ice text-on-ice" : "border border-border text-text-dim"
+                    }`}
+                  >
+                    {p.revealed ? t("pepiteRevealed") : t("pepiteNotRevealed")}
+                  </div>
+                )}
               </>
             ) : (
               <>

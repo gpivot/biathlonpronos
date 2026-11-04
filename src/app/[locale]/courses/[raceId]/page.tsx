@@ -79,6 +79,8 @@ export default async function RacePage({
   let playableCards: { id: string; card_type: string }[] = [];
   let activeCard: "ca_farte" | "aspiration" | null = null;
   let quatriemeChoixActive = false;
+  // Cartes Fusée / Gâchette posées sur l'étape de cette course.
+  let stageCards: ("fusee" | "gachette")[] = [];
   let initialBonusX2 = false;
   let initialCardTarget: string | null = null;
 
@@ -93,7 +95,7 @@ export default async function RacePage({
     const [{ data: cards }, { count: x2UsedCount }, seasonRaces] = await Promise.all([
       supabase
         .from("bonus_cards")
-        .select("id, card_type, status, used_on_race_id")
+        .select("id, card_type, status, used_on_race_id, used_on_stage_id")
         .eq("user_id", user.id)
         .eq("season_id", stage.season_id),
       supabase
@@ -110,6 +112,7 @@ export default async function RacePage({
     activeCard = onRace.caFarte ? "ca_farte" : onRace.aspiration ? "aspiration" : null;
     // Aspiration déjà posée l'emporte sur un 4e choix arrivé ensuite (voir resolvePredictionCard).
     quatriemeChoixActive = !!onRace.quatriemeChoix && !onRace.aspiration;
+    stageCards = [...(onRace.fusee ? (["fusee"] as const) : []), ...(onRace.gachette ? (["gachette"] as const) : [])];
     // Le 4e choix et Équipe s'activent tout seuls quand ils sont choisis : seuls Ça farte et
     // Aspiration se jouent ici.
     playableCards = availableCards.filter(
@@ -397,6 +400,7 @@ export default async function RacePage({
                   playableCards={playableCards}
                   activeCard={activeCard}
                   quatriemeChoixActive={quatriemeChoixActive}
+                  stageCards={stageCards}
                   initialBonusX2={initialBonusX2}
                   initialCardTarget={initialCardTarget}
                   x2Eligible={x2Eligible}

@@ -6,6 +6,9 @@ import {
   isCardUnlocked,
   offeredCards,
   describeCard,
+  canPlayStageCard,
+  coveredRaceIds,
+  playableStageIds,
   quatriemeChoixWindow,
   resolvePredictionCard,
   unclaimedCredits,
@@ -20,6 +23,7 @@ const race = (id: string, format: string, sex: string | null, day: number, statu
   sex,
   locks_at: new Date(Date.UTC(2026, 11, day, 12)).toISOString(),
   status,
+  stage_id: day <= 5 ? "etape1" : "etape2",
 });
 const races: CardRace[] = [
   race("sprintF", "sprint", "F", 1),
@@ -183,7 +187,27 @@ describe("cartes de la saison", () => {
       balle_de_pioche: "offered",
       aspiration: "locked",
       equipe: "locked",
+      fusee: "offered",
+      gachette: "offered",
+      talent: "locked",
     });
+  });
+
+  it("Talent seulement après une pépite révélée ; réglages admin (désactivée, hors période)", () => {
+    const now = new Date("2026-12-01");
+    const offers = offeredCards(null, stages, now, {
+      hasRevealedPepite: true,
+      settings: [
+        { card_type: "fusee", enabled: false, available_from: null, available_until: null },
+        { card_type: "gachette", enabled: true, available_from: "2027-01-01T00:00:00Z", available_until: null },
+        { card_type: "ca_farte", enabled: true, available_from: "2026-11-01T00:00:00Z", available_until: "2026-12-31T00:00:00Z" },
+      ],
+    });
+    const byType = Object.fromEntries(offers.map((o) => [o.type, o.state]));
+    expect(byType.fusee).toBeUndefined();
+    expect(byType.gachette).toBe("unavailable");
+    expect(byType.ca_farte).toBe("offered");
+    expect(byType.talent).toBe("offered");
   });
 
   it("Équipe couvre toutes les courses restantes, relais compris", () => {
@@ -238,5 +262,51 @@ describe("computeEquipeBonus", () => {
     expect(computeEquipeBonus(team, { format: "relais_f", sex: "F" }, [], relay)).toBe(6);
     expect(computeEquipeBonus(team, { format: "relais_h", sex: "H" }, [], relay)).toBe(0);
     expect(computeEquipeBonus(team, { format: "relais_mixte", sex: null }, [], relay)).toBe(0);
+  });
+});
+
+describe("cartes Fusée et Gâchette (posées sur une étape)", () => {
+  const before = new Date(Date.UTC(2026, 10, 30));
+  it("couvrent les courses individuelles de l'étape, hommes et femmes, pas les relais", () => {
+    const fusee = [card({ id: "f", card_type: "fusee", status: "used", used_on_stage_id: "etape1" })];
+    expect(coveredRaceIds(fusee[0], races)).toEqual(["sprintF", "sprintH", "poursuiteF", "poursuiteH"]);
+    expect(cardsOnRace("poursuiteH", fusee, races).fusee?.id).toBe("f");
+    expect(cardsOnRace("relaisF", fusee, races).fusee).toBeNull();
+    expect(cardsOnRace("sprintF2", fusee, races).fusee).toBeNull();
+  });
+
+  it("à poser avant la 1re course de l'étape, une seule fois par étape", () => {
+    const cards = [card({ id: "g", card_type: "gachette" })];
+    expect(canPlayStageCard("gachette", "etape1", cards, races, before)).toBe(true);
+    expect(canPlayStageCard("gachette", "etape1", cards, races, new Date(Date.UTC(2026, 11, 2)))).toBe(false);
+    expect(canPlayStageCard("fusee", "etape1", cards, races, before)).toBe(false); // pas en main
+    const twice = [...cards, card({ id: "g0", card_type: "gachette", status: "used", used_on_stage_id: "etape2" })];
+    expect(playableStageIds("gachette", twice, races, before)).toEqual(["etape1"]);
+  });
+
+  it("Talent n'est jamais « active »", () => {
+    expect(describeCard(card({ card_type: "talent", status: "used" }), races, before).state).toBe("used");
+  });
+});
+
+describe("Mondiaux / JO et cumul avec Ça farte (Guillaume, 04/11/2026)", () => {
+  const before = new Date(Date.UTC(2026, 10, 30));
+  const worlds: CardRace[] = races.map((r) => (r.stage_id === "etape1" ? { ...r, coefficient: 2 } : r));
+
+  it("aucune carte aux Mondiaux, le 4e choix saute leurs courses", () => {
+    const cards = [card({ id: "c", card_type: "ca_farte" }), card({ id: "f", card_type: "fusee" })];
+    expect(canPlayCard("ca_farte", "sprintF", cards, worlds)).toBe(false);
+    expect(canPlayCard("ca_farte", "sprintF2", cards, worlds)).toBe(true);
+    expect(canPlayStageCard("fusee", "etape1", cards, worlds, before)).toBe(false);
+    expect(quatriemeChoixWindow("sprintF", worlds)).toEqual([]);
+  });
+
+  it("Ça farte et Fusée/Gâchette ne se cumulent pas sur une étape", () => {
+    const withFusee = [card({ id: "c", card_type: "ca_farte" }), card({ id: "f", card_type: "fusee", status: "used", used_on_stage_id: "etape1" })];
+    expect(canPlayCard("ca_farte", "sprintF", withFusee, races)).toBe(false);
+    expect(canPlayCard("ca_farte", "sprintF2", withFusee, races)).toBe(true);
+    const withCaFarte = [card({ id: "g", card_type: "gachette" }), card({ id: "c", card_type: "ca_farte", status: "used", used_on_race_id: "poursuiteH" })];
+    expect(canPlayStageCard("gachette", "etape1", withCaFarte, races, before)).toBe(false);
+    expect(canPlayStageCard("gachette", "etape2", withCaFarte, races, before)).toBe(true);
   });
 });

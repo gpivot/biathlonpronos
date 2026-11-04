@@ -16,7 +16,7 @@ export function isBonusRule(rule: string | null | undefined): boolean {
  * (Race.malusScale_<règle>_<n>).
  */
 export const MALUS_SCALE: Record<string, string[]> = {
-  tour_de_pena: ["🎯", "🔁", "🔁🔁🔁"],
+  tour_de_pena: ["🎯", "🔁", "🔁🔁🔁", "🙈"],
   brouillard: ["✅", "🌫️", "🌫️"],
   tes_colle: ["😬", "😱", "💀", "🙈"],
   fete_nationale: ["🎉", "❤️", "⚡", "🃏"],
