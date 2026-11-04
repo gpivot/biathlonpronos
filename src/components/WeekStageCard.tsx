@@ -9,11 +9,14 @@ import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import type { WeekStage, WeekStageRace } from "@/lib/weekStage";
 import type { LastResult } from "@/lib/lastResult";
+import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
 
 /**
  * Encart « L'étape de la semaine » de l'accueil : bandeau de l'étape (drapeau, lieu, dates), puis
  * toutes ses courses avec leur statut, chacune dépliable sur le résultat (course notée) ou le
  * pronostic du joueur. La course du moment (cf. pickWeekFeature) est dépliée d'office.
+ * Étapes et courses spéciales signalées comme dans Ma saison : bandeau doré « Championnats du
+ * monde » (coefficient 2), bandeau rouge des courses malus, doré de la Fête nationale, « Bonus ×2 ».
  */
 export async function WeekStageCard({
   stage,
@@ -37,21 +40,33 @@ export async function WeekStageCard({
   const day = (date: string) =>
     new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
 
+  // Coefficient 2 = Mondiaux (ou JO) : bandeau doré, comme l'encart de l'étape dans Ma saison.
+  const isChampionship = stage.coefficient === 2 && stage.countsInStandings;
+  // Étape « Autre (×0) », hors classement : bandeau grisé.
+  const isOffStandings = !stage.countsInStandings;
+
   return (
     <div className="flex flex-col gap-2">
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("weekStageTitle")}</div>
-      <div className="overflow-hidden rounded-2xl border border-ice/50 bg-card">
+      <div className={`overflow-hidden rounded-2xl border bg-card ${
+          isOffStandings ? "border-dashed border-text-dim/40" : isChampionship ? "border-gold/60" : "border-ice/50"
+        }`}>
         <Link
           href={`/courses?etape=${stage.id}`}
-          className="flex items-center gap-2 bg-ice px-4 py-2.5 font-display text-[13px] font-bold uppercase tracking-wide text-on-ice"
+          className={`flex items-center gap-2 px-4 py-2.5 font-display text-[13px] font-bold uppercase tracking-wide ${
+            isOffStandings ? "bg-text-dim/20 text-text-dim" : isChampionship ? "bg-gold text-bg" : "bg-ice text-on-ice"
+          }`}
         >
           <span className="text-base">{nationFlagEmoji(stage.countryCode)}</span>
-          <span className="flex-1 truncate">{stage.location}</span>
-          {stage.coefficient === 2 && stage.countsInStandings && (
-            <span className="whitespace-nowrap rounded-full bg-on-ice/15 px-2 py-0.5 text-[10px]">{t("coefficientBadge")}</span>
+          <span className="flex min-w-0 flex-1 flex-col">
+            {isChampionship && <span className="text-[10px] leading-tight tracking-wider opacity-80">{tCourses("worldChampionships")}</span>}
+            <span className="truncate">{stage.location}</span>
+          </span>
+          {isChampionship && (
+            <span className="whitespace-nowrap rounded-full bg-bg/15 px-2 py-0.5 text-[10px]">{t("coefficientBadge")}</span>
           )}
-          {!stage.countsInStandings && (
-            <span className="whitespace-nowrap rounded-full bg-on-ice/15 px-2 py-0.5 text-[10px]">×0 · {t("offStandingsBadge")}</span>
+          {isOffStandings && (
+            <span className="whitespace-nowrap rounded-full border border-text-dim/40 px-2 py-0.5 text-[10px]">×0 · {t("offStandingsBadge")}</span>
           )}
           <span className="whitespace-nowrap font-semibold normal-case">
             {stage.startsOn === stage.endsOn ? day(stage.startsOn) : `${day(stage.startsOn)} – ${day(stage.endsOn)}`}
@@ -63,9 +78,22 @@ export async function WeekStageCard({
         {stage.races.map((race) => {
           const result = results[race.id] ?? null;
           const points = result?.prediction?.points ?? result?.pepite?.points ?? null;
+          const bonus = isBonusRule(race.specialRule);
           return (
             <details key={race.id} open={race.id === stage.openRaceId} className="group border-t border-border first-of-type:border-t-0">
-              <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
+              <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                {race.specialRule && (
+                  // Course malus : bandeau rouge avec le picto du malus ; Fête nationale : bandeau doré.
+                  <div
+                    className={`flex items-center gap-1.5 px-4 py-1 font-display text-[11px] font-bold uppercase tracking-wide ${
+                      bonus ? "bg-gold text-bg" : "bg-red text-white"
+                    }`}
+                  >
+                    <span>{SPECIAL_RULE_ICONS[race.specialRule] ?? "⚠️"}</span>
+                    {tCourses(bonus ? "specialBonusBanner" : "specialRaceBanner", { name: tFormat(`specialRule_${race.specialRule}`) })}
+                  </div>
+                )}
+                <div className="flex items-center gap-3 px-4 py-3">
                 <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                   <div className="truncate text-sm font-semibold">
                     {tFormat(race.format)}
@@ -81,6 +109,11 @@ export async function WeekStageCard({
                       minute: "2-digit",
                     })}
                   </div>
+                  {race.bonusX2 && (
+                    <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
+                      ⚡ {tRace("bonusX2Badge")}
+                    </div>
+                  )}
                 </div>
                 {race.displayStatus === "finished" && points != null && (
                   <div className={`whitespace-nowrap font-display text-sm font-extrabold ${points < 0 ? "text-red" : "text-gold"}`}>
@@ -90,6 +123,7 @@ export async function WeekStageCard({
                 )}
                 <StatusPill status={race.displayStatus} label={tRace(`status_${race.displayStatus}`)} />
                 <ChevronDownIcon className="h-4 w-4 flex-shrink-0 text-text-dim transition-transform group-open:rotate-180" />
+                </div>
               </summary>
 
               {race.displayStatus === "finished" ? (

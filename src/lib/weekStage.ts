@@ -25,6 +25,10 @@ export interface WeekStageRace {
   displayStatus: RaceDisplayStatus;
   /** null : pas de pronostic enregistré. */
   picks: WeekStagePick[] | null;
+  /** Course spéciale (malus, ou bonus Fête nationale), comme dans Ma saison. */
+  specialRule: string | null;
+  /** Bonus ×2 perso joué sur cette course. */
+  bonusX2: boolean;
 }
 
 export interface WeekStage {
@@ -60,6 +64,7 @@ interface RaceRow {
   sex: string | null;
   locks_at: string;
   status: string;
+  special_rule?: string | null;
 }
 
 /**
@@ -116,7 +121,7 @@ export async function getWeekStage(
 
   const { data: raceRows } = await supabase
     .from("races")
-    .select("id, format, sex, locks_at, status")
+    .select("id, format, sex, locks_at, status, special_rule")
     .eq("stage_id", stage.id)
     .order("locks_at", { ascending: true });
   const races = (raceRows ?? []) as RaceRow[];
@@ -124,14 +129,14 @@ export async function getWeekStage(
   const { data: predictionRows } = races.length
     ? await supabase
         .from("predictions")
-        .select("race_id, athlete_ids, nation_code")
+        .select("race_id, athlete_ids, nation_code, bonus_x2_used")
         .eq("user_id", userId)
         .in(
           "race_id",
           races.map((r) => r.id)
         )
     : { data: [] as any[] };
-  type PredictionRow = { race_id: string; athlete_ids: string[] | null; nation_code: string | null };
+  type PredictionRow = { race_id: string; athlete_ids: string[] | null; nation_code: string | null; bonus_x2_used?: boolean | null };
   const predictions = new Map<string, PredictionRow>(
     ((predictionRows ?? []) as PredictionRow[])
       .filter((p) => (p.athlete_ids?.length ?? 0) > 0 || p.nation_code)
@@ -174,7 +179,11 @@ export async function getWeekStage(
             };
           });
     }
-    return { id: r.id, format: r.format, sex: r.sex, locksAt: r.locks_at, displayStatus: getRaceDisplayStatus(r as any, now), picks };
+    return { id: r.id, format: r.format, sex: r.sex, locksAt: r.locks_at, displayStatus: getRaceDisplayStatus(r as any, now),
+      picks,
+      specialRule: r.special_rule ?? null,
+      bonusX2: p?.bonus_x2_used ?? false,
+    };
   };
 
   return {
