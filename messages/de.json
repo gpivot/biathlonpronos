@@ -570,7 +570,11 @@
     "caFarteActive": "Karte auf diesem Rennen gespielt: tippe auf ×3 neben dem Biathleten, dessen Punkte verdreifacht werden.",
     "cardAspiration": "Windschatten",
     "aspirationHint": "Windschatten: in diesem Rennen zählt jeder deiner Biathleten einen Platz besser.",
-    "aspirationActive": "Karte auf diesem Rennen gespielt: jeder deiner Biathleten zählt einen Platz besser."
+    "aspirationActive": "Karte auf diesem Rennen gespielt: jeder deiner Biathleten zählt einen Platz besser.",
+    "searchAthlete": "Name oder Land suchen (FRA, NOR…)",
+    "searchNation": "Land suchen (FRA, NOR…)",
+    "searchNoResult": "Keine Treffer",
+    "searchClear": "Suche löschen"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",

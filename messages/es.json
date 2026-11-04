@@ -570,7 +570,11 @@
     "caFarteActive": "carta jugada en esta carrera: toca ×3 junto al biatleta cuyos puntos se triplicarán.",
     "cardAspiration": "Rebufo",
     "aspirationHint": "Rebufo: en esta carrera, cada uno de tus biatletas cuenta un puesto más arriba.",
-    "aspirationActive": "carta jugada en esta carrera: cada uno de tus biatletas cuenta un puesto más arriba."
+    "aspirationActive": "carta jugada en esta carrera: cada uno de tus biatletas cuenta un puesto más arriba.",
+    "searchAthlete": "Buscar un nombre o país (FRA, NOR…)",
+    "searchNation": "Buscar un país (FRA, NOR…)",
+    "searchNoResult": "Sin resultados",
+    "searchClear": "Borrar búsqueda"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",

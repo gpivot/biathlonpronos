@@ -82,6 +82,7 @@ export default async function GlobesPage() {
       .map((o: any) => ({
         id: o.athlete_id,
         label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}) — ×${o.value}`,
+        nationCode: o.athletes.nation_code,
         odds: o.value,
       }))
       .sort(byOddsThenLabel);
@@ -105,7 +106,7 @@ export default async function GlobesPage() {
         isNation: true,
         initialPick: existing?.nation_code ?? null,
         options: (odds ?? [])
-          .map((o) => ({ id: o.nation_code as string, label: `${nameByNationCode.get(o.nation_code!) ?? o.nation_code} — ×${o.value}`, odds: Number(o.value) }))
+          .map((o) => ({ id: o.nation_code as string, label: `${nameByNationCode.get(o.nation_code!) ?? o.nation_code} — ×${o.value}`, nationCode: o.nation_code as string, odds: Number(o.value) }))
           .sort(byOddsThenLabel),
       });
     } else {
@@ -125,6 +126,7 @@ export default async function GlobesPage() {
           .map((o: any) => ({
             id: o.athlete_id,
             label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}) — ×${o.value}`,
+            nationCode: o.athletes.nation_code,
             odds: Number(o.value),
           }))
           .sort(byOddsThenLabel),

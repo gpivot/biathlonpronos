@@ -1266,3 +1266,15 @@ La version 4 (1.0.4) est en examen pour la production. Play Console signale, san
   clé « Sandbox » seule donne `401 THIRD_PARTY_AUTH_ERROR Invalid APNs credential` sur
   TestFlight et l'App Store). Clé actuelle « Biathlonpronos Push Prod », importée dans Firebase en
   développement et en production. `/admin/notifications` affiche la raison des échecs Firebase.
+
+## Recherche dans les listes de pronostics (04/11/2026)
+
+Demande de Guillaume : pouvoir filtrer la liste en tapant un nom ou un code pays à 3 lettres.
+Un champ de recherche (`src/components/SearchField.tsx`, logique dans `src/lib/searchFilter.ts`)
+est placé au-dessus de la liste des biathlètes (course individuelle), des nations (relais) et de
+chaque menu des pronostics de saison (globes, meilleure nation, Pépites). La recherche ignore
+majuscules et accents (« oberg » trouve Öberg, « bo » trouve Bø) ; plusieurs mots doivent tous
+correspondre (« lou fra »). Choix pragmatique, à confirmer : un mot qui est exactement un code
+pays présent dans la liste ne garde que ce pays (« fra » donne les Français, pas Franziska
+Preuss). Les biathlètes déjà choisis restent dans le résumé « Mon pronostic » même hors filtre, et
+le choix en cours d'un menu de saison reste toujours affiché.

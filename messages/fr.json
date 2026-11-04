@@ -570,7 +570,11 @@
     "caFarteActive": "carte jouée sur cette course : touche ×3 à côté du biathlète dont les points seront triplés.",
     "cardAspiration": "Aspiration",
     "aspirationHint": "Aspiration : sur cette course, chacun de tes biathlètes compte une place plus haut.",
-    "aspirationActive": "carte jouée sur cette course : chacun de tes biathlètes compte une place plus haut."
+    "aspirationActive": "carte jouée sur cette course : chacun de tes biathlètes compte une place plus haut.",
+    "searchAthlete": "Rechercher un nom ou un pays (FRA, NOR…)",
+    "searchNation": "Rechercher un pays (FRA, NOR…)",
+    "searchNoResult": "Aucun résultat",
+    "searchClear": "Effacer la recherche"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",

@@ -570,7 +570,11 @@
     "caFarteActive": "carta giocata su questa gara: tocca ×3 accanto al biatleta i cui punti saranno triplicati.",
     "cardAspiration": "Scia",
     "aspirationHint": "Scia: in questa gara, ognuno dei tuoi biatleti conta una posizione più in alto.",
-    "aspirationActive": "carta giocata su questa gara: ognuno dei tuoi biatleti conta una posizione più in alto."
+    "aspirationActive": "carta giocata su questa gara: ognuno dei tuoi biatleti conta una posizione più in alto.",
+    "searchAthlete": "Cerca un nome o un paese (FRA, NOR…)",
+    "searchNation": "Cerca un paese (FRA, NOR…)",
+    "searchNoResult": "Nessun risultato",
+    "searchClear": "Cancella ricerca"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",

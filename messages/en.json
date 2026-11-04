@@ -570,7 +570,11 @@
     "caFarteActive": "card played on this race: tap ×3 next to the biathlete whose points will be tripled.",
     "cardAspiration": "Slipstream",
     "aspirationHint": "Slipstream: on this race, each of your biathletes counts one place higher.",
-    "aspirationActive": "card played on this race: each of your biathletes counts one place higher."
+    "aspirationActive": "card played on this race: each of your biathletes counts one place higher.",
+    "searchAthlete": "Search a name or country (FRA, NOR…)",
+    "searchNation": "Search a country (FRA, NOR…)",
+    "searchNoResult": "No results",
+    "searchClear": "Clear search"
   },
   "SignIn": {
     "prompt": "Sign in to continue",

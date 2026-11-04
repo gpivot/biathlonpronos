@@ -8,6 +8,8 @@ import { CheckIcon } from "@/components/icons";
 import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog";
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
+import { filterBySearch } from "@/lib/searchFilter";
+import { SearchField } from "@/components/SearchField";
 
 export type NationWithOdds = {
   nation_code: string;
@@ -34,6 +36,7 @@ export function RelayPredictionForm({
 }) {
   const [selected, setSelected] = useState<string | null>(initialSelection);
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
+  const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Parcours d'invité : création du compte à la validation du premier pronostic.
@@ -84,6 +87,8 @@ export function RelayPredictionForm({
     }
   }
 
+  // Filtre : nom du pays ou code à 3 lettres (FRA, NOR…).
+  const visibleNations = filterBySearch(nations, search, (n) => [n.name, n.nation_code], (n) => n.nation_code);
   const selectedNation = nations.find((n) => n.nation_code === selected);
   // Pronostic enregistré et inchangé : « Ton pronostic est validé ! » remplace le bouton.
   const unsaved = savedState.nation !== null && (savedState.nation !== selected || savedState.bonusX2 !== bonusX2);
@@ -129,8 +134,15 @@ export function RelayPredictionForm({
         <RuleInfoButton format={format} small />
       </div>
 
+      <SearchField value={search} onChange={setSearch} placeholder={t("searchNation")} clearLabel={t("searchClear")} />
+
       <div className="flex flex-col gap-2">
-        {nations.map((n) => {
+        {visibleNations.length === 0 && (
+          <div className="rounded-2xl border border-border bg-card px-3.5 py-3 text-center text-[13px] text-text-dim">
+            {t("searchNoResult")}
+          </div>
+        )}
+        {visibleNations.map((n) => {
           const isSelected = selected === n.nation_code;
           return (
             <button
