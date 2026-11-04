@@ -183,6 +183,11 @@ cachée » (5 langues). Changements :
   pop-up joueur (`SeasonView.pepites`).
 - **Pas dans les pronostics de course** tant qu'elle n'est pas révélée : grisée dans le
   formulaire (« ta Pépite cachée »), refusée par la base (trigger `predictions_no_hidden_pepite`).
+- **Résultat d'une course** (accueil, étape de la semaine, page de la course) : la révélation est
+  mise en avant dans un encadré `PepiteReveal` (place, nom, points ajoutés), à la place de la
+  ligne « Bonus Pépite » des extras ; ❄️ devant les points dans l'étape de la semaine. Affiché même
+  sans pronostic sur la course. `score_ledger.breakdown.pepiteAthleteId` est enregistré depuis le
+  04/11/2026 ; avant, la Pépite est retrouvée parmi les révélées classées dans le Top 10.
 - **Points** : inchangés, `applyPepiteBonuses` ajoutait déjà les points de la Pépite (cote de la
   course × barème du rang) au score de la course de son premier Top 10.
 - Migration **0035_pepite_cachee.sql** : fonctions/triggers `pepite_is_eligible`, `pepites_check`

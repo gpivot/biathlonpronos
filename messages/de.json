@@ -71,7 +71,10 @@
     "seasonPicksEdit": "Meine Saisontipps ändern",
     "lastResultExtra_equipe": "Team-Karte",
     "favoriteTeamInvite": "Wähle dein Lieblingsteam",
-    "favoriteTeamInviteHint": "Verfolge seine Siege und Podestplätze und bereite die Bonuskarte Team vor."
+    "favoriteTeamInviteHint": "Verfolge seine Siege und Podestplätze und bereite die Bonuskarte Team vor.",
+    "pepiteRevealTitle": "Dein versteckter Rohdiamant ist aufgedeckt!",
+    "pepiteRevealHint": "Erste Top-10-Platzierung der Saison: Seine Punkte werden deinem Rennergebnis gutgeschrieben.",
+    "pepiteRevealRank": "{rank}."
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",

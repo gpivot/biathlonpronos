@@ -71,7 +71,10 @@
     "seasonPicksEdit": "Edit my season predictions",
     "lastResultExtra_equipe": "Team card",
     "favoriteTeamInvite": "Choose your favourite team",
-    "favoriteTeamInviteHint": "Follow its wins and podiums, and get ready for the Team bonus card."
+    "favoriteTeamInviteHint": "Follow its wins and podiums, and get ready for the Team bonus card.",
+    "pepiteRevealTitle": "Your Hidden Diamond is revealed!",
+    "pepiteRevealHint": "First Top 10 of the season: their points are added to your race score.",
+    "pepiteRevealRank": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}"
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",

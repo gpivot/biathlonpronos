@@ -27,6 +27,7 @@ import { ShowMore } from "@/components/ShowMore";
 import { MALUS_SCALE, SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
 import { canPlayCard, cardsOnRace, getSeasonCardRaces, type CardRow } from "@/lib/bonusCards";
 import { PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
+import { PepiteReveal } from "@/components/PepiteReveal";
 import { HelpButton } from "@/components/HelpButton";
 import { BonusPointsBadge, BonusQuestions } from "@/components/BonusQuestions";
 import { getRaceBonusQuestions } from "@/lib/bonusQuestions";
@@ -260,7 +261,8 @@ export default async function RacePage({
   }
   // Avant le départ : seulement les questions « avant le départ », une fois les pronostics ouverts.
   // Total de la course : pronostic + questions bonus (déjà additionnés par getRaceResult).
-  const pointsEarned = raceResult?.prediction?.points ?? myBonusPoints;
+  // Sans pronostic, la révélation de la Pépite cachée rapporte quand même ses points.
+  const pointsEarned = raceResult?.prediction?.points ?? (raceResult?.pepite?.points ?? 0) + myBonusPoints;
 
   const visibleBonusQuestions =
     displayStatus === "upcoming" ? (predictionsOpen ? bonusQuestions.filter((q) => q.kind === "pre_race") : []) : bonusQuestions;
@@ -502,6 +504,8 @@ export default async function RacePage({
                   </div>
                   <div className="font-display text-2xl font-extrabold text-ice">{Math.round(pointsEarned * 10) / 10} pts</div>
                 </div>
+
+                {raceResult?.pepite && <PepiteReveal pepite={raceResult.pepite} />}
 
                 {/* Questions bonus : à part du pronostic, pour voir d'un coup d'œil ce qu'elles ont rapporté. */}
                 {myBonusPoints > 0 && (

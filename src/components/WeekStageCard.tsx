@@ -59,7 +59,7 @@ export async function WeekStageCard({
 
         {stage.races.map((race) => {
           const result = results[race.id] ?? null;
-          const points = result?.prediction?.points ?? null;
+          const points = result?.prediction?.points ?? result?.pepite?.points ?? null;
           return (
             <details key={race.id} open={race.id === stage.openRaceId} className="group border-t border-border first-of-type:border-t-0">
               <summary className="flex cursor-pointer list-none items-center gap-3 px-4 py-3 [&::-webkit-details-marker]:hidden">
@@ -81,6 +81,7 @@ export async function WeekStageCard({
                 </div>
                 {race.displayStatus === "finished" && points != null && (
                   <div className={`whitespace-nowrap font-display text-sm font-extrabold ${points < 0 ? "text-red" : "text-gold"}`}>
+                    {result?.pepite && <span title={result.pepite.name}>❄️ </span>}
                     {formatPoints(points)}
                   </div>
                 )}

@@ -71,7 +71,10 @@
     "seasonPicksEdit": "Modifica i miei pronostici stagionali",
     "lastResultExtra_equipe": "Carta Squadra",
     "favoriteTeamInvite": "Scegli la tua squadra preferita",
-    "favoriteTeamInviteHint": "Segui le sue vittorie e i suoi podi, e prepara la carta bonus Squadra."
+    "favoriteTeamInviteHint": "Segui le sue vittorie e i suoi podi, e prepara la carta bonus Squadra.",
+    "pepiteRevealTitle": "La tua Pepita nascosta è stata rivelata!",
+    "pepiteRevealHint": "Prima Top 10 della stagione: i suoi punti si aggiungono al tuo punteggio della gara.",
+    "pepiteRevealRank": "{rank}º"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",

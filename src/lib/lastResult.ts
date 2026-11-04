@@ -81,6 +81,11 @@ export interface LastResult {
   podium: { rank: number; name: string; nationCode: string }[];
   /** Classement complet saisi par l'admin. */
   results: RaceResultRow[];
+  /**
+   * Révélation de la Pépite cachée du joueur sur cette course (son premier Top 10) : place, nom
+   * et points ajoutés au score de la course. null sinon. Indépendant du pronostic.
+   */
+  pepite: { rank: number; name: string; nationCode: string; points: number } | null;
   /** null : le joueur n'avait pas pronostiqué cette course. */
   prediction: {
     /** Total de la course : pronostic + questions bonus. */
@@ -118,6 +123,8 @@ interface IndividualBreakdown {
   nationalDayBoostedAthleteIds?: string[];
   aspirationBonus?: number;
   pepiteBonus?: number;
+  /** Pépite révélée sur cette course (enregistrée depuis le 04/11/2026). */
+  pepiteAthleteId?: string;
   /** Carte Équipe : cotes des biathlètes de l'équipe favorite dans le Top 10. */
   equipeBonus?: number;
 }
@@ -180,7 +187,6 @@ export function computeIndividualExtras(breakdown: IndividualBreakdown): LastRes
     { kind: "pronoParfait", points: breakdown.pronoParfaitBonus ?? 0 },
     { kind: "specialMalus", points: breakdown.specialMalus ?? 0 },
     { kind: "aspiration", points: breakdown.aspirationBonus ?? 0 },
-    { kind: "pepite", points: breakdown.pepiteBonus ?? 0 },
     { kind: "equipe", points: breakdown.equipeBonus ?? 0 },
   ];
   return extras.filter((e) => e.points !== 0);
@@ -332,6 +338,27 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   }));
   const fullResults: RaceResultRow[] = relay ? scoredRows.map((r) => ({ ...r, perfect: false })) : markPronoParfait(scoredRows);
 
+  // Pépite cachée révélée sur cette course : mise en avant à part (place, nom, points).
+  const breakdownAll = (ledger?.breakdown ?? {}) as IndividualBreakdown;
+  let pepite: LastResult["pepite"] = null;
+  const pepiteBonus = Number(breakdownAll.pepiteBonus ?? 0);
+  if (userId && !relay && pepiteBonus > 0) {
+    let pepiteId = breakdownAll.pepiteAthleteId ?? null;
+    if (!pepiteId) {
+      // Courses notées avant l'enregistrement de pepiteAthleteId : la Pépite révélée classée dans le Top 10.
+      const { data: claimed } = await supabase
+        .from("pepites")
+        .select("athlete_id")
+        .eq("user_id", userId)
+        .eq("season_id", stage.season_id)
+        .eq("bonus_claimed", true);
+      const ids = new Set(((claimed ?? []) as any[]).map((p) => p.athlete_id as string));
+      pepiteId = resultRows.find((r) => r.athlete_id && r.rank <= 10 && ids.has(r.athlete_id))?.athlete_id ?? null;
+    }
+    const row = pepiteId ? resultRows.find((r) => r.athlete_id === pepiteId) : null;
+    if (row) pepite = { rank: row.rank, name: rowName(row), nationCode: rowNation(row), points: pepiteBonus };
+  }
+
   const base: Omit<LastResult, "prediction"> = {
     raceId: race.id,
     format: race.format,
@@ -342,6 +369,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     coefficient: stage.coefficient,
     podium,
     results: fullResults,
+    pepite,
   };
 
   const hasPrediction = prediction && ((prediction.athlete_ids?.length ?? 0) > 0 || prediction.nation_code);

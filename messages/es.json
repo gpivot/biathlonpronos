@@ -71,7 +71,10 @@
     "seasonPicksEdit": "Modificar mis pronósticos de temporada",
     "lastResultExtra_equipe": "Carta Equipo",
     "favoriteTeamInvite": "Elige tu equipo favorito",
-    "favoriteTeamInviteHint": "Sigue sus victorias y podios, y prepara la carta bonus Equipo."
+    "favoriteTeamInviteHint": "Sigue sus victorias y podios, y prepara la carta bonus Equipo.",
+    "pepiteRevealTitle": "¡Tu Diamante oculto se ha revelado!",
+    "pepiteRevealHint": "Primer Top 10 de la temporada: sus puntos se suman a tu puntuación de la carrera.",
+    "pepiteRevealRank": "{rank}.º"
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",

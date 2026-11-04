@@ -71,7 +71,10 @@
     "seasonPicksEdit": "Modifier mes pronostics de saison",
     "lastResultExtra_equipe": "Carte Équipe",
     "favoriteTeamInvite": "Choisis ton équipe favorite",
-    "favoriteTeamInviteHint": "Suis ses victoires et podiums, et prépare la carte bonus Équipe."
+    "favoriteTeamInviteHint": "Suis ses victoires et podiums, et prépare la carte bonus Équipe.",
+    "pepiteRevealTitle": "Ta Pépite cachée est révélée !",
+    "pepiteRevealHint": "Premier Top 10 de la saison : ses points s'ajoutent à ton score de la course.",
+    "pepiteRevealRank": "{rank, selectordinal, one {#er} other {#e}}"
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
