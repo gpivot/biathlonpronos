@@ -1118,17 +1118,19 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
 ### Jokers de fin de saison
 - `src/lib/jokers.ts` (`selectJokers`, `computeSeasonJokers`, testés) : par joueur, les 3 plus
   mauvais résultats de courses individuelles et les 2 plus mauvais relais **parmi les courses
-  notées**, hors Mondiaux/JO (coefficient 2). Ordre : courses non jouées d'abord (pas de pronostic),
+  notées**, hors Mondiaux/JO (coefficient 2) et hors courses malus/bonus (`races.special_rule`
+  renseigné, décision de Guillaume du 04/11/2026). Ordre : courses non jouées d'abord (pas de pronostic),
   puis les plus petits scores, puis la plus ancienne.
-- Effacer = retirer les points de la course du total (un 0 ne change rien, un malus est rendu, un
-  petit score positif est retiré). Le bonus Pépite gagné sur une course n'est jamais effacé.
+- Effacer = retirer les points de la course du total (un 0 ne change rien, un petit score positif est
+  retiré). Le bonus Pépite gagné sur une course n'est jamais effacé.
 - **Application** : calcul à la lecture, rien n'est supprimé de `score_ledger`. L'admin active les
   jokers en fin de saison (bouton « Appliquer les jokers » dans la saison, `/admin`, colonne
   `seasons.jokers_applied`, migration **0030**, réversible). `getLeaderboard` (général, ligues, carte
   de rang, pop-up) retire alors les points effacés ; le classement « Par étapes » reste brut.
 - **Aperçu** dans Classement, encadré « Mon classement » (`JokersCard`, `getPlayerJokers`) : résultats qui seraient effacés si la saison
   s'arrêtait aujourd'hui, et l'effet sur le total.
-- **À confirmer** : relais des Mondiaux/JO exclus aussi ; une course non jouée est prise en
+- **À confirmer** : relais des Mondiaux/JO exclus aussi ; « étapes malus et bonus » lu comme les
+  courses à règle spéciale (le malus/bonus est porté par la course, pas par l'étape) ; une course non jouée est prise en
   priorité même si une course jouée a un malus plus lourd (lecture littérale de la règle) ; un
   joueur arrivé en cours de saison a les courses d'avant son inscription comptées comme non jouées.
 

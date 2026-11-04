@@ -5,7 +5,9 @@ import { fetchAll } from "./admin/fetchAll";
  * Jokers de fin de saison (décision de Guillaume, 01/11/2026) : on efface les 3 plus mauvais
  * résultats de courses individuelles (hors Mondiaux/JO) et les 2 plus mauvais relais (hors
  * Mondiaux/JO aussi, à confirmer). Une course non jouée compte comme un résultat à effacer en
- * priorité. Les jokers ne s'appliquent au classement qu'une fois la saison terminée, quand l'admin
+ * priorité. Les courses malus et bonus (`races.special_rule` renseigné : Tour de péna, Brouillard,
+ * T'es collé, Fête nationale…) ne sont jamais effacées non plus (décision de Guillaume, 04/11/2026).
+ * Les jokers ne s'appliquent au classement qu'une fois la saison terminée, quand l'admin
  * les active (`seasons.jokers_applied`) ; avant, « Ma saison » en montre un aperçu.
  *
  * Effacer un résultat retire ses points du total (un 0 ne change rien, un malus négatif est
@@ -24,6 +26,8 @@ export interface JokerCandidate {
   relay: boolean;
   /** Mondiaux ou JO (coefficient 2) : jamais effacée. */
   championship: boolean;
+  /** Course malus ou bonus (règle spéciale) : jamais effacée. */
+  special?: boolean;
   /** Le joueur a déposé un pronostic sur cette course. */
   played: boolean;
   /** Points de la course pour le joueur (hors bonus Pépite), 0 s'il n'en a pas. */
@@ -46,7 +50,7 @@ export function selectJokers(candidates: JokerCandidate[]): JokerSelection {
   const pick = (relay: boolean, count: number) =>
     candidates
       .map((c, index) => ({ c, index }))
-      .filter(({ c }) => c.relay === relay && !c.championship)
+      .filter(({ c }) => c.relay === relay && !c.championship && !c.special)
       .sort((a, b) => Number(a.c.played) - Number(b.c.played) || a.c.points - b.c.points || a.index - b.index)
       .slice(0, count)
       .map(({ c }) => c);
@@ -60,6 +64,8 @@ export interface JokerRace {
   format: string;
   coefficient: number;
   finished: boolean;
+  /** Règle spéciale (course malus ou bonus), null pour une course normale. */
+  specialRule?: string | null;
 }
 
 /**
@@ -90,6 +96,7 @@ export function computeSeasonJokers(
           raceId: race.id,
           relay: RELAY_FORMATS.includes(race.format),
           championship: race.coefficient === 2,
+          special: Boolean(race.specialRule),
           played: playedKeys.has(`${userId}|${race.id}`),
           points: pointsByKey.get(`${userId}|${race.id}`) ?? 0,
         }))
@@ -115,7 +122,7 @@ export async function loadSeasonJokers(
   if (userIds.length === 0) return new Map();
   const { data: races } = await supabase
     .from("races")
-    .select("id, format, status, locks_at, stages!inner(season_id, coefficient)")
+    .select("id, format, status, locks_at, special_rule, stages!inner(season_id, coefficient)")
     .eq("stages.season_id", seasonId)
     .order("locks_at", { ascending: true });
   const jokerRaces: JokerRace[] = ((races ?? []) as any[]).map((r) => ({
@@ -123,6 +130,7 @@ export async function loadSeasonJokers(
     format: r.format,
     coefficient: r.stages?.coefficient ?? 1,
     finished: r.status === "finished",
+    specialRule: r.special_rule ?? null,
   }));
   const finishedIds = jokerRaces.filter((r) => r.finished).map((r) => r.id);
   if (finishedIds.length === 0) return computeSeasonJokers([], [], [], userIds);
