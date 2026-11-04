@@ -582,7 +582,11 @@
     "aspirationHint": "Aspiration : sur cette course, chacun de tes biathlètes compte une place plus haut.",
     "aspirationActive": "carte jouée sur cette course : chacun de tes biathlètes compte une place plus haut.",
     "hiddenPepite": "ta Pépite cachée",
-    "hiddenPepiteError": "Ta Pépite cachée est déjà jouée sur cette course : retire-la de ton pronostic."
+    "hiddenPepiteError": "Ta Pépite cachée est déjà jouée sur cette course : retire-la de ton pronostic.",
+    "searchAthlete": "Rechercher un nom ou un pays (FRA, NOR…)",
+    "searchNation": "Rechercher un pays (FRA, NOR…)",
+    "searchNoResult": "Aucun résultat",
+    "searchClear": "Effacer la recherche"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",
@@ -950,7 +954,11 @@
     "remaining": "{time} restantes",
     "closed": "Terminée",
     "pointsBadge": "Question bonus +{points} pts",
-    "answeredCanChange": "Réponse enregistrée, modifiable tant que la question est ouverte. {points} pts si c'est la bonne !",
+    "savedTitle": "Réponse enregistrée !",
+    "savedChoice": "Ton choix : « {option} ».",
+    "canChange": "Modifiable tant que la question est ouverte, {points} pts si c'est la bonne.",
+    "resultSoon": "Résultat dès que la bonne réponse sera connue.",
+    "saving": "Enregistrement...",
     "signInToAnswer": "Connecte-toi pour répondre.",
     "answerToEarn": "Trouve la bonne réponse pour gagner {points} pts au classement général.",
     "notAnswered": "Pas de réponse.",
@@ -959,7 +967,6 @@
     "error_unknown": "Réponse non enregistrée, réessaie.",
     "answerButton": "Répondre et gagner {points} pts",
     "later": "Plus tard",
-    "pendingResult": "Réponse enregistrée. Résultat dès que la bonne réponse sera connue.",
     "correct": "Bonne réponse !",
     "wrong": "Mauvaise réponse : 0 pt."
   },

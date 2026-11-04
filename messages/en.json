@@ -582,7 +582,11 @@
     "aspirationHint": "Slipstream: on this race, each of your biathletes counts one place higher.",
     "aspirationActive": "card played on this race: each of your biathletes counts one place higher.",
     "hiddenPepite": "your Hidden Diamond",
-    "hiddenPepiteError": "Your Hidden Diamond is already played on this race: remove it from your pick."
+    "hiddenPepiteError": "Your Hidden Diamond is already played on this race: remove it from your pick.",
+    "searchAthlete": "Search a name or country (FRA, NOR…)",
+    "searchNation": "Search a country (FRA, NOR…)",
+    "searchNoResult": "No results",
+    "searchClear": "Clear search"
   },
   "SignIn": {
     "prompt": "Sign in to continue",
@@ -950,7 +954,11 @@
     "remaining": "{time} left",
     "closed": "Closed",
     "pointsBadge": "Bonus question +{points} pts",
-    "answeredCanChange": "Answer saved, you can change it while the question is open. {points} pts if it's right!",
+    "savedTitle": "Answer saved!",
+    "savedChoice": "Your pick: “{option}”.",
+    "canChange": "You can change it while the question is open, {points} pts if it's right.",
+    "resultSoon": "Result as soon as the right answer is known.",
+    "saving": "Saving...",
     "signInToAnswer": "Sign in to answer.",
     "answerToEarn": "Find the right answer to earn {points} pts in the overall standings.",
     "notAnswered": "No answer.",
@@ -959,7 +967,6 @@
     "error_unknown": "Answer not saved, please try again.",
     "answerButton": "Answer and earn {points} pts",
     "later": "Later",
-    "pendingResult": "Answer saved. Result as soon as the right answer is known.",
     "correct": "Right answer!",
     "wrong": "Wrong answer: 0 pts."
   },

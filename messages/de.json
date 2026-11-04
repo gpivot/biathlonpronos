@@ -582,7 +582,11 @@
     "aspirationHint": "Windschatten: in diesem Rennen zählt jeder deiner Biathleten einen Platz besser.",
     "aspirationActive": "Karte auf diesem Rennen gespielt: jeder deiner Biathleten zählt einen Platz besser.",
     "hiddenPepite": "dein versteckter Rohdiamant",
-    "hiddenPepiteError": "Dein versteckter Rohdiamant wird in diesem Rennen bereits gespielt: Nimm ihn aus deinem Tipp."
+    "hiddenPepiteError": "Dein versteckter Rohdiamant wird in diesem Rennen bereits gespielt: Nimm ihn aus deinem Tipp.",
+    "searchAthlete": "Name oder Land suchen (FRA, NOR…)",
+    "searchNation": "Land suchen (FRA, NOR…)",
+    "searchNoResult": "Keine Treffer",
+    "searchClear": "Suche löschen"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",
@@ -950,7 +954,11 @@
     "remaining": "noch {time}",
     "closed": "Beendet",
     "pointsBadge": "Bonusfrage +{points} Pkt.",
-    "answeredCanChange": "Antwort gespeichert, änderbar solange die Frage offen ist. {points} Pkt., wenn sie stimmt!",
+    "savedTitle": "Antwort gespeichert!",
+    "savedChoice": "Deine Wahl: „{option}“.",
+    "canChange": "Änderbar, solange die Frage offen ist, {points} Pkt., wenn sie stimmt.",
+    "resultSoon": "Ergebnis, sobald die richtige Antwort feststeht.",
+    "saving": "Wird gespeichert...",
     "signInToAnswer": "Melde dich an, um zu antworten.",
     "answerToEarn": "Finde die richtige Antwort und hol dir {points} Pkt. in der Gesamtwertung.",
     "notAnswered": "Keine Antwort.",
@@ -959,7 +967,6 @@
     "error_unknown": "Antwort nicht gespeichert, bitte erneut versuchen.",
     "answerButton": "Antworten und {points} Pkt. holen",
     "later": "Später",
-    "pendingResult": "Antwort gespeichert. Ergebnis, sobald die richtige Antwort feststeht.",
     "correct": "Richtige Antwort!",
     "wrong": "Falsche Antwort: 0 Pkt."
   },

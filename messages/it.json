@@ -582,7 +582,11 @@
     "aspirationHint": "Scia: in questa gara, ognuno dei tuoi biatleti conta una posizione più in alto.",
     "aspirationActive": "carta giocata su questa gara: ognuno dei tuoi biatleti conta una posizione più in alto.",
     "hiddenPepite": "la tua Pepita nascosta",
-    "hiddenPepiteError": "La tua Pepita nascosta è già in gioco in questa gara: toglila dal tuo pronostico."
+    "hiddenPepiteError": "La tua Pepita nascosta è già in gioco in questa gara: toglila dal tuo pronostico.",
+    "searchAthlete": "Cerca un nome o un paese (FRA, NOR…)",
+    "searchNation": "Cerca un paese (FRA, NOR…)",
+    "searchNoResult": "Nessun risultato",
+    "searchClear": "Cancella ricerca"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",
@@ -950,7 +954,11 @@
     "remaining": "Mancano {time}",
     "closed": "Chiusa",
     "pointsBadge": "Domanda bonus +{points} pt",
-    "answeredCanChange": "Risposta salvata, modificabile finché la domanda è aperta. {points} pt se è giusta!",
+    "savedTitle": "Risposta salvata!",
+    "savedChoice": "La tua scelta: «{option}».",
+    "canChange": "Modificabile finché la domanda è aperta, {points} pt se è giusta.",
+    "resultSoon": "Risultato appena si conosce la risposta giusta.",
+    "saving": "Salvataggio...",
     "signInToAnswer": "Accedi per rispondere.",
     "answerToEarn": "Trova la risposta giusta per guadagnare {points} pt nella classifica generale.",
     "notAnswered": "Nessuna risposta.",
@@ -959,7 +967,6 @@
     "error_unknown": "Risposta non salvata, riprova.",
     "answerButton": "Rispondi e guadagna {points} pt",
     "later": "Più tardi",
-    "pendingResult": "Risposta salvata. Risultato appena si conosce la risposta giusta.",
     "correct": "Risposta giusta!",
     "wrong": "Risposta sbagliata: 0 pt."
   },

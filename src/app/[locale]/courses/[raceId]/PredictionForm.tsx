@@ -9,6 +9,8 @@ import { GuestSignupDialog, GuestWelcome } from "@/components/GuestSignupDialog"
 import { PredictionSummary } from "./PredictionSummary";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { fullAthleteName, shortAthleteName } from "@/lib/athleteName";
+import { filterBySearch } from "@/lib/searchFilter";
+import { SearchField } from "@/components/SearchField";
 
 export type AthleteWithOdds = {
   athlete_id: string;
@@ -66,6 +68,7 @@ export function PredictionForm({
   const hasStartOrder = Object.keys(startOrder).length > 0;
   // Poursuite : affichage par ordre de départ par défaut, ou par cote.
   const [sortBy, setSortBy] = useState<"start" | "odds">(hasStartOrder ? "start" : "odds");
+  const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Parcours d'invité : création du compte à la validation du premier pronostic.
@@ -176,6 +179,13 @@ export function PredictionForm({
     sortBy === "start"
       ? [...athletes].sort((a, b) => (startOrder[a.athlete_id] ?? Infinity) - (startOrder[b.athlete_id] ?? Infinity) || a.value - b.value)
       : athletes;
+  // Filtre : nom, prénom ou code pays à 3 lettres (FRA, NOR…).
+  const visibleAthletes = filterBySearch(
+    sortedAthletes,
+    search,
+    (a) => [a.first_name, a.last_name, a.nation_code],
+    (a) => a.nation_code
+  );
 
   const athleteById = new Map(athletes.map((a) => [a.athlete_id, a]));
   // Pronostic enregistré et inchangé : « Ton pronostic est validé ! » remplace le bouton.
@@ -292,8 +302,15 @@ export function PredictionForm({
         )}
       </div>
 
+      <SearchField value={search} onChange={setSearch} placeholder={t("searchAthlete")} clearLabel={t("searchClear")} />
+
       <div className="flex flex-col gap-2">
-        {sortedAthletes.map((a) => {
+        {visibleAthletes.length === 0 && (
+          <div className="rounded-2xl border border-border bg-card px-3.5 py-3 text-center text-[13px] text-text-dim">
+            {t("searchNoResult")}
+          </div>
+        )}
+        {visibleAthletes.map((a) => {
           const isSelected = selected.includes(a.athlete_id);
           const isPepite = pepiteSet.has(a.athlete_id);
           const isGrilled = grilledSet.has(a.athlete_id) || isPepite;

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { getLeaderboard } from "@/lib/leaderboard";
 
@@ -17,7 +17,7 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ l
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await getAuthUser();
 
   const { data: memberships } = await supabase
     .from("league_memberships")

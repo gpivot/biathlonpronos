@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { fetchLiveQuestionInvites, type LiveQuestionInvite } from "@/lib/bonusQuestionActions";
+import type { LiveQuestionInvite } from "@/lib/bonusQuestionActions";
 import { BONUS_QUESTION_POINTS } from "@/lib/bonusQuestions";
 import { formatRemaining, useRemaining } from "./BonusQuestions";
 
@@ -58,7 +58,9 @@ export function LiveQuestionPopup() {
 
   const refresh = useCallback(() => {
     if (document.visibilityState !== "visible") return;
-    fetchLiveQuestionInvites()
+    // Requête GET (/api/live-questions) et non action serveur : ne retarde pas les changements de page.
+    fetch("/api/live-questions", { cache: "no-store" })
+      .then((res) => (res.ok ? (res.json() as Promise<LiveQuestionInvite[]>) : []))
       .then(setInvites)
       .catch(() => {});
   }, []);

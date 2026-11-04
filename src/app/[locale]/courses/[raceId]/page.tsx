@@ -1,12 +1,12 @@
 import { fullAthleteName } from "@/lib/athleteName";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ChevronLeftIcon, ChevronRightIcon, ClockIcon } from "@/components/icons";
 import { Link } from "@/i18n/navigation";
 import { getRaceDisplayStatus } from "@/lib/raceStatus";
-import { getClock } from "@/lib/clock";
+import { getAdminProfile, getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
@@ -41,12 +41,17 @@ export default async function RacePage({
 }) {
   const { locale, raceId } = await params;
   const supabase = createClient();
-  const t = await getTranslations("Race");
-  const tFormat = await getTranslations("RaceFormat");
-  const tSex = await getTranslations("Sex");
-  const tClassement = await getTranslations("Classement");
-
-  const { data: race } = await supabase.from("races").select("*, stages(*)").eq("id", raceId).single();
+  // Lancés ensemble : chaque lecture Supabase est un aller-retour réseau.
+  const [t, tFormat, tSex, tClassement, { data: race }, { now }, { data: authData }, adminProfile] = await Promise.all([
+    getTranslations("Race"),
+    getTranslations("RaceFormat"),
+    getTranslations("Sex"),
+    getTranslations("Classement"),
+    supabase.from("races").select("*, stages(*)").eq("id", raceId).single(),
+    getClock(),
+    getAuthUser(),
+    getAdminProfile(),
+  ]);
 
   if (!race) notFound();
 
@@ -59,18 +64,10 @@ export default async function RacePage({
     starts_on: string;
   };
   const isRelay = RELAY_FORMATS.includes(race.format);
-  const { now } = await getClock();
   const displayStatus = getRaceDisplayStatus(race, now);
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  let isAdmin = false;
-  if (user) {
-    const { data: profile } = await supabase.from("profiles").select("is_admin").eq("id", user.id).maybeSingle();
-    isAdmin = profile?.is_admin ?? false;
-  }
+  const user = authData.user;
+  const isAdmin = adminProfile.isAdmin;
 
   let athletesWithOdds: AthleteWithOdds[] = [];
   let nationsWithOdds: NationWithOdds[] = [];
@@ -210,7 +207,22 @@ export default async function RacePage({
   }
 
   // Poursuite / mass start : seuls les qualifiés prennent le départ, dans l'ordre de la liste.
-  const startList = displayStatus === "upcoming" ? await getStartList(supabase, race) : { status: "open" as const };
+  // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
+  const [startList, raceResult, players, ongoingBoard, bonusQuestions, { data: seasonRaces }] = await Promise.all([
+    displayStatus === "upcoming" ? getStartList(supabase, race) : Promise.resolve({ status: "open" as const }),
+    // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
+    displayStatus === "finished" ? getRaceResult(supabase, race.id, user?.id ?? null) : Promise.resolve(null),
+    displayStatus === "finished" ? getRacePlayers(supabase, race.id) : Promise.resolve([]),
+    displayStatus === "ongoing" ? getOngoingBoard(supabase, stage.season_id, race.id) : Promise.resolve([]),
+    // Questions bonus (avant le départ ou live) et points qu'elles ont rapportés au joueur.
+    getRaceBonusQuestions(supabase, race, user?.id ?? null, now),
+    // Courses précédente et suivante de la saison (ordre chronologique), boutons de l'en-tête.
+    supabase
+      .from("races")
+      .select("id, locks_at, stages!inner(season_id)")
+      .eq("stages.season_id", stage.season_id)
+      .order("locks_at", { ascending: true }),
+  ]);
   const startOrder: Record<string, number> = startList.status === "known" ? startList.order : {};
   const startGaps: Record<string, number> = startList.status === "known" ? startList.gaps : {};
   const startListPending = startList.status === "pending";
@@ -226,12 +238,9 @@ export default async function RacePage({
   const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 
-  // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
-  const raceResult = displayStatus === "finished" ? await getRaceResult(supabase, race.id, user?.id ?? null) : null;
   const results = raceResult?.results ?? [];
   const resultsTopCount = isRelay ? 5 : 10;
   const multiplier = raceResult?.prediction?.multiplier ?? null;
-  const players = displayStatus === "finished" ? await getRacePlayers(supabase, race.id) : [];
   // Après la course : un joueur qui a pronostiqué mais n'est dans aucune ligue est invité à se
   // comparer aux autres et à rejoindre (ou créer) une ligue (parcours d'invité, 01/11/2026).
   let compareInvite = false;
@@ -239,10 +248,6 @@ export default async function RacePage({
     const { count } = await supabase.from("league_memberships").select("league_id", { count: "exact", head: true }).eq("user_id", user.id);
     compareInvite = (count ?? 0) === 0;
   }
-  const ongoingBoard = displayStatus === "ongoing" ? await getOngoingBoard(supabase, stage.season_id, race.id) : [];
-
-  // Questions bonus (avant le départ ou live) et points qu'elles ont rapportés au joueur.
-  const bonusQuestions = await getRaceBonusQuestions(supabase, race, user?.id ?? null, now);
   const realNowMs = Date.now();
   const bonusRemainingMs = Object.fromEntries(
     bonusQuestions.filter((q) => q.kind === "live" && q.state === "open").map((q) => [q.id, Math.max(0, new Date(q.closesAt).getTime() - realNowMs)])
@@ -270,12 +275,6 @@ export default async function RacePage({
     <BonusQuestions questions={visibleBonusQuestions} remainingMs={bonusRemainingMs} signedIn={Boolean(user && !user.is_anonymous)} />
   );
 
-  // Courses précédente et suivante de la saison (ordre chronologique), boutons de l'en-tête.
-  const { data: seasonRaces } = await supabase
-    .from("races")
-    .select("id, locks_at, stages!inner(season_id)")
-    .eq("stages.season_id", stage.season_id)
-    .order("locks_at", { ascending: true });
   const raceIndex = (seasonRaces ?? []).findIndex((r: any) => r.id === race.id);
   const previousRaceId = raceIndex > 0 ? seasonRaces![raceIndex - 1].id : null;
   const nextRaceId = raceIndex >= 0 && raceIndex < (seasonRaces ?? []).length - 1 ? seasonRaces![raceIndex + 1].id : null;

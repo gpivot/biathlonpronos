@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { getOpenLiveQuestions } from "./bonusQuestions";
 
 export type AnswerBonusQuestionResult = { ok: true } | { ok: false; error: "notAuthenticated" | "closed" | "unknown" };
@@ -43,7 +43,7 @@ export async function fetchLiveQuestionInvites(): Promise<LiveQuestionInvite[]> 
   const supabase = createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await getAuthUser();
   if (!user) return [];
   const now = new Date();
   const questions = await getOpenLiveQuestions(supabase, user.id, now);

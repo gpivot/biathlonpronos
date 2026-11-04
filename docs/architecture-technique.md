@@ -1295,3 +1295,41 @@ La version 4 (1.0.4) est en examen pour la production. Play Console signale, san
   clé « Sandbox » seule donne `401 THIRD_PARTY_AUTH_ERROR Invalid APNs credential` sur
   TestFlight et l'App Store). Clé actuelle « Biathlonpronos Push Prod », importée dans Firebase en
   développement et en production. `/admin/notifications` affiche la raison des échecs Firebase.
+
+## Recherche dans les listes de pronostics (04/11/2026)
+
+Demande de Guillaume : pouvoir filtrer la liste en tapant un nom ou un code pays à 3 lettres.
+Un champ de recherche (`src/components/SearchField.tsx`, logique dans `src/lib/searchFilter.ts`)
+est placé au-dessus de la liste des biathlètes (course individuelle), des nations (relais) et de
+chaque menu des pronostics de saison (globes, meilleure nation, Pépites). La recherche ignore
+majuscules et accents (« oberg » trouve Öberg, « bo » trouve Bø) ; plusieurs mots doivent tous
+correspondre (« lou fra »). Choix pragmatique, à confirmer : un mot qui est exactement un code
+pays présent dans la liste ne garde que ce pays (« fra » donne les Français, pas Franziska
+Preuss). Les biathlètes déjà choisis restent dans le résumé « Mon pronostic » même hors filtre, et
+le choix en cours d'un menu de saison reste toujours affiché.
+
+## Réactivité des pages (04/11/2026)
+
+Guillaume trouvait l'appli lente à l'ouverture d'une notification et au rafraîchissement. Toutes
+les pages joueur sont rendues par le serveur à chaque visite (`force-dynamic`), chaque lecture
+Supabase étant un aller-retour réseau. Changements :
+
+- `src/app/[locale]/loading.tsx` (et `(auth)/loading.tsx`) : écran de chargement envoyé tout de
+  suite (blocs gris + barre de navigation `BottomNavLoading`, onglet demandé allumé) pendant que
+  le serveur prépare la page. Au lancement de l'appli, la mise en page (dont `PushRegistrar`) est
+  active avant la fin de l'accueil : la page d'une notification touchée s'ouvre plus tôt.
+- `getAuthUser()` (`lib/supabase/server.ts`) et `getAdminProfile()` (`lib/clock.ts`), mis en
+  cache pour la requête : le joueur connecté et son profil admin ne sont plus lus 3 à 4 fois par
+  page (page, horloge, barre de navigation).
+- Accueil et page course : lectures indépendantes lancées en parallèle (`Promise.all`) au lieu
+  d'à la suite.
+- Le pop-up des questions live et l'enregistrement du jeton de notification passent par des
+  routes (`/api/live-questions`, `/api/push/register`) et non plus par des actions serveur : Next.js
+  14 met les actions serveur dans la même file que les changements de page, et une action en cours
+  au moment d'un clic (ou du toucher d'une notification) force ensuite un second rendu complet.
+
+Piste hors code : la région des fonctions Vercel (Settings > Functions) doit être la plus proche
+de la région de la base Supabase (Project Settings > General), sinon chaque lecture traverse
+l'Atlantique (Vercel est par défaut à Washington, `iad1`).
+Base Supabase en `eu-west-1` (Irlande) : région Vercel conseillée `dub1` (Dublin), réglée par
+Guillaume le 04/11/2026 (forfait Hobby : une seule région).

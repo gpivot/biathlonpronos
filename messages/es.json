@@ -582,7 +582,11 @@
     "aspirationHint": "Rebufo: en esta carrera, cada uno de tus biatletas cuenta un puesto más arriba.",
     "aspirationActive": "carta jugada en esta carrera: cada uno de tus biatletas cuenta un puesto más arriba.",
     "hiddenPepite": "tu Diamante oculto",
-    "hiddenPepiteError": "Tu Diamante oculto ya se juega en esta carrera: quítalo de tu pronóstico."
+    "hiddenPepiteError": "Tu Diamante oculto ya se juega en esta carrera: quítalo de tu pronóstico.",
+    "searchAthlete": "Buscar un nombre o país (FRA, NOR…)",
+    "searchNation": "Buscar un país (FRA, NOR…)",
+    "searchNoResult": "Sin resultados",
+    "searchClear": "Borrar búsqueda"
   },
   "SignIn": {
     "prompt": "Inicia sesión para continuar",
@@ -950,7 +954,11 @@
     "remaining": "Quedan {time}",
     "closed": "Cerrada",
     "pointsBadge": "Pregunta extra +{points} pts",
-    "answeredCanChange": "Respuesta guardada, puedes cambiarla mientras la pregunta esté abierta. ¡{points} pts si aciertas!",
+    "savedTitle": "¡Respuesta guardada!",
+    "savedChoice": "Tu elección: «{option}».",
+    "canChange": "Puedes cambiarla mientras la pregunta esté abierta, {points} pts si aciertas.",
+    "resultSoon": "Resultado en cuanto se conozca la respuesta correcta.",
+    "saving": "Guardando...",
     "signInToAnswer": "Inicia sesión para responder.",
     "answerToEarn": "Acierta la respuesta para ganar {points} pts en la clasificación general.",
     "notAnswered": "Sin respuesta.",
@@ -959,7 +967,6 @@
     "error_unknown": "Respuesta no guardada, inténtalo de nuevo.",
     "answerButton": "Responder y ganar {points} pts",
     "later": "Más tarde",
-    "pendingResult": "Respuesta guardada. Resultado en cuanto se conozca la respuesta correcta.",
     "correct": "¡Respuesta correcta!",
     "wrong": "Respuesta incorrecta: 0 pts."
   },

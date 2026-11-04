@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
+import { cache } from "react";
 
 /**
  * Client Supabase pour les Server Components / Route Handlers.
@@ -38,6 +39,13 @@ export function createClient() {
     }
   );
 }
+
+/**
+ * Joueur connecté pour la requête en cours. `auth.getUser()` interroge le serveur d'auth de
+ * Supabase (un aller-retour réseau) : mis en cache pour la requête, il n'est fait qu'une fois
+ * même si la page, l'horloge et la barre de navigation le demandent chacune.
+ */
+export const getAuthUser = cache(() => createClient().auth.getUser());
 
 /**
  * Client "admin" — clé service_role, contourne RLS. Réservé au back-office

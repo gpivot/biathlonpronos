@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
-import type { GlobeOption } from "./GlobesForm";
+import { visibleOptions, type GlobeOption } from "./GlobesForm";
+import { SearchField } from "@/components/SearchField";
 
 export function PepiteForm({
   sex,
@@ -22,12 +23,14 @@ export function PepiteForm({
   const noLongerEligible = !!initialPick && !alreadyClaimed && !options.some((o) => o.id === initialPick);
   const locked = !!initialPick && !noLongerEligible;
   const [pick, setPick] = useState(noLongerEligible ? "" : initialPick ?? "");
+  const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const supabase = createClient();
   const t = useTranslations("Globes");
   const tCompte = useTranslations("Compte");
+  const tForm = useTranslations("PredictionForm");
 
   async function submit() {
     if (!pick) return;
@@ -73,6 +76,9 @@ export function PepiteForm({
         <p className="text-[13px] text-ice">{t("pepiteClaimed")}</p>
       ) : (
         <>
+          {!locked && (
+            <SearchField value={search} onChange={setSearch} placeholder={tForm("searchAthlete")} clearLabel={tForm("searchClear")} />
+          )}
           <select
             value={pick}
             onChange={(e) => setPick(e.target.value)}
@@ -80,7 +86,7 @@ export function PepiteForm({
             className="rounded-xl border border-border bg-bg px-3 py-2.5 text-sm disabled:opacity-60"
           >
             <option value="">{t("noPick")}</option>
-            {options.map((o) => (
+            {visibleOptions(options, search, pick).map((o) => (
               <option key={o.id} value={o.id}>
                 {o.label}
               </option>

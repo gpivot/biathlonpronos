@@ -1,7 +1,7 @@
 import { fullAthleteName } from "@/lib/athleteName";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { GlobesForm, type GlobeCategoryConfig } from "./GlobesForm";
 import { PepiteForm } from "./PepiteForm";
 import { getClock } from "@/lib/clock";
@@ -46,7 +46,7 @@ export default async function GlobesPage() {
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await getAuthUser();
 
   if (!user || user.is_anonymous) {
     return (
@@ -93,7 +93,7 @@ export default async function GlobesPage() {
       .filter(([, e]) => e.athlete?.sex === sex && isPepiteEligibleOdds(e.values))
       .map(([id, e]) => {
         const odds = Math.min(...e.values);
-        return { id, label: `${fullAthleteName(e.athlete)} (${e.athlete.nation_code}) — ×${odds}`, odds };
+        return { id, label: `${fullAthleteName(e.athlete)} (${e.athlete.nation_code}) — ×${odds}`, nationCode: e.athlete.nation_code as string, odds };
       })
       .sort(byOddsThenLabel);
   const pickByCategory = new Map((existingPicks ?? []).map((p) => [p.category, p]));
@@ -116,7 +116,7 @@ export default async function GlobesPage() {
         isNation: true,
         initialPick: existing?.nation_code ?? null,
         options: (odds ?? [])
-          .map((o) => ({ id: o.nation_code as string, label: `${nameByNationCode.get(o.nation_code!) ?? o.nation_code} — ×${o.value}`, odds: Number(o.value) }))
+          .map((o) => ({ id: o.nation_code as string, label: `${nameByNationCode.get(o.nation_code!) ?? o.nation_code} — ×${o.value}`, nationCode: o.nation_code as string, odds: Number(o.value) }))
           .sort(byOddsThenLabel),
       });
     } else {
@@ -136,6 +136,7 @@ export default async function GlobesPage() {
           .map((o: any) => ({
             id: o.athlete_id,
             label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}) — ×${o.value}`,
+            nationCode: o.athletes.nation_code,
             odds: Number(o.value),
           }))
           .sort(byOddsThenLabel),
