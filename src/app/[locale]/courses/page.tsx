@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { HeaderActions } from "@/components/HeaderActions";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getSeasonView, pickDefaultOpenStageId } from "@/lib/seasonView";
@@ -31,7 +31,7 @@ async function getCalendarData(): Promise<CalendarData> {
 
   const [{ data: season }, { data: userResult }] = await Promise.all([
     supabase.from("seasons").select("id, starts_on").eq("status", "active").maybeSingle(),
-    supabase.auth.getUser(),
+    getAuthUser(),
   ]);
 
   let isAdmin = false;

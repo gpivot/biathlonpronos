@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Link } from "@/i18n/navigation";
 import { HeaderActions } from "@/components/HeaderActions";
@@ -54,7 +54,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const supabase = createClient();
   const [{ data: season }, { data: userResult }] = await Promise.all([
     supabase.from("seasons").select("id").eq("status", "active").maybeSingle(),
-    supabase.auth.getUser(),
+    getAuthUser(),
   ]);
   const userId = userResult.user?.id ?? null;
   const { now } = await getClock();

@@ -1278,3 +1278,27 @@ correspondre (« lou fra »). Choix pragmatique, à confirmer : un mot qui est e
 pays présent dans la liste ne garde que ce pays (« fra » donne les Français, pas Franziska
 Preuss). Les biathlètes déjà choisis restent dans le résumé « Mon pronostic » même hors filtre, et
 le choix en cours d'un menu de saison reste toujours affiché.
+
+## Réactivité des pages (04/11/2026)
+
+Guillaume trouvait l'appli lente à l'ouverture d'une notification et au rafraîchissement. Toutes
+les pages joueur sont rendues par le serveur à chaque visite (`force-dynamic`), chaque lecture
+Supabase étant un aller-retour réseau. Changements :
+
+- `src/app/[locale]/loading.tsx` (et `(auth)/loading.tsx`) : écran de chargement envoyé tout de
+  suite (blocs gris + barre de navigation `BottomNavLoading`, onglet demandé allumé) pendant que
+  le serveur prépare la page. Au lancement de l'appli, la mise en page (dont `PushRegistrar`) est
+  active avant la fin de l'accueil : la page d'une notification touchée s'ouvre plus tôt.
+- `getAuthUser()` (`lib/supabase/server.ts`) et `getAdminProfile()` (`lib/clock.ts`), mis en
+  cache pour la requête : le joueur connecté et son profil admin ne sont plus lus 3 à 4 fois par
+  page (page, horloge, barre de navigation).
+- Accueil et page course : lectures indépendantes lancées en parallèle (`Promise.all`) au lieu
+  d'à la suite.
+- Le pop-up des questions live et l'enregistrement du jeton de notification passent par des
+  routes (`/api/live-questions`, `/api/push/register`) et non plus par des actions serveur : Next.js
+  14 met les actions serveur dans la même file que les changements de page, et une action en cours
+  au moment d'un clic (ou du toucher d'une notification) force ensuite un second rendu complet.
+
+Piste hors code : la région des fonctions Vercel (Settings > Functions) doit être la plus proche
+de la région de la base Supabase (Project Settings > General), sinon chaque lecture traverse
+l'Atlantique (Vercel est par défaut à Washington, `iad1`).

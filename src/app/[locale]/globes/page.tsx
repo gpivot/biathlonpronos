@@ -1,7 +1,7 @@
 import { fullAthleteName } from "@/lib/athleteName";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { GlobesForm, type GlobeCategoryConfig } from "./GlobesForm";
 import { PepiteForm } from "./PepiteForm";
 import { getClock } from "@/lib/clock";
@@ -45,7 +45,7 @@ export default async function GlobesPage() {
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await getAuthUser();
 
   if (!user || user.is_anonymous) {
     return (

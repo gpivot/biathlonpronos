@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { Landing } from "@/components/landing/Landing";
 import { HeaderActions } from "@/components/HeaderActions";
@@ -57,9 +57,11 @@ interface HomeData {
 async function getHomeData(): Promise<HomeData> {
   const supabase = createClient();
 
-  const [{ data: season }, { data: userResult }] = await Promise.all([
+  // Lancés ensemble : chaque lecture est un aller-retour vers Supabase.
+  const [{ data: season }, { data: userResult }, { now }] = await Promise.all([
     supabase.from("seasons").select("id, label, starts_on").eq("status", "active").maybeSingle(),
-    supabase.auth.getUser(),
+    getAuthUser(),
+    getClock(),
   ]);
   // Invité (session anonyme du bouton « Jouer ») : traité comme un visiteur, il voit la vitrine.
   const user = userResult.user && !userResult.user.is_anonymous ? userResult.user : null;
@@ -67,8 +69,6 @@ async function getHomeData(): Promise<HomeData> {
   if (!season) {
     return { season: null, userId: user?.id ?? null, weekStage: null, weekResults: {}, nowMs: Date.now(), nextRace: null, leaderboard: [], badges: new Map(), favoriteTeam: null, favoriteTeamStats: null, nextStage: null, lastResults: [], streak: null, seasonPicksBeforeStart: null, canChooseFavoriteTeam: false, cards: null };
   }
-
-  const { now } = await getClock();
 
   const weekStage = user ? await getWeekStage(supabase, season.id, user.id, now) : null;
   const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges, { count: startedRaces }] = await Promise.all([
@@ -106,42 +106,40 @@ async function getHomeData(): Promise<HomeData> {
       .eq("stages.season_id", season.id)
       .lte("locks_at", now.toISOString()),
   ]);
-  let seasonPicksBeforeStart: number | null = null;
-  // Aussi masquée dès le verrouillage des pronostics de saison (début de saison, cf. /globes), pour ne pas inviter vers une page fermée.
-  if (user && (startedRaces ?? 0) === 0 && new Date(season.starts_on) > now) {
-    const [{ count: globes }, { count: pepites }] = await Promise.all([
-      supabase.from("season_predictions").select("category", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
-      supabase.from("pepites").select("sex", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
-    ]);
-    seasonPicksBeforeStart = (globes ?? 0) + (pepites ?? 0);
-  }
   const weekResults = Object.fromEntries(weekResult.filter((r): r is LastResult => r != null).map((r) => [r.raceId, r]));
   const nextRace = weekStage ? null : ((upcomingRaces ?? []) as any[])[0] ?? null;
-
-  const { data: nextStage } = await supabase
-    .from("stages")
-    .select("id, location, country_code, starts_on, ends_on")
-    .eq("season_id", season.id)
-    .gt("starts_on", weekStage ? weekStage.endsOn : parisDay(now))
-    .order("starts_on", { ascending: true })
-    .limit(1)
-    .maybeSingle();
-
   const favoriteTeam = favoriteTeamResult.data as HomeData["favoriteTeam"];
-  const canChooseFavoriteTeam = Boolean(user && !favoriteTeam && !(await isEquipeCardActive(supabase, user.id, season.id)));
-  const favoriteTeamStats = favoriteTeam
-    ? await getFavoriteTeamStats(supabase, season.id, { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex })
-    : null;
 
-  let predicted = false;
-  if (user && nextRace) {
-    const { count } = await supabase
-      .from("predictions")
-      .select("race_id", { count: "exact", head: true })
-      .eq("user_id", user.id)
-      .eq("race_id", nextRace.id);
-    predicted = (count ?? 0) > 0;
-  }
+  // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
+  const [seasonPicksBeforeStart, { data: nextStage }, canChooseFavoriteTeam, favoriteTeamStats, predicted] = await Promise.all([
+    // Aussi masquée dès le verrouillage des pronostics de saison (début de saison, cf. /globes), pour ne pas inviter vers une page fermée.
+    user && (startedRaces ?? 0) === 0 && new Date(season.starts_on) > now
+      ? Promise.all([
+          supabase.from("season_predictions").select("category", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
+          supabase.from("pepites").select("sex", { count: "exact", head: true }).eq("user_id", user.id).eq("season_id", season.id),
+        ]).then(([{ count: globes }, { count: pepites }]) => (globes ?? 0) + (pepites ?? 0))
+      : Promise.resolve(null),
+    supabase
+      .from("stages")
+      .select("id, location, country_code, starts_on, ends_on")
+      .eq("season_id", season.id)
+      .gt("starts_on", weekStage ? weekStage.endsOn : parisDay(now))
+      .order("starts_on", { ascending: true })
+      .limit(1)
+      .maybeSingle(),
+    user && !favoriteTeam ? isEquipeCardActive(supabase, user.id, season.id).then((active) => !active) : Promise.resolve(false),
+    favoriteTeam
+      ? getFavoriteTeamStats(supabase, season.id, { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex })
+      : Promise.resolve(null),
+    user && nextRace
+      ? supabase
+          .from("predictions")
+          .select("race_id", { count: "exact", head: true })
+          .eq("user_id", user.id)
+          .eq("race_id", nextRace.id)
+          .then(({ count }) => (count ?? 0) > 0)
+      : Promise.resolve(false),
+  ]);
 
   return {
     season,

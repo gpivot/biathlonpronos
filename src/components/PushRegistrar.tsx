@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { FirebaseMessaging, isNativeApp, nativePlatform, notificationPath } from "@/lib/native/firebaseMessaging";
-import { registerPushToken } from "@/lib/push/actions";
 
 /**
  * Notifications de l'appli Android / iOS (rien ne se passe dans un navigateur). Au lancement,
@@ -12,6 +11,20 @@ import { registerPushToken } from "@/lib/push/actions";
  * connecté, le serveur le refuse : on réessaie à chaque changement de page, donc juste après la
  * connexion. Toucher une notification ouvre la page indiquée dans son champ `url`.
  */
+/**
+ * Envoie le jeton par une requête POST (/api/push/register) et non par une action serveur : une
+ * action en cours au moment où l'on touche une notification fait recharger la page d'arrivée.
+ */
+async function registerPushToken(token: string, platform: string, locale: string): Promise<boolean> {
+  const res = await fetch("/api/push/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, platform, locale }),
+  });
+  if (!res.ok) throw new Error(`push register ${res.status}`);
+  return Boolean(((await res.json()) as { ok?: boolean }).ok);
+}
+
 export function PushRegistrar() {
   const pathname = usePathname();
   const router = useRouter();

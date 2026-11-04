@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { HeaderActions } from "@/components/HeaderActions";
 import { ArrowLeftIcon } from "@/components/icons";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { CreateOrJoinLeague } from "./CreateOrJoinLeague";
 
@@ -16,7 +16,7 @@ export default async function LiguesPage() {
 
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await getAuthUser();
 
   let myLeagues: { id: string; name: string }[] = [];
   if (user && !user.is_anonymous) {
