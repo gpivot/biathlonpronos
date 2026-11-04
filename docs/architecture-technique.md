@@ -944,7 +944,7 @@ des notifications : elles serviront aux questions bonus posées pendant les cour
   seulement (sur Android il faudrait un serveur de redirection) ; Google sur les deux (projet
   Google Cloud `biathlonpronos-6eae5` : client Web « Biathlon Pronos », client iOS « Client iOS 1 »,
   clients Android « Client Android 1 » avec le SHA-1 de la clé d'importation `99:12:53:…` et
-  « Client Android Play » avec le SHA-1 de la clé de signature Play `C7:CE:D6:4A:…`, indispensable
+  « Client Android 2 » avec le SHA-1 de la clé de signature Play `C7:CE:D6:4A:…`, indispensable
   pour les installations depuis le Play Store, sinon erreur `[16] Account reauth failed`). L'écran
   de consentement doit être publié (« En production »), sinon seuls les testeurs déclarés passent.
   Les ID Web et iOS sont dans `socialLogin.ts`, le client iOS inversé est l'URL scheme de
