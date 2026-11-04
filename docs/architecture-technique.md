@@ -1421,5 +1421,5 @@ pronostiqué au moins une course de la saison avant celle-ci (`applyTourDePenaAb
 ligne `score_ledger` avec `breakdown.absent`). Pas de cumul avec les jokers : les courses malus ne
 sont jamais effacées.
 
-**Migrations** : **0037** (nouvelles valeurs d'enum, à exécuter seule) puis **0038** (colonnes,
+**Migrations** : **0038** (nouvelles valeurs d'enum, à exécuter seule) puis **0039** (colonnes,
 table des réglages, fonctions). Les deux sont à coller avant la fusion de la PR.

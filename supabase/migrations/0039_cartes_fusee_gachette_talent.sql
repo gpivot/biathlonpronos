@@ -1,5 +1,5 @@
 -- Biathlonpronos — cartes Fusée, Gâchette et Talent, réglages des cartes dans l'admin
--- (Guillaume, 04/11/2026). À coller APRÈS 0037, avant de fusionner la PR.
+-- (Guillaume, 04/11/2026). À coller APRÈS 0038, avant de fusionner la PR.
 --
 -- 1. Fusée et Gâchette ne sont plus des bonus automatiques mais des cartes du 10/10, posées sur une
 --    étape avant sa 1re course (play_stage_card). Le moteur de points (code) lit le rang au temps

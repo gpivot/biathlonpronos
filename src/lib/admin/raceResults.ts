@@ -270,7 +270,7 @@ async function clearRaceScores(
       const revealedHere =
         !!pepite &&
         (pepite.revealed_race_id === raceId ||
-          // Révélées avant la migration 0037 (sans revealed_race_id).
+          // Révélées avant la migration 0039 (sans revealed_race_id).
           (pepite.revealed_race_id == null && pepite.bonus_claimed && (!breakdown.pepiteAthleteId || breakdown.pepiteAthleteId === pepite.athlete_id)));
       if (revealedHere) toReset.push(row.user_id as string);
       else frozen.push({ userId: row.user_id as string, points: Number(breakdown.pepiteBonus), athleteId: breakdown.pepiteAthleteId ?? null });

@@ -18,7 +18,7 @@ import type { BonusCardEffect } from "./scoring/types";
  * - « Talent » (04/11/2026) : seulement après la révélation d'une de tes pépites ; réactive cette
  *   pépite (de nouveau cachée) ou en désigne une nouvelle, pour un sexe.
  * L'admin peut désactiver une carte ou limiter la période où elle est proposée au 10/10
- * (bonus_card_settings, migration 0037).
+ * (bonus_card_settings, migration 0039).
  * Une même carte ne se prend pas sur deux 10/10 d'affilée. Sur une même course, Ça farte et
  * Aspiration s'excluent, Aspiration et 4e choix aussi ; Ça farte se pose sur un des 4 choix d'un
  * 4e choix. Équipe se cumule avec tout. La carte « Fondue » (dégrillage) a été supprimée avec la
@@ -218,7 +218,7 @@ export function canPlayCard(
 /**
  * Une carte Fusée / Gâchette peut-elle être posée sur cette étape ? La carte est en main, l'étape a
  * des courses individuelles et aucune course de l'étape (relais compris) n'est encore partie, et la
- * même carte n'y est pas déjà posée. Même règle que play_stage_card (migration 0037).
+ * même carte n'y est pas déjà posée. Même règle que play_stage_card (migration 0039).
  */
 export function canPlayStageCard(
   type: StageCardType,
@@ -437,7 +437,7 @@ export type OfferState = "offered" | "locked" | "justTaken" | "unavailable";
  * Cartes du pop-up du 10/10 : masquées si l'admin les a désactivées, grisées hors de leur période
  * (« unavailable »), verrouillées tant que leur étape n'a pas commencé (Talent : tant qu'aucune
  * pépite n'est révélée), et grisées si c'est la carte prise au 10/10 précédent (une même carte pas
- * deux fois d'affilée). Même règle que claim_bonus_card (migration 0037).
+ * deux fois d'affilée). Même règle que claim_bonus_card (migration 0039).
  */
 export function offeredCards(
   previousClaimedType: string | null,
