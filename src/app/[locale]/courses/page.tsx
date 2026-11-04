@@ -4,7 +4,8 @@ import { HeaderActions } from "@/components/HeaderActions";
 import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { ArrowLeftIcon } from "@/components/icons";
-import { getSeasonView, pickDefaultOpenStageId } from "@/lib/seasonView";
+import { getSeasonView, pickDefaultOpenStageId, type HiddenPepite } from "@/lib/seasonView";
+import { HiddenPepiteCard } from "@/components/HiddenPepiteCard";
 import { getClock } from "@/lib/clock";
 import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
@@ -22,6 +23,7 @@ interface CalendarData {
   seasonPicks: SeasonPick[] | null;
   /** Pronostics de saison encore modifiables (avant le début de saison, comme /globes). */
   seasonPicksOpen: boolean;
+  pepites: HiddenPepite[] | null;
   streak: number | null;
   cards: PlayerCards | null;
 }
@@ -40,13 +42,13 @@ async function getCalendarData(): Promise<CalendarData> {
     isAdmin = profile?.is_admin ?? false;
   }
 
-  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, seasonPicksOpen: false, streak: null, cards: null };
+  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, seasonPicksOpen: false, pepites: null, streak: null, cards: null };
 
   const { now } = await getClock();
   // Invité (session anonyme) : vu comme un visiteur tant que son compte n'est pas créé.
   const playerId = userResult.user && !userResult.user.is_anonymous ? userResult.user.id : null;
-  const { stages, seasonPicks, streak, cards } = await getSeasonView(supabase, season, playerId, now);
-  return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, streak, cards };
+  const { stages, seasonPicks, pepites, streak, cards } = await getSeasonView(supabase, season, playerId, now);
+  return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, pepites, streak, cards };
 }
 
 export default async function CoursesPage({
@@ -60,7 +62,7 @@ export default async function CoursesPage({
   // Arrivée depuis « L'étape de la semaine » de l'accueil : cette étape est dépliée d'office.
   const { etape } = await searchParams;
   const t = await getTranslations("Courses");
-  const { seasonId, stages, isAdmin, seasonPicks, seasonPicksOpen, streak, cards } = await getCalendarData();
+  const { seasonId, stages, isAdmin, seasonPicks, seasonPicksOpen, pepites, streak, cards } = await getCalendarData();
   const requestedStageId = etape && stages.some((s) => s.id === etape) ? etape : null;
 
   return (
@@ -80,6 +82,8 @@ export default async function CoursesPage({
         {isAdmin && seasonId && <CalendarImportButton seasonId={seasonId} />}
 
         {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} open={seasonPicksOpen} />}
+
+        {pepites && <HiddenPepiteCard pepites={pepites} />}
 
         {streak != null && <StreakCard current={streak} cards={cards ?? undefined} seasonId={seasonId ?? undefined} />}
 

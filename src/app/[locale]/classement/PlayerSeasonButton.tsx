@@ -87,6 +87,19 @@ export function PlayerSeasonButton({ userId, className, children }: { userId: st
                         <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
                       </div>
                     </div>
+                    {/* Pépite cachée révélée : son nom en haut du pop-up (invisible tant qu'elle ne l'est pas). */}
+                    {data.pepites
+                      ?.filter((p) => p.revealed && p.name)
+                      .map((p) => (
+                        <div key={p.sex} className="flex items-center gap-2 border-t border-border pt-2.5 text-[13px] text-text-dim">
+                          <span className="text-base">❄️</span>
+                          {t("playerPepiteRevealed", { sex: p.sex })}
+                          <span className="font-semibold text-ice">
+                            {p.nationCode && `${nationFlagEmoji(p.nationCode)} `}
+                            {p.name}
+                          </span>
+                        </div>
+                      ))}
                     {data.cards && data.cards.cards.length > 0 && (
                       <div className="flex flex-col gap-1.5 border-t border-border pt-2.5">
                         <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">

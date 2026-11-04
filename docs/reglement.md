@@ -218,9 +218,11 @@ Dès que tu la choisis et jusqu'à la fin de la saison, chaque biathlète de ton
 
 > **Chat noir retirée le 01/11/2026 (Guillaume)** : la carte (corriger un pronostic de début de saison) est désormais réservée à VéloPronos.
 
-## 14. La pépite
+## 14. La pépite cachée
 
-Chaque joueur peut miser en début de saison sur un outsider. Pour être éligible, le biathlète doit posséder au moment du choix une cote supérieure ou égale à 30. Ton objectif : anticiper la révélation de l'hiver. Lorsque ta Pépite réalise son premier Top 10 de la saison, elle te rapporte un bonus exceptionnel. Une fois ce bonus obtenu, le pari Pépite est terminé.
+Chaque joueur peut miser en début de saison sur un outsider par sexe (une Pépite Femmes, une Pépite Hommes). Pour être éligible, **toutes** les cotes du biathlète au moment du choix (sprint, poursuite, individuel, mass start, gros globe, meilleur jeune) doivent être supérieures ou égales à 30 : un biathlète qui a une seule cote sous 30 n'est pas une pépite (précisé par Guillaume le 04/11/2026). Ton objectif : anticiper la révélation de l'hiver.
+
+La pépite est cachée : les autres joueurs ne la voient pas, et elle est jouée en secret sur toutes les courses individuelles. C'est pourquoi tu ne peux pas la mettre dans tes pronostics de course tant qu'elle n'est pas révélée. Lorsque ta Pépite réalise son premier Top 10 de la saison, les points qu'elle gagne sur cette course (cote × barème du classement, comme un pronostic normal) s'ajoutent à ton score de la course. Elle est alors révélée : le picto ❄️ apparaît à côté de ton pseudo au classement et son nom s'affiche en haut de ton pop-up joueur. Elle redevient ensuite un biathlète normal à pronostiquer, et le pari Pépite est terminé.
 
 ## 15. Fusée & Gâchette
 
@@ -260,7 +262,7 @@ Les jokers ne s'appliquent qu'en fin de saison. Pendant la saison, l'encadré «
 
 Le classement **par étapes** additionne les points des courses d'une seule étape. Le leader de chaque étape porte le **Dossard Rouge** (le jaune reste réservé au classement général). À côté de son pseudo, chaque joueur affiche le nombre d'étapes qu'il a gagnées.
 
-**Les pictos des joueurs** : dossard jaune (leader du général), dossard rouge (leader de l'étape, avec le nombre d'étapes gagnées), ⚡ bonus ×2 utilisés (avec le nombre), 🍾 courses gagnées (meilleur pronostiqueur), ⭐ pronos parfaits (avec le nombre), ❄️ Pépite révélée.
+**Les pictos des joueurs** : dossard jaune (leader du général), dossard rouge (leader de l'étape, avec le nombre d'étapes gagnées), ⚡ bonus ×2 utilisés (avec le nombre), 🍾 courses gagnées (meilleur pronostiqueur), ⭐ pronos parfaits (avec le nombre), ❄️ Pépite cachée révélée.
 
 ## 17. Les courses
 

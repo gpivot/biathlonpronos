@@ -30,7 +30,7 @@ export interface SeasonJokers {
 
 /**
  * Contenu de « Ma saison » (`/courses`) pour un joueur : courses de chaque étape avec son
- * pronostic, son bonus ×2 et ses points, plus ses pronostics de saison (globes, Pépites).
+ * pronostic, son bonus ×2 et ses points, plus ses pronostics de saison (globes) et ses Pépites cachées.
  * Sert aussi au pop-up d'un joueur du Classement (`isOwner` false) : on n'y montre que ce qui
  * ne permet pas de copier, c'est-à-dire les pronostics des courses déjà parties, les globes
  * une fois la saison commencée et une Pépite une fois révélée (bonus obtenu). Les règles
@@ -48,10 +48,23 @@ const SEASON_CATEGORIES = [
 
 const shortName = (a: { first_name?: string; last_name?: string } | null | undefined) => shortAthleteName(a);
 
+/** Pépite cachée d'un sexe : name null tant qu'elle n'est pas choisie (ou pas visible chez un autre joueur). */
+export interface HiddenPepite {
+  sex: "F" | "H";
+  name: string | null;
+  nationCode: string | null;
+  revealed: boolean;
+}
+
 export interface SeasonView {
   stages: CalendarStage[];
-  /** null : visiteur non connecté. */
+  /** Les 6 globes. null : visiteur non connecté. */
   seasonPicks: SeasonPick[] | null;
+  /**
+   * Pépites cachées (Femmes, Hommes), hors des pronostics de saison depuis le 04/11/2026.
+   * Chez un autre joueur, seules les Pépites révélées ont un nom. null : visiteur.
+   */
+  pepites: HiddenPepite[] | null;
   /** Série en cours (10/10), null pour un visiteur. */
   streak: number | null;
   /** Cartes bonus (crédits à choisir et cartes prises), null pour un visiteur. */
@@ -141,8 +154,7 @@ export async function getSeasonView(
 
   const seasonPickByCategory = new Map((seasonPredictions ?? []).map((p: any) => [p.category as string, p]));
   const seasonPicks: SeasonPick[] | null = userId
-    ? [
-        ...SEASON_CATEGORIES.map((category) => {
+    ? SEASON_CATEGORIES.map((category) => {
           const pick = seasonPickByCategory.get(category);
           const athlete = pick?.athlete_id ? athleteById.get(pick.athlete_id) : null;
           return {
@@ -151,18 +163,20 @@ export async function getSeasonView(
             name: pick ? (athlete ? shortName(athlete) : nationNameByCode.get(pick.nation_code) ?? pick.nation_code) : null,
             nationCode: athlete?.nation_code ?? pick?.nation_code ?? null,
           };
-        }),
-        ...(["F", "H"] as const).map((sex) => {
-          const pepite = pepites.find((p: any) => p.sex === sex);
-          const athlete = pepite ? athleteById.get(pepite.athlete_id) : null;
-          return {
-            key: `pepite_${sex}`,
-            labelKey: `pepite_${sex}`,
-            name: athlete ? shortName(athlete) : null,
-            nationCode: athlete?.nation_code ?? null,
-          };
-        }),
-      ]
+        })
+    : null;
+
+  const hiddenPepites: HiddenPepite[] | null = userId
+    ? (["F", "H"] as const).map((sex) => {
+        const pepite = pepites.find((p: any) => p.sex === sex);
+        const athlete = pepite ? athleteById.get(pepite.athlete_id) : null;
+        return {
+          sex,
+          name: athlete ? shortName(athlete) : null,
+          nationCode: athlete?.nation_code ?? null,
+          revealed: !!pepite?.bonus_claimed,
+        };
+      })
     : null;
 
   const mapped: CalendarStage[] = (stages ?? []).map((stage: any) => ({
@@ -185,7 +199,7 @@ export async function getSeasonView(
       .sort((a: any, b: any) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
   }));
 
-  return { stages: mapped, seasonPicks, streak, cards };
+  return { stages: mapped, seasonPicks, pepites: hiddenPepites, streak, cards };
 }
 
 /**

@@ -47,7 +47,7 @@
     "lastResultExtra_pronoParfait": "Pronostico perfetto",
     "lastResultExtra_specialMalus": "Malus gara speciale",
     "lastResultExtra_aspiration": "Bonus scia",
-    "lastResultExtra_pepite": "Bonus Pepita",
+    "lastResultExtra_pepite": "Bonus Pepita nascosta",
     "fuseeLabel": "Razzo: miglior tempo sugli sci",
     "gachetteLabel": "Grilletto: tiro senza errori",
     "shootingsLabel": "Errori al tiro: {shots}",
@@ -71,7 +71,10 @@
     "seasonPicksEdit": "Modifica i miei pronostici stagionali",
     "lastResultExtra_equipe": "Carta Squadra",
     "favoriteTeamInvite": "Scegli la tua squadra preferita",
-    "favoriteTeamInviteHint": "Segui le sue vittorie e i suoi podi, e prepara la carta bonus Squadra."
+    "favoriteTeamInviteHint": "Segui le sue vittorie e i suoi podi, e prepara la carta bonus Squadra.",
+    "pepiteRevealTitle": "La tua Pepita nascosta è stata rivelata!",
+    "pepiteRevealHint": "Prima Top 10 della stagione: i suoi punti si aggiungono al tuo punteggio della gara.",
+    "pepiteRevealRank": "{rank}º"
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",
@@ -272,9 +275,9 @@
     "globeNation": "Miglior nazione",
     "globeBigScale": "Coppa generale: premia la Top 5 finale",
     "globeSmallScale": "Giovane e nazione: premiano il podio",
-    "pepiteTitle": "La Pepita",
-    "pepiteBody": "Una scommessa a inizio stagione su un outsider per sesso. Una scelta nascosta: alla sua prima Top 10 della stagione, il suo punteggio in quella gara ti viene aggiunto come bonus, poi torna a essere un atleta come gli altri.",
-    "pepiteOdds": "Quota ≥ 30",
+    "pepiteTitle": "La Pepita nascosta",
+    "pepiteBody": "Una scommessa a inizio stagione su un outsider per sesso, che gli altri giocatori non vedono. Viene giocata di nascosto in tutte le gare individuali: alla sua prima Top 10 della stagione, i punti che ottiene in quella gara si aggiungono al tuo punteggio della gara. Viene quindi rivelata (❄️ in classifica) e torna a essere un atleta come gli altri. Prima della rivelazione, non puoi inserirla nei tuoi pronostici di gara.",
+    "pepiteOdds": "Tutte le quote ≥ 30",
     "jokersTitle": "I jolly di fine stagione",
     "jokersBody": "A fine stagione vengono cancellati i tuoi risultati peggiori (mai Mondiali, Olimpiadi né gare malus o bonus). Una gara non giocata viene cancellata per prima. Cancellare un risultato toglie i suoi punti: uno 0 non costa nulla.",
     "jokersIndividual": "gare individuali",
@@ -370,10 +373,12 @@
     "saving": "Salvataggio...",
     "saved": "Pronostici di stagione salvati.",
     "submit": "Conferma i miei pronostici di stagione",
-    "pepiteTitle": "La tua Pepita",
-    "pepiteHint": "Un outsider (quota ≥ 30) scelto a inizio stagione, uno per sesso. Una scelta nascosta: alla sua prima Top 10 della stagione, il suo punteggio in quella gara viene aggiunto come bonus al tuo punteggio. Dopodiché torna a essere un atleta normale.",
-    "pepiteClaimed": "Bonus Pepita già ottenuto!",
-    "pepiteSubmit": "Conferma la mia scelta (definitiva)"
+    "pepiteTitle": "La tua Pepita nascosta",
+    "pepiteHint": "Un outsider scelto a inizio stagione, uno per sesso: tutte le sue quote (sprint, inseguimento, individuale, mass start, globo…) devono essere almeno 30. Nessun altro la vede. Viene giocata di nascosto in tutte le gare: alla sua prima Top 10 della stagione, i suoi punti in quella gara si aggiungono al tuo punteggio. Viene quindi rivelata e torna a essere un atleta come gli altri. Fino ad allora, non puoi inserirla nei tuoi pronostici di gara.",
+    "pepiteClaimed": "Pepita nascosta rivelata: bonus ottenuto!",
+    "pepiteSubmit": "Conferma la mia Pepita nascosta (definitiva)",
+    "pepiteNotEligible": "Questo atleta non è idoneo: tutte le sue quote devono essere almeno 30.",
+    "pepiteNoLongerEligible": "La tua Pepita non è più idonea con la nuova regola (tutte le quote devono essere almeno 30). Scegline un'altra."
   },
   "Ligues": {
     "title": "Le mie leghe",
@@ -412,7 +417,8 @@
     "emptyStage": "Ancora nessun punto su questa tappa.",
     "noStages": "Nessuna tappa ancora in programma.",
     "noPicks": "Nessun pronostico",
-    "myRankingTitle": "La mia classifica"
+    "myRankingTitle": "La mia classifica",
+    "playerPepiteRevealed": "{sex, select, F {Pepita nascosta donne rivelata:} other {Pepita nascosta uomini rivelata:}}"
   },
   "Courses": {
     "title": "La mia stagione",
@@ -430,8 +436,6 @@
     "seasonPredictionsCount": "{chosen} su {total} scelti",
     "seasonPredictionsNone": "Non ancora scelto",
     "seasonPredictionsLink": "Vedi o modifica i miei pronostici di stagione",
-    "pepite_F": "La mia Pepita donne",
-    "pepite_H": "La mia Pepita uomini",
     "specialRaceBanner": "Gara malus · {name}",
     "opensOn": "Apre il {date}",
     "seasonPredictionsComplete": "Completa",
@@ -444,7 +448,13 @@
     "jokersNone": "Ancora niente da cancellare.",
     "jokersPoints": "{points} pt",
     "jokersNotPlayed": "Non giocata",
-    "jokersDiscover": "Scopri i tuoi jolly di fine stagione"
+    "jokersDiscover": "Scopri i tuoi jolly di fine stagione",
+    "pepiteCardTitle": "Pepita nascosta",
+    "pepiteCardHint": "Giocata di nascosto in tutte le gare fino alla sua prima Top 10. Gli altri giocatori la vedono solo una volta rivelata.",
+    "pepiteRevealed": "Rivelata",
+    "pepiteNotRevealed": "Non ancora rivelata",
+    "pepiteNone": "Non ancora scelta",
+    "pepiteChoose": "Scegli"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -571,6 +581,8 @@
     "cardAspiration": "Scia",
     "aspirationHint": "Scia: in questa gara, ognuno dei tuoi biatleti conta una posizione più in alto.",
     "aspirationActive": "carta giocata su questa gara: ognuno dei tuoi biatleti conta una posizione più in alto.",
+    "hiddenPepite": "la tua Pepita nascosta",
+    "hiddenPepiteError": "La tua Pepita nascosta è già in gioco in questa gara: toglila dal tuo pronostico.",
     "searchAthlete": "Cerca un nome o un paese (FRA, NOR…)",
     "searchNation": "Cerca un paese (FRA, NOR…)",
     "searchNoResult": "Nessun risultato",
@@ -890,12 +902,12 @@
     "leader": "Pettorale giallo: leader della classifica",
     "x2Used": "{used}/{max} bonus ×2 usati",
     "raceWins": "{count, plural, one {# gara vinta} other {# gare vinte}} (miglior pronosticatore)",
-    "pepite": "{count, plural, one {Pepita rivelata} other {# Pepite rivelate}}",
+    "pepite": "{count, plural, one {Pepita nascosta rivelata} other {# Pepite nascoste rivelate}}",
     "helpTitle": "Le icone dei giocatori",
     "helpLeader": "Pettorale giallo: il leader della classifica generale della stagione (o della lega).",
     "helpX2": "Bonus ×2 già usati, sui 3 della stagione.",
     "helpWins": "Gare vinte da miglior pronosticatore.",
-    "helpPepite": "Pepita rivelata: primo Top 10 raggiunto, bonus incassato.",
+    "helpPepite": "Pepita nascosta rivelata: primo Top 10 raggiunto, punti incassati.",
     "stageLeader": "Pettorale rosso: leader della tappa",
     "stageWins": "Pettorale rosso: {count, plural, one {# tappa vinta} other {# tappe vinte}}",
     "perfectPicks": "{count, plural, one {# pronostico perfetto} other {# pronostici perfetti}}",

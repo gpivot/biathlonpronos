@@ -25,8 +25,8 @@ export function computeSeasonPredictionScore(
 }
 
 /**
- * §14 — Pépite : un outsider choisi en début de saison (cote ≥ 30 au moment
- * du choix), une par sexe. C'est un pronostic caché actif sur chaque course
+ * §14 — Pépite cachée : un outsider choisi en début de saison (toutes ses
+ * cotes ≥ 30 au moment du choix), une par sexe. C'est un pronostic caché actif sur chaque course
  * individuelle jusqu'à son premier Top 10 de la saison : à ce moment-là, son
  * score sur cette course (cote × multiplicateur de rang, même barème qu'un
  * pronostic normal, §1) s'ajoute en bonus au score du joueur. Ensuite, elle
@@ -35,6 +35,16 @@ export function computeSeasonPredictionScore(
  */
 export function isPepiteEligible(oddsAtPick: number): boolean {
   return oddsAtPick >= PEPITE_MIN_ODDS;
+}
+
+/**
+ * Éligibilité d'un biathlète comme Pépite (règle précisée par Guillaume le
+ * 04/11/2026) : TOUTES ses cotes courantes de la saison (sprint, poursuite,
+ * individuel, mass start, globe, jeune) doivent être ≥ 30, pas une seule.
+ * Même règle côté base : pepite_is_eligible (migration 0035).
+ */
+export function isPepiteEligibleOdds(allOdds: number[]): boolean {
+  return allOdds.length > 0 && allOdds.every((v) => isPepiteEligible(Number(v)));
 }
 
 export function computePepiteBonus(oddsAtRace: number, rank: number): number {

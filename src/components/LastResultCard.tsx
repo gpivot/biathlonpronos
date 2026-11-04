@@ -5,6 +5,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import type { LastResult, LastResultExtra, LastResultPick } from "@/lib/lastResult";
+import { PepiteReveal } from "@/components/PepiteReveal";
 import { FuseeGachetteBadges, PenaltyLine, PredictionBreakdown, formatPoints } from "@/components/PredictionBreakdown";
 
 const MEDALS = ["🥇", "🥈", "🥉"];
@@ -56,10 +57,12 @@ export async function SingleResultCard({ result, locale }: { result: LastResult;
             {t("coefficientBadge")}
           </div>
         )}
-        {prediction && (
+        {prediction ? (
           <div className={`font-display text-base font-extrabold ${prediction.points < 0 ? "text-red" : "text-gold"}`}>
             {formatPoints(prediction.points)}
           </div>
+        ) : (
+          result.pepite && <div className="font-display text-base font-extrabold text-gold">{formatPoints(result.pepite.points)}</div>
         )}
       </div>
 
@@ -89,6 +92,8 @@ export async function ResultBody({
         {t("lastResultSeeRace")}
         <ChevronRightIcon className="h-3.5 w-3.5" />
       </Link>
+
+      {result.pepite && <PepiteReveal pepite={result.pepite} />}
 
       {prediction ? (
         <>

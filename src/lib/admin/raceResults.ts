@@ -366,7 +366,7 @@ async function applyPepiteBonuses(
         season_id: seasonId,
         race_id: raceId,
         points: (existing?.points ?? 0) + bonus,
-        breakdown: { ...((existing?.breakdown as object) ?? {}), pepiteBonus: bonus },
+        breakdown: { ...((existing?.breakdown as object) ?? {}), pepiteBonus: bonus, pepiteAthleteId: pepite.athlete_id },
       },
       { onConflict: "user_id,race_id" }
     );

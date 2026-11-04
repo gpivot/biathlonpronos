@@ -9,7 +9,7 @@ import { SeasonCategoryIcon } from "@/components/SeasonCategoryIcon";
 
 export interface SeasonPick {
   key: string;
-  /** Clé de traduction : Globes.category_* ou Courses.pepite_F / pepite_H. */
+  /** Clé de traduction : Globes.category_*. */
   labelKey: string;
   /** null : pas encore choisi. */
   name: string | null;
@@ -17,7 +17,7 @@ export interface SeasonPick {
 }
 
 /**
- * « Mes pronostics de saison » (globes et Pépites), replié par défaut en haut du Calendrier.
+ * « Mes pronostics de saison » (les 6 globes ; la Pépite cachée a son propre encadré), replié par défaut en haut du Calendrier.
  * `readOnly` : ceux d'un autre joueur (pop-up du Classement), sans lien de modification.
  */
 export function SeasonPredictionsAccordion({
@@ -51,14 +51,8 @@ export function SeasonPredictionsAccordion({
           {picks.map((pick) => (
             <div key={pick.key} className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-2.5">
               <div className="flex flex-1 items-center gap-2 text-[13px] text-text-dim">
-                {pick.labelKey.startsWith("category_") ? (
-                  <>
-                    <SeasonCategoryIcon category={pick.labelKey.slice("category_".length)} className="h-5 w-5 flex-shrink-0" />
-                    {tGlobes(pick.labelKey)}
-                  </>
-                ) : (
-                  `❄️ ${t(pick.labelKey)}`
-                )}
+                <SeasonCategoryIcon category={pick.labelKey.slice("category_".length)} className="h-5 w-5 flex-shrink-0" />
+                {tGlobes(pick.labelKey)}
               </div>
               {pick.name ? (
                 <div className="flex items-center gap-1.5 text-[13px] font-semibold">
