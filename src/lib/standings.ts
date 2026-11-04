@@ -24,6 +24,8 @@ export interface StandingsStage {
   location: string;
   country_code: string | null;
   starts_on: string;
+  /** false : étape « Autre (×0) », hors classement : elle a son classement mais pas de dossard rouge. */
+  countsInStandings?: boolean;
   races: StandingsRace[];
 }
 
@@ -86,7 +88,7 @@ export function buildStandings(
 export async function getStandingsStages(supabase: SupabaseClient, seasonId: string, now: Date): Promise<StandingsStage[]> {
   const { data, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, races(id, format, sex, locks_at, status)")
+    .select("id, location, country_code, starts_on, counts_in_standings, races(id, format, sex, locks_at, status)")
     .eq("season_id", seasonId)
     .order("starts_on", { ascending: true });
   if (error) console.error("getStandingsStages:", error.message);
@@ -95,6 +97,7 @@ export async function getStandingsStages(supabase: SupabaseClient, seasonId: str
     location: stage.location,
     country_code: stage.country_code,
     starts_on: stage.starts_on,
+    countsInStandings: stage.counts_in_standings !== false,
     races: ((stage.races ?? []) as any[])
       .map((race) => ({ ...race, displayStatus: getRaceDisplayStatus(race, now) }))
       .sort((a, b) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),

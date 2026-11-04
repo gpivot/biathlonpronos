@@ -11,14 +11,15 @@ export interface LeaderboardRow {
 /**
  * Classement général : agrégat du score_ledger, jamais recalculé à la main. En fin de saison, une
  * fois les jokers activés par l'admin (`seasons.jokers_applied`), les résultats qu'ils effacent sont
- * retirés du total (cf. src/lib/jokers.ts).
+ * retirés du total (cf. src/lib/jokers.ts). Les courses des étapes « Autre (×0) », hors classement,
+ * ne comptent pas (`score_ledger.counts_in_standings`, migration 0041).
  */
 export async function getLeaderboard(supabase: SupabaseClient, seasonId: string): Promise<LeaderboardRow[]> {
   let ledger: any[];
   try {
     // Plus de 1000 lignes dès quelques courses avec beaucoup de joueurs : lecture par pages.
     ledger = await fetchAll<any>((from, to) =>
-      supabase.from("score_ledger").select("id, user_id, points, profiles(pseudo)").eq("season_id", seasonId).order("id").range(from, to)
+      supabase.from("score_ledger").select("id, user_id, points, profiles(pseudo)").eq("season_id", seasonId).eq("counts_in_standings", true).order("id").range(from, to)
     );
   } catch (error) {
     console.error("getLeaderboard:", (error as Error).message);

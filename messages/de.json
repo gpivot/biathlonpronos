@@ -32,6 +32,7 @@
     "seeFullStandings": "Ganze Wertung anzeigen",
     "emptyState": "Noch keine Station geplant. Lege in Supabase eine Saison, Stationen und Rennen an (siehe supabase/seed.sql), um diese Ansicht zu füllen.",
     "coefficientBadge": "Koeff. ×2",
+    "offStandingsBadge": "Außer Wertung",
     "lastResultTitle": "Letztes Ergebnis",
     "lastResultsTitle": "Letzte Ergebnisse",
     "lastResultSeeRace": "Zum Rennen",
@@ -435,6 +436,7 @@
     "emptyState": "Keine Station geplant. Lege eine Saison, Stationen und Rennen für diese Saison an.",
     "noRacesInStage": "Kein Rennen für diese Station.",
     "coefficientBadge": "Koeff. ×2",
+    "offStandingsBadge": "Außer Wertung",
     "importButton": "Kalender importieren (CSV)",
     "importLoading": "Wird importiert...",
     "importSummary": "{stagesCreated} Station(en) erstellt, {stagesUpdated} aktualisiert · {racesCreated} Rennen erstellt, {racesUpdated} aktualisiert.",
@@ -555,7 +557,8 @@
     "countdownUnitSeconds": "Sek",
     "opinionTitle": "Die Meinung von Biathlonpronos",
     "bonusQuestionsLine": "Bonusfragen",
-    "malusScale_tour_de_pena_4": "Nicht getippter Biathlet → 5 Strafrunden, -100 Pkt. (kein Tipp: -300)"
+    "malusScale_tour_de_pena_4": "Nicht getippter Biathlet → 5 Strafrunden, -100 Pkt. (kein Tipp: -300)",
+    "offStandingsNotice": "Rennen außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant)."
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",

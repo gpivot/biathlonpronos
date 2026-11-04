@@ -52,6 +52,8 @@ export interface CardRace {
   stage_id?: string;
   /** Coefficient de l'étape : 2 aux Mondiaux/JO, où aucune carte ne se joue (Guillaume, 04/11/2026). */
   coefficient?: number;
+  /** false : étape hors classement (×0), où aucune carte ne se joue non plus. */
+  countsInStandings?: boolean;
   format: string;
   sex: string | null;
   locks_at: string;
@@ -62,9 +64,12 @@ export function isRelayFormat(format: string): boolean {
   return format.startsWith("relais");
 }
 
-/** Mondiaux / JO (coefficient 2) : aucune carte bonus, l'événement garde son seul ×2. */
-export function isChampionshipRace(race: { coefficient?: number } | undefined): boolean {
-  return race?.coefficient === 2;
+/**
+ * Pas de carte bonus sur cette course : Mondiaux / JO (coefficient 2), où l'événement garde son seul
+ * ×2, et étapes « Autre (×0) » hors classement (migration 0041).
+ */
+export function isCardFreeRace(race: { coefficient?: number; countsInStandings?: boolean } | undefined): boolean {
+  return race?.coefficient === 2 || race?.countsInStandings === false;
 }
 
 /**
@@ -73,13 +78,13 @@ export function isChampionshipRace(race: { coefficient?: number } | undefined): 
  */
 export function quatriemeChoixWindow(activationRaceId: string, seasonRaces: CardRace[]): string[] {
   const activation = seasonRaces.find((r) => r.id === activationRaceId);
-  if (!activation || isRelayFormat(activation.format) || isChampionshipRace(activation)) return [];
+  if (!activation || isRelayFormat(activation.format) || isCardFreeRace(activation)) return [];
   const start = new Date(activation.locks_at).getTime();
   const countBySex = new Map<string, number>();
   const window: string[] = [];
   // Les courses des Mondiaux/JO ne consomment pas le 4e choix : il reprend à l'étape suivante.
   const sorted = seasonRaces
-    .filter((r) => !isRelayFormat(r.format) && !isChampionshipRace(r) && new Date(r.locks_at).getTime() >= start)
+    .filter((r) => !isRelayFormat(r.format) && !isCardFreeRace(r) && new Date(r.locks_at).getTime() >= start)
     .sort(
       (a, b) =>
         new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime() ||
@@ -201,7 +206,7 @@ export function canPlayCard(
   seasonRaces: CardRace[]
 ): boolean {
   const race = seasonRaces.find((r) => r.id === raceId);
-  if (!race || isRelayFormat(race.format) || isChampionshipRace(race)) return false;
+  if (!race || isRelayFormat(race.format) || isCardFreeRace(race)) return false;
   if (!cards.some((c) => c.card_type === type && c.status === "available")) return false;
   const current = cardsOnRace(raceId, cards, seasonRaces);
   // Ça farte ne se cumule pas avec Fusée / Gâchette (Guillaume, 04/11/2026).
@@ -230,7 +235,7 @@ export function canPlayStageCard(
   if (!cards.some((c) => c.card_type === type && c.status === "available")) return false;
   const stageRaces = seasonRaces.filter((r) => r.stage_id === stageId);
   if (!stageRaces.some((r) => !isRelayFormat(r.format))) return false;
-  if (stageRaces.some((r) => isChampionshipRace(r))) return false;
+  if (stageRaces.some((r) => isCardFreeRace(r))) return false;
   if (stageRaces.some((r) => new Date(r.locks_at) <= now)) return false;
   if (cards.some((c) => c.card_type === type && c.status === "used" && c.used_on_stage_id === stageId)) return false;
   // Pas de cumul avec un Ça farte déjà posé sur une course de l'étape.
@@ -292,12 +297,13 @@ export function isOfferedBySettings(type: string, settings: CardSetting[], now: 
 export async function getSeasonCardRaces(supabase: SupabaseClient, seasonId: string): Promise<CardRace[]> {
   const { data } = await supabase
     .from("races")
-    .select("id, stage_id, format, sex, locks_at, status, stages!inner(season_id, coefficient)")
+    .select("id, stage_id, format, sex, locks_at, status, stages!inner(season_id, coefficient, counts_in_standings)")
     .eq("stages.season_id", seasonId);
   return ((data ?? []) as any[]).map((r) => ({
     id: r.id,
     stage_id: r.stage_id,
     coefficient: r.stages?.coefficient,
+    countsInStandings: r.stages?.counts_in_standings !== false,
     format: r.format,
     sex: r.sex,
     locks_at: r.locks_at,
@@ -319,7 +325,7 @@ export async function getPlayerCards(supabase: SupabaseClient, seasonId: string,
       .order("earned_at", { ascending: true }),
     supabase.from("streak_counters").select("cards_earned").eq("user_id", userId).eq("season_id", seasonId).maybeSingle(),
     getSeasonCardRaces(supabase, seasonId),
-    supabase.from("stages").select("id, location, starts_on, coefficient, races(locks_at)").eq("season_id", seasonId),
+    supabase.from("stages").select("id, location, starts_on, coefficient, counts_in_standings, races(locks_at)").eq("season_id", seasonId),
     supabase
       .from("bonus_card_settings")
       .select("card_type, enabled, available_from, available_until, force_unlock")
@@ -332,7 +338,8 @@ export async function getPlayerCards(supabase: SupabaseClient, seasonId: string,
       .eq("bonus_claimed", true),
   ]);
   const rows = (cards ?? []) as CardRow[];
-  const cardStages: CardStage[] = ((stages ?? []) as any[]).map((st) => ({
+  // Étapes hors classement (×0) : hors de la numérotation qui débloque Aspiration et Équipe (comme bonus_card_unlocked, migration 0041).
+  const cardStages: CardStage[] = ((stages ?? []) as any[]).filter((st) => st.counts_in_standings !== false).map((st) => ({
     starts_on: st.starts_on,
     coefficient: st.coefficient,
     firstLocksAt: ((st.races ?? []) as { locks_at: string }[]).map((r) => r.locks_at).sort()[0] ?? null,

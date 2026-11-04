@@ -32,6 +32,7 @@
     "seeFullStandings": "Ver la clasificación completa",
     "emptyState": "Todavía no hay ninguna etapa programada. Añade una temporada, etapas y carreras desde Supabase (ver supabase/seed.sql) para rellenar esta pantalla.",
     "coefficientBadge": "Coef. ×2",
+    "offStandingsBadge": "Fuera de clasificación",
     "lastResultTitle": "Último resultado",
     "lastResultsTitle": "Últimos resultados",
     "lastResultSeeRace": "Ver la carrera",
@@ -435,6 +436,7 @@
     "emptyState": "No hay ninguna etapa programada. Añade una temporada, etapas y carreras para esta temporada.",
     "noRacesInStage": "No hay carreras en esta etapa.",
     "coefficientBadge": "Coef. ×2",
+    "offStandingsBadge": "Fuera de clasificación",
     "importButton": "Importar calendario (CSV)",
     "importLoading": "Importando...",
     "importSummary": "{stagesCreated} etapa(s) creada(s), {stagesUpdated} actualizada(s) · {racesCreated} carrera(s) creada(s), {racesUpdated} actualizada(s).",
@@ -555,7 +557,8 @@
     "countdownUnitSeconds": "s",
     "opinionTitle": "La opinión de Biathlonpronos",
     "bonusQuestionsLine": "Preguntas extra",
-    "malusScale_tour_de_pena_4": "Biatleta no pronosticado → 5 vueltas, -100 pts (sin pronóstico: -300)"
+    "malusScale_tour_de_pena_4": "Biatleta no pronosticado → 5 vueltas, -100 pts (sin pronóstico: -300)",
+    "offStandingsNotice": "Carrera fuera de clasificación: tiene su propia clasificación, pero sus puntos no cuentan para la temporada (sin dorsal rojo, carta bonus, ×2 ni Diamante oculto)."
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",

@@ -78,6 +78,8 @@ export interface LastResult {
   location: string;
   countryCode: string;
   coefficient: number;
+  /** false : étape « Autre (×0) », hors classement de la saison. */
+  countsInStandings?: boolean;
   podium: { rank: number; name: string; nationCode: string }[];
   /** Classement complet saisi par l'admin. */
   results: RaceResultRow[];
@@ -221,7 +223,7 @@ export function computeResultRowPoints(params: { rank: number; odds: number | un
   return base > 0 ? base : null;
 }
 
-const RACE_SELECT = "id, format, sex, locks_at, special_rule, stages!inner(location, country_code, coefficient, season_id)";
+const RACE_SELECT = "id, format, sex, locks_at, special_rule, stages!inner(location, country_code, coefficient, counts_in_standings, season_id)";
 
 /** Durée pendant laquelle le dernier résultat de chaque catégorie reste affiché sur l'accueil. */
 export const LAST_RESULTS_WINDOW_MS = 48 * 3600 * 1000;
@@ -274,7 +276,13 @@ export async function getRaceResult(supabase: SupabaseClient, raceId: string, us
 }
 
 async function buildRaceResult(supabase: SupabaseClient, race: any, userId: string | null): Promise<LastResult> {
-  const stage = race.stages as any as { location: string; country_code: string; coefficient: number; season_id: string };
+  const stage = race.stages as any as {
+    location: string;
+    country_code: string;
+    coefficient: number;
+    counts_in_standings?: boolean;
+    season_id: string;
+  };
   const relay = RELAY_FORMATS.includes(race.format);
 
   const [{ data: results }, { data: prediction }, { data: ledger }, { data: odds }, bonusByRace] = await Promise.all([
@@ -365,6 +373,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     location: stage.location,
     countryCode: stage.country_code,
     coefficient: stage.coefficient,
+    countsInStandings: stage.counts_in_standings !== false,
     podium,
     results: fullResults,
     pepite,

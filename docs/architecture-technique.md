@@ -1461,3 +1461,49 @@ rond en haut à droite des onglets. Colonne `profiles.avatar` (migration **0038*
 Server Action (les joueurs ne peuvent modifier que leur pseudo, 0016). Photo de profil écartée pour
 l'instant (stockage, modération, bouton « signaler » exigé par Apple). Le picto pourrait aussi
 s'afficher dans le Classement : à décider avec Guillaume.
+
+## Étapes « Autre (×0) », hors classement (04/11/2026)
+
+Demande de Guillaume du 04/11/2026 : une 3e catégorie d'étape, à côté de « Coupe du Monde (×1) » et
+« Mondiaux / JO (×2) », pour des courses tests, bonus ou de recrutement de nouveaux joueurs (PR à
+fusionner, migration **0041** à coller avant).
+
+**Modèle (générique, à reprendre tel quel pour VéloPronos).** La catégorie n'est pas un 3e
+coefficient : c'est un drapeau `stages.counts_in_standings` (par défaut `true`), à côté du
+coefficient (qui reste 1 pour une étape ×0). Les courses se pronostiquent et se notent
+normalement, à ×1, et ont **leur propre classement** (page de la course, Classement « Par
+étapes ») : c'est ce qui permet d'en faire une porte d'entrée pour de nouveaux joueurs. Seul le
+**classement de la saison** les ignore. Le drapeau est recopié par trigger sur chaque ligne de
+points (`score_ledger.counts_in_standings`, y compris les questions bonus de la course) et suit
+l'étape si l'admin change sa catégorie après coup : tous les totaux de saison filtrent d'un seul
+`.eq("counts_in_standings", true)`. Pour VéloPronos : même colonne sur l'étape (ou la course,
+si les courses hors classement y sont isolées), même trigger sur le grand livre des points, même
+filtre dans le classement général. Helpers : `src/lib/stageCategory.ts` (menu de l'admin ↔ colonnes,
+testé).
+
+**Effets (choix pragmatiques, à confirmer par Guillaume)** :
+- **Classement de la saison** (général, ligues, carte de rang, Top 5 de l'accueil, pop-up joueur) :
+  points non comptés (`getLeaderboard`).
+- **Dossard rouge** : ni étape gagnée (`getPlayerBadges` ne lit que les lignes comptées), ni leader
+  de l'étape en cours sur le classement « Saison », ni dossard rouge en « Par étapes » (l'étape
+  reste sélectionnable, avec « ×0 · Hors classement » dans le menu). Ses courses gagnées
+  (🍾) et pronos parfaits (⭐) ne comptent pas non plus dans les pictos de la saison.
+- **Série 10/10** : ses courses ne la font ni avancer ni casser (`recomputeSeasonStreaks`) ; la
+  série est recalculée quand l'admin change la catégorie d'une étape.
+- **Cartes bonus** : aucune ne s'y joue, comme aux Mondiaux / JO (`isCardFreeRace`,
+  `race_is_championship`, `play_stage_card`) ; le 4e choix saute ses courses ; elle ne compte pas
+  dans la numérotation qui débloque Aspiration (4e étape) et Équipe (étape après les Mondiaux).
+- **Bonus ×2 perso** : pas proposé (et ignoré à la notation s'il était coché).
+- **Pépite** : jamais révélée sur une course hors classement ; elle reste cachée pour la suite.
+- **Jokers de fin de saison** : ses courses ne sont jamais prises (elles ne comptent déjà pas).
+- **Globes** (pronostics de saison) : non concernés, ils dépendent des classements IBU.
+- **Affichage** : encart grisé en pointillés avec « Hors classement » et une pastille « ×0 » dans
+  le Calendrier, pastille « ×0 · Hors classement » sur l'étape de la semaine et le dernier
+  résultat, encadré gris explicatif sur la page de la course. Badge « ×0 · hors classement » dans
+  `/admin`.
+- **Admin / CSV** : menu « Autre (×0, hors classement) » à la création et à la modification d'une
+  étape ; à l'import du calendrier, une catégorie contenant « Autre », « Hors classement » ou
+  « Test » rend l'étape hors classement ; l'export écrit « Autre (hors classement) ».
+- **Limite connue** : passer une étape déjà notée en ×0 (ou l'inverse) met à jour les points et les
+  séries tout de suite, mais ne retire pas une Pépite déjà révélée dessus (et n'en révèle pas une)
+  tant que les résultats ne sont pas réenregistrés.

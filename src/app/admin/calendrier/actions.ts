@@ -6,7 +6,8 @@ import { isSpecialRuleAllowed } from "../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { importCalendarCsv } from "@/lib/admin/calendarImport";
-import { deleteStage } from "@/lib/admin/raceResults";
+import { deleteStage, recomputeSeasonStreaks } from "@/lib/admin/raceResults";
+import { stageCategoryFields } from "@/lib/stageCategory";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
 
 export async function createSeason(formData: FormData) {
@@ -58,7 +59,7 @@ export async function createStage(formData: FormData) {
     country_code: String(formData.get("country_code")),
     starts_on: String(formData.get("starts_on")),
     ends_on: String(formData.get("ends_on")),
-    coefficient: Number(formData.get("coefficient")),
+    ...stageCategoryFields(formData.get("coefficient")),
   });
   if (error) throw new Error(error.message);
 
@@ -126,24 +127,33 @@ export async function removeSeason(formData: FormData) {
   revalidatePath("/admin", "layout");
 }
 
-/** Modifie les infos d'une étape (lieu, pays, dates, coefficient), comme le crayon des courses. */
+/** Modifie les infos d'une étape (lieu, pays, dates, catégorie ×1 / ×2 / ×0), comme le crayon des courses. */
 export async function updateStage(formData: FormData) {
   await requireAdmin();
   const startsOn = String(formData.get("starts_on"));
   const endsOn = String(formData.get("ends_on"));
   if (endsOn < startsOn) throw new Error("La date de fin doit être après la date de début.");
 
-  const { error } = await createAdminClient()
+  const admin = createAdminClient();
+  const stageId = String(formData.get("stage_id"));
+  const { data: before } = await admin.from("stages").select("season_id, counts_in_standings").eq("id", stageId).single();
+  const category = stageCategoryFields(formData.get("coefficient"));
+  const { error } = await admin
     .from("stages")
     .update({
       location: String(formData.get("location")).trim(),
       country_code: String(formData.get("country_code")),
       starts_on: startsOn,
       ends_on: endsOn,
-      coefficient: Number(formData.get("coefficient")) === 2 ? 2 : 1,
+      ...category,
     })
-    .eq("id", String(formData.get("stage_id")));
+    .eq("id", stageId);
   if (error) throw new Error(error.message);
+  // Étape passée dans ou hors du classement : les points suivent en base (trigger, migration 0041),
+  // les séries 10/10 sont recalculées ici.
+  if (before && before.counts_in_standings !== category.counts_in_standings) {
+    await recomputeSeasonStreaks(admin, before.season_id);
+  }
 
   revalidatePath("/admin", "layout");
   revalidatePath("/", "layout");

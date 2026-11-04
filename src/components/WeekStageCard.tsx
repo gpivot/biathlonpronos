@@ -47,8 +47,11 @@ export async function WeekStageCard({
         >
           <span className="text-base">{nationFlagEmoji(stage.countryCode)}</span>
           <span className="flex-1 truncate">{stage.location}</span>
-          {stage.coefficient === 2 && (
+          {stage.coefficient === 2 && stage.countsInStandings && (
             <span className="whitespace-nowrap rounded-full bg-on-ice/15 px-2 py-0.5 text-[10px]">{t("coefficientBadge")}</span>
+          )}
+          {!stage.countsInStandings && (
+            <span className="whitespace-nowrap rounded-full bg-on-ice/15 px-2 py-0.5 text-[10px]">×0 · {t("offStandingsBadge")}</span>
           )}
           <span className="whitespace-nowrap font-semibold normal-case">
             {stage.startsOn === stage.endsOn ? day(stage.startsOn) : `${day(stage.startsOn)} – ${day(stage.endsOn)}`}

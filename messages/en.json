@@ -32,6 +32,7 @@
     "seeFullStandings": "See the full standings",
     "emptyState": "No stage scheduled yet. Add a season, stages and races from Supabase (see supabase/seed.sql) to populate this screen.",
     "coefficientBadge": "×2 coeff.",
+    "offStandingsBadge": "Unranked",
     "lastResultTitle": "Latest result",
     "lastResultsTitle": "Latest results",
     "lastResultSeeRace": "See the race",
@@ -435,6 +436,7 @@
     "emptyState": "No stage scheduled. Add a season, stages and races for this season.",
     "noRacesInStage": "No race for this stage.",
     "coefficientBadge": "×2 coeff.",
+    "offStandingsBadge": "Unranked",
     "importButton": "Import calendar (CSV)",
     "importLoading": "Importing...",
     "importSummary": "{stagesCreated} stage(s) created, {stagesUpdated} updated · {racesCreated} race(s) created, {racesUpdated} updated.",
@@ -555,7 +557,8 @@
     "countdownUnitSeconds": "s",
     "opinionTitle": "Biathlonpronos' take",
     "bonusQuestionsLine": "Bonus questions",
-    "malusScale_tour_de_pena_4": "Biathlete not picked → 5 loops, -100 pts (no pick at all: -300)"
+    "malusScale_tour_de_pena_4": "Biathlete not picked → 5 loops, -100 pts (no pick at all: -300)",
+    "offStandingsNotice": "Unranked race: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond)."
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",

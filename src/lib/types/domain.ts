@@ -57,6 +57,8 @@ export interface Stage {
   starts_on: string;
   ends_on: string;
   coefficient: 1 | 2;
+  /** false : étape « Autre (×0) », hors classement de la saison (migration 0041). */
+  counts_in_standings: boolean;
 }
 
 export type RaceFormat =
