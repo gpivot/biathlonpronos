@@ -1,7 +1,6 @@
 import { cache } from "react";
-import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
-import { SIMULATED_CLOCK_COOKIE, applyClockOffset, parseClockOffset } from "./simulatedClock";
+import { applyClockOffset, parseClockOffset } from "./simulatedClock";
 
 export interface Clock {
   /** « Maintenant » pour l'affichage : simulé si l'admin a réglé l'horloge. */
@@ -13,12 +12,13 @@ export interface Clock {
  * Horloge de la requête en cours (Server Components / actions uniquement).
  * Le décalage fait foi dans profiles.simulated_clock_offset_ms (le même que
  * celui qu'applique la base via effective_now()) et n'est pris en compte que
- * pour un admin. Le cookie sert seulement à éviter une requête au profil
- * quand aucune simulation n'est active.
+ * pour un admin. Le profil est lu même sans cookie : le cookie n'existe que
+ * dans le navigateur où l'horloge a été réglée, alors que la base applique le
+ * décalage partout : sinon, sur un autre navigateur, la page affiche « pronos
+ * ouverts » (heure réelle) alors que la base refuse l'enregistrement.
  */
 export const getClock = cache(async (): Promise<Clock> => {
   const realNow = new Date();
-  if (parseClockOffset(cookies().get(SIMULATED_CLOCK_COOKIE)?.value) === null) return { now: realNow, simulated: false };
 
   const supabase = createClient();
   const {

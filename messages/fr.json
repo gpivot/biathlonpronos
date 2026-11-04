@@ -540,6 +540,7 @@
     "submit": "Valider mon pronostic",
     "saved": "Ton pronostic est validé !",
     "saveError": "Ton pronostic n'a pas pu être enregistré. Réessaie.",
+    "lockedError": "Les pronostics sont fermés pour cette course : ton pronostic n'a pas été enregistré.",
     "cardSectionTitle": "Carte bonus",
     "noCard": "Aucune",
     "cardBalleDePioche": "4e choix",

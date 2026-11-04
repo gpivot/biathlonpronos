@@ -77,7 +77,8 @@ export function RelayPredictionForm({
     setSaving(false);
     if (error) {
       console.error(error);
-      setError(t("saveError"));
+      // 42501 = refus des règles d'accès de la base : course verrouillée (heure de départ passée).
+      setError(t(error.code === "42501" ? "lockedError" : "saveError"));
     } else {
       setSavedState({ nation: selected, bonusX2 });
     }

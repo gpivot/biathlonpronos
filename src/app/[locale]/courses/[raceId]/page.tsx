@@ -361,6 +361,9 @@ export default async function RacePage({
 
         {opinion && <RaceOpinion title={t("opinionTitle")} text={opinion} />}
 
+        {/* Questions bonus juste sous l'avis, pour qu'elles soient vues (avant le départ et en live). */}
+        {(displayStatus === "upcoming" || displayStatus === "ongoing") && bonusQuestionsBlock}
+
         {displayStatus === "upcoming" &&
           (!predictionsOpen ? (
             <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] leading-relaxed text-text-dim">
@@ -418,10 +421,6 @@ export default async function RacePage({
               )}
             </>
           ))}
-
-        {displayStatus === "upcoming" && bonusQuestionsBlock}
-
-        {displayStatus === "ongoing" && bonusQuestionsBlock}
 
         {displayStatus === "ongoing" && (
           <div className="flex flex-col gap-4">

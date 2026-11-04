@@ -540,6 +540,7 @@
     "submit": "Conferma il mio pronostico",
     "saved": "Il tuo pronostico è confermato!",
     "saveError": "Non è stato possibile salvare il tuo pronostico. Riprova.",
+    "lockedError": "I pronostici per questa gara sono chiusi: il tuo pronostico non è stato salvato.",
     "cardSectionTitle": "Carta bonus",
     "noCard": "Nessuna",
     "cardBalleDePioche": "4ª scelta",

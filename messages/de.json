@@ -540,6 +540,7 @@
     "submit": "Meinen Tipp bestätigen",
     "saved": "Dein Tipp ist bestätigt!",
     "saveError": "Dein Tipp konnte nicht gespeichert werden. Versuch es noch einmal.",
+    "lockedError": "Die Tipps für dieses Rennen sind geschlossen: Dein Tipp wurde nicht gespeichert.",
     "cardSectionTitle": "Bonuskarte",
     "noCard": "Keine",
     "cardBalleDePioche": "4. Tipp",

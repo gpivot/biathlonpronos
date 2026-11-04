@@ -540,6 +540,7 @@
     "submit": "Confirmar mi pronóstico",
     "saved": "¡Tu pronóstico está confirmado!",
     "saveError": "No se ha podido guardar tu pronóstico. Inténtalo de nuevo.",
+    "lockedError": "Los pronósticos de esta carrera están cerrados: tu pronóstico no se ha guardado.",
     "cardSectionTitle": "Carta bonus",
     "noCard": "Ninguna",
     "cardBalleDePioche": "4.ª elección",

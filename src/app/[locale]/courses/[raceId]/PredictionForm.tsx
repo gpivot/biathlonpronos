@@ -151,7 +151,8 @@ export function PredictionForm({
     setSaving(false);
     if (failure) {
       console.error(failure);
-      setError(t("saveError"));
+      // 42501 = refus des règles d'accès de la base : course verrouillée (heure de départ passée).
+      setError(t(failure.code === "42501" ? "lockedError" : "saveError"));
     } else {
       setSavedState({
         key: [...selected].sort().join(","),
