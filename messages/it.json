@@ -32,6 +32,7 @@
     "seeFullStandings": "Vedi la classifica completa",
     "emptyState": "Nessuna tappa ancora in programma. Aggiungi una stagione, delle tappe e delle gare da Supabase (vedi supabase/seed.sql) per popolare questa schermata.",
     "coefficientBadge": "Coeff. ×2",
+    "offStandingsBadge": "Fuori classifica",
     "lastResultTitle": "Ultimo risultato",
     "lastResultsTitle": "Ultimi risultati",
     "lastResultSeeRace": "Vedi la gara",
@@ -435,6 +436,7 @@
     "emptyState": "Nessuna tappa in programma. Aggiungi una stagione, delle tappe e delle gare per questa stagione.",
     "noRacesInStage": "Nessuna gara in questa tappa.",
     "coefficientBadge": "Coeff. ×2",
+    "offStandingsBadge": "Fuori classifica",
     "importButton": "Importa calendario (CSV)",
     "importLoading": "Importazione...",
     "importSummary": "{stagesCreated} tappa/e create, {stagesUpdated} aggiornate · {racesCreated} gara/e create, {racesUpdated} aggiornate.",
@@ -555,7 +557,8 @@
     "countdownUnitSeconds": "s",
     "opinionTitle": "Il parere di Biathlonpronos",
     "bonusQuestionsLine": "Domande bonus",
-    "malusScale_tour_de_pena_4": "Biatleta non pronosticato → 5 giri, -100 pt (nessun pronostico: -300)"
+    "malusScale_tour_de_pena_4": "Biatleta non pronosticato → 5 giri, -100 pt (nessun pronostico: -300)",
+    "offStandingsNotice": "Gara fuori classifica: ha la sua classifica, ma i suoi punti non contano per la stagione (niente pettorale rosso, carta bonus, ×2 né Pepita)."
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",

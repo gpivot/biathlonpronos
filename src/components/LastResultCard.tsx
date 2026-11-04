@@ -52,9 +52,14 @@ export async function SingleResultCard({ result, locale }: { result: LastResult;
           {tFormat(result.format)}
           {sex ? ` ${tSex(sex)}` : ""}
         </div>
-        {result.coefficient === 2 && (
+        {result.coefficient === 2 && result.countsInStandings !== false && (
           <div className="whitespace-nowrap rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold text-gold">
             {t("coefficientBadge")}
+          </div>
+        )}
+        {result.countsInStandings === false && (
+          <div className="whitespace-nowrap rounded-full border border-dashed border-text-dim/40 px-2 py-0.5 font-display text-[10px] font-bold text-text-dim">
+            ×0 · {t("offStandingsBadge")}
           </div>
         )}
         {prediction ? (

@@ -60,8 +60,11 @@ export default async function RacePage({
     country_code: string;
     season_id: string;
     coefficient: 1 | 2;
+    /** false : étape « Autre (×0) », hors classement de la saison (migration 0041). */
+    counts_in_standings?: boolean;
     starts_on: string;
   };
+  const offStandings = stage.counts_in_standings === false;
   const isRelay = RELAY_FORMATS.includes(race.format);
   const displayStatus = getRaceDisplayStatus(race, now);
 
@@ -85,8 +88,8 @@ export default async function RacePage({
   let initialCardTarget: string | null = null;
 
   // §7 — bonus ×2 personnel : 3 fois par saison, jamais sur une course
-  // spéciale ni sur une étape Mondiaux/JO (déjà comptée double).
-  const x2Eligible = !race.special_rule && stage.coefficient !== 2;
+  // spéciale ni sur une étape Mondiaux/JO (déjà comptée double), ni hors classement (×0).
+  const x2Eligible = !race.special_rule && stage.coefficient !== 2 && !offStandings;
   // Fête nationale : course bonus, encadré doré au lieu du rouge des malus.
   const bonusRule = isBonusRule(race.special_rule);
   let x2UsesRemaining = 0;
@@ -308,6 +311,15 @@ export default async function RacePage({
             {tFormat(race.format)}
             {displayedSex(race) ? ` ${tSex(displayedSex(race)!)}` : ""}
           </div>
+          {offStandings && (
+            // Étape « Autre (×0) » : course test ou de recrutement, hors classement de la saison.
+            <div className="flex items-center gap-3 rounded-2xl border border-dashed border-text-dim/40 bg-text-dim/10 px-3 py-2.5">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-text-dim/15 font-display text-sm font-bold text-text-dim">
+                ×0
+              </div>
+              <div className="text-[13px] font-semibold leading-snug text-text-dim">{t("offStandingsNotice")}</div>
+            </div>
+          )}
           {race.special_rule && (
             // Course malus : bandeau rouge avec gros picto, nom du malus, phrase choc et « ? » illustré.
             <div

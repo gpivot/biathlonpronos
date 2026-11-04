@@ -90,7 +90,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
     leagues,
     stages: stages.map((s) => ({
       id: s.id,
-      label: `${nationFlagEmoji(s.country_code)} ${s.location}`,
+      label: `${nationFlagEmoji(s.country_code)} ${s.location}${s.countsInStandings === false ? ` (×0 · ${tHome("offStandingsBadge")})` : ""}`,
       races: s.races.map((r) => ({ id: r.id, label: raceLabel(r) })),
     })),
   };
@@ -104,7 +104,8 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
     const members = leagueId ? await getLeagueMembers(supabase, leagueId) : null;
     if (period === "season") {
       // Dossard rouge sur le classement Saison : le(s) leader(s) de l'étape en cours.
-      const ongoingStage = stages.find(isStageOngoing);
+      // Une étape hors classement (×0) ne donne pas de dossard rouge.
+      const ongoingStage = stages.find((s) => s.countsInStandings !== false && isStageOngoing(s));
       const [currentStreaks, ongoingRows] = await Promise.all([
         getCurrentStreaks(supabase, season.id),
         ongoingStage ? getRacesStandings(supabase, ongoingStage.races, null, false) : Promise.resolve([]),
@@ -192,7 +193,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                 userId={row.userId}
                 stage={
                   period === "stages" && stage
-                    ? { stageId: stage.id, rank: row.rank, points: row.points, leader: !race && row.rank === 1 && row.points > 0, singleRace: !!race }
+                    ? { stageId: stage.id, rank: row.rank, points: row.points, leader: !race && stage.countsInStandings !== false && row.rank === 1 && row.points > 0, singleRace: !!race }
                     : null
                 }
                 className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3.5 ${
@@ -214,7 +215,9 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                       badges={badges.get(row.userId)}
                       leader={period === "season" && row.rank === 1 && row.points > 0}
                       stageLeader={
-                        period === "stages" ? !race && row.rank === 1 && row.points > 0 : ongoingStageLeaders.has(row.userId)
+                        period === "stages"
+                          ? !race && stage?.countsInStandings !== false && row.rank === 1 && row.points > 0
+                          : ongoingStageLeaders.has(row.userId)
                       }
                       streak={period === "season" ? streaks.get(row.userId) ?? null : null}
                     />

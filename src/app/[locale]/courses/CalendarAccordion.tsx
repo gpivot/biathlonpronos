@@ -35,6 +35,8 @@ export interface CalendarStage {
   starts_on: string;
   ends_on: string;
   coefficient: 1 | 2;
+  /** false : étape « Autre (×0) », hors classement de la saison (affichée grisée). */
+  counts_in_standings?: boolean;
   /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
   opensOn: string | null;
   races: CalendarRace[];
@@ -73,15 +75,19 @@ export function CalendarAccordion({
         const isOpen = stage.id === openStageId;
         // Coefficient 2 = Mondiaux (ou JO) : encart doré pour le distinguer des étapes de Coupe du monde.
         const isChampionship = stage.coefficient === 2;
+        // Étape hors classement (×0) : encart grisé, en pointillés.
+        const isOffStandings = stage.counts_in_standings === false;
         const toPlayCount = readOnly || stage.opensOn ? 0 : stage.races.filter((r) => r.displayStatus === "upcoming" && !r.predicted).length;
         return (
           <div
             key={stage.id}
             ref={stage.id === scrollToStageId ? scrollIntoViewOnMount : undefined}
             className={`overflow-hidden rounded-2xl border ${
-              isChampionship
-                ? "border-gold/60 bg-gradient-to-br from-gold/25 to-card shadow-[0_0_24px_-8px_oklch(0.84_0.15_90/0.5)]"
-                : "border-border bg-card"
+              isOffStandings
+                ? "border-dashed border-text-dim/40 bg-text-dim/10"
+                : isChampionship
+                  ? "border-gold/60 bg-gradient-to-br from-gold/25 to-card shadow-[0_0_24px_-8px_oklch(0.84_0.15_90/0.5)]"
+                  : "border-border bg-card"
             }`}
           >
             <button
@@ -90,25 +96,37 @@ export function CalendarAccordion({
             >
               <div
                 className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl text-lg ${
-                  isChampionship ? "bg-gold/20" : "bg-ice-soft"
+                  isOffStandings ? "bg-text-dim/15 grayscale" : isChampionship ? "bg-gold/20" : "bg-ice-soft"
                 }`}
               >
                 {nationFlagEmoji(stage.country_code)}
               </div>
               <div className="flex flex-1 flex-col gap-0.5">
-                {isChampionship && (
+                {isChampionship && !isOffStandings && (
                   <div className="font-display text-[10px] font-bold uppercase tracking-wider text-gold">
                     {t("worldChampionships")}
                   </div>
                 )}
-                <div className={`text-sm font-semibold ${isChampionship ? "text-gold" : ""}`}>{stage.location}</div>
+                {isOffStandings && (
+                  <div className="font-display text-[10px] font-bold uppercase tracking-wider text-text-dim">
+                    {t("offStandingsBadge")}
+                  </div>
+                )}
+                <div className={`text-sm font-semibold ${isOffStandings ? "text-text-dim" : isChampionship ? "text-gold" : ""}`}>
+                  {stage.location}
+                </div>
                 <div className="text-xs text-text-dim">
                   {new Date(stage.starts_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                   {" – "}
                   {new Date(stage.ends_on).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
                 </div>
               </div>
-              {stage.coefficient === 2 && (
+              {isOffStandings && (
+                <div className="whitespace-nowrap rounded-full border border-text-dim/40 px-2.5 py-1 font-display text-[11px] font-bold text-text-dim">
+                  ×0
+                </div>
+              )}
+              {stage.coefficient === 2 && !isOffStandings && (
                 <div className="whitespace-nowrap rounded-full bg-gold-soft px-2.5 py-1 font-display text-[11px] font-bold text-gold">
                   {t("coefficientBadge")}
                 </div>
@@ -124,7 +142,11 @@ export function CalendarAccordion({
             </button>
 
             {isOpen && (
-              <div className={`flex flex-col gap-2 border-t px-3 py-3 ${isChampionship ? "border-gold/30" : "border-border"}`}>
+              <div
+                className={`flex flex-col gap-2 border-t px-3 py-3 ${
+                  isOffStandings ? "border-dashed border-text-dim/30" : isChampionship ? "border-gold/30" : "border-border"
+                }`}
+              >
                 {stage.races.length === 0 ? (
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (

@@ -32,6 +32,7 @@
     "seeFullStandings": "Voir le classement complet",
     "emptyState": "Aucune étape programmée pour le moment. Ajoute une saison, des étapes et des courses depuis Supabase (voir supabase/seed.sql) pour peupler cet écran.",
     "coefficientBadge": "Coeff. ×2",
+    "offStandingsBadge": "Hors classement",
     "lastResultTitle": "Dernier résultat",
     "lastResultsTitle": "Derniers résultats",
     "lastResultSeeRace": "Voir la course",
@@ -435,6 +436,7 @@
     "emptyState": "Aucune étape programmée. Ajoute une saison, des étapes et des courses pour cette saison.",
     "noRacesInStage": "Aucune course pour cette étape.",
     "coefficientBadge": "Coeff. ×2",
+    "offStandingsBadge": "Hors classement",
     "importButton": "Importer le calendrier (CSV)",
     "importLoading": "Import en cours...",
     "importSummary": "{stagesCreated} étape(s) créée(s), {stagesUpdated} mise(s) à jour · {racesCreated} course(s) créée(s), {racesUpdated} mise(s) à jour.",
@@ -555,7 +557,8 @@
     "countdownUnitSeconds": "s",
     "opinionTitle": "L'avis de Biathlonpronos",
     "bonusQuestionsLine": "Questions bonus",
-    "malusScale_tour_de_pena_4": "Biathlète non pronostiqué → 5 tours d'office, -100 pts (pas de prono : -300)"
+    "malusScale_tour_de_pena_4": "Biathlète non pronostiqué → 5 tours d'office, -100 pts (pas de prono : -300)",
+    "offStandingsNotice": "Course hors classement : elle a son propre classement, mais ses points ne comptent pas pour la saison (pas de dossard rouge, de carte bonus, de ×2 ni de Pépite)."
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",

@@ -29,6 +29,7 @@ import {
   setJokersApplied,
 } from "./calendrier/actions";
 import { removeRace } from "./races/[raceId]/actions";
+import { STAGE_CATEGORY_OPTIONS } from "@/lib/stageCategory";
 
 export const dynamic = "force-dynamic";
 
@@ -166,6 +167,9 @@ export default async function AdminCalendarResultsPage() {
                       <div className="text-sm font-semibold">
                         {nationFlagEmoji(stage.country_code)} {stage.location}
                         {stage.coefficient === 2 && <span className="ml-2 text-xs text-gold">×2</span>}
+                        {stage.counts_in_standings === false && (
+                          <span className="ml-2 text-xs text-text-dim">×0 · hors classement</span>
+                        )}
                       </div>
                       <div className="text-xs text-text-dim">{formatDateRange(stage.starts_on, stage.ends_on)}</div>
                     </div>
@@ -286,8 +290,11 @@ export default async function AdminCalendarResultsPage() {
               <input name="starts_on" type="date" required className={inputClass} />
               <input name="ends_on" type="date" required className={inputClass} />
               <select name="coefficient" className={inputClass}>
-                <option value="1">Coupe du Monde (×1)</option>
-                <option value="2">Mondiaux / JO (×2)</option>
+                {STAGE_CATEGORY_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
               </select>
               <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
                 Créer

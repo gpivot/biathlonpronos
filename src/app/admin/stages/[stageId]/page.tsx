@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/server";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { updateStage } from "../../calendrier/actions";
+import { STAGE_CATEGORY_OPTIONS, stageCategoryFormValue } from "@/lib/stageCategory";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
@@ -50,18 +51,23 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
           </select>
           <input name="starts_on" type="date" required defaultValue={stage.starts_on} title="Début" className={inputClass} />
           <input name="ends_on" type="date" required defaultValue={stage.ends_on} title="Fin" className={inputClass} />
-          <select name="coefficient" defaultValue={String(stage.coefficient)} className={inputClass}>
-            <option value="1">Coupe du Monde (×1)</option>
-            <option value="2">Mondiaux / JO (×2)</option>
+          <select name="coefficient" defaultValue={stageCategoryFormValue(stage)} className={inputClass}>
+            {STAGE_CATEGORY_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
           </select>
           <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Enregistrer
           </button>
         </div>
         <p className="text-xs text-text-dim">
-          Les horaires des courses se modifient avec le crayon de chaque course.
+          Les horaires des courses se modifient avec le crayon de chaque course. « Autre (×0) » : courses
+          tests ou de recrutement, notées normalement mais hors classement de la saison (pas de dossard
+          rouge, de carte bonus, de ×2, de Pépite ni de série 10/10).
           {hasFinishedRace &&
-            " Attention : des courses de cette étape sont déjà notées ; un changement de coefficient ne recalcule pas leurs points tant que leurs résultats ne sont pas réenregistrés."}
+            " Attention : des courses de cette étape sont déjà notées ; un passage ×1 / ×2 ne recalcule pas leurs points tant que leurs résultats ne sont pas réenregistrés (le passage en ×0 ou hors de ×0 s’applique tout de suite au classement)."}
         </p>
       </form>
     </div>

@@ -12,7 +12,7 @@ export function GET() {
 
     const { data: stages } = await admin
       .from("stages")
-      .select("location, country_code, coefficient, races(format, sex, locks_at)")
+      .select("location, country_code, coefficient, counts_in_standings, races(format, sex, locks_at)")
       .eq("season_id", season.id);
     return { filename: `calendrier-${season.label}.csv`, csv: buildCalendarCsv(stages ?? []) };
   });

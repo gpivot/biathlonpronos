@@ -75,6 +75,8 @@ export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string
       .from("score_ledger")
       .select("user_id, race_id, points, perfect:breakdown->pronoParfaitBonus")
       .eq("season_id", seasonId)
+      // Étapes hors classement (×0) : ni victoire, ni dossard rouge, ni prono parfait comptés.
+      .eq("counts_in_standings", true)
       .not("race_id", "is", null),
     supabase
       .from("predictions")

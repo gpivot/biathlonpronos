@@ -41,16 +41,20 @@ export async function WeekStageCard({
     new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
 
   // Coefficient 2 = Mondiaux (ou JO) : bandeau doré, comme l'encart de l'étape dans Ma saison.
-  const isChampionship = stage.coefficient === 2;
+  const isChampionship = stage.coefficient === 2 && stage.countsInStandings;
+  // Étape « Autre (×0) », hors classement : bandeau grisé.
+  const isOffStandings = !stage.countsInStandings;
 
   return (
     <div className="flex flex-col gap-2">
       <div className="font-display text-xs font-bold uppercase tracking-wider text-text-dim">{t("weekStageTitle")}</div>
-      <div className={`overflow-hidden rounded-2xl border bg-card ${isChampionship ? "border-gold/60" : "border-ice/50"}`}>
+      <div className={`overflow-hidden rounded-2xl border bg-card ${
+          isOffStandings ? "border-dashed border-text-dim/40" : isChampionship ? "border-gold/60" : "border-ice/50"
+        }`}>
         <Link
           href={`/courses?etape=${stage.id}`}
           className={`flex items-center gap-2 px-4 py-2.5 font-display text-[13px] font-bold uppercase tracking-wide ${
-            isChampionship ? "bg-gold text-bg" : "bg-ice text-on-ice"
+            isOffStandings ? "bg-text-dim/20 text-text-dim" : isChampionship ? "bg-gold text-bg" : "bg-ice text-on-ice"
           }`}
         >
           <span className="text-base">{nationFlagEmoji(stage.countryCode)}</span>
@@ -60,6 +64,9 @@ export async function WeekStageCard({
           </span>
           {isChampionship && (
             <span className="whitespace-nowrap rounded-full bg-bg/15 px-2 py-0.5 text-[10px]">{t("coefficientBadge")}</span>
+          )}
+          {isOffStandings && (
+            <span className="whitespace-nowrap rounded-full border border-text-dim/40 px-2 py-0.5 text-[10px]">×0 · {t("offStandingsBadge")}</span>
           )}
           <span className="whitespace-nowrap font-semibold normal-case">
             {stage.startsOn === stage.endsOn ? day(stage.startsOn) : `${day(stage.startsOn)} – ${day(stage.endsOn)}`}

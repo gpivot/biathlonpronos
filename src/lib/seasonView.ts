@@ -106,7 +106,7 @@ export async function getSeasonView(
 
   const { data: stages, error } = await supabase
     .from("stages")
-    .select("id, location, country_code, starts_on, ends_on, coefficient, races(id, format, sex, locks_at, status, special_rule)")
+    .select("id, location, country_code, starts_on, ends_on, coefficient, counts_in_standings, races(id, format, sex, locks_at, status, special_rule)")
     .eq("season_id", season.id)
     .order("starts_on", { ascending: true });
   if (error) console.error("getSeasonView:", error.message);
@@ -201,6 +201,7 @@ export async function getSeasonView(
     starts_on: stage.starts_on,
     ends_on: stage.ends_on,
     coefficient: stage.coefficient,
+    counts_in_standings: stage.counts_in_standings !== false,
     opensOn: isPredictionOpen(stage.starts_on, now) ? null : predictionOpensOn(stage.starts_on),
     races: (stage.races ?? [])
       .map((race: any) => ({

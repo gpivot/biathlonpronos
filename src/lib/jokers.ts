@@ -7,6 +7,7 @@ import { fetchAll } from "./admin/fetchAll";
  * Mondiaux/JO aussi, à confirmer). Une course non jouée compte comme un résultat à effacer en
  * priorité. Les courses malus et bonus (`races.special_rule` renseigné : Tour de péna, Brouillard,
  * T'es collé, Fête nationale…) ne sont jamais effacées non plus (décision de Guillaume, 04/11/2026).
+ * Les étapes hors classement (×0, migration 0041) sont ignorées : leurs courses ne comptent pas.
  * Les jokers ne s'appliquent au classement qu'une fois la saison terminée, quand l'admin
  * les active (`seasons.jokers_applied`) ; avant, « Ma saison » en montre un aperçu.
  *
@@ -66,6 +67,8 @@ export interface JokerRace {
   finished: boolean;
   /** Règle spéciale (course malus ou bonus), null pour une course normale. */
   specialRule?: string | null;
+  /** false : étape hors classement (×0), ses courses ne comptent pas et ne sont jamais effacées. */
+  countsInStandings?: boolean;
 }
 
 /**
@@ -78,7 +81,7 @@ export function computeSeasonJokers(
   predictions: { userId: string; raceId: string; played: boolean }[],
   userIds: string[]
 ): Map<string, JokerSelection> {
-  const finished = races.filter((r) => r.finished);
+  const finished = races.filter((r) => r.finished && r.countsInStandings !== false);
   const pointsByKey = new Map<string, number>();
   for (const row of ledger) {
     if (!row.raceId) continue;
@@ -122,7 +125,7 @@ export async function loadSeasonJokers(
   if (userIds.length === 0) return new Map();
   const { data: races } = await supabase
     .from("races")
-    .select("id, format, status, locks_at, special_rule, stages!inner(season_id, coefficient)")
+    .select("id, format, status, locks_at, special_rule, stages!inner(season_id, coefficient, counts_in_standings)")
     .eq("stages.season_id", seasonId)
     .order("locks_at", { ascending: true });
   const jokerRaces: JokerRace[] = ((races ?? []) as any[]).map((r) => ({
@@ -131,6 +134,7 @@ export async function loadSeasonJokers(
     coefficient: r.stages?.coefficient ?? 1,
     finished: r.status === "finished",
     specialRule: r.special_rule ?? null,
+    countsInStandings: r.stages?.counts_in_standings !== false,
   }));
   const finishedIds = jokerRaces.filter((r) => r.finished).map((r) => r.id);
   if (finishedIds.length === 0) return computeSeasonJokers([], [], [], userIds);

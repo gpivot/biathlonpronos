@@ -193,7 +193,7 @@ export interface ScoreRaceSummary {
 export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<ScoreRaceSummary> {
   const { data: race, error: raceError } = await admin
     .from("races")
-    .select("id, sex, format, special_rule, locks_at, stages(id, season_id, country_code, coefficient)")
+    .select("id, sex, format, special_rule, locks_at, stages(id, season_id, country_code, coefficient, counts_in_standings)")
     .eq("id", raceId)
     .single();
   if (raceError || !race) throw new Error(raceError?.message ?? "Course introuvable.");
@@ -226,7 +226,8 @@ export async function scoreRace(admin: SupabaseClient, raceId: string): Promise<
 
   // §14 — la Pépite est indépendante du pronostic du joueur sur cette course précise : à vérifier
   // même si personne n'a pronostiqué dessus. Après les pronostics, pour s'ajouter à leurs points.
-  await applyPepiteBonuses(admin, stage.season_id, race, results ?? []);
+  // Étape hors classement (×0) : la Pépite n'y est pas révélée, elle reste en jeu pour la suite.
+  if (stage.counts_in_standings !== false) await applyPepiteBonuses(admin, stage.season_id, race, results ?? []);
 
   await admin.from("races").update({ status: "finished" }).eq("id", raceId);
   await recomputeSeasonStreaks(admin, stage.season_id);
@@ -370,11 +371,12 @@ async function applyTourDePenaAbsences(
 export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: string): Promise<void> {
   const { data: races } = await admin
     .from("races")
-    .select("id, locks_at, stages!inner(season_id)")
+    .select("id, locks_at, stages!inner(season_id, counts_in_standings)")
     .eq("stages.season_id", seasonId)
     .eq("status", "finished")
     .order("locks_at");
-  const raceIds = (races ?? []).map((r) => r.id as string);
+  // Étapes hors classement (×0) : leurs courses ne font ni avancer ni casser la série.
+  const raceIds = (races ?? []).filter((r: any) => r.stages?.counts_in_standings !== false).map((r) => r.id as string);
 
   const [predictions, ledger, { data: counters }] = await Promise.all([
     raceIds.length === 0
@@ -576,10 +578,13 @@ async function scoreIndividualPredictions(
 
   const scoreLedgerRows = [];
   const pointsByUserId = new Map<string, number>();
+  const offStandings = stage.counts_in_standings === false;
+  const noCards = stage.coefficient === 2 || offStandings;
 
   for (const prediction of predictions) {
     // Mondiaux / JO : aucune carte bonus, seul le ×2 de l'événement compte (Guillaume, 04/11/2026).
-    const userCards = stage.coefficient === 2 ? [] : cardsByUserId.get(prediction.user_id) ?? [];
+    // Étape hors classement (×0) : aucune carte non plus.
+    const userCards = noCards ? [] : cardsByUserId.get(prediction.user_id) ?? [];
     const { athleteIds: predictedAthleteIds, card } = resolvePredictionCard(race.id, prediction, userCards, seasonRaces);
     const onRace = cardsOnRace(race.id, userCards, seasonRaces);
 
@@ -590,7 +595,8 @@ async function scoreIndividualPredictions(
       athleteTeamByAthleteId,
       specialRule: race.special_rule,
       stageCoefficient: stage.coefficient,
-      bonusX2Active: prediction.bonus_x2_used,
+      // Pas de ×2 perso sur une étape hors classement (il n'y est pas proposé).
+      bonusX2Active: prediction.bonus_x2_used && !offStandings,
       card,
       // Team Nation et Aspiration retirées du règlement (Guillaume, 30/10/2026) : l'équipe favorite
       // ne rapporte plus de points, elle reste une info ludique sur l'accueil.
@@ -683,12 +689,12 @@ async function scoreRelayPredictions(
       results: relayResults,
       oddsByNationCode,
       stageCoefficient: stage.coefficient,
-      bonusX2Active: prediction.bonus_x2_used,
+      bonusX2Active: prediction.bonus_x2_used && stage.counts_in_standings !== false,
     });
 
     // Carte Équipe : la cote du relais si la nation favorite finit dans le Top 10 (relais de son sexe).
-    // Jamais aux Mondiaux / JO.
-    const equipeBonus = stage.coefficient !== 2 && cardsOnRace(race.id, cardsByUserId.get(prediction.user_id) ?? [], seasonRaces).equipe
+    // Jamais aux Mondiaux / JO ni sur une étape hors classement.
+    const equipeBonus = stage.coefficient !== 2 && stage.counts_in_standings !== false && cardsOnRace(race.id, cardsByUserId.get(prediction.user_id) ?? [], seasonRaces).equipe
       ? computeEquipeBonus(
           favoriteTeamByUserId.get(prediction.user_id) ?? null,
           race,

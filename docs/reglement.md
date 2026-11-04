@@ -137,6 +137,10 @@ Le bonus ×2 personnel n'est pas cumulable avec ce coefficient : une course ne p
 
 **Aucune carte bonus ne se joue sur les Mondiaux ou les JO** (précisé le 04/11/2026) : on sacralise l'événement avec son seul ×2. La Balle de pioche saute leurs courses et reprend à l'étape suivante.
 
+### Étapes hors classement (×0)
+
+Certaines étapes peuvent être organisées hors classement (courses tests, courses bonus, courses pour découvrir le jeu). On y pronostique comme d'habitude et chaque course a son propre classement, mais **leurs points ne comptent pas pour le classement général de la saison** et elles ne donnent pas de dossard rouge. Aucune carte bonus ni bonus ×2 personnel ne s'y joue, la Pépite n'y est pas révélée et la série 10/10 n'en tient pas compte (ajouté le 04/11/2026, détails à confirmer).
+
 ## 9. Les courses spéciales
 
 Certaines courses de la saison possèdent une règle exceptionnelle annoncée à l'avance. Elles peuvent bouleverser les habitudes et obliger les joueurs à adapter leurs choix.

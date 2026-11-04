@@ -48,7 +48,7 @@ interface CalendarRow {
 /**
  * Import du calendrier de saison : une ligne = une course. Les lignes
  * partageant le même lieu forment une étape (dates min/max, coefficient ×2
- * si "Championnats du Monde"/JO). Ré-exécutable sans dupliquer : étape
+ * si "Championnats du Monde"/JO, hors classement si "Autre", "Hors classement" ou "Test"). Ré-exécutable sans dupliquer : étape
  * retrouvée par (season_id, location), course par (stage_id, format, sex).
  * Colonnes attendues : Lieu (ville), Pays (pour code drapeau) [alpha-2],
  * Date, Heure de départ UTC, Catégorie, Type de course, Sexe.
@@ -116,18 +116,20 @@ export async function importCalendarCsv(
     const startsOn = dates[0];
     const endsOn = dates[dates.length - 1];
     const coefficient = stageRows.some((r) => /championnats|jeux olympiques|\bjo\b/i.test(r.category)) ? 2 : 1;
+    // Étape « Autre (×0) » : hors classement de la saison (migration 0041).
+    const counts_in_standings = !stageRows.some((r) => OFF_STANDINGS_CATEGORY.test(r.category));
 
     let stageId = stageIdByLocation.get(location.toLowerCase());
     if (stageId) {
       await admin
         .from("stages")
-        .update({ country_code: nationCode, starts_on: startsOn, ends_on: endsOn, coefficient })
+        .update({ country_code: nationCode, starts_on: startsOn, ends_on: endsOn, coefficient, counts_in_standings })
         .eq("id", stageId);
       summary.stagesUpdated++;
     } else {
       const { data: created, error } = await admin
         .from("stages")
-        .insert({ season_id: seasonId, location, country_code: nationCode, starts_on: startsOn, ends_on: endsOn, coefficient })
+        .insert({ season_id: seasonId, location, country_code: nationCode, starts_on: startsOn, ends_on: endsOn, coefficient, counts_in_standings })
         .select("id")
         .single();
       if (error || !created) {
@@ -199,10 +201,14 @@ const EXPORT_TYPE_AND_SEX: Record<string, [string, string | null]> = {
   relais_mixte_simple: ["Relais mixte simple", "Mixte"],
 };
 
+/** Catégorie CSV d'une étape hors classement (×0). */
+export const OFF_STANDINGS_CATEGORY = /\bautre\b|hors classement|\btests?\b/i;
+
 export interface CalendarExportStage {
   location: string;
   country_code: string;
   coefficient: number;
+  counts_in_standings?: boolean;
   races: Array<{ format: string; sex: string | null; locks_at: string }>;
 }
 
@@ -220,7 +226,11 @@ export function buildCalendarCsv(stages: CalendarExportStage[]): string {
           alpha3ToAlpha2(stage.country_code) ?? stage.country_code,
           iso.slice(0, 10),
           iso.slice(11, 16),
-          stage.coefficient === 2 ? "Championnats du Monde" : "Coupe du Monde",
+          stage.counts_in_standings === false
+            ? "Autre (hors classement)"
+            : stage.coefficient === 2
+              ? "Championnats du Monde"
+              : "Coupe du Monde",
           typeLabel,
           sexLabel,
         ],
