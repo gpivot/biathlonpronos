@@ -173,6 +173,14 @@ export default async function AdminCalendarResultsPage() {
                       <span className="text-xs text-text-dim">
                         {done}/{stage.races.length} résultat(s) saisi(s)
                       </span>
+                      <Link
+                        href={`/admin/stages/${stage.id}`}
+                        title="Modifier l'étape"
+                        aria-label="Modifier l'étape"
+                        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full border border-border text-text-dim hover:text-ice"
+                      >
+                        <PencilIcon className="h-4 w-4" />
+                      </Link>
                       <form action={removeStage}>
                         <input type="hidden" name="stage_id" value={stage.id} />
                         <ConfirmButton

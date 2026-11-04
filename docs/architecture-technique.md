@@ -570,7 +570,10 @@ Horloge simulée.
 - **Étapes & courses** : chaque course garde son statut (à venir / résultats à saisir / résultats
   saisis, même règle que le Calendrier joueur, horloge simulée comprise), avec un crayon (page de la
   course : modification format, sexe, heure UTC, course spéciale + saisie des résultats) et une
-  poubelle rouge (avec confirmation).
+  poubelle rouge (avec confirmation). Chaque étape a aussi son crayon (04/11/2026,
+  `admin/stages/[stageId]`, action `updateStage`) : lieu, pays, dates, coefficient ×1/×2. Changer le
+  coefficient d'une étape déjà notée ne recalcule pas les points (message d'avertissement affiché) :
+  il faut réenregistrer les résultats des courses concernées.
 - **Réinitialiser les résultats** (page de la course, `resetRaceResults`) : efface les résultats et
   les points de la course (`score_ledger`), rend le bonus Pépite s'il avait été gagné dessus, repasse
   la course « à venir ». Séries 10/10 et cotes poursuite recalculées (cf. ci-dessous).

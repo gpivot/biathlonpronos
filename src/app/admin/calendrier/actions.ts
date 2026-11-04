@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { isSpecialRuleAllowed } from "../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
@@ -123,4 +124,28 @@ export async function removeSeason(formData: FormData) {
   const { error } = await createAdminClient().from("seasons").delete().eq("id", String(formData.get("season_id")));
   if (error) throw new Error(error.message);
   revalidatePath("/admin", "layout");
+}
+
+/** Modifie les infos d'une étape (lieu, pays, dates, coefficient), comme le crayon des courses. */
+export async function updateStage(formData: FormData) {
+  await requireAdmin();
+  const startsOn = String(formData.get("starts_on"));
+  const endsOn = String(formData.get("ends_on"));
+  if (endsOn < startsOn) throw new Error("La date de fin doit être après la date de début.");
+
+  const { error } = await createAdminClient()
+    .from("stages")
+    .update({
+      location: String(formData.get("location")).trim(),
+      country_code: String(formData.get("country_code")),
+      starts_on: startsOn,
+      ends_on: endsOn,
+      coefficient: Number(formData.get("coefficient")) === 2 ? 2 : 1,
+    })
+    .eq("id", String(formData.get("stage_id")));
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/admin", "layout");
+  revalidatePath("/", "layout");
+  redirect("/admin");
 }
