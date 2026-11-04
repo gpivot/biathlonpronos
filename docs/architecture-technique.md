@@ -1345,7 +1345,7 @@ restent disponibles d'une course à l'autre.
   fiche du Règlement, la question de la FAQ et les textes des 5 langues. `RELAY_FORMATS` vit
   désormais dans `src/lib/raceFormats.ts`.
 - Cartes au 10/10 : **quatre** au choix (Ça farte, 4e choix, Aspiration, Équipe).
-- Migration **0035** : `claim_bonus_card` ne propose plus Fondue, `play_bonus_card` la refuse, et
+- Migration **0036** : `claim_bonus_card` ne propose plus Fondue, `play_bonus_card` la refuse, et
   les cartes Fondue déjà prises sont supprimées (le 10/10 redevient un crédit : le joueur choisit
   une autre carte ; à confirmer). La valeur `fondue` reste dans l'enum `bonus_card_type`, inutilisée ;
   la table `grilled_states` aussi.

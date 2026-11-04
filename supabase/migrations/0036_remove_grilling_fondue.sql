@@ -1,5 +1,5 @@
 -- Biathlonpronos — suppression des biathlètes grillés et de la carte Fondue (Guillaume, 04/11/2026).
--- À coller APRÈS 0034, avant de fusionner la PR.
+-- À coller APRÈS 0035 (Pépite cachée), avant de fusionner la PR.
 --
 -- - La règle des biathlètes grillés (§2) n'existe plus : rien à changer en base, elle n'était
 --   calculée que par l'écran de course. La table grilled_states (inutilisée depuis le 27/10) reste

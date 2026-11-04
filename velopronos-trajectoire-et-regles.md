@@ -117,7 +117,7 @@ Série : VéloPronos **5 étapes consécutives** avec des points (uniquement Gra
 
 | Carte | Statut | Écarts à régler |
 |---|---|---|
-| Grillade (vélo) = **Fondue** (biathlon) | ➕ | **À garder dans VéloPronos.** Fondue supprimée de Biathlonpronos le 04/11/2026 avec le grillage : reprendre le code du commit `91420f9` (`FondueButton.tsx`, valeur `fondue` de `claim_bonus_card` avant la migration 0035). |
+| Grillade (vélo) = **Fondue** (biathlon) | ➕ | **À garder dans VéloPronos.** Fondue supprimée de Biathlonpronos le 04/11/2026 avec le grillage : reprendre le code du commit `91420f9` (`FondueButton.tsx`, valeur `fondue` de `claim_bonus_card` avant la migration 0036). |
 | **Bonus ×3** (vélo) = **Ça farte** (biathlon) | ✅ | |
 | **4e choix** | 🔁❓ | Vélo : 3 étapes suivantes, les 4 coureurs sont grillés le lendemain. Biathlon : 4 courses, une carte à la fois. |
 | **Équipe** | 🔁❓ | Vélo : à partir du mardi de la 2e semaine d'un Grand Tour. Biathlon : après les Mondiaux/JO. Quelle règle de début pour les courses de 5-8 jours et les classiques ? |
