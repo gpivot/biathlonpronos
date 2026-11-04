@@ -78,6 +78,11 @@ export function NotificationForm() {
                   }.`}
             </p>
           )}
+          {result.report?.errors?.map((error) => (
+            <p key={error} className="text-red">
+              Erreur Firebase : {error}
+            </p>
+          ))}
           {result.email && (
             <p>
               {result.email.recipients === 0

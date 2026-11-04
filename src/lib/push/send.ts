@@ -10,6 +10,8 @@ export interface PushReport {
   removed: number;
   /** Joueurs qui ont reçu la notification sur au moins un téléphone. */
   userIds: string[];
+  /** Raisons des échecs, sans doublon (diagnostic dans /admin). */
+  errors: string[];
 }
 
 /** Message identique pour tous, ou construit pour chaque téléphone (langue, points du joueur…). */
@@ -45,7 +47,7 @@ export async function sendPush(content: PushContent, options: SendPushOptions = 
   }
 
   const excluded = options.preference ? await usersWithPreferenceOff(admin, options.preference) : new Set<string>();
-  const report: PushReport = { devices: 0, sent: 0, failed: 0, removed: 0, userIds: [] };
+  const report: PushReport = { devices: 0, sent: 0, failed: 0, removed: 0, userIds: [], errors: [] };
   const reached = new Set<string>();
   const invalid: string[] = [];
 
@@ -60,14 +62,17 @@ export async function sendPush(content: PushContent, options: SendPushOptions = 
 
   for (const batch of chunk(jobs, BATCH_SIZE)) {
     const results = await Promise.all(
-      batch.map(({ row, message }) => sendToToken(account, row.token, message).catch(() => "error" as const))
+      batch.map(({ row, message }) => sendToToken(account, row.token, message).catch((e: unknown) => ({ error: e instanceof Error ? e.message : String(e) })))
     );
     results.forEach((result, j) => {
       if (result === "sent") {
         report.sent++;
         reached.add(batch[j].row.user_id);
-      } else report.failed++;
+        return;
+      }
+      report.failed++;
       if (result === "invalid-token") invalid.push(batch[j].row.token);
+      else if (!report.errors.includes(result.error)) report.errors.push(result.error);
     });
   }
 

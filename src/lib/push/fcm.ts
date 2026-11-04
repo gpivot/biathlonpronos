@@ -20,7 +20,7 @@ export interface PushMessage {
   url?: string;
 }
 
-export type SendResult = "sent" | "invalid-token" | "error";
+export type SendResult = "sent" | "invalid-token" | { error: string };
 
 export function readServiceAccount(raw = process.env.FIREBASE_SERVICE_ACCOUNT): ServiceAccount | null {
   if (!raw) return null;
@@ -103,5 +103,14 @@ export async function sendToToken(account: ServiceAccount, token: string, messag
   });
   if (response.ok) return "sent";
   const body = await response.json().catch(() => null);
-  return isInvalidTokenResponse(response.status, body) ? "invalid-token" : "error";
+  if (isInvalidTokenResponse(response.status, body)) return "invalid-token";
+  return { error: describeFcmError(response.status, body) };
+}
+
+/** Raison d'un échec FCM, lisible dans /admin (ex. « 401 THIRD_PARTY_AUTH_ERROR » : clé APNs). */
+export function describeFcmError(status: number, body: unknown): string {
+  const error = (body as { error?: { status?: string; message?: string; details?: { errorCode?: string }[] } } | null)
+    ?.error;
+  const code = (error?.details ?? []).map((d) => d.errorCode).find(Boolean) ?? error?.status;
+  return [status, code, error?.message].filter(Boolean).join(" ");
 }
