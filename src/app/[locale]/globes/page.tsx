@@ -5,7 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 import { GlobesForm, type GlobeCategoryConfig } from "./GlobesForm";
 import { PepiteForm } from "./PepiteForm";
 import { getClock } from "@/lib/clock";
-import { PEPITE_MIN_ODDS } from "@/lib/scoring";
+import { isPepiteEligibleOdds } from "@/lib/scoring";
+import { fetchAll } from "@/lib/admin/fetchAll";
 
 export const dynamic = "force-dynamic";
 
@@ -58,7 +59,7 @@ export default async function GlobesPage() {
     );
   }
 
-  const [{ data: existingPicks }, { data: nations }, { data: pepites }, { data: pepiteOdds }] = await Promise.all([
+  const [{ data: existingPicks }, { data: nations }, { data: pepites }, pepiteOdds] = await Promise.all([
     supabase
       .from("season_predictions")
       .select("category, athlete_id, nation_code")
@@ -66,24 +67,34 @@ export default async function GlobesPage() {
       .eq("season_id", season.id),
     supabase.from("nations").select("code, name"),
     supabase.from("pepites").select("sex, athlete_id, bonus_claimed").eq("user_id", user.id).eq("season_id", season.id),
-    supabase
-      .from("odds")
-      .select("athlete_id, value, athletes(first_name, last_name, nation_code, sex)")
-      .eq("season_id", season.id)
-      .eq("format", "sprint")
-      .gte("value", PEPITE_MIN_ODDS)
-      .is("valid_until", null),
+    // Toutes les cotes courantes des biathlètes (plus de 1000 lignes) : une Pépite doit avoir chacune ≥ 30.
+    fetchAll<any>((from, to) =>
+      supabase
+        .from("odds")
+        .select("id, athlete_id, value, athletes(first_name, last_name, nation_code, sex)")
+        .eq("season_id", season.id)
+        .not("athlete_id", "is", null)
+        .is("valid_until", null)
+        .order("id")
+        .range(from, to)
+    ),
   ]);
   const nameByNationCode = new Map((nations ?? []).map((n) => [n.code, n.name]));
   const pepiteBySex = new Map((pepites ?? []).map((p) => [p.sex, p]));
+  const oddsByAthlete = new Map<string, { athlete: any; values: number[] }>();
+  for (const o of pepiteOdds) {
+    const entry = oddsByAthlete.get(o.athlete_id) ?? { athlete: o.athletes, values: [] };
+    entry.values.push(Number(o.value));
+    oddsByAthlete.set(o.athlete_id, entry);
+  }
+  // Libellé : la plus basse de ses cotes (toutes ≥ 30).
   const pepiteOptionsFor = (sex: "H" | "F") =>
-    (pepiteOdds ?? [])
-      .filter((o: any) => o.athletes?.sex === sex)
-      .map((o: any) => ({
-        id: o.athlete_id,
-        label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}) — ×${o.value}`,
-        odds: o.value,
-      }))
+    Array.from(oddsByAthlete.entries())
+      .filter(([, e]) => e.athlete?.sex === sex && isPepiteEligibleOdds(e.values))
+      .map(([id, e]) => {
+        const odds = Math.min(...e.values);
+        return { id, label: `${fullAthleteName(e.athlete)} (${e.athlete.nation_code}) — ×${odds}`, odds };
+      })
       .sort(byOddsThenLabel);
   const pickByCategory = new Map((existingPicks ?? []).map((p) => [p.category, p]));
 

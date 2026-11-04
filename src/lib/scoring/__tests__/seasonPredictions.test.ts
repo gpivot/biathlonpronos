@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computePepiteBonus, computeSeasonPredictionScore, isPepiteEligible } from "../seasonPredictions";
+import { computePepiteBonus, computeSeasonPredictionScore, isPepiteEligible, isPepiteEligibleOdds } from "../seasonPredictions";
 
 describe("computeSeasonPredictionScore", () => {
   it("applique le barème large du gros globe (1re à 5e)", () => {
@@ -22,6 +22,15 @@ describe("isPepiteEligible", () => {
   it("exige une cote d'au moins 30 au moment du choix", () => {
     expect(isPepiteEligible(30)).toBe(true);
     expect(isPepiteEligible(29)).toBe(false);
+  });
+});
+
+describe("isPepiteEligibleOdds", () => {
+  it("exige que toutes les cotes du biathlète soient d'au moins 30", () => {
+    expect(isPepiteEligibleOdds([30, 45, 60, 135])).toBe(true);
+    // Ponsiluoma : sprint 30 mais poursuite 15 → pas une Pépite.
+    expect(isPepiteEligibleOdds([30, 15, 25, 30, 135])).toBe(false);
+    expect(isPepiteEligibleOdds([])).toBe(false);
   });
 });
 

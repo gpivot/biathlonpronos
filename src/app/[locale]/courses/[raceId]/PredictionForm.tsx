@@ -26,6 +26,7 @@ export function PredictionForm({
   athletes,
   initialSelection,
   grilledAthleteIds,
+  hiddenPepiteIds = [],
   playableCards,
   activeCard,
   quatriemeChoixActive,
@@ -41,6 +42,8 @@ export function PredictionForm({
   athletes: AthleteWithOdds[];
   initialSelection: string[];
   grilledAthleteIds: string[];
+  /** Pépites cachées pas encore révélées du joueur : déjà jouées en caché, pas sélectionnables. */
+  hiddenPepiteIds?: string[];
   /** Cartes (Ça farte, Aspiration) que le joueur peut encore jouer sur cette course. */
   playableCards: { id: string; card_type: string }[];
   /** Carte déjà jouée sur cette course (Ça farte ou Aspiration). */
@@ -80,6 +83,7 @@ export function PredictionForm({
   const t = useTranslations("PredictionForm");
 
   const grilledSet = new Set(grilledAthleteIds);
+  const pepiteSet = new Set(hiddenPepiteIds);
   const hasCaFarte = playableCards.some((c) => c.card_type === "ca_farte");
   const hasAspiration = playableCards.some((c) => c.card_type === "aspiration");
   const cardLabel = (card: CardChoice) => (card === "aspiration" ? t("cardAspiration") : t("cardCaFarte"));
@@ -92,7 +96,7 @@ export function PredictionForm({
     setSelected((prev) => {
       if (prev.includes(athleteId)) return prev.filter((id) => id !== athleteId);
       // Un biathlète grillé peut être retiré du pronostic, pas ajouté.
-      if (grilledSet.has(athleteId)) return prev;
+      if (grilledSet.has(athleteId) || pepiteSet.has(athleteId)) return prev;
       if (prev.length >= requiredCount) return prev;
       return [...prev, athleteId];
     });
@@ -152,7 +156,9 @@ export function PredictionForm({
     if (failure) {
       console.error(failure);
       // 42501 = refus des règles d'accès de la base : course verrouillée (heure de départ passée).
-      setError(t(failure.code === "42501" ? "lockedError" : "saveError"));
+      setError(
+        t(failure.code === "42501" ? "lockedError" : failure.message?.includes("hidden_pepite_in_prediction") ? "hiddenPepiteError" : "saveError")
+      );
     } else {
       setSavedState({
         key: [...selected].sort().join(","),
@@ -289,7 +295,8 @@ export function PredictionForm({
       <div className="flex flex-col gap-2">
         {sortedAthletes.map((a) => {
           const isSelected = selected.includes(a.athlete_id);
-          const isGrilled = grilledSet.has(a.athlete_id);
+          const isPepite = pepiteSet.has(a.athlete_id);
+          const isGrilled = grilledSet.has(a.athlete_id) || isPepite;
           const isCaFarteTarget = cardChoice === "ca_farte" && caFarteTarget === a.athlete_id;
           return (
             <button
@@ -325,7 +332,7 @@ export function PredictionForm({
                           : t("startPosition", { position: startOrder[a.athlete_id] })
                       }`
                     : ""}
-                  {isGrilled ? ` · ${t("grilled")}` : ""}
+                  {isPepite ? ` · ❄️ ${t("hiddenPepite")}` : isGrilled ? ` · ${t("grilled")}` : ""}
                 </span>
               </div>
               {isSelected && cardChoice === "ca_farte" && (

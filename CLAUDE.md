@@ -41,7 +41,7 @@ OAuth Google/Apple, publicité/RGPD). La refonte UI (dashboard d'accueil, naviga
 3. `npm run dev` puis http://localhost:3000. `npm test` (Vitest) et `npx tsc --noEmit` doivent
    rester verts.
 4. La base Supabase est unique et partagée entre toutes les machines. Les migrations
-   (`supabase/migrations/`) jusqu'à 0028 sont déjà appliquées ; 0029 à 0031 (Fête nationale, jokers, parcours d'invité) et 0032 (avis de la course) sont à coller à la fusion de leur PR ; 0033 (questions bonus) à coller avant la fusion de sa PR ; 0034 (notifications, voir `docs/notifications.md`) à coller avant la fusion de sa PR ; toute nouvelle migration se
+   (`supabase/migrations/`) jusqu'à 0028 sont déjà appliquées ; 0029 à 0031 (Fête nationale, jokers, parcours d'invité) et 0032 (avis de la course) sont à coller à la fusion de leur PR ; 0033 (questions bonus) à coller avant la fusion de sa PR ; 0034 (notifications, voir `docs/notifications.md`) à coller avant la fusion de sa PR ; 0035 (Pépite cachée) à coller avant la fusion de sa PR ; toute nouvelle migration se
    colle dans l'éditeur SQL de Supabase par Guillaume (Claude ne peut pas exécuter de DDL).
 
 ## Façons de travailler avec Guillaume

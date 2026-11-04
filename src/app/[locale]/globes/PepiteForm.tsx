@@ -18,7 +18,10 @@ export function PepiteForm({
   initialPick: string | null;
   alreadyClaimed: boolean;
 }) {
-  const [pick, setPick] = useState(initialPick ?? "");
+  // Pépite choisie avant la règle « toutes les cotes ≥ 30 » et plus éligible : le choix se rouvre.
+  const noLongerEligible = !!initialPick && !alreadyClaimed && !options.some((o) => o.id === initialPick);
+  const locked = !!initialPick && !noLongerEligible;
+  const [pick, setPick] = useState(noLongerEligible ? "" : initialPick ?? "");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -52,7 +55,7 @@ export function PepiteForm({
 
     setSaving(false);
     if (error) {
-      setError(error.message);
+      setError(error.message.includes("pepite_not_eligible") ? t("pepiteNotEligible") : error.message);
       return;
     }
     setSaved(true);
@@ -64,6 +67,7 @@ export function PepiteForm({
         ❄️ {t("pepiteTitle")} — {sex === "F" ? tCompte("women") : tCompte("men")}
       </div>
       <p className="text-[12px] leading-relaxed text-text-dim">{t("pepiteHint")}</p>
+      {noLongerEligible && <p className="text-[12px] leading-relaxed text-gold">{t("pepiteNoLongerEligible")}</p>}
 
       {alreadyClaimed ? (
         <p className="text-[13px] text-ice">{t("pepiteClaimed")}</p>
@@ -72,7 +76,7 @@ export function PepiteForm({
           <select
             value={pick}
             onChange={(e) => setPick(e.target.value)}
-            disabled={!!initialPick}
+            disabled={locked}
             className="rounded-xl border border-border bg-bg px-3 py-2.5 text-sm disabled:opacity-60"
           >
             <option value="">{t("noPick")}</option>
@@ -86,7 +90,7 @@ export function PepiteForm({
           {error && <div className="text-xs text-red">{error}</div>}
           {saved && !error && <div className="text-xs text-ice">{t("saved")}</div>}
 
-          {!initialPick && (
+          {!locked && (
             <button
               onClick={submit}
               disabled={!pick || saving}

@@ -47,7 +47,7 @@
     "lastResultExtra_pronoParfait": "Prono parfait",
     "lastResultExtra_specialMalus": "Malus course spéciale",
     "lastResultExtra_aspiration": "Bonus aspiration",
-    "lastResultExtra_pepite": "Bonus Pépite",
+    "lastResultExtra_pepite": "Bonus Pépite cachée",
     "fuseeLabel": "Fusée : meilleur temps de ski",
     "gachetteLabel": "Gâchette : sans-faute au tir",
     "shootingsLabel": "Fautes au tir : {shots}",
@@ -65,7 +65,7 @@
     "favoriteTeamPodiums": "{count, plural, =0 {0 podium} one {# podium} other {# podiums}}",
     "nextStageTitle": "Prochaine étape",
     "seasonPicksTitle": "Pronostics de saison",
-    "seasonPicksHint": "Gros globes, meilleurs jeunes, meilleures nations et tes Pépites : à saisir avant le début de la saison !",
+    "seasonPicksHint": "Gros globes, meilleurs jeunes, meilleures nations et tes Pépites cachées : à saisir avant le début de la saison !",
     "seasonPicksDone": "Tout est saisi. Tu peux encore changer d'avis jusqu'au début de la saison.",
     "seasonPicksButton": "Saisir mes pronostics de saison",
     "seasonPicksEdit": "Modifier mes pronostics de saison",
@@ -272,9 +272,9 @@
     "globeNation": "Meilleure nation",
     "globeBigScale": "Gros globe : récompense le Top 5 final",
     "globeSmallScale": "Jeune et nation : récompensent le podium",
-    "pepiteTitle": "La Pépite",
-    "pepiteBody": "Mise en début de saison sur un outsider par sexe. Pronostic caché : à son premier Top 10 de la saison, son score de la course s'ajoute en bonus, puis elle redevient une biathlète comme une autre.",
-    "pepiteOdds": "Cote ≥ 30",
+    "pepiteTitle": "La Pépite cachée",
+    "pepiteBody": "Mise en début de saison sur un outsider par sexe, que les autres joueurs ne voient pas. Elle est jouée en caché sur toutes les courses individuelles : à son premier Top 10 de la saison, les points qu'elle gagne sur cette course s'ajoutent à ton score de la course. Elle est alors révélée (❄️ au classement) et redevient une biathlète comme une autre. Avant sa révélation, tu ne peux pas la mettre dans tes pronostics de course.",
+    "pepiteOdds": "Toutes ses cotes ≥ 30",
     "jokersTitle": "Les jokers de fin de saison",
     "jokersBody": "En fin de saison, tes plus mauvais résultats sont effacés (jamais les Mondiaux, les JO, ni les courses malus ou bonus). Une course non jouée est effacée en priorité. Effacer un résultat retire ses points : un 0 ne coûte rien.",
     "jokersIndividual": "courses individuelles",
@@ -370,10 +370,12 @@
     "saving": "Enregistrement...",
     "saved": "Pronostics de saison enregistrés.",
     "submit": "Valider mes pronostics de saison",
-    "pepiteTitle": "Ta Pépite",
-    "pepiteHint": "Un outsider (cote ≥ 30) misé en début de saison, un par sexe. Pronostic caché : dès son premier Top 10 de la saison, son score de la course s'ajoute en bonus à ton score. Ensuite, elle redevient un(e) athlète comme les autres.",
-    "pepiteClaimed": "Bonus Pépite déjà obtenu !",
-    "pepiteSubmit": "Valider ma Pépite (définitif)"
+    "pepiteTitle": "Ta Pépite cachée",
+    "pepiteHint": "Un outsider misé en début de saison, un par sexe : toutes ses cotes (sprint, poursuite, individuel, mass start, globe…) doivent être d'au moins 30. Personne d'autre ne la voit. Elle est jouée en caché sur toutes les courses : dès son premier Top 10 de la saison, ses points sur cette course s'ajoutent à ton score. Elle est alors révélée et redevient une biathlète comme les autres. D'ici là, tu ne peux pas la mettre dans tes pronostics de course.",
+    "pepiteClaimed": "Pépite cachée révélée : bonus obtenu !",
+    "pepiteSubmit": "Valider ma Pépite cachée (définitif)",
+    "pepiteNotEligible": "Ce biathlète n'est pas éligible : toutes ses cotes doivent être d'au moins 30.",
+    "pepiteNoLongerEligible": "Ta Pépite n'est plus éligible avec la nouvelle règle (toutes ses cotes doivent être d'au moins 30). Choisis-en une autre."
   },
   "Ligues": {
     "title": "Mes ligues",
@@ -412,7 +414,8 @@
     "emptyStage": "Aucun point sur cette étape pour le moment.",
     "noStages": "Aucune étape programmée pour le moment.",
     "noPicks": "Pas de pronostic",
-    "myRankingTitle": "Mon classement"
+    "myRankingTitle": "Mon classement",
+    "playerPepiteRevealed": "{sex, select, F {Pépite cachée Femmes révélée :} other {Pépite cachée Hommes révélée :}}"
   },
   "Courses": {
     "title": "Ma saison",
@@ -430,8 +433,6 @@
     "seasonPredictionsCount": "{chosen} sur {total} choisis",
     "seasonPredictionsNone": "Pas encore choisi",
     "seasonPredictionsLink": "Voir ou modifier mes pronostics de saison",
-    "pepite_F": "Ma Pépite Femmes",
-    "pepite_H": "Ma Pépite Hommes",
     "specialRaceBanner": "Course malus · {name}",
     "opensOn": "Ouvre le {date}",
     "seasonPredictionsComplete": "Compléter",
@@ -444,7 +445,13 @@
     "jokersNone": "Aucun résultat à effacer pour l'instant.",
     "jokersPoints": "{points} pts",
     "jokersNotPlayed": "Non jouée",
-    "jokersDiscover": "Découvre tes jokers de fin de saison"
+    "jokersDiscover": "Découvre tes jokers de fin de saison",
+    "pepiteCardTitle": "Pépite cachée",
+    "pepiteCardHint": "Jouée en caché sur toutes les courses jusqu'à son premier Top 10. Les autres joueurs ne la voient qu'une fois révélée.",
+    "pepiteRevealed": "Révélée",
+    "pepiteNotRevealed": "Pas encore révélée",
+    "pepiteNone": "Pas encore choisie",
+    "pepiteChoose": "Choisir"
   },
   "RaceFormat": {
     "sprint": "Sprint",
@@ -570,7 +577,9 @@
     "caFarteActive": "carte jouée sur cette course : touche ×3 à côté du biathlète dont les points seront triplés.",
     "cardAspiration": "Aspiration",
     "aspirationHint": "Aspiration : sur cette course, chacun de tes biathlètes compte une place plus haut.",
-    "aspirationActive": "carte jouée sur cette course : chacun de tes biathlètes compte une place plus haut."
+    "aspirationActive": "carte jouée sur cette course : chacun de tes biathlètes compte une place plus haut.",
+    "hiddenPepite": "ta Pépite cachée",
+    "hiddenPepiteError": "Ta Pépite cachée est déjà jouée sur cette course : retire-la de ton pronostic."
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",
@@ -886,12 +895,12 @@
     "leader": "Dossard jaune : leader du classement",
     "x2Used": "{used}/{max} bonus ×2 utilisés",
     "raceWins": "{count, plural, one {# course gagnée} other {# courses gagnées}} (meilleur pronostiqueur)",
-    "pepite": "{count, plural, one {Pépite révélée} other {# Pépites révélées}}",
+    "pepite": "{count, plural, one {Pépite cachée révélée} other {# Pépites cachées révélées}}",
     "helpTitle": "Les pictos des joueurs",
     "helpLeader": "Dossard jaune : le leader du classement général de la saison (ou de la ligue).",
     "helpX2": "Bonus ×2 déjà utilisés sur les 3 de la saison.",
     "helpWins": "Courses gagnées en terminant meilleur pronostiqueur.",
-    "helpPepite": "Pépite révélée : elle a fait son premier Top 10 et rapporté son bonus.",
+    "helpPepite": "Pépite cachée révélée : elle a fait son premier Top 10 et rapporté ses points.",
     "stageLeader": "Dossard rouge : leader de l'étape",
     "stageWins": "Dossard rouge : {count, plural, one {# étape gagnée} other {# étapes gagnées}}",
     "perfectPicks": "{count, plural, one {# prono parfait} other {# pronos parfaits}}",

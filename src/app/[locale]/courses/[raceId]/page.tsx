@@ -76,6 +76,8 @@ export default async function RacePage({
   let initialAthleteSelection: string[] = [];
   let initialNationSelection: string | null = null;
   let grilledAthleteIds: string[] = [];
+  // Pépites cachées pas encore révélées : jouées en caché sur toutes les courses, donc hors pronostic.
+  let hiddenPepiteIds: string[] = [];
   let availableCards: { id: string; card_type: string }[] = [];
   // Cartes jouables sur cette course (une seule à la fois) et carte déjà jouée qui la couvre.
   let playableCards: { id: string; card_type: string }[] = [];
@@ -162,7 +164,7 @@ export default async function RacePage({
       .sort((a: AthleteWithOdds, b: AthleteWithOdds) => a.value - b.value);
 
     if (user) {
-      const [{ data: existing }, { data: stageRaces }, { count: fondueOnThisRace }] = await Promise.all([
+      const [{ data: existing }, { data: stageRaces }, { count: fondueOnThisRace }, { data: hiddenPepites }] = await Promise.all([
         supabase
           .from("predictions")
           .select("athlete_ids, bonus_x2_used, bonus_card_used, bonus_card_target_athlete_id")
@@ -177,7 +179,14 @@ export default async function RacePage({
           .eq("card_type", "fondue")
           .eq("status", "used")
           .eq("used_on_race_id", race.id),
+        supabase
+          .from("pepites")
+          .select("athlete_id")
+          .eq("user_id", user.id)
+          .eq("season_id", stage.season_id)
+          .eq("bonus_claimed", false),
       ]);
+      hiddenPepiteIds = (hiddenPepites ?? []).map((p) => p.athlete_id as string);
       initialAthleteSelection = existing?.athlete_ids ?? [];
 
       // §2 — grillés = biathlètes choisis sur la course précédente de l'étape
@@ -410,6 +419,7 @@ export default async function RacePage({
                   athletes={selectableAthletes}
                   initialSelection={initialAthleteSelection}
                   grilledAthleteIds={grilledAthleteIds}
+                  hiddenPepiteIds={hiddenPepiteIds}
                   playableCards={playableCards}
                   activeCard={activeCard}
                   quatriemeChoixActive={quatriemeChoixActive}

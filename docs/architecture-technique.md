@@ -165,6 +165,30 @@ Pépite femme par joueur/saison (`pepites` a désormais une clé `(user_id, seas
 `0015_pepites_per_sex.sql` — colonne `sex` ajoutée, backfillée depuis l'athlète, puis PK recréée).
 Écran `/globes` : deux sélecteurs (Femmes / Hommes), chacun verrouillé une fois validé.
 
+**Pépite cachée (04/11/2026, demande de Guillaume).** La Pépite s'appelle désormais « Pépite
+cachée » (5 langues). Changements :
+- **Éligibilité** : toutes les cotes courantes du biathlète pour la saison (sprint, poursuite,
+  individuel, mass start, gros globe, meilleur jeune) doivent être ≥ 30, et non plus la seule cote
+  du sprint (ex. Ponsiluoma : sprint 30 mais poursuite 15, donc plus éligible). Lecture de la
+  phrase « aucune de tes cotes ne soit inférieure à 30 » d'après l'exemple donné, **à confirmer**.
+  `isPepiteEligibleOdds` côté code, `pepite_is_eligible` côté base. `odds_at_pick` = la plus basse
+  de ses cotes. Une Pépite déjà choisie qui n'est plus éligible peut être remplacée (le formulaire
+  `/globes` se rouvre, la base l'autorise) ; sinon le choix reste définitif.
+- **Hors des pronostics de saison** : l'accordéon « Mes pronostics de saison » ne compte plus que
+  les 6 globes. Nouvel encadré permanent `HiddenPepiteCard` entre cet accordéon et la Série en
+  cours (Femmes / Hommes, « Révélée » ou « Pas encore révélée », bouton « Choisir » si vide).
+  L'invitation de l'accueil (8 choix sur `/globes`) compte toujours les 2 Pépites.
+- **Visibilité** : inchangée côté base (0018, lisible par les autres seulement une fois
+  `bonus_claimed`). Une fois révélée : ❄️ au classement (déjà en place) et son nom en haut du
+  pop-up joueur (`SeasonView.pepites`).
+- **Pas dans les pronostics de course** tant qu'elle n'est pas révélée : grisée dans le
+  formulaire (« ta Pépite cachée »), refusée par la base (trigger `predictions_no_hidden_pepite`).
+- **Points** : inchangés, `applyPepiteBonuses` ajoutait déjà les points de la Pépite (cote de la
+  course × barème du rang) au score de la course de son premier Top 10.
+- Migration **0035_pepite_cachee.sql** : fonctions/triggers `pepite_is_eligible`, `pepites_check`
+  (éligibilité, sexe, choix définitif, `bonus_claimed` et `odds_at_pick` jamais fixés par le
+  joueur) et `predictions_no_hidden_pepite`. Le back-office (service_role) n'est pas concerné.
+
 **Classements annexes (Dossard Rouge) — une seule dimension implémentée, le reste mis en suspens.**
 L'idée initiale de Guillaume était un classement par type de course (sprint/poursuite/individuel/
 mass start/relais) ; **mise en suspens pour l'instant, à reprendre plus tard**. Seule la meilleure
