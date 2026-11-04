@@ -6,7 +6,7 @@ import { parseShootings, totalMisses } from "../shootings";
  * fait que pré-remplir les lignes, l'admin relit puis valide pour calculer les points. Pensé pour
  * être produit par une IA à partir du classement officiel IBU.
  */
-export const ATHLETE_RESULTS_HEADERS = ["Rang", "Nom", "Prénom", "Nation", "Écart (s)", "Tirs", "Tours de péna", "Fusée", "Gâchette"];
+export const ATHLETE_RESULTS_HEADERS = ["Rang", "Nom", "Prénom", "Nation", "Écart (s)", "Tirs", "Tours de péna", "Rang ski", "Gâchette"];
 export const NATION_RESULTS_HEADERS = ["Rang", "Nation", "Tirs"];
 
 export interface ResultsCsvCandidate {
@@ -26,7 +26,8 @@ export interface ParsedResultRow {
   /** Fautes par tir, « 0+1+0+2 ». */
   shootings: string;
   penaltyLaps: string;
-  isFusee: boolean;
+  /** Rang au temps de ski (carte Fusée), « 1 », « 2 », « 3 »… ou vide. */
+  skiRank: string;
   isGachette: boolean;
 }
 
@@ -51,6 +52,12 @@ export function nameVariants(value: string): string[] {
 
 function parseFlag(value: string | undefined): boolean {
   return ["oui", "o", "x", "1", "true", "vrai", "yes", "y"].includes(normalizeLabel(value ?? ""));
+}
+
+function parseSkiRank(rank: string, fuseeFlag: string | undefined): string {
+  const n = Number(rank.trim());
+  if (rank.trim() !== "" && Number.isInteger(n) && n > 0) return String(n);
+  return parseFlag(fuseeFlag) ? "1" : "";
 }
 
 /** « 12.3 », « +12,3 », « 1:02.5 », « +1:02:03.4 » → secondes. `null` si vide ou illisible. */
@@ -138,7 +145,7 @@ export function parseResultsCsv(
     const gap = parseTimeGap(cell(row, "ecart (s)", "ecart", "gap", "behind"));
     const gachetteFromMisses = cell(row, "fautes", "misses");
     if (mode === "nation") {
-      result.rows[candidate.id] = { rank: String(rank), timeGapSeconds: "", shootings, penaltyLaps: "", isFusee: false, isGachette: false };
+      result.rows[candidate.id] = { rank: String(rank), timeGapSeconds: "", shootings, penaltyLaps: "", skiRank: "", isGachette: false };
       result.matched++;
       return;
     }
@@ -149,7 +156,8 @@ export function parseResultsCsv(
       timeGapSeconds: gap != null ? String(gap) : rank === 1 ? "0" : "",
       shootings,
       penaltyLaps: cell(row, "tours de pena", "tours de penalite") || (missesFromShootings != null ? String(missesFromShootings) : ""),
-      isFusee: parseFlag(row["fusee"]),
+      // « Rang ski » (1, 2, 3…) ; anciens fichiers : colonne « Fusée » cochée = meilleur temps.
+      skiRank: parseSkiRank(cell(row, "rang ski", "ski"), row["fusee"]),
       isGachette: gachetteFromMisses !== "" ? Number(gachetteFromMisses) === 0 : parseFlag(row["gachette"]),
     };
     result.matched++;
@@ -178,7 +186,7 @@ export function buildResultsCsv(
     ATHLETE_RESULTS_HEADERS,
     ordered.map((c) => {
       const r = rows[c.id];
-      return [r?.rank, c.lastName, c.firstName, c.nationCode, r?.timeGapSeconds, r?.shootings, r?.penaltyLaps, yesNo(r?.isFusee), yesNo(r?.isGachette)];
+      return [r?.rank, c.lastName, c.firstName, c.nationCode, r?.timeGapSeconds, r?.shootings, r?.penaltyLaps, r?.skiRank, yesNo(r?.isGachette)];
     })
   );
 }

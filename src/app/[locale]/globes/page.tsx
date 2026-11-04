@@ -68,7 +68,7 @@ export default async function GlobesPage() {
       .eq("user_id", user.id)
       .eq("season_id", season.id),
     supabase.from("nations").select("code, name"),
-    supabase.from("pepites").select("sex, athlete_id, bonus_claimed").eq("user_id", user.id).eq("season_id", season.id),
+    supabase.from("pepites").select("sex, athlete_id, bonus_claimed, active_from").eq("user_id", user.id).eq("season_id", season.id),
     // Toutes les cotes courantes des biathlètes (plus de 1000 lignes) : une Pépite doit avoir chacune ≥ 30.
     fetchAll<any>((from, to) =>
       supabase
@@ -83,6 +83,23 @@ export default async function GlobesPage() {
     supabase.from("favorite_teams").select("nation_code, sex").eq("user_id", user.id).eq("season_id", season.id).maybeSingle(),
     isEquipeCardActive(supabase, user.id, season.id),
   ]);
+  // Carte Talent en main, et nom des pépites révélées (réactivables avec elle).
+  const claimedIds = (pepites ?? []).filter((p) => p.bonus_claimed).map((p) => p.athlete_id as string);
+  const [{ data: talentCard }, { data: claimedAthletes }] = await Promise.all([
+    supabase
+      .from("bonus_cards")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("season_id", season.id)
+      .eq("card_type", "talent")
+      .eq("status", "available")
+      .limit(1)
+      .maybeSingle(),
+    claimedIds.length > 0
+      ? supabase.from("athletes").select("id, first_name, last_name, nation_code").in("id", claimedIds)
+      : Promise.resolve({ data: [] as any[] }),
+  ]);
+  const claimedNameById = new Map(((claimedAthletes ?? []) as any[]).map((a) => [a.id as string, `${fullAthleteName(a)} (${a.nation_code})`]));
   const nameByNationCode = new Map((nations ?? []).map((n) => [n.code, n.name]));
   const pepiteBySex = new Map((pepites ?? []).map((p) => [p.sex, p]));
   const oddsByAthlete = new Map<string, { athlete: any; values: number[] }>();
@@ -171,6 +188,9 @@ export default async function GlobesPage() {
           initialPick={pepiteBySex.get("F")?.athlete_id ?? null}
           alreadyClaimed={pepiteBySex.get("F")?.bonus_claimed ?? false}
           options={pepiteOptionsFor("F")}
+          talentCardId={talentCard?.id ?? null}
+          revealedName={claimedNameById.get(pepiteBySex.get("F")?.athlete_id ?? "") ?? null}
+          fromTalent={!!pepiteBySex.get("F")?.active_from}
         />
         <PepiteForm
           sex="H"
@@ -178,6 +198,9 @@ export default async function GlobesPage() {
           initialPick={pepiteBySex.get("H")?.athlete_id ?? null}
           alreadyClaimed={pepiteBySex.get("H")?.bonus_claimed ?? false}
           options={pepiteOptionsFor("H")}
+          talentCardId={talentCard?.id ?? null}
+          revealedName={claimedNameById.get(pepiteBySex.get("H")?.athlete_id ?? "") ?? null}
+          fromTalent={!!pepiteBySex.get("H")?.active_from}
         />
       </div>
 

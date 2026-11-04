@@ -8,10 +8,10 @@ import { RELAY_FORMATS } from "@/lib/raceFormats";
 
 /** Lignes d'explication propres à chaque format, en plus des règles communes (clés RuleInfo.*). */
 const FORMAT_LINES: Record<string, string[]> = {
-  sprint: ["individual", "fusee"],
-  individuel: ["individual", "fusee"],
-  poursuite: ["individual", "pursuitStart", "gachette"],
-  mass_start: ["individual", "gachette"],
+  sprint: ["individual", "fusee", "gachette"],
+  individuel: ["individual", "fusee", "gachette"],
+  poursuite: ["individual", "pursuitStart", "fusee", "gachette"],
+  mass_start: ["individual", "fusee", "gachette"],
 };
 
 /** Bouton « ? » de la page d'une course : rappel simple de la règle du format. */

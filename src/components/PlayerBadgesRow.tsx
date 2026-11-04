@@ -13,6 +13,12 @@ export function StageLeaderBib({ className = "h-5 w-5", label, number = 1 }: { c
   return <Bib className={className} label={label ?? t("stageLeader")} fill="#E8414B" stroke="#9C1C24" number={number} />;
 }
 
+/** Dossard bleu du meilleur jeune (pronostic de saison « Meilleur jeune »), comme en Coupe du monde. */
+export function YoungBib({ className = "h-4 w-4" }: { className?: string }) {
+  const t = useTranslations("Badges");
+  return <Bib className={className} label={t("young")} fill="#2F80ED" stroke="#1B4F96" />;
+}
+
 function Bib({ className, label, fill, stroke, number = 1 }: { className: string; label: string; fill: string; stroke: string; number?: number }) {
   return (
     <svg viewBox="0 0 24 24" role="img" aria-label={label} className={`flex-shrink-0 ${className}`}>

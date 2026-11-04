@@ -161,7 +161,7 @@ async function CompactPicks({ picks, extras }: { picks: LastResultPick[]; extras
             <span className="flex min-w-0 items-center gap-1 font-semibold">
               <span className="truncate">{pick.name}</span>
               {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
-              <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
+              <FuseeGachetteBadges skiRank={pick.skiRank} gachette={pick.gachette} />
             </span>
             {pick.penalty && <PenaltyLine penalty={pick.penalty} />}
           </span>

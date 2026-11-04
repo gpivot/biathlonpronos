@@ -1,7 +1,6 @@
 import { useTranslations } from "next-intl";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { LastResultExtra, LastResultPick } from "@/lib/lastResult";
-import { FUSEE_BONUS, GACHETTE_BONUS } from "@/lib/scoring/constants";
 import { ShootingDots } from "./ShootingDots";
 
 const COMBINATION_KINDS: LastResultExtra["kind"][] = ["top3", "top5", "top10", "pronoParfait"];
@@ -12,15 +11,16 @@ export function formatPoints(points: number) {
   return `${rounded > 0 ? "+" : ""}${rounded} pts`;
 }
 
-/** Pictos Fusée (meilleur temps de ski) et Gâchette (sans-faute au tir). */
-export function FuseeGachetteBadges({ fusee, gachette }: { fusee: boolean; gachette: boolean }) {
+/** Pictos Fusée (top 3 du temps de ski, avec le rang si 2e ou 3e) et Gâchette (sans-faute au tir). */
+export function FuseeGachetteBadges({ skiRank, gachette }: { skiRank: number | null; gachette: boolean }) {
   const t = useTranslations("Home");
+  const fusee = skiRank != null && skiRank >= 1 && skiRank <= 3;
   if (!fusee && !gachette) return null;
   return (
     <>
       {fusee && (
-        <span title={t("fuseeLabel")} aria-label={t("fuseeLabel")} className="text-[13px]">
-          🚀
+        <span title={t("fuseeLabel", { rank: skiRank })} aria-label={t("fuseeLabel", { rank: skiRank })} className="text-[13px]">
+          🚀{skiRank! > 1 && <sup className="text-[9px] font-bold text-text-dim">{skiRank}</sup>}
         </span>
       )}
       {gachette && (
@@ -52,7 +52,8 @@ export function PredictionBreakdown({
   showLegend?: boolean;
 }) {
   const t = useTranslations("Home");
-  const hasFuseeGachette = showLegend && picks.some((p) => p.fusee || p.gachette);
+  const hasFuseeGachette =
+    showLegend && picks.some((p) => (p.skiRank != null && p.skiRank <= 3) || p.gachette || p.cardBonus);
   // Bonus de combinaison mis en avant en bandeau vert au-dessus des choix ; les autres restent en bas.
   const combination = extras.find((e) => COMBINATION_KINDS.includes(e.kind) && e.points > 0);
   const otherExtras = extras.filter((e) => e !== combination);
@@ -92,9 +93,9 @@ export function PredictionBreakdown({
                 <span className="truncate">{pick.name}</span>
                 {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
                 {pick.nationalDay && <span className="text-[11px] text-gold">🎉×2</span>}
-                <FuseeGachetteBadges fusee={pick.fusee} gachette={pick.gachette} />
+                <FuseeGachetteBadges skiRank={pick.skiRank} gachette={pick.gachette} />
               </div>
-              {showCalc && <CalcDetail odds={pick.odds} rankMultiplier={pick.rankMultiplier} fusee={pick.fusee} gachette={pick.gachette} />}
+              {showCalc && <CalcDetail odds={pick.odds} rankMultiplier={pick.rankMultiplier} cardBonus={pick.cardBonus} />}
               {pick.penalty && <PenaltyLine penalty={pick.penalty} />}
             </div>
             <ShootingDots shootings={pick.shootings} />
@@ -135,23 +136,21 @@ export function FuseeGachetteLegend() {
   return <div className="px-3 text-[11px] text-text-dim">{t("fuseeGachetteLegend")}</div>;
 }
 
-/** Détail du calcul d'une ligne : « cote 8 × 25 », plus Fusée/Gâchette (page de la course). */
+/** Détail du calcul d'une ligne : « cote 8 × 25 », plus les cartes Fusée/Gâchette du joueur (page de la course). */
 export function CalcDetail({
   odds,
   rankMultiplier,
-  fusee,
-  gachette,
+  cardBonus = null,
 }: {
   odds: number | null;
   rankMultiplier: number | null;
-  fusee: boolean;
-  gachette: boolean;
+  cardBonus?: LastResultPick["cardBonus"];
 }) {
   const t = useTranslations("Race");
   if (odds == null) return null;
   const parts = [rankMultiplier != null ? t("calcDetail", { odds, multiplier: rankMultiplier }) : t("calcOddsOnly", { odds })];
-  if (fusee) parts.push(`🚀 ${FUSEE_BONUS}`);
-  if (gachette) parts.push(`🎯 ${GACHETTE_BONUS}`);
+  if (cardBonus?.fusee) parts.push(`🚀 ${cardBonus.fusee}`);
+  if (cardBonus?.gachette) parts.push(`🎯 ${cardBonus.gachette}`);
   return <div className="truncate text-[11px] font-normal text-text-dim">{parts.join(" + ")}</div>;
 }
 

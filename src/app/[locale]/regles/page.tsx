@@ -1,12 +1,12 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { PageHeader } from "@/components/PageHeader";
-import { LeaderBib, StageLeaderBib } from "@/components/PlayerBadgesRow";
+import { LeaderBib, StageLeaderBib, YoungBib } from "@/components/PlayerBadgesRow";
 import { ScoreMockup } from "@/components/landing/Mockups";
 import {
   COMBINATION_BONUS,
-  FUSEE_BONUS,
-  GACHETTE_BONUS,
+  FUSEE_CARD_BONUS_BY_SKI_RANK,
+  GACHETTE_CARD_BONUS,
   GROS_GLOBE_MULTIPLIERS,
   PETIT_GLOBE_MULTIPLIERS,
   RANK_MULTIPLIERS,
@@ -35,6 +35,9 @@ const CARDS = [
   { type: "balle_de_pioche", emoji: "🃏" },
   { type: "aspiration", emoji: "💨", tag: "cardFrom4" },
   { type: "equipe", emoji: "👥", tag: "cardAfterWorlds" },
+  { type: "fusee", emoji: "🚀" },
+  { type: "gachette", emoji: "🎯" },
+  { type: "talent", emoji: "❄️" },
 ] as const;
 
 export default async function ReglesPage() {
@@ -215,11 +218,17 @@ export default async function ReglesPage() {
 
           <RuleCard emoji="🚀" title={t("fgTitle")} body={t("fgBody")}>
             <div className="grid grid-cols-2 gap-2">
-              <BonusTile emoji="🚀" name={t("fuseeName")} value={`+${FUSEE_BONUS}`} desc={t("fuseeDesc")} formats={t("fuseeFormats")} />
+              <BonusTile
+                emoji="🚀"
+                name={t("fuseeName")}
+                value={`+${FUSEE_CARD_BONUS_BY_SKI_RANK[1]}/${FUSEE_CARD_BONUS_BY_SKI_RANK[2]}/${FUSEE_CARD_BONUS_BY_SKI_RANK[3]}`}
+                desc={t("fuseeDesc")}
+                formats={t("fuseeFormats")}
+              />
               <BonusTile
                 emoji="🎯"
                 name={t("gachetteName")}
-                value={`+${GACHETTE_BONUS}`}
+                value={`+${GACHETTE_CARD_BONUS.other}`}
                 desc={t("gachetteDesc")}
                 formats={t("gachetteFormats")}
               />
@@ -315,15 +324,22 @@ export default async function ReglesPage() {
               {(["women", "men"] as const).map((sex) => (
                 <div key={sex} className="flex flex-col gap-1 rounded-xl border border-border bg-card2 px-3 py-2">
                   <span className="font-display text-[11px] font-extrabold uppercase tracking-wide text-text-dim">{t(sex)}</span>
-                  <span className="text-[12px]">🏆 {t("globeBig")}</span>
-                  <span className="text-[12px]">🌱 {t("globeYoung")}</span>
+                  <span className="text-[12px]">🔮 {t("globeBig")}</span>
+                  <span className="flex items-center gap-1 text-[12px]">
+                    <YoungBib /> {t("globeYoung")}
+                  </span>
                   <span className="text-[12px]">🏳️ {t("globeNation")}</span>
                 </div>
               ))}
             </div>
-            <Label>🏆 {t("globeBigScale")}</Label>
+            <Label>🔮 {t("globeBigScale")}</Label>
             <Scale multipliers={GROS_GLOBE_MULTIPLIERS} rank={rank} />
-            <Label>🌱🏳️ {t("globeSmallScale")}</Label>
+            <Label>
+              <span className="inline-flex items-center gap-1 align-middle">
+                <YoungBib /> 🏳️
+              </span>{" "}
+              {t("globeSmallScale")}
+            </Label>
             <Scale multipliers={PETIT_GLOBE_MULTIPLIERS} rank={rank} cols="grid-cols-3" />
           </RuleCard>
 

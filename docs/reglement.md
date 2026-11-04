@@ -135,6 +135,8 @@ Les Championnats du Monde et les Jeux Olympiques constituent le sommet de la sai
 
 Le bonus ×2 personnel n'est pas cumulable avec ce coefficient : une course ne peut donc pas passer en ×4.
 
+**Aucune carte bonus ne se joue sur les Mondiaux ou les JO** (précisé le 04/11/2026) : on sacralise l'événement avec son seul ×2. La Balle de pioche saute leurs courses et reprend à l'étape suivante.
+
 ## 9. Les courses spéciales
 
 Certaines courses de la saison possèdent une règle exceptionnelle annoncée à l'avance. Elles peuvent bouleverser les habitudes et obliger les joueurs à adapter leurs choix.
@@ -142,6 +144,8 @@ Certaines courses de la saison possèdent une règle exceptionnelle annoncée à
 ### Tour de péna
 
 Sur cette course, chaque tour de pénalité effectué par l'un de tes trois biathlètes entraîne : **–20 points par tour de pénalité**. Un bon classement ne suffit donc plus : il faut également viser juste. (Prévoir d'ajouter la saisie du nombre de tours de pénalité dans la saisie des résultats de cette étape spéciale.)
+
+**Pronostic vide (ajouté le 04/11/2026)** : si tu ne joues pas tes 3 biathlètes, chaque biathlète manquant compte **5 tours d'office, soit –100 points**. Un joueur qui ne pronostique pas du tout la course prend donc –300 points (seulement s'il a déjà joué au moins une course de la saison, pour ne pas pénaliser les comptes inactifs).
 
 ### Brouillard
 
@@ -195,12 +199,14 @@ Ta série continue tant qu'au moins l'un de tes trois biathlètes (ou nation) ma
 
 ## 13. Les cartes bonus
 
-Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi. Au 10/10, tu choisis toi-même ta carte. Une même carte ne peut pas être prise sur deux 10/10 d'affilée : si tu prends Ça farte à ton 1er 10/10, elle est grisée au 2e et redevient possible au 3e. De nouvelles cartes s'ajoutent au fil de la saison. Sur une même course, Ça farte et Aspiration ne se cumulent pas, ni Aspiration et 4e choix ; Ça farte peut en revanche se poser sur un des 4 choix d'un 4e choix. Équipe se cumule avec toutes les autres.
+Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi. Au 10/10, tu choisis toi-même ta carte. Une même carte ne peut pas être prise sur deux 10/10 d'affilée : si tu prends Ça farte à ton 1er 10/10, elle est grisée au 2e et redevient possible au 3e. De nouvelles cartes s'ajoutent au fil de la saison. Sur une même course, Ça farte et Aspiration ne se cumulent pas, ni Aspiration et Balle de pioche ; Ça farte peut en revanche se poser sur un des 4 choix d'une Balle de pioche. Ça farte ne se cumule pas non plus avec Fusée ou Gâchette. Équipe se cumule avec toutes les autres.
+
+Aucune carte ne se joue sur les Mondiaux ou les JO (§8). L'organisateur peut activer ou désactiver chaque carte et limiter la période où elle est proposée au 10/10 ; une carte déjà en main reste jouable.
 
 ### Ça farte !
 Tu poses un ×3 sur un seul biathlète de ton choix avant une course individuelle (pas sur un relais). Seuls les points de ce biathlète sont triplés. Le reste de ton pronostic conserve son barème normal. Bonus valable une fois sur un biathlète uniquement. Tu peux la garder en main et la jouer sur la course de ton choix. Il ne se cumule pas avec un ×2 : le biathlète ciblé reste à ×3, jamais ×6.
 
-### 4e choix (Balle de pioche)
+### Balle de pioche (anciennement « 4e choix », renommée le 04/11/2026)
 Dès que tu la choisis, elle s'active automatiquement sur les 4 prochaines courses individuelles (2 hommes et 2 femmes, relais exclus) : tu peux sélectionner 4 biathlètes au lieu de 3. Mais seuls les résultats de tes 3 meilleurs biathlètes sont comptabilisés. Tu peux y ajouter Ça farte (×3 sur un des 4 choix), mais pas Aspiration.
 
 ### Aspiration (à partir de la 4e étape)
@@ -208,6 +214,15 @@ Sur une course individuelle de ton choix, chacun de tes biathlètes compte une p
 
 ### Équipe (à partir de l'étape qui suit les Mondiaux ou les JO)
 Dès que tu la choisis et jusqu'à la fin de la saison, chaque biathlète de ton équipe favorite qui termine dans le Top 10 ajoute une fois sa cote au score de la course, que tu l'aies choisi ou non. Exemple avec France Hommes : tu pronostiques Perrot, 2e à une cote de 8 ; Jacquelin (4e, cote 12) et Claude (8e, cote 24) ne sont pas dans ton pronostic. Tu marques 8 × 18 pour Perrot, plus 8 + 12 + 24 grâce à la carte. Sur le relais hommes ou femmes de ton équipe, ta nation dans le Top 10 ajoute une fois la cote du relais. Ces points comptent pour ta série.
+
+### Fusée (ajoutée le 04/11/2026, à la place du bonus automatique)
+À poser sur une étape avant le départ de sa 1re course. Sur toutes les courses individuelles de l'étape (sprint, poursuite, individuel, mass start, hommes et femmes), chacun de tes biathlètes pronostiqués rapporte **+100 points s'il signe le meilleur temps de ski, +50 pour le 2e meilleur temps, +20 pour le 3e**. Cumulable entre tes 3 pronostics, même s'ils finissent hors du Top 10 (de quoi sauver ta série en cours). Points fixes, doublés par ton bonus ×2 (un +100 devient +200), jamais triplés. Avec une Balle de pioche, la carte s'applique aux 4 biathlètes mais seuls tes 3 meilleurs scores comptent. Se cumule avec le bonus ×2, Aspiration et Équipe, pas avec Ça farte.
+
+### Gâchette (ajoutée le 04/11/2026, à la place du bonus automatique)
+Même fonctionnement que Fusée : **+100 points pour chaque biathlète pronostiqué qui réalise le 20/20 au tir** (poursuite, individuel, mass start), **+50 pour un 10/10 au sprint**. Cumulable entre tes 3 pronostics et valable sur toutes les courses individuelles de l'étape choisie, à poser avant son début.
+
+### Talent (ajoutée le 04/11/2026)
+Proposée seulement si une de tes pépites cachées a été révélée. Pour les hommes ou pour les femmes, tu peux soit **réactiver** ta pépite révélée (elle redevient cachée et marque à son prochain Top 10), soit **en choisir une nouvelle** (toutes ses cotes ≥ 30). Elle ne compte qu'à partir des courses suivantes, et ne peut pas être un biathlète déjà présent dans tes pronostics à venir. Les points de la première révélation restent acquis.
 
 > **Chat noir retirée le 01/11/2026 (Guillaume)** : la carte (corriger un pronostic de début de saison) est désormais réservée à VéloPronos.
 
@@ -218,6 +233,8 @@ Chaque joueur peut miser en début de saison sur un outsider par sexe (une Pépi
 La pépite est cachée : les autres joueurs ne la voient pas, et elle est jouée en secret sur toutes les courses individuelles. C'est pourquoi tu ne peux pas la mettre dans tes pronostics de course tant qu'elle n'est pas révélée. Lorsque ta Pépite réalise son premier Top 10 de la saison, les points qu'elle gagne sur cette course (cote × barème du classement, comme un pronostic normal) s'ajoutent à ton score de la course. Elle est alors révélée : le picto ❄️ apparaît à côté de ton pseudo au classement et son nom s'affiche en haut de ton pop-up joueur. Elle redevient ensuite un biathlète normal à pronostiquer, et le pari Pépite est terminé.
 
 ## 15. Fusée & Gâchette
+
+> **Devenues des cartes bonus le 04/11/2026 (Guillaume)** : il n'y a plus de bonus automatique. Voir les cartes Fusée et Gâchette au §13. Les pictos 🚀 (top 3 du temps de ski) et 🎯 (sans-faute au tir) restent affichés dans les résultats. Le Prono parfait ne tient compte que de cote × place. Ancienne règle, pour mémoire :
 
 Biathlonpronos récompense aussi les performances qui font l'essence du biathlon. Après certaines courses, deux performances spéciales sont enregistrées.
 
@@ -231,7 +248,7 @@ Afin de conserver un équilibre entre les disciplines, chaque bonus ne s'appliqu
 
 ## 16. Le classement général
 
-Tous les points obtenus pendant la saison alimentent ton classement général Biathlonpronos. Il additionne : les points des courses individuelles ; les bonus de pronostics ; les relais ; les courses spéciales ; les cartes bonus ; les bonus Fusée et Gâchette ; les pronostics de saison.
+Tous les points obtenus pendant la saison alimentent ton classement général Biathlonpronos. Il additionne : les points des courses individuelles ; les bonus de pronostics ; les relais ; les courses spéciales ; les cartes bonus (dont Fusée et Gâchette) ; les pronostics de saison.
 
 Le leader du classement général porte virtuellement le **Dossard Jaune**.
 

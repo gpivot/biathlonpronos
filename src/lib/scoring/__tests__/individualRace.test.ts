@@ -183,20 +183,149 @@ describe("computeIndividualRaceScore — courses spéciales", () => {
   });
 });
 
-describe("computeIndividualRaceScore — Fusée & Gâchette", () => {
-  it("bonus Fusée (une fois) et Gâchette (cumulable)", () => {
+describe("computeIndividualRaceScore — cartes Fusée & Gâchette", () => {
+  const results: AthleteRaceResult[] = [
+    { athleteId: "a", rank: 1, skiRank: 2, isGachette: true },
+    { athleteId: "b", rank: 2, skiRank: 1 },
+    { athleteId: "c", rank: 25, skiRank: 3, isGachette: true },
+  ];
+  const odds = { a: 1, b: 1, c: 1 };
+
+  it("plus aucun bonus sans carte", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({ predictedAthleteIds: ["a", "b", "c"], results, oddsByAthleteId: odds, raceFormat: "poursuite" })
+    );
+    expect(result.breakdown.fuseeGachetteBonus).toBe(0);
+    expect(result.total).toBe(25 + 18);
+  });
+
+  it("Fusée : 100 / 50 / 20 selon le temps de ski, cumulable, même hors Top 10", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b", "c"],
+        results,
+        oddsByAthleteId: odds,
+        raceFormat: "poursuite",
+        stageCards: { fusee: true, gachette: false },
+      })
+    );
+    expect(result.breakdown.fuseeCardBonus).toBe(50 + 100 + 20);
+    expect(result.breakdown.fuseeByAthlete).toEqual({ a: 50, b: 100, c: 20 });
+    expect(result.total).toBe(25 + 18 + 170);
+  });
+
+  it("Gâchette : 100 par 20/20, 50 par 10/10 au sprint", () => {
+    const input = { predictedAthleteIds: ["a", "b", "c"], results, oddsByAthleteId: odds, stageCards: { fusee: false, gachette: true } };
+    expect(computeIndividualRaceScore(baseInput({ ...input, raceFormat: "mass_start" })).breakdown.gachetteCardBonus).toBe(200);
+    expect(computeIndividualRaceScore(baseInput({ ...input, raceFormat: "sprint" })).breakdown.gachetteCardBonus).toBe(100);
+  });
+
+  it("ancienne case Fusée cochée = meilleur temps de ski", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a"],
+        results: [{ athleteId: "a", rank: 1, isFusee: true }],
+        oddsByAthleteId: { a: 1 },
+        stageCards: { fusee: true, gachette: false },
+      })
+    );
+    expect(result.breakdown.fuseeCardBonus).toBe(100);
+  });
+
+  it("doublées par le bonus ×2 perso : 100 devient 200", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b"],
+        results: [
+          { athleteId: "a", rank: 1, skiRank: 1, isGachette: true },
+          { athleteId: "b", rank: 2, skiRank: 3 },
+        ],
+        oddsByAthleteId: { a: 10, b: 1 },
+        raceFormat: "sprint",
+        bonusX2Active: true,
+        stageCards: { fusee: true, gachette: true },
+      })
+    );
+    // Fusée 100 + 20, Gâchette 50 (10/10 au sprint) : 170, ×2 = 340.
+    expect(result.breakdown.fuseeGachetteBonus).toBe(340);
+    expect(result.breakdown.fuseeByAthlete).toEqual({ a: 100, b: 20 });
+    expect(result.total).toBe(250 * 2 + 18 * 2 + 340);
+  });
+
+  it("jamais multipliés par les Mondiaux ni par Ça farte", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b"],
+        results: [
+          { athleteId: "a", rank: 1, skiRank: 1, isGachette: true },
+          { athleteId: "b", rank: 2 },
+        ],
+        oddsByAthleteId: { a: 10, b: 1 },
+        raceFormat: "individuel",
+        stageCoefficient: 2,
+        card: { type: "ca_farte", targetAthleteId: "a" },
+        stageCards: { fusee: true, gachette: true },
+      })
+    );
+    expect(result.perAthlete.a).toBe(750); // 250 × 3, sans les cartes
+    expect(result.total).toBe(750 + 36 + 100 + 100);
+  });
+
+  it("4e choix : seuls les 3 biathlètes comptés en profitent", () => {
+    const result = computeIndividualRaceScore(
+      baseInput({
+        predictedAthleteIds: ["a", "b", "c", "d"],
+        results: [
+          { athleteId: "a", rank: 1 },
+          { athleteId: "b", rank: 2 },
+          { athleteId: "c", rank: 3 },
+          { athleteId: "d", rank: 30, skiRank: 3 },
+        ],
+        oddsByAthleteId: { a: 10, b: 10, c: 10, d: 1 },
+        card: { type: "balle_de_pioche" },
+        stageCards: { fusee: true, gachette: false },
+      })
+    );
+    expect(result.breakdown.droppedByBalleDePioche).toEqual(["d"]);
+    expect(result.breakdown.fuseeGachetteBonus).toBe(0);
+  });
+
+  it("n'entrent plus dans le Prono parfait", () => {
     const result = computeIndividualRaceScore(
       baseInput({
         predictedAthleteIds: ["a", "b", "c"],
         results: [
-          { athleteId: "a", rank: 1, isFusee: true },
-          { athleteId: "b", rank: 2, isGachette: true },
-          { athleteId: "c", rank: 3, isGachette: true },
+          { athleteId: "a", rank: 1 },
+          { athleteId: "b", rank: 2 },
+          { athleteId: "c", rank: 3 },
+          { athleteId: "d", rank: 4, isGachette: true, skiRank: 1 },
         ],
-        oddsByAthleteId: { a: 1, b: 1, c: 1 },
+        oddsByAthleteId: { a: 1, b: 1, c: 1, d: 3 },
       })
     );
-    expect(result.breakdown.fuseeGachetteBonus).toBe(50 + 20 + 20);
+    // d : 3 × 10 = 30 > c : 1 × 13 = 13 → le trio parfait est a, b, d (sans Fusée/Gâchette)
+    expect(result.breakdown.pronoParfaitBonus).toBe(0);
+  });
+});
+
+describe("computeIndividualRaceScore — Tour de péna, pronostic incomplet", () => {
+  it("5 tours d'office (-100) par biathlète non pronostiqué", () => {
+    const one = computeIndividualRaceScore(
+      baseInput({ predictedAthleteIds: ["a"], results: [{ athleteId: "a", rank: 1, penaltyLaps: 0 }], oddsByAthleteId: { a: 10 }, specialRule: "tour_de_pena" })
+    );
+    expect(one.breakdown.specialMalus).toBe(-200);
+    expect(one.breakdown.missingPicks).toBe(2);
+    expect(one.total).toBe(250 - 200);
+    const none = computeIndividualRaceScore(baseInput({ specialRule: "tour_de_pena" }));
+    expect(none.total).toBe(-300);
+  });
+
+  it("aucun malus avec 3 biathlètes, ni hors Tour de péna", () => {
+    const full = computeIndividualRaceScore(
+      baseInput({ predictedAthleteIds: ["a", "b", "c"], results: [], specialRule: "tour_de_pena" })
+    );
+    expect(full.breakdown.specialMalus).toBe(0);
+    expect(computeIndividualRaceScore(baseInput({ predictedAthleteIds: ["a"] })).breakdown.specialMalus).toBe(0);
   });
 });
 
@@ -331,7 +460,7 @@ describe("computeIndividualRaceScore — bonus Team Nation", () => {
     expect(result.breakdown.teamNationBoostedAthleteIds).toEqual([]);
   });
 
-  it("le doublement porte aussi sur le bonus Gâchette de l'athlète concerné", () => {
+  it("le doublement ne porte pas sur la carte Gâchette (points fixes)", () => {
     const result = computeIndividualRaceScore(
       baseInput({
         predictedAthleteIds: ["a"],
@@ -340,10 +469,12 @@ describe("computeIndividualRaceScore — bonus Team Nation", () => {
         athleteTeamByAthleteId: { a: { nationCode: "FRA", sex: "F" } },
         favoriteTeam: { nationCode: "FRA", sex: "F" },
         raceCountryCode: "FRA",
+        raceFormat: "poursuite",
+        stageCards: { fusee: false, gachette: true },
       })
     );
-    // (250 base + 20 Gâchette) × 2 Team Nation = 540
-    expect(result.perAthlete.a).toBe(540);
+    expect(result.perAthlete.a).toBe(500);
+    expect(result.total).toBe(600);
   });
 });
 
@@ -454,7 +585,7 @@ describe("computeIndividualRaceScore — Fête nationale", () => {
     expect(result.breakdown.nationalDayBoostedAthleteIds).toEqual(["perrot"]);
   });
 
-  it("ne double rien hors Top 10 (même avec un bonus Fusée)", () => {
+  it("ne double rien hors Top 10 (même avec une carte Fusée)", () => {
     const result = computeIndividualRaceScore(
       input({
         results: [
@@ -462,9 +593,11 @@ describe("computeIndividualRaceScore — Fête nationale", () => {
           { athleteId: "perrot", rank: 2 },
           { athleteId: "jacquelin", rank: 12, isFusee: true },
         ],
+        stageCards: { fusee: true, gachette: false },
       })
     );
-    expect(result.perAthlete.jacquelin).toBe(50);
+    expect(result.perAthlete.jacquelin).toBe(0);
+    expect(result.breakdown.fuseeByAthlete).toEqual({ jacquelin: 100 });
     expect(result.breakdown.nationalDayBoostedAthleteIds).not.toContain("jacquelin");
   });
 
