@@ -165,7 +165,7 @@ export async function LeagueMockup() {
 /** 4 — La stratégie : course spéciale (malus), cartes bonus, Mondiaux ×2. */
 export async function StrategyMockup() {
   const t = await getTranslations("Landing");
-  const cards = [t("mockCardFarte"), t("mockCardFondue"), t("mockCard4th")];
+  const cards = [t("mockCardFarte"), t("mockCardAspiration"), t("mockCard4th")];
   return (
     <Phone>
       <ScreenTitle eyebrow={t("mockStrategyEyebrow")} title={t("mockStrategyTitle")} />

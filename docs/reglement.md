@@ -42,15 +42,11 @@ Un biathlète classé au-delà de la 10e place ne rapporte normalement aucun poi
 
 Les montants exacts de ces bonus sont ajoutés au score obtenu sur une étape.
 
-## 2. Les biathlètes sont « grillés »
+## 2. Tous les biathlètes restent disponibles
 
-Biathlonpronos récompense ceux qui savent varier leurs choix. Lorsque tu sélectionnes un biathlète sur une course, il devient grillé pour la course suivante de la même étape.
+Il n'y a pas de biathlète « grillé » : tu peux reprendre les mêmes biathlètes d'une course à l'autre, y compris sur la course suivante de la même étape.
 
-Exemple : tu joues Lou Jeanmonnot sur le sprint. Elle n'est plus disponible pour ton pronostic sur la poursuite qui suit. Si la 3e course de la même étape est une mass-start, les 3 biathlètes choisis sur la course précédente sont grillés.
-
-### Le dégrillage
-
-Quand une étape se termine, les coureurs sont dégrillés pour la 1e course de l'étape suivante. Certaines cartes bonus permettent également de contourner cette règle.
+(Règle des biathlètes grillés et carte Fondue supprimées le 04/11/2026 pour une meilleure lisibilité. Elles restent prévues pour VéloPronos, où le coureur grillé et sa carte sont conservés.)
 
 ## 3. Les cotes
 
@@ -199,10 +195,7 @@ Ta série continue tant qu'au moins l'un de tes trois biathlètes (ou nation) ma
 
 ## 13. Les cartes bonus
 
-Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi. Au 10/10, tu choisis toi-même ta carte. Une même carte ne peut pas être prise sur deux 10/10 d'affilée : si tu prends Ça farte à ton 1er 10/10, elle est grisée au 2e et redevient possible au 3e. De nouvelles cartes s'ajoutent au fil de la saison. Sur une même course, Ça farte et Aspiration ne se cumulent pas, ni Aspiration et 4e choix ; Ça farte peut en revanche se poser sur un des 4 choix d'un 4e choix. Fondue et Équipe se cumulent avec toutes les autres.
-
-### Fondue
-Tu peux exceptionnellement dégriller tes biathlètes. Les biathlètes utilisés sur la course précédente redeviennent immédiatement disponibles pour ton prochain pronostic. Idéal avant une poursuite. Valable une seule fois, sur la course de ton choix.
+Les cartes gagnées grâce au 10/10 peuvent être conservées puis utilisées au moment choisi. Au 10/10, tu choisis toi-même ta carte. Une même carte ne peut pas être prise sur deux 10/10 d'affilée : si tu prends Ça farte à ton 1er 10/10, elle est grisée au 2e et redevient possible au 3e. De nouvelles cartes s'ajoutent au fil de la saison. Sur une même course, Ça farte et Aspiration ne se cumulent pas, ni Aspiration et 4e choix ; Ça farte peut en revanche se poser sur un des 4 choix d'un 4e choix. Équipe se cumule avec toutes les autres.
 
 ### Ça farte !
 Tu poses un ×3 sur un seul biathlète de ton choix avant une course individuelle (pas sur un relais). Seuls les points de ce biathlète sont triplés. Le reste de ton pronostic conserve son barème normal. Bonus valable une fois sur un biathlète uniquement. Tu peux la garder en main et la jouer sur la course de ton choix. Il ne se cumule pas avec un ×2 : le biathlète ciblé reste à ×3, jamais ×6.
@@ -272,7 +265,6 @@ Chaque course dispose de sa propre fiche avec :
 - les biathlètes disponibles ;
 - leurs cotes (à choisir dans la liste des cotes selon le format de course) ;
 - les éventuelles règles spéciales Bonus/Malus ;
-- les biathlètes grillés ;
 - les informations utiles avant de pronostiquer.
 
 **L'avis de Biathlonpronos** : quelques informations et tendances pour comprendre les enjeux de la course, avec la possibilité de retrouver l'analyse complète et les contenus Biathlonpronos sur Instagram.

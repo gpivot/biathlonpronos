@@ -1333,3 +1333,29 @@ de la région de la base Supabase (Project Settings > General), sinon chaque lec
 l'Atlantique (Vercel est par défaut à Washington, `iad1`).
 Base Supabase en `eu-west-1` (Irlande) : région Vercel conseillée `dub1` (Dublin), réglée par
 Guillaume le 04/11/2026 (forfait Hobby : une seule région).
+
+## Suppression des biathlètes grillés et de la carte Fondue (04/11/2026)
+
+Décision de Guillaume, pour une meilleure lisibilité : **la règle des biathlètes grillés (§2) est
+supprimée de Biathlonpronos**, et avec elle la carte **Fondue** (dégrillage). Tous les biathlètes
+restent disponibles d'une course à l'autre.
+
+- Code retiré : `src/lib/grilling.ts` (et son test), `FondueButton.tsx`, le calcul des grillés
+  dans la page course, l'état « grillé » de `PredictionForm`, la ligne du « ? » de la course, la
+  fiche du Règlement, la question de la FAQ et les textes des 5 langues. `RELAY_FORMATS` vit
+  désormais dans `src/lib/raceFormats.ts`.
+- Cartes au 10/10 : **quatre** au choix (Ça farte, 4e choix, Aspiration, Équipe).
+- Migration **0035** : `claim_bonus_card` ne propose plus Fondue, `play_bonus_card` la refuse, et
+  les cartes Fondue déjà prises sont supprimées (le 10/10 redevient un crédit : le joueur choisit
+  une autre carte ; à confirmer). La valeur `fondue` reste dans l'enum `bonus_card_type`, inutilisée ;
+  la table `grilled_states` aussi.
+- Le numéro §2 du règlement est gardé (« Tous les biathlètes restent disponibles ») pour ne pas
+  décaler les références §3 à §18 citées dans le code.
+
+**⚠️ VéloPronos : la règle reste.** Lors de la duplication de l'app pour VéloPronos, le
+**coureur grillé** et sa carte (**Grillade**, l'équivalent de Fondue) doivent être conservés (voir
+`velopronos-trajectoire-et-regles.md`). Le code à reprendre est celui du commit `91420f9` (dernier
+état de `main` avec la règle) : `src/lib/grilling.ts` + `src/lib/__tests__/grilling.test.ts`,
+`src/app/[locale]/courses/[raceId]/FondueButton.tsx`, le calcul des grillés dans
+`courses/[raceId]/page.tsx` et la prop `grilledAthleteIds` de `PredictionForm.tsx`. Pour les
+retrouver : `git show 91420f9:src/lib/grilling.ts`.

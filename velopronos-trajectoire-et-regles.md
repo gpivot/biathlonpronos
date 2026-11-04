@@ -18,6 +18,8 @@ Tout ce qui est marqué ❓ vient d'une lecture du code base44 ou d'une ambiguï
 - **Reprise des joueurs 2026** dans la mesure du possible. Les données de jeu 2026 ne sont pas reprises. Abonnement base44 maintenu au niveau Starter (export de données limité).
 - **Deux évolutions communes aux deux apps** : (a) classement par étapes avec dossard rouge, (b) parcours d'accueil par « course test » (voir §5).
 
+> **04/11/2026 — à ne pas oublier à la duplication** : Biathlonpronos a supprimé la règle des biathlètes grillés et la carte Fondue. **VéloPronos garde le coureur grillé et la carte Grillade.** Le code de la règle est à reprendre du commit `91420f9` de Biathlonpronos (détail dans `docs/architecture-technique.md`).
+
 ## 1 bis. Décisions de Guillaume du 01/11/2026 (réponses à la matrice)
 
 Ces décisions **priment** sur les statuts ❓ des §3 à §5 ci-dessous. Les 11 questions du §8 sont closes, sauf les points du §1 ter.
@@ -90,7 +92,7 @@ Conséquence : on garde le modèle `season → stage → race` de Biathlonpronos
 |---|---|---|
 | Barème de position × cote (25/18/13/10/7/5/4/3/2/1), Top 10 | ✅ | Identique. Cote selon le type d'étape. |
 | 3 choix par étape | ✅ | |
-| Coureur grillé (non rejouable le lendemain) | ✅🔁 | Même principe. Vélo : grillage d'une étape à la suivante, dans une même course ❓. |
+| Coureur grillé (non rejouable le lendemain) | ✅➕ | **À garder dans VéloPronos.** Supprimé de Biathlonpronos le 04/11/2026 : à remettre lors de la duplication (code du commit `91420f9`, voir `docs/architecture-technique.md`, section du 04/11/2026). Vélo : grillage d'une étape à la suivante, dans une même course. |
 | Bonus de combinaison Top 10 / Top 5 / Top 3 (« Musette ») : +20 / +50 / +100 | ✅ | Mêmes montants que Biathlonpronos. |
 | Prono parfait +200 | ✅❓ | Biathlonpronos : il **remplace** le bonus Top 3/5/10. À confirmer que c'est aussi le cas dans VéloPronos (le code base44 est à vérifier). |
 | Verrouillage au départ | ✅ | |
@@ -115,7 +117,7 @@ Série : VéloPronos **5 étapes consécutives** avec des points (uniquement Gra
 
 | Carte | Statut | Écarts à régler |
 |---|---|---|
-| Grillade (vélo) = **Fondue** (biathlon) | ✅ | |
+| Grillade (vélo) = **Fondue** (biathlon) | ➕ | **À garder dans VéloPronos.** Fondue supprimée de Biathlonpronos le 04/11/2026 avec le grillage : reprendre le code du commit `91420f9` (`FondueButton.tsx`, valeur `fondue` de `claim_bonus_card` avant la migration 0035). |
 | **Bonus ×3** (vélo) = **Ça farte** (biathlon) | ✅ | |
 | **4e choix** | 🔁❓ | Vélo : 3 étapes suivantes, les 4 coureurs sont grillés le lendemain. Biathlon : 4 courses, une carte à la fois. |
 | **Équipe** | 🔁❓ | Vélo : à partir du mardi de la 2e semaine d'un Grand Tour. Biathlon : après les Mondiaux/JO. Quelle règle de début pour les courses de 5-8 jours et les classiques ? |

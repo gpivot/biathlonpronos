@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { CloseIcon } from "@/components/icons";
-import { RELAY_FORMATS } from "@/lib/grilling";
+import { RELAY_FORMATS } from "@/lib/raceFormats";
 
 /** Lignes d'explication propres à chaque format, en plus des règles communes (clés RuleInfo.*). */
 const FORMAT_LINES: Record<string, string[]> = {
@@ -19,7 +19,7 @@ export function RuleInfoButton({ format, small = false }: { format: string; smal
   const t = useTranslations("RuleInfo");
   const [open, setOpen] = useState(false);
   const isRelay = RELAY_FORMATS.includes(format);
-  const lines = isRelay ? ["relay"] : [...(FORMAT_LINES[format] ?? ["individual"]), "grilled"];
+  const lines = isRelay ? ["relay"] : FORMAT_LINES[format] ?? ["individual"];
 
   return (
     <>
