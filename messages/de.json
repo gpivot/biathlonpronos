@@ -942,6 +942,8 @@
     "x2Used": "{used}/{max} ×2-Boni genutzt",
     "raceWins": "{count, plural, one {# Rennen gewonnen} other {# Rennen gewonnen}} (bester Tipper)",
     "pepite": "{count, plural, one {Versteckter Rohdiamant aufgedeckt} other {# versteckte Rohdiamanten aufgedeckt}}",
+    "pepiteF": "Rohdiamant Frauen",
+    "pepiteH": "Rohdiamant Männer",
     "helpTitle": "Die Spieler-Symbole",
     "helpLeader": "Gelbes Trikot: Führender der Gesamtwertung der Saison (oder der Liga).",
     "helpX2": "Bereits genutzte ×2-Boni, von 3 pro Saison.",

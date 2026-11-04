@@ -14,6 +14,8 @@ export interface PlayerBadges {
   /** Courses où le joueur a réussi le Prono parfait. */
   perfectPicks: number;
   pepites: number;
+  /** Sexe des Pépites révélées (F, H), pour les mini ♀/♂ à droite du ❄️. */
+  pepiteSexes?: ("F" | "H")[];
 }
 
 export const X2_PER_SEASON = 3;
@@ -79,7 +81,7 @@ export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string
       .select("user_id, races!inner(stages!inner(season_id))")
       .eq("bonus_x2_used", true)
       .eq("races.stages.season_id", seasonId),
-    supabase.from("pepites").select("user_id").eq("season_id", seasonId).eq("bonus_claimed", true),
+    supabase.from("pepites").select("user_id, sex").eq("season_id", seasonId).eq("bonus_claimed", true),
     supabase.from("races").select("id, stage_id, status, stages!inner(season_id)").eq("stages.season_id", seasonId),
   ]);
 
@@ -99,6 +101,10 @@ export async function getPlayerBadges(supabase: SupabaseClient, seasonId: string
   for (const [userId, count] of Array.from(stageWins)) get(userId).stageWins = count;
   for (const l of (ledger ?? []) as any[]) if (Number(l.perfect ?? 0) > 0) get(l.user_id).perfectPicks += 1;
   for (const p of (x2 ?? []) as any[]) get(p.user_id).x2Used += 1;
-  for (const p of (pepites ?? []) as any[]) get(p.user_id).pepites += 1;
+  for (const p of (pepites ?? []) as any[]) {
+    const b = get(p.user_id);
+    b.pepites += 1;
+    if (p.sex === "F" || p.sex === "H") b.pepiteSexes = Array.from(new Set([...(b.pepiteSexes ?? []), p.sex])).sort() as ("F" | "H")[];
+  }
   return badges;
 }

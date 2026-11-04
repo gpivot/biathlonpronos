@@ -92,8 +92,17 @@ export function PlayerBadgesRow({
         </span>
       )}
       {b.pepites > 0 && (
-        <span title={t("pepite", { count: b.pepites })} className="whitespace-nowrap text-ice">
-          <span className="text-[14px]">❄️</span>{b.pepites > 1 ? b.pepites : ""}
+        <span title={t("pepite", { count: b.pepites })} className="inline-flex items-center whitespace-nowrap text-ice">
+          <span className="text-[14px]">❄️</span>
+          {b.pepiteSexes?.length ? (
+            // Mini ♀ / ♂ à droite du cristal : quelle(s) Pépite(s) ont été révélées (les deux empilées).
+            <span className="ml-px flex flex-col justify-center text-[10px] font-bold leading-[9px]">
+              {b.pepiteSexes.includes("F") && <span aria-label={t("pepiteF")}>♀</span>}
+              {b.pepiteSexes.includes("H") && <span aria-label={t("pepiteH")}>♂</span>}
+            </span>
+          ) : (
+            b.pepites > 1 && b.pepites
+          )}
         </span>
       )}
     </span>
