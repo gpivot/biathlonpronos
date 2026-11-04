@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
-import { ArrowLeftIcon, ChevronRightIcon, HelpIcon, MessageIcon } from "@/components/icons";
+import { ArrowLeftIcon, ChevronDownIcon, ChevronRightIcon, HelpIcon, MessageIcon } from "@/components/icons";
 import { LanguagePills } from "./LanguagePills";
 import { PseudoEditor } from "./PseudoEditor";
 import { ThemeToggle } from "./ThemeToggle";
@@ -94,12 +94,19 @@ export default async function ComptePage() {
           <p className="text-center text-[12px] text-text-dim">{t("languagesAvailable", { count: 5 })}</p>
         </Card>
 
-        <section id="faq" className="flex scroll-mt-6 flex-col gap-3 pt-2">
-          <SectionLabel>❓ {tGlobal("footerFaq")}</SectionLabel>
-          <FaqList rulesLink={false} />
-        </section>
-
         <div className="flex flex-col gap-2.5">
+          <details id="faq" className="group scroll-mt-6 rounded-2xl border border-border bg-card">
+            <summary className="flex cursor-pointer list-none items-center gap-3.5 px-4 py-3.5 [&::-webkit-details-marker]:hidden">
+              <IconBox>
+                <span className="font-display text-lg font-extrabold leading-none">?</span>
+              </IconBox>
+              <span className="flex-1 font-display text-sm font-bold">{t("faqTitle")}</span>
+              <ChevronDownIcon className="h-4 w-4 text-text-dim transition group-open:rotate-180" />
+            </summary>
+            <div className="px-3 pb-3">
+              <FaqList rulesLink={false} />
+            </div>
+          </details>
           <LinkRow href="/regles" icon={<HelpIcon className="h-5 w-5" />} label={t("helpAndRules")} />
           <LinkRow href="/support" icon={<MessageIcon className="h-5 w-5" />} label={tGlobal("footerSupport")} />
         </div>
