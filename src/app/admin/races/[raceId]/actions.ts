@@ -4,8 +4,10 @@ import { revalidatePath } from "next/cache";
 import { isSpecialRuleAllowed } from "../../_components/labels";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
-import { fetchIbuResults, fetchIbuStartList } from "@/lib/admin/ibuResults";
-import { matchStartList, saveStartList } from "@/lib/admin/startListImport";
+import { fetchIbuResults, fetchIbuStartList, fetchIbuStartNations } from "@/lib/admin/ibuResults";
+import { matchStartList, matchStartNations, saveStartList, saveStartNations } from "@/lib/admin/startListImport";
+import { placeGeneralStartList, type OpeningRace } from "@/lib/admin/startListOpening";
+import { RELAY_FORMATS } from "@/lib/raceFormats";
 import { notifyRaceResults } from "@/lib/notifications/jobs";
 import { redirect } from "next/navigation";
 import {
@@ -120,8 +122,9 @@ export interface StartListImportState {
 }
 
 /**
- * Liste de départ officielle IBU (poursuite, mass start) : enregistrée directement, la course
- * n'affiche ensuite que ces biathlètes, avec les cotes déjà validées. Ré-exécutable.
+ * Liste de départ officielle IBU (toutes les courses ; relais : les nations engagées) : enregistrée
+ * directement, elle remplace la liste provisoire du général. La course n'affiche ensuite que ces
+ * biathlètes (ou nations), avec les cotes déjà validées. Ré-exécutable.
  */
 export async function loadIbuStartList(raceId: string, forcedIbuRaceId?: string): Promise<StartListImportState> {
   await requireAdmin();
@@ -136,6 +139,31 @@ async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, r
     .single();
   if (!race) return { ok: false, message: "Course introuvable.", unmatched: [] };
   const stage = race.stages as any;
+
+  if (RELAY_FORMATS.includes(race.format)) {
+    try {
+      const ibu = await fetchIbuStartNations({ seasonLabel: stage.seasons?.label ?? "", stage, race, forcedRaceId: forcedIbuRaceId });
+      const { data: odds } = await admin
+        .from("odds")
+        .select("nation_code")
+        .eq("season_id", stage.season_id)
+        .eq("format", race.format)
+        .is("valid_until", null);
+      const matched = matchStartNations(ibu.nations, (odds ?? []).map((o: any) => o.nation_code).filter(Boolean));
+      if (matched.rows.length === 0) {
+        return { ok: false, message: `Aucune nation de la liste IBU (${ibu.nations.length}) n'a de cote pour ce relais : rien enregistré.`, unmatched: matched.unmatched };
+      }
+      await saveStartNations(admin, raceId, matched.rows);
+      revalidatePath("/admin", "layout");
+      return {
+        ok: true,
+        message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} nation(s) sur ${ibu.nations.length} avec leur cote.`,
+        unmatched: matched.unmatched,
+      };
+    } catch (err) {
+      return { ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", unmatched: [] };
+    }
+  }
 
   try {
     const ibu = await fetchIbuStartList({ seasonLabel: stage.seasons?.label ?? "", stage, race, forcedRaceId: forcedIbuRaceId });
@@ -171,8 +199,34 @@ async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, r
 
 export async function clearStartList(formData: FormData) {
   await requireAdmin();
-  await saveStartList(createAdminClient(), String(formData.get("race_id")), []);
+  const admin = createAdminClient();
+  const raceId = String(formData.get("race_id"));
+  await saveStartList(admin, raceId, []);
+  await saveStartNations(admin, raceId, []);
   revalidatePath("/admin", "layout");
+}
+
+/**
+ * Sprint, individuel, relais : (re)place la liste provisoire du lundi 17 h, d'après le classement
+ * général IBU (60 premiers, ou nations du général du relais). Remplace la liste enregistrée, même
+ * officielle. La tâche planifiée le fait toute seule à l'ouverture ; ce bouton sert à la refaire.
+ */
+export async function loadGeneralStartList(raceId: string): Promise<StartListImportState> {
+  await requireAdmin();
+  const admin = createAdminClient();
+  const { data: race } = await admin
+    .from("races")
+    .select("id, format, sex, locks_at, stages!inner(season_id, starts_on, location)")
+    .eq("id", raceId)
+    .single();
+  if (!race) return { ok: false, message: "Course introuvable.", unmatched: [] };
+  try {
+    const report = await placeGeneralStartList(admin, race as unknown as OpeningRace);
+    revalidatePath("/admin", "layout");
+    return { ok: true, message: `Liste provisoire enregistrée : ${report}.`, unmatched: [] };
+  } catch (err) {
+    return { ok: false, message: `Liste provisoire non enregistrée : ${err instanceof Error ? err.message : "erreur IBU inconnue"}.`, unmatched: [] };
+  }
 }
 
 /** Modifie format, sexe, heure de départ (UTC) et course spéciale. */

@@ -15,7 +15,7 @@ import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { displayedSex } from "@/lib/raceLabel";
 import { RELAY_FORMATS } from "@/lib/raceFormats";
 import { getRaceResult } from "@/lib/lastResult";
-import { getStartList } from "@/lib/startList";
+import { getNationStartList, getStartList } from "@/lib/startList";
 import { isPredictionOpen, predictionOpensOn } from "@/lib/predictionWindow";
 import { RaceCountdown } from "./RaceCountdown";
 import { RaceOpinion } from "./RaceOpinion";
@@ -132,8 +132,11 @@ export default async function RacePage({
       .eq("format", race.format)
       .is("valid_until", null);
 
+    // Avant le départ : seules les nations de la liste (général du relais, puis liste IBU), s'il y en a une.
+    const nationStartList = displayStatus === "upcoming" ? await getNationStartList(supabase, race.id) : null;
     nationsWithOdds = (odds ?? [])
       .map((o: any) => ({ nation_code: o.nation_code, name: o.nations?.name ?? o.nation_code, value: o.value }))
+      .filter((n: NationWithOdds) => !nationStartList || nationStartList.nations.includes(n.nation_code))
       .sort((a: NationWithOdds, b: NationWithOdds) => a.value - b.value);
 
     if (user) {
@@ -191,6 +194,7 @@ export default async function RacePage({
   }
 
   // Poursuite / mass start : seuls les qualifiés prennent le départ, dans l'ordre de la liste.
+  // Sprint / individuel : top 60 du général à l'ouverture, puis liste officielle IBU.
   // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
   const [startList, raceResult, players, ongoingBoard, bonusQuestions, { data: seasonRaces }] = await Promise.all([
     displayStatus === "upcoming" ? getStartList(supabase, race) : Promise.resolve({ status: "open" as const }),
@@ -215,7 +219,7 @@ export default async function RacePage({
     startList.status === "known" ? athletesWithOdds.filter((a) => startOrder[a.athlete_id] != null) : athletesWithOdds;
 
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
-  // Liste des biathlètes visible 7 jours avant l'étape seulement (cotes mises à jour pendant les pauses).
+  // Pronostics ouverts le lundi qui précède l'étape, à 17 h (voir predictionWindow.ts).
   const predictionsOpen = isPredictionOpen(stage.starts_on, now);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
   // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.

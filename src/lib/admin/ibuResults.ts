@@ -296,3 +296,124 @@ export async function fetchIbuStartList(params: IbuRaceLookup): Promise<{ raceId
   if (entries.length === 0) throw new Error(`L'IBU n'a pas encore publié la liste de départ de ${description}.`);
   return { raceId, description, entries };
 }
+
+/** Relais : lignes d'équipe de la liste de départ IBU → nations, dans l'ordre de départ (dossard). */
+export function ibuRowsToStartNations(rows: IbuResultRow[]): { position: number; nation: string }[] {
+  const toNumber = (v: string | number | null | undefined) => {
+    const n = Number(v);
+    return v == null || v === "" || !Number.isFinite(n) || n < 1 ? null : n;
+  };
+  const teams = rows.filter((r) => r.IsTeam === true || (!r.Leg && !r.GivenName && !r.FamilyName));
+  const seen = new Set<string>();
+  return teams
+    .map((r) => ({ nation: r.Nat ?? "", order: toNumber(r.StartOrder) ?? toNumber(r.Bib) ?? Infinity }))
+    .filter((t) => t.nation)
+    .sort((a, b) => a.order - b.order)
+    .filter((t) => (seen.has(t.nation) ? false : (seen.add(t.nation), true)))
+    .map((t, index) => ({ position: index + 1, nation: t.nation }));
+}
+
+/** Liste de départ officielle IBU d'un relais : les nations engagées. */
+export async function fetchIbuStartNations(params: IbuRaceLookup): Promise<{ raceId: string; description: string; nations: { position: number; nation: string }[] }> {
+  const { raceId, description: foundDescription } = await findIbuRace(params);
+  let description = foundDescription;
+  const data = await getJson<{ Results?: IbuResultRow[]; Competition?: { ShortDescription?: string } }>(
+    `Results?RaceId=${encodeURIComponent(raceId)}`
+  );
+  if (params.forcedRaceId) description = data.Competition?.ShortDescription ?? raceId;
+  const nations = ibuRowsToStartNations(data.Results ?? []);
+  if (nations.length === 0) throw new Error(`L'IBU n'a pas encore publié la liste de départ de ${description}.`);
+  return { raceId, description, nations };
+}
+
+/* ───────────── Classements généraux (Coupe du monde) ───────────── */
+
+export interface IbuCup {
+  CupId: string;
+  Description?: string;
+  Level?: number;
+}
+
+export interface IbuCupRow {
+  Rank?: string | number | null;
+  IBUId?: string;
+  Name?: string;
+  ShortName?: string;
+  Nat?: string;
+  Score?: string | number | null;
+}
+
+export type CupKind = "total" | "relay";
+
+/**
+ * Coupe IBU d'un classement général : identifiants du type « BT2627SWRLCP__SWTS » (général
+ * femmes) ou « …__SMRL » (relais hommes). On cherche d'abord le suffixe, puis le libellé.
+ * Hypothèse sur le format des identifiants, à vérifier sur l'API réelle (non joignable depuis
+ * l'environnement de développement).
+ */
+export function pickCup(cups: IbuCup[], kind: CupKind, category: string): IbuCup | null {
+  const suffixes =
+    kind === "total" ? [`${category}TS`] : category === "MX" ? ["MXRL", "MXSR", "MXMR"] : [`${category}RL`];
+  for (const suffix of suffixes) {
+    const found = cups.find((c) => c.CupId.toUpperCase().endsWith(`__${suffix}`)) ?? cups.find((c) => c.CupId.toUpperCase().endsWith(suffix));
+    if (found) return found;
+  }
+  const sexWord = category === "SW" ? "women" : category === "SM" ? "men" : "mixed";
+  const wanted = kind === "total" ? /total|overall/i : /relay/i;
+  return (
+    cups.find((c) => {
+      const label = c.Description ?? "";
+      return wanted.test(label) && new RegExp(`\\b${sexWord}\\b`, "i").test(label) && !/nations?\s*cup/i.test(label);
+    }) ?? null
+  );
+}
+
+/** Lignes d'un classement général → dans l'ordre du classement, limité à `limit` places. */
+export function cupRowsToRanking(rows: IbuCupRow[], limit?: number): { rank: number; name: string; nation: string }[] {
+  const ranked = rows
+    .map((r) => ({ rank: Number(r.Rank), name: (r.Name ?? r.ShortName ?? "").trim(), nation: (r.Nat ?? "").trim() }))
+    .filter((r) => Number.isInteger(r.rank) && r.rank >= 1 && (r.name || r.nation))
+    .sort((a, b) => a.rank - b.rank);
+  // Ex aequo : on garde tous ceux qui partagent la dernière place retenue.
+  if (limit == null || ranked.length <= limit) return ranked;
+  const cutoff = ranked[limit - 1].rank;
+  return ranked.filter((r) => r.rank <= cutoff);
+}
+
+function previousSeasonId(seasonId: string): string {
+  const start = Number(seasonId.slice(0, 2));
+  const pad = (n: number) => String((n + 100) % 100).padStart(2, "0");
+  return `${pad(start - 1)}${pad(start)}`;
+}
+
+/**
+ * Classement général IBU (général individuel ou général des relais) de la saison de la date
+ * donnée. En tout début de saison, quand il est encore vide, on reprend le classement final de la
+ * saison précédente (à confirmer).
+ */
+export async function fetchIbuCupRanking(params: {
+  date: string;
+  kind: CupKind;
+  category: "SW" | "SM" | "MX";
+  limit?: number;
+}): Promise<{ cupId: string; previousSeason: boolean; rows: { rank: number; name: string; nation: string }[] }> {
+  const seasonId = ibuSeasonIdForDate(params.date);
+  if (!seasonId) throw new Error(`Date ${params.date} : saison IBU introuvable.`);
+  for (const [id, previousSeason] of [
+    [seasonId, false],
+    [previousSeasonId(seasonId), true],
+  ] as const) {
+    const cups = await getJson<IbuCup[]>(`Cups?SeasonId=${id}`);
+    const cup = pickCup(cups, params.kind, params.category);
+    if (!cup) continue;
+    const data = await getJson<{ Rows?: IbuCupRow[] }>(`CupResults?CupId=${encodeURIComponent(cup.CupId)}`);
+    const rows = cupRowsToRanking(data.Rows ?? [], params.limit);
+    if (rows.length > 0) return { cupId: cup.CupId, previousSeason, rows };
+  }
+  throw new Error(`Classement général IBU introuvable (${params.kind === "total" ? "général" : "relais"} ${params.category}, saison ${seasonId}).`);
+}
+
+/** Catégorie IBU d'une course (SW, SM, MX). */
+export function ibuCategory(format: string, sex: string | null): "SW" | "SM" | "MX" {
+  return categoryFor(format, sex) as "SW" | "SM" | "MX";
+}

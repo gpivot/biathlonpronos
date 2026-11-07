@@ -111,6 +111,15 @@ export default async function ReglesPage() {
             <Example>{t("pickExample")}</Example>
           </RuleCard>
 
+          <RuleCard emoji="🗓️" title={t("whenTitle")} body={t("whenBody")}>
+            <ul className="flex flex-col gap-1.5 text-[12px] leading-relaxed text-text-dim">
+              <li>🔓 {t("whenOpen")}</li>
+              <li>👥 {t("whenField")}</li>
+              <li>⏱️ {t("whenQualified")}</li>
+              <li>🔒 {t("whenClose")}</li>
+            </ul>
+          </RuleCard>
+
           <RuleCard emoji="🎁" title={t("comboTitle")} body={t("comboBody")}>
             <div className="grid grid-cols-2 gap-2">
               {(

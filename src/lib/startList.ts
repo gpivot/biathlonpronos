@@ -8,6 +8,17 @@ import type { SupabaseClient } from "@supabase/supabase-js";
  */
 export const START_LIST_FORMATS = ["poursuite", "mass_start"];
 export const PURSUIT_FIELD_SIZE = 60;
+/**
+ * Courses sans qualification (règle du 07/11/2026) : à l'ouverture du lundi 17 h, seuls les 60
+ * premiers du classement général sont proposés (liste « general »), puis la liste officielle IBU
+ * les remplace. Sans liste enregistrée, tous les biathlètes ayant une cote restent proposés.
+ */
+export const GENERAL_FIELD_FORMATS = ["sprint", "individuel"];
+export const GENERAL_FIELD_SIZE = 60;
+/** Formats dont la liste de départ s'enregistre (biathlètes) : qualification ou top 60 du général. */
+export const ATHLETE_START_LIST_FORMATS = [...START_LIST_FORMATS, ...GENERAL_FIELD_FORMATS];
+
+export type StartListSource = "ibu" | "general";
 
 export type StartList =
   /** Course sans qualification : tous les biathlètes ayant une cote. */
@@ -18,7 +29,8 @@ export type StartList =
   | {
       status: "known";
       order: Record<string, number>;
-      source: "ibu" | "sprint";
+      /** ibu : liste officielle ; general : top 60 du général (provisoire) ; sprint : 60 premiers du sprint. */
+      source: StartListSource | "sprint";
       /** Poursuite : retard au départ en secondes entières (écart du sprint, dixièmes ignorés). */
       gaps: Record<string, number>;
     };
@@ -32,9 +44,18 @@ type SprintResult = { athlete_id: string | null; rank: number; time_gap_seconds?
  */
 export function resolveStartList(
   format: string,
-  stored: { athlete_id: string; start_position: number }[],
+  stored: { athlete_id: string; start_position: number; source?: string | null }[],
   sprintResults: SprintResult[]
 ): StartList {
+  if (GENERAL_FIELD_FORMATS.includes(format)) {
+    if (stored.length === 0) return { status: "open" };
+    return {
+      status: "known",
+      source: stored.some((s) => s.source === "general") ? "general" : "ibu",
+      gaps: {},
+      order: Object.fromEntries(stored.map((s) => [s.athlete_id, s.start_position])),
+    };
+  }
   if (!START_LIST_FORMATS.includes(format)) return { status: "open" };
   // Écarts de départ de la poursuite : ceux du sprint, comme à l'IBU (12,8 s → départ à +12 s).
   const gaps: Record<string, number> = {};
@@ -77,8 +98,8 @@ export async function getStartList(
   supabase: SupabaseClient,
   race: { id: string; format: string; stage_id: string; sex: string | null; locks_at: string }
 ): Promise<StartList> {
-  if (!START_LIST_FORMATS.includes(race.format)) return { status: "open" };
-  const { data: stored } = await supabase.from("race_start_lists").select("athlete_id, start_position").eq("race_id", race.id);
+  if (!ATHLETE_START_LIST_FORMATS.includes(race.format)) return { status: "open" };
+  const { data: stored } = await supabase.from("race_start_lists").select("athlete_id, start_position, source").eq("race_id", race.id);
   let sprintResults: SprintResult[] = [];
   if (race.format === "poursuite") {
     const sprint = await findQualifyingSprint(supabase, race);
@@ -88,4 +109,20 @@ export async function getStartList(
     }
   }
   return resolveStartList(race.format, stored ?? [], sprintResults);
+}
+
+/** Relais : nations proposées (liste provisoire du général ou officielle IBU). null : aucune liste, toutes les nations cotées. */
+export interface NationStartList {
+  source: StartListSource;
+  nations: string[];
+}
+
+export async function getNationStartList(supabase: SupabaseClient, raceId: string): Promise<NationStartList | null> {
+  const { data } = await supabase
+    .from("race_start_nations")
+    .select("nation_code, start_position, source")
+    .eq("race_id", raceId)
+    .order("start_position", { ascending: true });
+  if (!data || data.length === 0) return null;
+  return { source: data.some((r) => r.source === "general") ? "general" : "ibu", nations: data.map((r) => r.nation_code as string) };
 }

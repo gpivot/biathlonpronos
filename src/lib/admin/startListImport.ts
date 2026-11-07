@@ -46,13 +46,55 @@ export function matchStartList(entries: IbuStartEntry[], candidates: StartListCa
   return result;
 }
 
-/** Remplace la liste de départ enregistrée de la course. */
-export async function saveStartList(admin: SupabaseClient, raceId: string, rows: MatchedStartList["rows"]): Promise<void> {
+/** Remplace la liste de départ enregistrée de la course (officielle IBU par défaut, ou top 60 du général). */
+export async function saveStartList(
+  admin: SupabaseClient,
+  raceId: string,
+  rows: MatchedStartList["rows"],
+  source: "ibu" | "general" = "ibu"
+): Promise<void> {
   const { error: deleteError } = await admin.from("race_start_lists").delete().eq("race_id", raceId);
   if (deleteError) throw new Error(deleteError.message);
   if (rows.length === 0) return;
   const { error } = await admin
     .from("race_start_lists")
-    .insert(rows.map((r) => ({ race_id: raceId, athlete_id: r.athleteId, start_position: r.position, bib: r.bib })));
+    .insert(rows.map((r) => ({ race_id: raceId, athlete_id: r.athleteId, start_position: r.position, bib: r.bib, source })));
   if (error) throw new Error(error.message);
+}
+
+/** Relais : remplace les nations proposées de la course. */
+export async function saveStartNations(
+  admin: SupabaseClient,
+  raceId: string,
+  rows: { nation: string; position: number }[],
+  source: "ibu" | "general" = "ibu"
+): Promise<void> {
+  const { error: deleteError } = await admin.from("race_start_nations").delete().eq("race_id", raceId);
+  if (deleteError) throw new Error(deleteError.message);
+  if (rows.length === 0) return;
+  const { error } = await admin
+    .from("race_start_nations")
+    .insert(rows.map((r) => ({ race_id: raceId, nation_code: r.nation, start_position: r.position, source })));
+  if (error) throw new Error(error.message);
+}
+
+/**
+ * Partie pure (testée) : garde les nations de la liste qui ont une cote pour ce relais, dans
+ * l'ordre de la liste (doublons retirés, positions renumérotées).
+ */
+export function matchStartNations(
+  entries: { nation: string }[],
+  oddsNations: string[]
+): { rows: { nation: string; position: number }[]; unmatched: string[] } {
+  const known = new Set(oddsNations);
+  const seen = new Set<string>();
+  const rows: { nation: string; position: number }[] = [];
+  const unmatched: string[] = [];
+  for (const { nation } of entries) {
+    if (!nation || seen.has(nation)) continue;
+    seen.add(nation);
+    if (known.has(nation)) rows.push({ nation, position: rows.length + 1 });
+    else unmatched.push(nation);
+  }
+  return { rows, unmatched };
 }

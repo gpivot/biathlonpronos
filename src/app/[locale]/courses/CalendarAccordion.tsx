@@ -39,7 +39,7 @@ export interface CalendarStage {
   counts_in_standings?: boolean;
   /** Mention réglée dans l'admin (ex. « Pré-saison »), affichée au-dessus du lieu à la place de celle de la catégorie. */
   label?: string | null;
-  /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (7 jours avant l'étape), null sinon. */
+  /** Jour d'ouverture des pronostics ("2027-01-02") tant qu'ils sont fermés (lundi qui précède l'étape, 17 h), null sinon. */
   opensOn: string | null;
   races: CalendarRace[];
 }
