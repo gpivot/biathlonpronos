@@ -380,37 +380,25 @@ export function cupRowsToRanking(rows: IbuCupRow[], limit?: number): { rank: num
   return ranked.filter((r) => r.rank <= cutoff);
 }
 
-function previousSeasonId(seasonId: string): string {
-  const start = Number(seasonId.slice(0, 2));
-  const pad = (n: number) => String((n + 100) % 100).padStart(2, "0");
-  return `${pad(start - 1)}${pad(start)}`;
-}
-
 /**
  * Classement général IBU (général individuel ou général des relais) de la saison de la date
- * donnée. En tout début de saison, quand il est encore vide, on reprend le classement final de la
- * saison précédente (à confirmer).
+ * donnée. null : pas encore de classement (tout début de saison, coupe pas encore créée ou vide),
+ * l'appelant se rabat alors sur les cotes du jeu.
  */
 export async function fetchIbuCupRanking(params: {
   date: string;
   kind: CupKind;
   category: "SW" | "SM" | "MX";
   limit?: number;
-}): Promise<{ cupId: string; previousSeason: boolean; rows: { rank: number; name: string; nation: string }[] }> {
+}): Promise<{ cupId: string; rows: { rank: number; name: string; nation: string }[] } | null> {
   const seasonId = ibuSeasonIdForDate(params.date);
   if (!seasonId) throw new Error(`Date ${params.date} : saison IBU introuvable.`);
-  for (const [id, previousSeason] of [
-    [seasonId, false],
-    [previousSeasonId(seasonId), true],
-  ] as const) {
-    const cups = await getJson<IbuCup[]>(`Cups?SeasonId=${id}`);
-    const cup = pickCup(cups, params.kind, params.category);
-    if (!cup) continue;
-    const data = await getJson<{ Rows?: IbuCupRow[] }>(`CupResults?CupId=${encodeURIComponent(cup.CupId)}`);
-    const rows = cupRowsToRanking(data.Rows ?? [], params.limit);
-    if (rows.length > 0) return { cupId: cup.CupId, previousSeason, rows };
-  }
-  throw new Error(`Classement général IBU introuvable (${params.kind === "total" ? "général" : "relais"} ${params.category}, saison ${seasonId}).`);
+  const cups = await getJson<IbuCup[]>(`Cups?SeasonId=${seasonId}`);
+  const cup = pickCup(cups, params.kind, params.category);
+  if (!cup) return null;
+  const data = await getJson<{ Rows?: IbuCupRow[] }>(`CupResults?CupId=${encodeURIComponent(cup.CupId)}`);
+  const rows = cupRowsToRanking(data.Rows ?? [], params.limit);
+  return rows.length > 0 ? { cupId: cup.CupId, rows } : null;
 }
 
 /** Catégorie IBU d'une course (SW, SM, MX). */

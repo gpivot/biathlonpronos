@@ -41,19 +41,30 @@ function cachedRanking(cache: RankingCache, date: string, kind: "total" | "relay
 }
 
 /**
- * Relais mixtes : général du relais mixte s'il existe, sinon nations classées à la fois au
- * général du relais femmes et à celui des hommes (à confirmer).
+ * Partie pure (testée) : premières courses de la saison, quand le général IBU est encore vide. On
+ * reprend les cotes du jeu (CSV corrigé des départs à la retraite, demande de Guillaume du
+ * 07/11/2026) : les `limit` plus petites cotes du format, ex aequo de la dernière place compris.
  */
-async function relayNations(cache: RankingCache, date: string, category: "SW" | "SM" | "MX"): Promise<{ nations: string[]; note: string }> {
-  try {
-    const ranking = await cachedRanking(cache, date, "relay", category);
-    return { nations: ranking.rows.map((r) => r.nation), note: ranking.cupId + (ranking.previousSeason ? " (saison précédente)" : "") };
-  } catch (error) {
-    if (category !== "MX") throw error;
-    const [women, men] = await Promise.all([cachedRanking(cache, date, "relay", "SW"), cachedRanking(cache, date, "relay", "SM")]);
-    const menNations = new Set(men.rows.map((r) => r.nation));
-    return { nations: women.rows.map((r) => r.nation).filter((n) => menNations.has(n)), note: `${women.cupId} + ${men.cupId}` };
-  }
+export function topByOdds<T extends { value: number }>(rows: T[], limit: number): (T & { rank: number })[] {
+  const sorted = [...rows].sort((a, b) => a.value - b.value);
+  const ranked = sorted.map((r, i) => ({ ...r, rank: sorted.findIndex((x) => x.value === r.value) + 1 }));
+  if (ranked.length <= limit) return ranked;
+  const cutoff = ranked[limit - 1].value;
+  return ranked.filter((r) => r.value <= cutoff);
+}
+
+/**
+ * Relais mixtes : général du relais mixte s'il existe, sinon nations classées à la fois au
+ * général du relais femmes et à celui des hommes (à confirmer). null : pas encore de général.
+ */
+async function relayNations(cache: RankingCache, date: string, category: "SW" | "SM" | "MX"): Promise<{ nations: string[]; note: string } | null> {
+  const ranking = await cachedRanking(cache, date, "relay", category);
+  if (ranking) return { nations: ranking.rows.map((r) => r.nation), note: ranking.cupId };
+  if (category !== "MX") return null;
+  const [women, men] = await Promise.all([cachedRanking(cache, date, "relay", "SW"), cachedRanking(cache, date, "relay", "SM")]);
+  if (!women || !men) return null;
+  const menNations = new Set(men.rows.map((r) => r.nation));
+  return { nations: women.rows.map((r) => r.nation).filter((n) => menNations.has(n)), note: `${women.cupId} + ${men.cupId}` };
 }
 
 /** Place la liste provisoire d'une course (remplace celle déjà enregistrée). Renvoie un compte rendu. */
@@ -61,32 +72,46 @@ export async function placeGeneralStartList(admin: SupabaseClient, race: Opening
   const category = ibuCategory(race.format, race.sex);
   const { data: odds } = await admin
     .from("odds")
-    .select("athlete_id, nation_code, athletes(first_name, last_name, nation_code, sex)")
+    .select("athlete_id, nation_code, value, athletes(first_name, last_name, nation_code, sex)")
     .eq("season_id", race.stages.season_id)
     .eq("format", race.format)
     .is("valid_until", null);
 
   if (RELAY_FORMATS.includes(race.format)) {
-    const { nations, note } = await relayNations(cache, race.stages.starts_on, category);
+    const oddsNations = (odds ?? []).filter((o: any) => o.nation_code).map((o: any) => ({ nation: o.nation_code as string, value: Number(o.value) }));
+    const general = await relayNations(cache, race.stages.starts_on, category);
+    if (!general) {
+      // Début de saison : toutes les nations cotées (CSV de cotes), par cote croissante.
+      if (oddsNations.length === 0) throw new Error("aucune nation cotée pour ce relais");
+      const rows = [...oddsNations].sort((a, b) => a.value - b.value).map((n, i) => ({ nation: n.nation, position: i + 1 }));
+      await saveStartNations(admin, race.id, rows, "general");
+      return `${rows.length} nation(s) cotée(s) (général du relais pas encore publié, cotes du jeu)`;
+    }
     const matched = matchStartNations(
-      nations.map((nation) => ({ nation })),
-      (odds ?? []).map((o: any) => o.nation_code).filter(Boolean)
+      general.nations.map((nation) => ({ nation })),
+      oddsNations.map((n) => n.nation)
     );
-    if (matched.rows.length === 0) throw new Error(`aucune nation du général (${note}) n'a de cote pour ce relais`);
+    if (matched.rows.length === 0) throw new Error(`aucune nation du général (${general.note}) n'a de cote pour ce relais`);
     await saveStartNations(admin, race.id, matched.rows, "general");
-    return `${matched.rows.length} nation(s) du général (${note})` + (matched.unmatched.length ? `, sans cote : ${matched.unmatched.join(", ")}` : "");
+    return `${matched.rows.length} nation(s) du général (${general.note})` + (matched.unmatched.length ? `, sans cote : ${matched.unmatched.join(", ")}` : "");
   }
 
   if (!GENERAL_FIELD_FORMATS.includes(race.format)) throw new Error(`format ${race.format} non concerné`);
+  const athleteOdds = (odds ?? []).filter((o: any) => o.athlete_id && (!race.sex || o.athletes?.sex === race.sex));
   const ranking = await cachedRanking(cache, race.stages.starts_on, "total", category, GENERAL_FIELD_SIZE);
-  const candidates: StartListCandidate[] = (odds ?? [])
-    .filter((o: any) => o.athlete_id && (!race.sex || o.athletes?.sex === race.sex))
-    .map((o: any) => ({
-      id: o.athlete_id,
-      firstName: o.athletes?.first_name ?? "",
-      lastName: o.athletes?.last_name ?? "",
-      nationCode: o.athletes?.nation_code ?? "",
-    }));
+  if (!ranking) {
+    // Début de saison : les 60 plus petites cotes du format (CSV corrigé des départs à la retraite).
+    if (athleteOdds.length === 0) throw new Error("aucun biathlète coté pour ce format");
+    const top = topByOdds(athleteOdds.map((o: any) => ({ athleteId: o.athlete_id as string, value: Number(o.value) })), GENERAL_FIELD_SIZE);
+    await saveStartList(admin, race.id, top.map((t) => ({ athleteId: t.athleteId, position: t.rank, bib: null })), "general");
+    return `${top.length} biathlète(s), les ${GENERAL_FIELD_SIZE} plus petites cotes (général pas encore publié, cotes du jeu)`;
+  }
+  const candidates: StartListCandidate[] = athleteOdds.map((o: any) => ({
+    id: o.athlete_id,
+    firstName: o.athletes?.first_name ?? "",
+    lastName: o.athletes?.last_name ?? "",
+    nationCode: o.athletes?.nation_code ?? "",
+  }));
   // Le général donne « NOM Prénom » d'un bloc : la comparaison des noms accepte les deux ordres.
   const matched = matchStartList(
     ranking.rows.map((r) => ({ position: r.rank, bib: null, firstName: "", lastName: r.name, nation: r.nation })),
@@ -95,7 +120,7 @@ export async function placeGeneralStartList(admin: SupabaseClient, race: Opening
   if (matched.rows.length === 0) throw new Error(`aucun biathlète du général (${ranking.cupId}) n'a de cote pour ce format`);
   await saveStartList(admin, race.id, matched.rows, "general");
   return (
-    `${matched.rows.length} biathlète(s) sur les ${ranking.rows.length} premiers du général (${ranking.cupId}${ranking.previousSeason ? ", saison précédente" : ""})` +
+    `${matched.rows.length} biathlète(s) sur les ${ranking.rows.length} premiers du général (${ranking.cupId})` +
     (matched.unmatched.length ? `, sans cote : ${matched.unmatched.join(", ")}` : "")
   );
 }

@@ -1543,9 +1543,12 @@ semaine » plus haut).
   `CupResults?CupId=…` (coupe « …__SWTS » / « …__SMTS » pour le général, « …__SWRL » /
   « …__SMRL » pour les relais). **Format des identifiants supposé, pas vérifié** : l'API n'était
   pas joignable depuis l'environnement de développement. À tester avec le bouton « Replacer les
-  60 premiers du général » de l'admin. En tout début de saison (général vide), on reprend le
-  général final de la saison précédente (à confirmer).
-- **Si l'IBU ne répond pas** : rien n'est enregistré, tous les biathlètes (ou nations) cotés restent
+  60 premiers du général » de l'admin.
+- **Premières courses de la saison** (général IBU pas encore publié) : demande de Guillaume du
+  07/11/2026, on reprend les **cotes du jeu** (CSV corrigé des départs à la retraite, déjà importé) :
+  les 60 plus petites cotes du format (ex aequo compris) pour les sprints et individuels, toutes les
+  nations cotées pour les relais (`topByOdds`, testé).
+- **Si l'IBU ne répond pas** (erreur réseau) : rien n'est enregistré, tous les biathlètes (ou nations) cotés restent
   proposés à 17 h, comme avant ; la tâche réessaie jusqu'à 23 h.
 - **Liste définitive** : bouton « Récupérer la liste de départ définitive (IBU) » sur la page admin
   de chaque course (sprint, individuel, relais compris), à cliquer à la main dès la publication (en
