@@ -1544,10 +1544,10 @@ semaine » plus haut).
   « …__SMRL » pour les relais). **Format des identifiants supposé, pas vérifié** : l'API n'était
   pas joignable depuis l'environnement de développement. À tester avec le bouton « Replacer les
   60 premiers du général » de l'admin.
-- **Premières courses de la saison** (général IBU pas encore publié) : demande de Guillaume du
-  07/11/2026, on reprend les **cotes du jeu** (CSV corrigé des départs à la retraite, déjà importé) :
-  les 60 plus petites cotes du format (ex aequo compris) pour les sprints et individuels, toutes les
-  nations cotées pour les relais (`topByOdds`, testé).
+- **1re étape de la saison et course test de pré-saison** (général IBU pas encore publié) :
+  décision de Guillaume du 08/11/2026, **pas de limite**, tout le CSV de cotes (corrigé des départs
+  à la retraite) est proposé ; aucune liste n'est enregistrée. Le top 60 s'applique à partir de la
+  2e étape, dès que l'IBU publie le général.
 - **Si l'IBU ne répond pas** (erreur réseau) : rien n'est enregistré, tous les biathlètes (ou nations) cotés restent
   proposés à 17 h, comme avant ; la tâche réessaie jusqu'à 23 h.
 - **Liste définitive** : bouton « Récupérer la liste de départ définitive (IBU) » sur la page admin

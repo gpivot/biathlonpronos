@@ -95,11 +95,3 @@ describe("relais", () => {
   });
 });
 
-describe("début de saison : cotes du jeu", () => {
-  it("garde les plus petites cotes, ex aequo de la dernière place compris", async () => {
-    const { topByOdds } = await import("../admin/startListOpening");
-    const rows = [{ id: "c", value: 20 }, { id: "a", value: 5 }, { id: "b", value: 12 }, { id: "d", value: 12 }, { id: "e", value: 30 }];
-    expect(topByOdds(rows, 2).map((r) => [r.id, r.rank])).toEqual([["a", 1], ["b", 2], ["d", 2]]);
-    expect(topByOdds(rows, 10)).toHaveLength(5);
-  });
-});

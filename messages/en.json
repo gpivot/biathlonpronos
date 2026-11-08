@@ -202,7 +202,7 @@
     "whenTitle": "When can I predict?",
     "whenBody": "Predictions for every race of a stage open at the same time and close race by race.",
     "whenOpen": "Opening: the Monday before the stage, at 5 pm (Paris time).",
-    "whenField": "Sprint and individual: at first, the top 60 of the overall standings. The list is then refined with the official start list, usually published the day before the race. Relays: the nations in the relay overall standings.",
+    "whenField": "Sprint and individual: at first, the top 60 of the overall standings. The list is then refined with the official start list, usually published the day before the race. Relays: the nations in the relay overall standings. For the first stage of the season, every athlete is available.",
     "whenQualified": "Pursuit and mass start: open as soon as the qualified athletes are known (top 60 of the sprint, 30 mass start starters).",
     "whenClose": "Closing: at the start of each race. Until then, you can change your prediction as often as you like.",
     "comboTitle": "Combination bonuses",

@@ -56,13 +56,13 @@ export function StartListPanel({
   if (isRelay) {
     source = nationList?.source ?? null;
     status = !nationList
-      ? `Pas encore de liste : toutes les nations cotées sont proposées. La liste provisoire (nations du général du relais) se place toute seule avant l'ouverture (${opening}).`
+      ? `Pas encore de liste : toutes les nations cotées sont proposées. La liste provisoire (nations du général du relais) se place toute seule avant l'ouverture (${opening}), sauf tant que le général IBU n'est pas publié (1re étape, course test) : tout le CSV reste alors proposé.`
       : nationList.source === "general"
         ? `Liste provisoire (général du relais) : ${nationList.nations.length} nation(s). Récupère la liste officielle IBU dès sa publication, en général la veille vers 17-18 h.`
         : `Liste officielle IBU enregistrée : ${nationList.nations.length} nation(s) pronostiquable(s).`;
   } else if (!startList || startList.status !== "known") {
     status = hasGeneralField
-      ? `Pas encore de liste : tous les biathlètes cotés sont proposés. Les 60 premiers du général se placent tout seuls avant l'ouverture (${opening}).`
+      ? `Pas encore de liste : tous les biathlètes cotés sont proposés. Les 60 premiers du général se placent tout seuls avant l'ouverture (${opening}), sauf tant que le général IBU n'est pas publié (1re étape, course test) : tout le CSV reste alors proposé.`
       : format === "poursuite"
         ? "Pas encore connue : les pronostics ouvriront dès que les résultats du sprint seront saisis (60 premiers), ou dès que la liste IBU sera récupérée."
         : "Pas encore connue : les pronostics ne sont pas ouverts. Récupère la liste IBU dès sa publication (en général la veille de la course).";

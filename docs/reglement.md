@@ -301,7 +301,7 @@ Choisis tes trois biathlètes. Surveille le tir. Regarde les skis. Et surtout…
 
 ## Autres infos utiles
 
-- Ouverture des pronostics de toutes les courses d'une étape le lundi qui la précède, à 17 h (heure de Paris). Sprints et individuels : d'abord les 60 premiers du classement général, puis la liste de départ officielle (en général la veille). Relais : les nations classées au général du relais, puis la liste officielle. Poursuite et mass start : dès que les qualifiés sont connus (règle du 07/11/2026).
+- Ouverture des pronostics de toutes les courses d'une étape le lundi qui la précède, à 17 h (heure de Paris). Sprints et individuels : d'abord les 60 premiers du classement général (à partir de la 2e étape ; 1re étape et courses tests : tous les biathlètes cotés), puis la liste de départ officielle (en général la veille). Relais : les nations classées au général du relais, puis la liste officielle. Poursuite et mass start : dès que les qualifiés sont connus (règle du 07/11/2026).
 - Verrouillage des pronostics au moment précis du départ de la course.
 - Possibilité de créer des Ligues entre amis.
 - **Cote "meilleure nation"** : une cote par couple (nation, sexe) — les niveaux diffèrent fortement entre hommes et femmes d'un même pays (ex. Norvège Hommes cote 8, Norvège Femmes cote 15).

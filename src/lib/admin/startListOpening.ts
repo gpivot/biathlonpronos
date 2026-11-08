@@ -41,19 +41,6 @@ function cachedRanking(cache: RankingCache, date: string, kind: "total" | "relay
 }
 
 /**
- * Partie pure (testée) : premières courses de la saison, quand le général IBU est encore vide. On
- * reprend les cotes du jeu (CSV corrigé des départs à la retraite, demande de Guillaume du
- * 07/11/2026) : les `limit` plus petites cotes du format, ex aequo de la dernière place compris.
- */
-export function topByOdds<T extends { value: number }>(rows: T[], limit: number): (T & { rank: number })[] {
-  const sorted = [...rows].sort((a, b) => a.value - b.value);
-  const ranked = sorted.map((r, i) => ({ ...r, rank: sorted.findIndex((x) => x.value === r.value) + 1 }));
-  if (ranked.length <= limit) return ranked;
-  const cutoff = ranked[limit - 1].value;
-  return ranked.filter((r) => r.value <= cutoff);
-}
-
-/**
  * Relais mixtes : général du relais mixte s'il existe, sinon nations classées à la fois au
  * général du relais femmes et à celui des hommes (à confirmer). null : pas encore de général.
  */
@@ -67,6 +54,13 @@ async function relayNations(cache: RankingCache, date: string, category: "SW" | 
   return { nations: women.rows.map((r) => r.nation).filter((n) => menNations.has(n)), note: `${women.cupId} + ${men.cupId}` };
 }
 
+/**
+ * Tant que le général IBU de la saison n'est pas publié (1re étape, course test de pré-saison),
+ * pas de limite : tout le CSV de cotes est proposé (décision de Guillaume du 08/11/2026, le top 60
+ * s'applique à partir de la 2e étape). Aucune liste n'est enregistrée.
+ */
+export const FULL_CSV_NOTE = "général IBU pas encore publié, tout le CSV de cotes reste proposé";
+
 /** Place la liste provisoire d'une course (remplace celle déjà enregistrée). Renvoie un compte rendu. */
 export async function placeGeneralStartList(admin: SupabaseClient, race: OpeningRace, cache: RankingCache = new Map()): Promise<string> {
   const category = ibuCategory(race.format, race.sex);
@@ -78,14 +72,11 @@ export async function placeGeneralStartList(admin: SupabaseClient, race: Opening
     .is("valid_until", null);
 
   if (RELAY_FORMATS.includes(race.format)) {
-    const oddsNations = (odds ?? []).filter((o: any) => o.nation_code).map((o: any) => ({ nation: o.nation_code as string, value: Number(o.value) }));
+    const oddsNations = (odds ?? []).filter((o: any) => o.nation_code).map((o: any) => ({ nation: o.nation_code as string }));
     const general = await relayNations(cache, race.stages.starts_on, category);
     if (!general) {
-      // Début de saison : toutes les nations cotées (CSV de cotes), par cote croissante.
-      if (oddsNations.length === 0) throw new Error("aucune nation cotée pour ce relais");
-      const rows = [...oddsNations].sort((a, b) => a.value - b.value).map((n, i) => ({ nation: n.nation, position: i + 1 }));
-      await saveStartNations(admin, race.id, rows, "general");
-      return `${rows.length} nation(s) cotée(s) (général du relais pas encore publié, cotes du jeu)`;
+      await saveStartNations(admin, race.id, []);
+      return FULL_CSV_NOTE;
     }
     const matched = matchStartNations(
       general.nations.map((nation) => ({ nation })),
@@ -100,11 +91,8 @@ export async function placeGeneralStartList(admin: SupabaseClient, race: Opening
   const athleteOdds = (odds ?? []).filter((o: any) => o.athlete_id && (!race.sex || o.athletes?.sex === race.sex));
   const ranking = await cachedRanking(cache, race.stages.starts_on, "total", category, GENERAL_FIELD_SIZE);
   if (!ranking) {
-    // Début de saison : les 60 plus petites cotes du format (CSV corrigé des départs à la retraite).
-    if (athleteOdds.length === 0) throw new Error("aucun biathlète coté pour ce format");
-    const top = topByOdds(athleteOdds.map((o: any) => ({ athleteId: o.athlete_id as string, value: Number(o.value) })), GENERAL_FIELD_SIZE);
-    await saveStartList(admin, race.id, top.map((t) => ({ athleteId: t.athleteId, position: t.rank, bib: null })), "general");
-    return `${top.length} biathlète(s), les ${GENERAL_FIELD_SIZE} plus petites cotes (général pas encore publié, cotes du jeu)`;
+    await saveStartList(admin, race.id, []);
+    return FULL_CSV_NOTE;
   }
   const candidates: StartListCandidate[] = athleteOdds.map((o: any) => ({
     id: o.athlete_id,

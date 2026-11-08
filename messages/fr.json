@@ -202,7 +202,7 @@
     "whenTitle": "Quand pronostiquer ?",
     "whenBody": "Les pronostics de toutes les courses d'une étape ouvrent en même temps et se ferment course par course.",
     "whenOpen": "Ouverture : le lundi qui précède l'étape, à 17 h (heure de Paris).",
-    "whenField": "Sprint et individuel : d'abord les 60 premiers du classement général. La liste est affinée avec la liste de départ officielle, publiée en général la veille de la course. Relais : les nations classées au général du relais.",
+    "whenField": "Sprint et individuel : d'abord les 60 premiers du classement général. La liste est affinée avec la liste de départ officielle, publiée en général la veille de la course. Relais : les nations classées au général du relais. Pour la 1re étape de la saison, tous les biathlètes sont proposés.",
     "whenQualified": "Poursuite et mass start : ouvertes dès que les qualifiés sont connus (60 premiers du sprint, 30 partants de la mass start).",
     "whenClose": "Fermeture : au départ de chaque course. Jusque-là, tu peux modifier ton prono autant que tu veux.",
     "comboTitle": "Les bonus de combinaison",
