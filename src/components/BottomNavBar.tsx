@@ -12,28 +12,53 @@ export type NavHref = (typeof NAV_ITEMS)[number]["href"];
 export type NavLabels = Record<(typeof NAV_ITEMS)[number]["labelKey"] | "admin", string>;
 
 /** Barre de navigation basse, partagée par BottomNav (page chargée) et BottomNavLoading (chargement). */
-export function BottomNavBar({ labels, isAdmin, active }: { labels: NavLabels; isAdmin: boolean; active?: NavHref }) {
+export function BottomNavBar({
+  labels,
+  isAdmin,
+  active,
+  adminActive,
+  locale,
+}: {
+  labels: NavLabels;
+  isAdmin: boolean;
+  active?: NavHref;
+  /** Onglet Admin allumé (pages du back-office). */
+  adminActive?: boolean;
+  /** Hors routing i18n (back-office /admin) : liens natifs préfixés par cette langue. */
+  locale?: string;
+}) {
   return (
     // Figée en bas de l'écran pendant le défilement (sticky : reste dans le flux, rien à compenser).
     <nav className="sticky bottom-0 z-40 flex items-center justify-around border-t border-border bg-nav/95 px-1 py-3.5 pb-[max(1.25rem,env(safe-area-inset-bottom))] backdrop-blur">
       {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
         const isActive = href === active;
-        return (
-          <Link
-            key={href}
-            href={href}
-            className={`flex flex-col items-center gap-1 font-display text-[10px] font-semibold ${
-              isActive ? "text-ice" : "text-text-dim"
-            }`}
-          >
+        const className = `flex flex-col items-center gap-1 font-display text-[10px] font-semibold ${
+          isActive ? "text-ice" : "text-text-dim"
+        }`;
+        const content = (
+          <>
             <Icon className="h-5 w-5" />
             {labels[labelKey]}
+          </>
+        );
+        return locale ? (
+          <a key={href} href={href === "/" ? `/${locale}` : `/${locale}${href}`} className={className}>
+            {content}
+          </a>
+        ) : (
+          <Link key={href} href={href} className={className}>
+            {content}
           </Link>
         );
       })}
       {isAdmin && (
         // /admin est hors i18n (back-office interne) : lien natif, pas <Link> de next-intl.
-        <a href="/admin" className="flex flex-col items-center gap-1 font-display text-[10px] font-semibold text-text-dim">
+        <a
+          href="/admin"
+          className={`flex flex-col items-center gap-1 font-display text-[10px] font-semibold ${
+            adminActive ? "text-ice" : "text-text-dim"
+          }`}
+        >
           <ShieldIcon className="h-5 w-5" />
           {labels.admin}
         </a>
