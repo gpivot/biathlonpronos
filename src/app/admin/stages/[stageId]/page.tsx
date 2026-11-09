@@ -66,12 +66,24 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
             title="Texte affiché au-dessus du lieu dans le Calendrier. Vide : Coupe du Monde / Championnats du monde, rien pour une étape hors classement."
             className={inputClass}
           />
+          <label className="flex items-center gap-1.5 text-xs text-text-dim">
+            Ouverture des pronos le
+            <input
+              name="predictions_open_on"
+              type="date"
+              defaultValue={stage.predictions_open_on ?? ""}
+              title="À 17 h, heure de Paris. Vide : le lundi qui précède l'étape."
+              className={inputClass}
+            />
+            à 17 h
+          </label>
           <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Enregistrer
           </button>
         </div>
         <p className="text-xs text-text-dim">
-          Les horaires des courses se modifient avec le crayon de chaque course. « Autre (×0) » : courses
+          Ouverture des pronos : vide = le lundi qui précède l&apos;étape à 17 h ; une date = ce jour-là à
+          17 h (une date passée ouvre tout de suite). Les horaires des courses se modifient avec le crayon de chaque course. « Autre (×0) » : courses
           tests ou de recrutement, notées normalement mais hors classement de la saison (pas de dossard
           rouge, de carte bonus, de ×2, de Pépite ni de série 10/10).
           {hasFinishedRace &&

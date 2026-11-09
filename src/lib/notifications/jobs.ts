@@ -72,7 +72,7 @@ function emailFrame(texts: NotificationTexts, settings: PlayerSettings, kind: "r
 export async function runReminders(admin: SupabaseClient, now: Date): Promise<string> {
   const { data: rows, error } = await admin
     .from("races")
-    .select("id, locks_at, format, sex, status, stages(location, starts_on)")
+    .select("id, locks_at, format, sex, status, stages(location, starts_on, predictions_open_on)")
     .eq("status", "upcoming")
     .gt("locks_at", now.toISOString())
     .lte("locks_at", new Date(now.getTime() + REMINDER_LEAD_MS).toISOString());
@@ -80,8 +80,8 @@ export async function runReminders(admin: SupabaseClient, now: Date): Promise<st
 
   const races: RaceInfo[] = (rows ?? [])
     .filter((race) => {
-      const stage = race.stages as unknown as { location: string; starts_on: string } | null;
-      return stage && isReminderWindow(race.locks_at, now) && isPredictionOpen(stage.starts_on, now);
+      const stage = race.stages as unknown as { location: string; starts_on: string; predictions_open_on?: string | null } | null;
+      return stage && isReminderWindow(race.locks_at, now) && isPredictionOpen(stage.starts_on, now, stage.predictions_open_on);
     })
     .map((race) => ({
       id: race.id,

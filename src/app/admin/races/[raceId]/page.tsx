@@ -34,12 +34,12 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
   const { data: race } = await admin
     .from("races")
-    .select("*, stages(location, season_id, coefficient, starts_on)")
+    .select("*, stages(location, season_id, coefficient, starts_on, predictions_open_on)")
     .eq("id", raceId)
     .single();
   if (!race) notFound();
 
-  const stage = race.stages as { location: string; season_id: string; coefficient: number; starts_on: string };
+  const stage = race.stages as { location: string; season_id: string; coefficient: number; starts_on: string; predictions_open_on: string | null };
   const isRelay = RELAY_FORMATS.includes(race.format);
 
   const { data: existingResults } = await admin.from("race_results").select("*").eq("race_id", raceId);
@@ -191,7 +191,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           format={race.format}
           startList={startList}
           nationList={nationList}
-          opensAt={predictionOpensAt(stage.starts_on).toISOString()}
+          opensAt={predictionOpensAt(stage.starts_on, stage.predictions_open_on).toISOString()}
         />
       )}
 

@@ -1528,6 +1528,12 @@ semaine » plus haut).
 - **Ouverture** (`predictionWindow.ts`, testé) : toutes les courses d'une étape ouvrent **le lundi
   qui précède son premier jour, à 17 h heure de Paris** (heure d'été gérée). Une étape qui commence
   un lundi ouvre le lundi d'avant (à confirmer). Fermeture inchangée : au départ de chaque course.
+- **Ouverture forcée** (09/11/2026, migration **0044**) : champ « Ouverture des pronos le … à 17 h »
+  sur la page admin d'une étape (`stages.predictions_open_on`). Vide = règle du lundi ; une date =
+  ce jour-là à 17 h (une date passée ouvre tout de suite). Sert à ouvrir la 1re étape (Kontiolahti)
+  en avance avec tout le CSV. Limite : la liste provisoire du top 60 n'est placée par la tâche
+  planifiée que pour les étapes qui commencent dans les 8 jours (sans effet sur la 1re étape, qui
+  garde tout le CSV).
 - **Sprint et individuel** : à l'ouverture, seuls les **60 premiers du général de la Coupe du monde**
   (par sexe, ex aequo de la 60e place compris) sont proposés, parmi ceux qui ont une cote. Liste
   enregistrée dans `race_start_lists` avec `source = 'general'` (migration **0043**).

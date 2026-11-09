@@ -17,7 +17,7 @@ export async function findNextPlayableRace(): Promise<string | null> {
 
   const { data: races } = await supabase
     .from("races")
-    .select("id, format, sex, locks_at, stage_id, stages!inner(season_id, starts_on)")
+    .select("id, format, sex, locks_at, stage_id, stages!inner(season_id, starts_on, predictions_open_on)")
     .eq("stages.season_id", season.id)
     .neq("status", "finished")
     .gt("locks_at", now.toISOString())
@@ -25,7 +25,7 @@ export async function findNextPlayableRace(): Promise<string | null> {
     .limit(12);
 
   for (const race of (races ?? []) as any[]) {
-    if (!isPredictionOpen(race.stages.starts_on, now)) continue;
+    if (!isPredictionOpen(race.stages.starts_on, now, race.stages.predictions_open_on)) continue;
     const { count } = await supabase
       .from("odds")
       .select("id", { count: "exact", head: true })
