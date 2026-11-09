@@ -90,7 +90,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
     leagues,
     stages: stages.map((s) => ({
       id: s.id,
-      label: `${nationFlagEmoji(s.country_code)} ${s.location}${s.countsInStandings === false ? ` (×0 · ${tHome("offStandingsBadge")})` : ""}`,
+      label: `${nationFlagEmoji(s.country_code)} ${s.location}`,
       races: s.races.map((r) => ({ id: r.id, label: raceLabel(r) })),
     })),
   };
@@ -172,6 +172,10 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
         )}
 
         <StandingsFilters state={state} options={options} />
+
+        {period === "stages" && stage?.countsInStandings === false && (
+          <div className="-mt-2 px-1 text-[12px] text-text-dim">{t("offStandingsStageInfo")}</div>
+        )}
 
         {noLeague ? (
           <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-border p-5 text-[13px] text-text-dim">

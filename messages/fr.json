@@ -432,6 +432,7 @@
     "noLeague": "Tu ne fais partie d'aucune ligue cette saison. Crée la tienne ou rejoins celle de tes amis avec leur code.",
     "noLeagueButton": "Voir les ligues",
     "emptyStage": "Aucun point sur cette étape pour le moment.",
+    "offStandingsStageInfo": "Cette étape ne compte pas pour le classement général",
     "noStages": "Aucune étape programmée pour le moment.",
     "noPicks": "Pas de pronostic",
     "myRankingTitle": "Mon classement",
