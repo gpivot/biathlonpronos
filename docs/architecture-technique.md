@@ -835,7 +835,7 @@ testés). Aucun SQL : ligues, adhésions, score_ledger et pronostics verrouillé
   semaine : « Les biathlètes sont au repos, profites-en pour farter tes skis ! » avec 🎿.
 - **« À suivre »** : la course d'après celle que montre déjà l'encadré (la 2e course à venir quand
   l'encadré affiche la prochaine, sinon la prochaine).
-- **Pronostics ouverts 7 jours avant l'étape** (`predictionWindow.ts`, testé) : avant, la page de
+- **Pronostics ouverts 7 jours avant l'étape** (remplacé le 07/11/2026 par l'ouverture le lundi 17 h, voir la dernière section) (`predictionWindow.ts`, testé) : avant, la page de
   la course affiche la date d'ouverture au lieu de la liste des biathlètes, et Ma saison / « À
   suivre » montrent « Ouvre le … » à la place de « À jouer ». **À confirmer** : contrôle côté
   interface seulement (le pronostic est enregistré par le navigateur) ; un verrou en base
@@ -1518,3 +1518,47 @@ testé).
 - **Limite connue** : passer une étape déjà notée en ×0 (ou l'inverse) met à jour les points et les
   séries tout de suite, mais ne retire pas une Pépite déjà révélée dessus (et n'en révèle pas une)
   tant que les résultats ne sont pas réenregistrés.
+
+## Ouverture des pronostics le lundi 17 h et listes de départ (07/11/2026)
+
+Demande de Guillaume : les staffs changent souvent leurs biathlètes en début de semaine, il faut le
+temps de récupérer l'information. **Cette règle remplace l'ouverture à J-7** (section « Étape de la
+semaine » plus haut).
+
+- **Ouverture** (`predictionWindow.ts`, testé) : toutes les courses d'une étape ouvrent **le lundi
+  qui précède son premier jour, à 17 h heure de Paris** (heure d'été gérée). Une étape qui commence
+  un lundi ouvre le lundi d'avant (à confirmer). Fermeture inchangée : au départ de chaque course.
+- **Sprint et individuel** : à l'ouverture, seuls les **60 premiers du général de la Coupe du monde**
+  (par sexe, ex aequo de la 60e place compris) sont proposés, parmi ceux qui ont une cote. Liste
+  enregistrée dans `race_start_lists` avec `source = 'general'` (migration **0043**).
+- **Relais** : les **nations classées au général du relais** (même sexe), dans
+  `race_start_nations` (migration 0043). Relais mixtes : général du relais mixte s'il existe à
+  l'IBU, sinon nations classées à la fois au général relais femmes et hommes (à confirmer).
+- **Poursuite et mass start** : inchangées (60 premiers du sprint ; liste IBU des 30 partants).
+- **Automatisation** : la tâche planifiée existante (`/api/notifications/cron`, tous les quarts
+  d'heure par pg_cron) appelle `runStartListOpening` (`src/lib/admin/startListOpening.ts`) : de
+  2 h avant l'ouverture à 6 h après, elle place la liste provisoire des courses qui n'en ont pas
+  encore. Une liste déjà là (provisoire ou officielle) n'est jamais remplacée par la tâche.
+- **Source** : API publique de biathlonresults.com, `Cups?SeasonId=2627` puis
+  `CupResults?CupId=…` (coupe « …__SWTS » / « …__SMTS » pour le général, « …__SWRL » /
+  « …__SMRL » pour les relais). **Format des identifiants supposé, pas vérifié** : l'API n'était
+  pas joignable depuis l'environnement de développement. À tester avec le bouton « Replacer les
+  60 premiers du général » de l'admin.
+- **1re étape de la saison et course test de pré-saison** (général IBU pas encore publié) :
+  décision de Guillaume du 08/11/2026, **pas de limite**, tout le CSV de cotes (corrigé des départs
+  à la retraite) est proposé ; aucune liste n'est enregistrée. Le top 60 s'applique à partir de la
+  2e étape, dès que l'IBU publie le général.
+- **Si l'IBU ne répond pas** (erreur réseau) : rien n'est enregistré, tous les biathlètes (ou nations) cotés restent
+  proposés à 17 h, comme avant ; la tâche réessaie jusqu'à 23 h.
+- **Liste définitive** : bouton « Récupérer la liste de départ définitive (IBU) » sur la page admin
+  de chaque course (sprint, individuel, relais compris), à cliquer à la main dès la publication (en
+  général la veille vers 17-18 h). Elle remplace la liste provisoire. Bouton « Replacer les
+  60 premiers du général » pour refaire la liste provisoire, « Effacer la liste » pour tout proposer.
+- **Limite connue** : un joueur qui a déjà choisi un biathlète (ou une nation) retiré par la liste
+  définitive garde son pronostic ; le biathlète n'apparaît plus dans la liste du formulaire. Pas
+  de notification pour l'instant.
+- Le verrou à J-7 / lundi 17 h reste appliqué par l'affichage seulement (la base ne bloque que la
+  fermeture au départ, comme avant).
+- Textes mis à jour dans les 5 langues : FAQ de l'accueil (`faq_when_a`), nouvelle carte « Quand
+  pronostiquer ? » dans les Règles, « Ouvre le … à 17 h » (Calendrier, accueil), message de la page
+  d'une course pas encore ouverte.

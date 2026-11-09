@@ -18,7 +18,8 @@ import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getClock } from "@/lib/clock";
 import { removeRace, resetResults, updateRace, updateRaceOpinion } from "./actions";
 import { ArrowLeftIcon } from "@/components/icons";
-import { START_LIST_FORMATS, getStartList } from "@/lib/startList";
+import { ATHLETE_START_LIST_FORMATS, getNationStartList, getStartList } from "@/lib/startList";
+import { predictionOpensAt } from "@/lib/predictionWindow";
 import { StartListPanel } from "./StartListPanel";
 import { BonusQuestionsPanel, type AdminBonusQuestion } from "./BonusQuestionsPanel";
 import { bonusQuestionState, type BonusQuestionRow } from "@/lib/bonusQuestions";
@@ -33,12 +34,12 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
   const { data: race } = await admin
     .from("races")
-    .select("*, stages(location, season_id, coefficient)")
+    .select("*, stages(location, season_id, coefficient, starts_on)")
     .eq("id", raceId)
     .single();
   if (!race) notFound();
 
-  const stage = race.stages as { location: string; season_id: string; coefficient: number };
+  const stage = race.stages as { location: string; season_id: string; coefficient: number; starts_on: string };
   const isRelay = RELAY_FORMATS.includes(race.format);
 
   const { data: existingResults } = await admin.from("race_results").select("*").eq("race_id", raceId);
@@ -118,7 +119,8 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
   const { now } = await getClock();
   const displayStatus = getRaceDisplayStatus(race, now);
   const hasResults = (existingResults ?? []).length > 0 || race.status === "finished";
-  const startList = START_LIST_FORMATS.includes(race.format) ? await getStartList(admin, race) : null;
+  const startList = ATHLETE_START_LIST_FORMATS.includes(race.format) ? await getStartList(admin, race) : null;
+  const nationList = isRelay ? await getNationStartList(admin, race.id) : null;
   const bonusQuestions = await getAdminBonusQuestions(admin, race, now);
 
   return (
@@ -183,7 +185,15 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         </div>
       </form>
 
-      {startList && <StartListPanel raceId={race.id} format={race.format} startList={startList} />}
+      {(startList || isRelay) && (
+        <StartListPanel
+          raceId={race.id}
+          format={race.format}
+          startList={startList}
+          nationList={nationList}
+          opensAt={predictionOpensAt(stage.starts_on).toISOString()}
+        />
+      )}
 
       <BonusQuestionsPanel raceId={race.id} questions={bonusQuestions} />
 
