@@ -74,7 +74,7 @@ async function getHomeData(): Promise<HomeData> {
   const [{ data: upcomingRaces }, leaderboard, favoriteTeamResult, lastResults, streak, cards, weekResult, badges, { count: startedRaces }] = await Promise.all([
     supabase
       .from("races")
-      .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id, starts_on)")
+      .select("id, format, sex, locks_at, stages!inner(location, country_code, season_id, starts_on, predictions_open_on)")
       .eq("stages.season_id", season.id)
       .eq("status", "upcoming")
       .gt("locks_at", now.toISOString())
@@ -151,7 +151,9 @@ async function getHomeData(): Promise<HomeData> {
       ? ({
           ...nextRace,
           predicted,
-          opensOn: isPredictionOpen(nextRace.stages.starts_on, now) ? null : predictionOpensOn(nextRace.stages.starts_on),
+          opensOn: isPredictionOpen(nextRace.stages.starts_on, now, nextRace.stages.predictions_open_on)
+            ? null
+            : predictionOpensOn(nextRace.stages.starts_on, nextRace.stages.predictions_open_on),
         } as HomeData["nextRace"])
       : null,
     leaderboard,

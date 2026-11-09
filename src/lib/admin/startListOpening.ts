@@ -26,7 +26,7 @@ export interface OpeningRace {
   format: string;
   sex: string | null;
   locks_at: string;
-  stages: { season_id: string; starts_on: string; location?: string };
+  stages: { season_id: string; starts_on: string; location?: string; predictions_open_on?: string | null };
 }
 
 type Ranking = Awaited<ReturnType<typeof fetchIbuCupRanking>>;
@@ -117,7 +117,7 @@ export async function placeGeneralStartList(admin: SupabaseClient, race: Opening
 export function needsGeneralStartList(race: Pick<OpeningRace, "format" | "locks_at" | "stages">, now: Date): boolean {
   if (!GENERAL_FIELD_FORMATS.includes(race.format) && !RELAY_FORMATS.includes(race.format)) return false;
   if (new Date(race.locks_at).getTime() <= now.getTime()) return false;
-  const opensAt = predictionOpensAt(race.stages.starts_on).getTime();
+  const opensAt = predictionOpensAt(race.stages.starts_on, race.stages.predictions_open_on).getTime();
   return now.getTime() >= opensAt - OPENING_PREPARE_MS && now.getTime() <= opensAt + OPENING_RETRY_MS;
 }
 
@@ -130,7 +130,7 @@ export async function runStartListOpening(admin: SupabaseClient, now: Date): Pro
   const today = parisDay(now);
   const { data: races, error } = await admin
     .from("races")
-    .select("id, format, sex, locks_at, stages!inner(season_id, starts_on, location)")
+    .select("id, format, sex, locks_at, stages!inner(season_id, starts_on, location, predictions_open_on)")
     .neq("status", "finished")
     .gt("locks_at", now.toISOString())
     .in("format", [...GENERAL_FIELD_FORMATS, ...RELAY_FORMATS])

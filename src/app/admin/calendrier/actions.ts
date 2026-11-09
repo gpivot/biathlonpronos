@@ -160,6 +160,8 @@ export async function updateStage(formData: FormData) {
       ends_on: endsOn,
       ...category,
       label: stageLabel(formData.get("label")),
+      // Vide : règle normale (lundi qui précède l'étape, 17 h).
+      predictions_open_on: String(formData.get("predictions_open_on") ?? "").trim() || null,
     })
     .eq("id", stageId);
   if (error) throw new Error(error.message);

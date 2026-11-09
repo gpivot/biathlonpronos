@@ -20,4 +20,11 @@ describe("ouverture des pronostics d'une étape", () => {
     expect(isPredictionOpen("2026-11-26", new Date("2026-11-23T15:59:00Z"))).toBe(false);
     expect(isPredictionOpen("2026-11-26", new Date("2026-11-23T16:00:00Z"))).toBe(true);
   });
+
+  it("date forcée dans l'admin : ce jour-là à 17 h", () => {
+    expect(predictionOpensOn("2026-11-28", "2026-11-09")).toBe("2026-11-09");
+    expect(isPredictionOpen("2026-11-28", new Date("2026-11-09T16:30:00Z"), "2026-11-09")).toBe(true);
+    expect(isPredictionOpen("2026-11-28", new Date("2026-11-09T15:30:00Z"), "2026-11-09")).toBe(false);
+    expect(isPredictionOpen("2026-11-28", new Date("2026-11-09T16:30:00Z"), null)).toBe(false);
+  });
 });

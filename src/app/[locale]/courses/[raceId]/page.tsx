@@ -63,6 +63,8 @@ export default async function RacePage({
     /** false : étape « Autre (×0) », hors classement de la saison (migration 0041). */
     counts_in_standings?: boolean;
     starts_on: string;
+    /** Ouverture des pronostics forcée dans l'admin (migration 0044), null sinon. */
+    predictions_open_on?: string | null;
   };
   const offStandings = stage.counts_in_standings === false;
   const isRelay = RELAY_FORMATS.includes(race.format);
@@ -220,7 +222,7 @@ export default async function RacePage({
 
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
   // Pronostics ouverts le lundi qui précède l'étape, à 17 h (voir predictionWindow.ts).
-  const predictionsOpen = isPredictionOpen(stage.starts_on, now);
+  const predictionsOpen = isPredictionOpen(stage.starts_on, now, stage.predictions_open_on);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
   // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
   const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
@@ -378,7 +380,7 @@ export default async function RacePage({
           (!predictionsOpen ? (
             <div className="rounded-2xl border border-dashed border-border p-5 text-[13px] leading-relaxed text-text-dim">
               {t("predictionsOpenOn", {
-                date: new Date(`${predictionOpensOn(stage.starts_on)}T12:00:00Z`).toLocaleDateString(locale, {
+                date: new Date(`${predictionOpensOn(stage.starts_on, stage.predictions_open_on)}T12:00:00Z`).toLocaleDateString(locale, {
                   timeZone: DISPLAY_TIME_ZONE,
                   weekday: "long",
                   day: "numeric",
