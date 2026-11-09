@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { CLAIMABLE_CARD_TYPES } from "@/lib/bonusCards";
 import { fromParisWallTime } from "@/lib/displayTimeZone";
+import { adminFormAction } from "@/lib/admin/formAction";
 
 async function assertAdmin() {
   const supabase = createClient();
@@ -23,7 +24,7 @@ function dayBoundary(value: FormDataEntryValue | null, end: boolean): string | n
 }
 
 /** Enregistre le réglage d'une carte (interrupteur, période, déblocage forcé) pour la saison. */
-export async function saveCardSetting(formData: FormData): Promise<void> {
+export const saveCardSetting = adminFormAction(async (formData: FormData) => {
   await assertAdmin();
   const seasonId = String(formData.get("season_id") ?? "");
   const cardType = String(formData.get("card_type") ?? "");
@@ -44,4 +45,4 @@ export async function saveCardSetting(formData: FormData): Promise<void> {
     );
   if (error) throw new Error(error.message);
   revalidatePath("/admin/cartes");
-}
+});

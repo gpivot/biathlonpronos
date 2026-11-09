@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
+import { adminFormAction } from "@/lib/admin/formAction";
 
-export async function setAdminRole(formData: FormData) {
+export const setAdminRole = adminFormAction(async (formData: FormData) => {
   const callerId = await requireAdmin();
 
   const userId = String(formData.get("user_id"));
@@ -16,15 +17,15 @@ export async function setAdminRole(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/joueurs");
-}
+});
 
 /**
  * Parcours d'invité : supprime les comptes invités (session anonyme) jamais confirmés depuis plus de
  * 7 jours. Même fonction que la purge automatique de nuit (migration 0031).
  */
-export async function purgeGuests() {
+export const purgeGuests = adminFormAction(async () => {
   await requireAdmin();
   const { error } = await createAdminClient().rpc("purge_anonymous_users");
   if (error) throw new Error(`${error.message} (migration 0031 appliquée ?)`);
   revalidatePath("/admin/joueurs");
-}
+});

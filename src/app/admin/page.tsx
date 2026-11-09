@@ -30,6 +30,7 @@ import {
 } from "./calendrier/actions";
 import { removeRace } from "./races/[raceId]/actions";
 import { STAGE_CATEGORY_OPTIONS } from "@/lib/stageCategory";
+import { AdminForm, SubmitButton } from "./_components/AdminForm";
 
 export const dynamic = "force-dynamic";
 
@@ -83,14 +84,14 @@ export default async function AdminCalendarResultsPage() {
                   {s.status === "active" ? (
                     <span className="rounded-full bg-ice-soft px-3 py-1 text-xs font-semibold text-ice">active</span>
                   ) : (
-                    <form action={activateSeason}>
+                    <AdminForm action={activateSeason} successMessage={`Saison ${s.label} activée ✓`}>
                       <input type="hidden" name="season_id" value={s.id} />
-                      <button type="submit" className="rounded border border-border px-3 py-1 text-xs">
+                      <SubmitButton pendingLabel="Activation…" savedLabel="Activée ✓" className="rounded border border-border px-3 py-1 text-xs">
                         Activer
-                      </button>
-                    </form>
+                      </SubmitButton>
+                    </AdminForm>
                   )}
-                  <form action={removeSeason}>
+                  <AdminForm action={removeSeason} successMessage={`Saison ${s.label} supprimée ✓`}>
                     <input type="hidden" name="season_id" value={s.id} />
                     <ConfirmButton
                       title="Supprimer la saison"
@@ -100,7 +101,7 @@ export default async function AdminCalendarResultsPage() {
                     >
                       <TrashIcon className="h-4 w-4" />
                     </ConfirmButton>
-                  </form>
+                  </AdminForm>
                 </div>
               </summary>
               <div className="flex flex-col gap-3 border-t border-border px-4 py-3">
@@ -110,7 +111,10 @@ export default async function AdminCalendarResultsPage() {
                   sont ceux qui ont une cote globe, jeune ou meilleure nation.
                 </p>
                 <GlobesSection admin={admin} seasonId={s.id} />
-                <form action={setJokersApplied} className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3">
+                <AdminForm
+                  action={setJokersApplied}
+                  successMessage={s.jokers_applied ? "Jokers retirés du classement ✓" : "Jokers appliqués au classement ✓"}
+                  className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3">
                   <input type="hidden" name="season_id" value={s.id} />
                   <input type="hidden" name="applied" value={s.jokers_applied ? "0" : "1"} />
                   <div className="flex-1 text-xs text-text-dim">
@@ -129,7 +133,7 @@ export default async function AdminCalendarResultsPage() {
                   >
                     {s.jokers_applied ? "Retirer les jokers" : "Appliquer les jokers"}
                   </ConfirmButton>
-                </form>
+                </AdminForm>
               </div>
             </details>
           ))}
@@ -140,14 +144,14 @@ export default async function AdminCalendarResultsPage() {
 
         <details className="rounded-xl border border-border bg-card p-4">
           <summary className="cursor-pointer text-xs font-semibold text-text-dim">Nouvelle saison</summary>
-          <form action={createSeason} className="mt-3 flex flex-wrap gap-2">
+          <AdminForm action={createSeason} successMessage="Saison créée ✓" resetOnSuccess className="mt-3 flex flex-wrap gap-2">
             <input name="label" required placeholder="Label (ex. 2026-27)" className={inputClass} />
             <input name="starts_on" type="date" required className={inputClass} />
             <input name="ends_on" type="date" required className={inputClass} />
-            <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+            <SubmitButton pendingLabel="Création…" savedLabel="Créée ✓" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
               Créer
-            </button>
-          </form>
+            </SubmitButton>
+          </AdminForm>
         </details>
       </section>
 
@@ -185,7 +189,7 @@ export default async function AdminCalendarResultsPage() {
                       >
                         <PencilIcon className="h-4 w-4" />
                       </Link>
-                      <form action={removeStage}>
+                      <AdminForm action={removeStage} successMessage={`Étape ${stage.location} supprimée ✓`}>
                         <input type="hidden" name="stage_id" value={stage.id} />
                         <ConfirmButton
                           title="Supprimer l'étape"
@@ -194,7 +198,7 @@ export default async function AdminCalendarResultsPage() {
                         >
                           <TrashIcon className="h-4 w-4" />
                         </ConfirmButton>
-                      </form>
+                      </AdminForm>
                     </div>
                   </summary>
 
@@ -225,7 +229,7 @@ export default async function AdminCalendarResultsPage() {
                         >
                           <PencilIcon className="h-4 w-4" />
                         </Link>
-                        <form action={removeRace}>
+                        <AdminForm action={removeRace} successMessage="Course supprimée ✓">
                           <input type="hidden" name="race_id" value={race.id} />
                           <ConfirmButton
                             title="Supprimer la course"
@@ -234,12 +238,12 @@ export default async function AdminCalendarResultsPage() {
                           >
                             <TrashIcon className="h-4 w-4" />
                           </ConfirmButton>
-                        </form>
+                        </AdminForm>
                       </div>
                     ))}
                     {stage.races.length === 0 && <p className="px-2 text-xs text-text-dim">Aucune course pour cette étape.</p>}
 
-                    <form action={createRace} className="mt-2 flex flex-wrap gap-2 border-t border-border/50 px-2 pt-3">
+                    <AdminForm action={createRace} successMessage={`Course ajoutée à ${stage.location} ✓`} className="mt-2 flex flex-wrap gap-2 border-t border-border/50 px-2 pt-3">
                       <input type="hidden" name="stage_id" value={stage.id} />
                       <select name="format" required className={inputClass}>
                         {RACE_FORMATS.map((f) => (
@@ -261,10 +265,10 @@ export default async function AdminCalendarResultsPage() {
                         className={inputClass}
                       />
                       <SpecialRuleSelect defaultFormat={RACE_FORMATS[0].value} championship={stage.coefficient === 2} className={inputClass} />
-                      <button type="submit" className="rounded border border-border px-3 py-1.5 text-xs">
+                      <SubmitButton pendingLabel="Ajout…" savedLabel="Ajoutée ✓" className="rounded border border-border px-3 py-1.5 text-xs">
                         Ajouter la course
-                      </button>
-                    </form>
+                      </SubmitButton>
+                    </AdminForm>
                   </div>
                 </details>
               );
@@ -277,7 +281,7 @@ export default async function AdminCalendarResultsPage() {
 
           <details className="rounded-xl border border-border bg-card p-4">
             <summary className="cursor-pointer text-xs font-semibold text-text-dim">Nouvelle étape</summary>
-            <form action={createStage} className="mt-3 flex flex-wrap gap-2">
+            <AdminForm action={createStage} successMessage="Étape créée ✓" resetOnSuccess className="mt-3 flex flex-wrap gap-2">
               <input type="hidden" name="season_id" value={season.id} />
               <input name="location" required placeholder="Lieu (ex. Kontiolahti)" className={inputClass} />
               <select name="country_code" required className={inputClass}>
@@ -297,10 +301,10 @@ export default async function AdminCalendarResultsPage() {
                 ))}
               </select>
               <input name="label" maxLength={40} placeholder="Mention (ex. Pré-saison)" className={inputClass} />
-              <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+              <SubmitButton pendingLabel="Création…" savedLabel="Créée ✓" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
                 Créer
-              </button>
-            </form>
+              </SubmitButton>
+            </AdminForm>
           </details>
 
           <CsvImportPanel

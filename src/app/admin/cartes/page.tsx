@@ -2,6 +2,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { CLAIMABLE_CARD_TYPES, type CardSetting } from "@/lib/bonusCards";
 import { toParisWallTime } from "@/lib/displayTimeZone";
 import { saveCardSetting } from "./actions";
+import { AdminForm, SubmitButton } from "../_components/AdminForm";
 
 export const dynamic = "force-dynamic";
 
@@ -55,9 +56,10 @@ export default async function AdminCardsPage() {
             const setting = byType.get(type);
             const label = CARD_LABELS[type];
             return (
-              <form
+              <AdminForm
                 key={type}
                 action={saveCardSetting}
+                successMessage={`Carte ${label.name} enregistrée ✓`}
                 className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 text-sm sm:flex-row sm:flex-wrap sm:items-end"
               >
                 <input type="hidden" name="season_id" value={season.id} />
@@ -94,10 +96,8 @@ export default async function AdminCardsPage() {
                     Débloquer tout de suite
                   </label>
                 )}
-                <button type="submit" className="rounded-lg bg-ice px-3 py-1.5 font-semibold text-on-ice">
-                  Enregistrer
-                </button>
-              </form>
+                <SubmitButton className="rounded-lg bg-ice px-3 py-1.5 font-semibold text-on-ice">Enregistrer</SubmitButton>
+              </AdminForm>
             );
           })}
         </div>

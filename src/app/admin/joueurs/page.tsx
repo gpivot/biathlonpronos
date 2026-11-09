@@ -1,6 +1,7 @@
 import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { PlayerList, type PlayerRow } from "./PlayerList";
 import { purgeGuests } from "./actions";
+import { AdminForm, SubmitButton } from "../_components/AdminForm";
 
 export const dynamic = "force-dynamic";
 
@@ -52,15 +53,15 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
         </p>
       </div>
 
-      <form action={purgeGuests} className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3 text-xs text-text-dim">
+      <AdminForm action={purgeGuests} successMessage="Invités de plus de 7 jours purgés ✓" className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3 text-xs text-text-dim">
         <span className="flex-1">
           {guestIds.size} invité{guestIds.size > 1 ? "s" : ""} en cours (bouton « Jouer » sans compte). Ceux qui n&apos;ont
           pas créé leur compte au bout de 7 jours sont supprimés chaque nuit si pg_cron est activé, sinon avec ce bouton.
         </span>
-        <button type="submit" className="rounded border border-border px-3 py-1 font-semibold text-frost">
+        <SubmitButton pendingLabel="Purge…" savedLabel="Purgé ✓" className="rounded border border-border px-3 py-1 font-semibold text-frost">
           Purger les invités de plus de 7 jours
-        </button>
-      </form>
+        </SubmitButton>
+      </AdminForm>
 
       <form className="flex gap-2">
         <input

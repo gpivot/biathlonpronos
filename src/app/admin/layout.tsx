@@ -7,6 +7,7 @@ import { routing } from "@/i18n/routing";
 import { createClient } from "@/lib/supabase/server";
 import { AdminNav } from "@/components/AdminNav";
 import { SimulatedClockBanner } from "@/components/SimulatedClockBanner";
+import { AdminFeedbackProvider } from "./_components/AdminFeedback";
 import "../globals.css";
 
 export const metadata: Metadata = { title: "Biathlonpronos — Admin" };
@@ -40,14 +41,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <html lang="fr">
       <body className="bg-bg text-text">
         <SimulatedClockBanner />
-        <div className="flex min-h-dvh flex-col">
-          <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 pt-2 sm:px-6">
-            <AdminNav homeHref={`/${locale}`} />
-            {children}
+        <AdminFeedbackProvider>
+          <div className="flex min-h-dvh flex-col">
+            <div className="mx-auto w-full max-w-5xl flex-1 px-4 pb-8 pt-2 sm:px-6">
+              <AdminNav homeHref={`/${locale}`} />
+              {children}
+            </div>
+            {/* Barre de navigation du bas gardée dans l'admin, onglet Admin allumé. */}
+            <BottomNavBar labels={labels} isAdmin adminActive locale={locale} />
           </div>
-          {/* Barre de navigation du bas gardée dans l'admin, onglet Admin allumé. */}
-          <BottomNavBar labels={labels} isAdmin adminActive locale={locale} />
-        </div>
+        </AdminFeedbackProvider>
       </body>
     </html>
   );

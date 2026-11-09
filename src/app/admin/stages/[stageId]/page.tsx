@@ -4,6 +4,7 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { updateStage } from "../../calendrier/actions";
 import { STAGE_CATEGORY_OPTIONS, stageCategoryFormValue } from "@/lib/stageCategory";
+import { AdminForm, SubmitButton } from "../../_components/AdminForm";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
@@ -31,7 +32,7 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
         {nationFlagEmoji(stage.country_code)} {stage.location}
       </h1>
 
-      <form action={updateStage} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+      <AdminForm action={updateStage} successMessage={`Étape ${stage.location} enregistrée ✓`} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">Infos de l&apos;étape</div>
         <input type="hidden" name="stage_id" value={stage.id} />
         <div className="flex flex-wrap gap-2">
@@ -77,9 +78,7 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
             />
             à 17 h
           </label>
-          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
-            Enregistrer
-          </button>
+          <SubmitButton className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">Enregistrer</SubmitButton>
         </div>
         <p className="text-xs text-text-dim">
           Ouverture des pronos : vide = le lundi qui précède l&apos;étape à 17 h ; une date = ce jour-là à
@@ -89,7 +88,7 @@ export default async function AdminStagePage({ params }: { params: Promise<{ sta
           {hasFinishedRace &&
             " Attention : des courses de cette étape sont déjà notées ; un passage ×1 / ×2 ne recalcule pas leurs points tant que leurs résultats ne sont pas réenregistrés (le passage en ×0 ou hors de ×0 s’applique tout de suite au classement)."}
         </p>
-      </form>
+      </AdminForm>
     </div>
   );
 }

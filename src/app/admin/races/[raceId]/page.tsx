@@ -23,6 +23,7 @@ import { predictionOpensAt } from "@/lib/predictionWindow";
 import { StartListPanel } from "./StartListPanel";
 import { BonusQuestionsPanel, type AdminBonusQuestion } from "./BonusQuestionsPanel";
 import { bonusQuestionState, type BonusQuestionRow } from "@/lib/bonusQuestions";
+import { AdminForm, SubmitButton } from "../../_components/AdminForm";
 
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
@@ -135,7 +136,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         </span>
       </div>
 
-      <form action={updateRace} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+      <AdminForm action={updateRace} successMessage="Course enregistrée ✓" className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">Infos de la course</div>
         <input type="hidden" name="race_id" value={race.id} />
         <div className="flex flex-wrap gap-2">
@@ -160,14 +161,12 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
             className={inputClass}
           />
           <SpecialRuleSelect defaultValue={race.special_rule ?? ""} defaultFormat={race.format} championship={stage.coefficient === 2} className={inputClass} />
-          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
-            Enregistrer
-          </button>
+          <SubmitButton className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">Enregistrer</SubmitButton>
         </div>
         <p className="text-xs text-text-dim">Heure de départ en UTC : c&apos;est aussi l&apos;heure de verrouillage des pronostics.</p>
-      </form>
+      </AdminForm>
 
-      <form action={updateRaceOpinion} className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
+      <AdminForm action={updateRaceOpinion} successMessage="Avis enregistré ✓" className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">L&apos;avis de Biathlonpronos</div>
         <input type="hidden" name="race_id" value={race.id} />
         <textarea
@@ -179,11 +178,9 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
         />
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs text-text-dim">Affiché dans un encadré sur la page de la course. Laisse vide pour masquer la rubrique.</p>
-          <button type="submit" className="flex-shrink-0 rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
-            Enregistrer
-          </button>
+          <SubmitButton className="flex-shrink-0 rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">Enregistrer</SubmitButton>
         </div>
-      </form>
+      </AdminForm>
 
       {(startList || isRelay) && (
         <StartListPanel
@@ -215,7 +212,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
 
       <div className="flex flex-wrap gap-2 border-t border-border pt-4">
         {hasResults && (
-          <form action={resetResults}>
+          <AdminForm action={resetResults} successMessage="Résultats réinitialisés ✓">
             <input type="hidden" name="race_id" value={race.id} />
             <ConfirmButton
               message="Réinitialiser les résultats de cette course ? Les résultats saisis et les points des joueurs sur cette course seront effacés."
@@ -223,9 +220,9 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
             >
               Réinitialiser les résultats
             </ConfirmButton>
-          </form>
+          </AdminForm>
         )}
-        <form action={removeRace}>
+        <AdminForm action={removeRace} successMessage="Course supprimée ✓">
           <input type="hidden" name="race_id" value={race.id} />
           <input type="hidden" name="redirect" value="1" />
           <ConfirmButton
@@ -234,7 +231,7 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
           >
             Supprimer la course
           </ConfirmButton>
-        </form>
+        </AdminForm>
       </div>
     </div>
   );

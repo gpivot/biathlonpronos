@@ -5,6 +5,7 @@ import { clearStartList, loadGeneralStartList, loadIbuStartList, type StartListI
 import { ConfirmButton } from "../../_components/ConfirmButton";
 import { GENERAL_FIELD_FORMATS, type NationStartList, type StartList } from "@/lib/startList";
 import { RELAY_FORMATS } from "@/lib/raceFormats";
+import { AdminForm } from "../../_components/AdminForm";
 
 /**
  * Liste de départ d'une course. Sprint, individuel, relais : liste provisoire placée toute seule à
@@ -129,7 +130,7 @@ export function StartListPanel({
         </div>
       )}
       {(source === "ibu" || source === "general") && (
-        <form action={clearStartList}>
+        <AdminForm action={clearStartList} successMessage="Liste de départ effacée ✓">
           <input type="hidden" name="race_id" value={raceId} />
           <ConfirmButton
             message="Effacer la liste de départ de cette course ?"
@@ -137,7 +138,7 @@ export function StartListPanel({
           >
             Effacer la liste
           </ConfirmButton>
-        </form>
+        </AdminForm>
       )}
     </div>
   );

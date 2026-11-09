@@ -6,6 +6,7 @@ import { ODDS_CSV_HEADERS } from "@/lib/admin/oddsCsv";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CsvImportPanel } from "../_components/CsvImportPanel";
 import { createAthlete, createNation, importOdds, updateOddsRow } from "./actions";
+import { AdminForm, SubmitButton } from "../_components/AdminForm";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ function NationOddsForm({
   odds: OddsMap;
 }) {
   return (
-    <form action={updateOddsRow} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg bg-bg/60 px-3 py-2 text-sm">
+    <AdminForm action={updateOddsRow} successMessage={`Cotes ${title} enregistrées ✓`} className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg bg-bg/60 px-3 py-2 text-sm">
       <input type="hidden" name="season_id" value={seasonId} />
       <input type="hidden" name="nation_code" value={nationCode} />
       <input type="hidden" name="nation_sex" value={nationSex} />
@@ -56,10 +57,10 @@ function NationOddsForm({
           <input name={`odds_${f.format}`} type="number" min={1} defaultValue={odds[f.format] ?? ""} className={oddsInputClass} />
         </label>
       ))}
-      <button type="submit" className="rounded border border-border px-2 py-1 text-xs">
+      <SubmitButton pendingLabel="…" savedLabel="✓" className="rounded border border-border px-2 py-1 text-xs">
         OK
-      </button>
-    </form>
+      </SubmitButton>
+    </AdminForm>
   );
 }
 
@@ -165,7 +166,7 @@ export default async function AdminAthletesPage({
 
       <details className="rounded-xl border border-border bg-card p-4">
         <summary className="cursor-pointer text-xs font-semibold text-text-dim">Ajouter un athlète ou une nation</summary>
-        <form action={createAthlete} className="mt-3 flex flex-wrap gap-2">
+        <AdminForm action={createAthlete} successMessage="Athlète ajouté ✓" resetOnSuccess className="mt-3 flex flex-wrap gap-2">
           <input type="hidden" name="season_id" value={season.id} />
           <input name="first_name" required placeholder="Prénom" className={inputClass} />
           <input name="last_name" required placeholder="Nom" className={inputClass} />
@@ -180,17 +181,17 @@ export default async function AdminAthletesPage({
             <option value="F">Femme</option>
             <option value="H">Homme</option>
           </select>
-          <button type="submit" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
+          <SubmitButton pendingLabel="Ajout…" savedLabel="Ajouté ✓" className="rounded bg-ice px-4 py-1.5 text-sm font-bold text-on-ice">
             Ajouter l&apos;athlète
-          </button>
-        </form>
-        <form action={createNation} className="mt-3 flex flex-wrap gap-2 border-t border-border/50 pt-3">
+          </SubmitButton>
+        </AdminForm>
+        <AdminForm action={createNation} successMessage="Nation enregistrée ✓" resetOnSuccess className="mt-3 flex flex-wrap gap-2 border-t border-border/50 pt-3">
           <input name="code" required placeholder="Code (ex. USA)" maxLength={3} className={`w-28 ${inputClass}`} />
           <input name="name" required placeholder="Nom (ex. États-Unis)" className={inputClass} />
-          <button type="submit" className="rounded border border-border px-3 py-1.5 text-xs">
+          <SubmitButton pendingLabel="Ajout…" savedLabel="Ajoutée ✓" className="rounded border border-border px-3 py-1.5 text-xs">
             Ajouter la nation
-          </button>
-        </form>
+          </SubmitButton>
+        </AdminForm>
       </details>
 
       <div className="flex flex-col gap-2">
@@ -261,10 +262,14 @@ export default async function AdminAthletesPage({
                                 return (
                                   <tr key={athlete.id} className="border-t border-border/40">
                                     <td className={`whitespace-nowrap px-2 py-1 ${hasOdds ? "" : "text-text-dim"}`}>
-                                      <form id={formId} action={updateOddsRow}>
+                                      <AdminForm
+                                        id={formId}
+                                        action={updateOddsRow}
+                                        successMessage={`Cotes de ${fullAthleteName(athlete)} enregistrées ✓`}
+                                      >
                                         <input type="hidden" name="season_id" value={season.id} />
                                         <input type="hidden" name="athlete_id" value={athlete.id} />
-                                      </form>
+                                      </AdminForm>
                                       {fullAthleteName(athlete)}
                                       {!hasOdds && <span className="ml-1 text-[11px]">(sans cote)</span>}
                                     </td>

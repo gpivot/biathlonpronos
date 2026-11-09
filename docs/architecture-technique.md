@@ -1568,3 +1568,21 @@ semaine » plus haut).
 - Textes mis à jour dans les 5 langues : FAQ de l'accueil (`faq_when_a`), nouvelle carte « Quand
   pronostiquer ? » dans les Règles, « Ouvre le … à 17 h » (Calendrier, accueil), message de la page
   d'une course pas encore ouverte.
+
+## Back-office : confirmation visible des enregistrements (09/11/2026)
+
+Demande de Guillaume : en cliquant sur « Enregistrer » dans l'admin, rien ne se voyait. Désormais,
+tous les formulaires simples du back-office (calendrier, étape, course, avis, cartes bonus, cotes,
+athlètes, nations, joueurs, suppressions) passent par `AdminForm` (`src/app/admin/_components/AdminForm.tsx`) :
+
+- le bouton (`SubmitButton`) se grise avec « Enregistrement… » pendant l'envoi, puis affiche
+  « Enregistré ✓ » quelques secondes ; les boutons de suppression (`ConfirmButton`) se grisent aussi ;
+- un bandeau en bas de l'écran (`AdminFeedbackProvider`, dans le layout `/admin`) confirme
+  (« Carte Fusée enregistrée ✓ ») ou donne la raison de l'échec en rouge. Il reste affiché après une
+  redirection (ex. retour au calendrier après modification d'une étape).
+
+Les Server Actions de ces formulaires sont enveloppées par `adminFormAction`
+(`src/lib/admin/formAction.ts`) : une erreur levée est **renvoyée** comme message au lieu d'être
+lancée, car Next.js masque le texte des erreurs en production. Toute nouvelle action de formulaire
+de l'admin doit suivre ce modèle. Les formulaires qui avaient déjà leur propre retour (résultats,
+globes, horloge, notifications, questions bonus, imports CSV) sont inchangés.

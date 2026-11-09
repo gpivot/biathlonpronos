@@ -18,6 +18,7 @@ import {
   scoreRace,
   type ResultEntryInput,
 } from "@/lib/admin/raceResults";
+import { adminFormAction } from "@/lib/admin/formAction";
 
 export interface SubmitResultsState {
   status: "idle" | "success" | "error";
@@ -197,14 +198,14 @@ async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, r
   }
 }
 
-export async function clearStartList(formData: FormData) {
+export const clearStartList = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const admin = createAdminClient();
   const raceId = String(formData.get("race_id"));
   await saveStartList(admin, raceId, []);
   await saveStartNations(admin, raceId, []);
   revalidatePath("/admin", "layout");
-}
+});
 
 /**
  * Sprint, individuel, relais : (re)place la liste provisoire du lundi 17 h, d'après le classement
@@ -230,7 +231,7 @@ export async function loadGeneralStartList(raceId: string): Promise<StartListImp
 }
 
 /** Modifie format, sexe, heure de départ (UTC) et course spéciale. */
-export async function updateRace(formData: FormData) {
+export const updateRace = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));
   const format = String(formData.get("format"));
@@ -257,10 +258,10 @@ export async function updateRace(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin", "layout");
-}
+});
 
 /** « L'avis de Biathlonpronos » de la course ; un texte vide masque la rubrique sur la page course. */
-export async function updateRaceOpinion(formData: FormData) {
+export const updateRaceOpinion = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));
   const opinion = String(formData.get("opinion") ?? "").trim();
@@ -273,20 +274,20 @@ export async function updateRaceOpinion(formData: FormData) {
 
   revalidatePath("/admin", "layout");
   revalidatePath("/", "layout");
-}
+});
 
-export async function resetResults(formData: FormData) {
+export const resetResults = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));
   const admin = createAdminClient();
   await resetRaceResults(admin, raceId);
   await rescorePursuitAfterSprint(admin, raceId);
   revalidatePath("/admin", "layout");
-}
+});
 
-export async function removeRace(formData: FormData) {
+export const removeRace = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   await deleteRace(createAdminClient(), String(formData.get("race_id")));
   revalidatePath("/admin", "layout");
   if (formData.get("redirect") === "1") redirect("/admin");
-}
+});

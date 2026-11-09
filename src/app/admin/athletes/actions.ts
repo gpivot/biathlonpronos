@@ -6,8 +6,9 @@ import { requireAdmin } from "@/lib/admin/requireAdmin";
 import { clearCurrentOdds, setCurrentOdds } from "@/lib/admin/odds";
 import { replaceOddsFromCsv } from "@/lib/admin/oddsCsv";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
+import { adminFormAction } from "@/lib/admin/formAction";
 
-export async function createAthlete(formData: FormData) {
+export const createAthlete = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const { error } = await createAdminClient().from("athletes").insert({
     season_id: String(formData.get("season_id")),
@@ -19,9 +20,9 @@ export async function createAthlete(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/athletes");
-}
+});
 
-export async function createNation(formData: FormData) {
+export const createNation = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const { error } = await createAdminClient().from("nations").upsert({
     code: String(formData.get("code")).trim().toUpperCase(),
@@ -30,13 +31,13 @@ export async function createNation(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin/athletes");
-}
+});
 
 /**
  * Enregistre une ligne du tableau (athlète, équipe ou nation) : chaque champ `odds_<format>`
  * modifié remplace la cote courante, un champ vidé la retire.
  */
-export async function updateOddsRow(formData: FormData) {
+export const updateOddsRow = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const admin = createAdminClient();
 
@@ -71,7 +72,7 @@ export async function updateOddsRow(formData: FormData) {
   }
 
   revalidatePath("/admin/athletes");
-}
+});
 
 export async function importOdds(seasonId: string, csvText: string): Promise<CsvActionResult> {
   await requireAdmin();

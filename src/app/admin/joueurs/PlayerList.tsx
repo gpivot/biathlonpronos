@@ -1,4 +1,5 @@
 import { setAdminRole } from "./actions";
+import { AdminForm, SubmitButton } from "../_components/AdminForm";
 
 export interface PlayerRow {
   id: string;
@@ -36,18 +37,21 @@ export function PlayerList({ players, meId }: { players: PlayerRow[]; meId: stri
               </div>
             </div>
             {isMe ? null : (
-              <form action={setAdminRole}>
+              <AdminForm
+                action={setAdminRole}
+                successMessage={p.isAdmin ? `${p.pseudo} n'est plus admin ✓` : `${p.pseudo} est maintenant admin ✓`}
+              >
                 <input type="hidden" name="user_id" value={p.id} />
                 <input type="hidden" name="is_admin" value={String(!p.isAdmin)} />
-                <button
-                  type="submit"
+                <SubmitButton
+                  pendingLabel="…"
                   className={`flex-shrink-0 rounded-lg px-3 py-1.5 text-xs font-bold ${
                     p.isAdmin ? "border border-red/60 text-red hover:bg-red/10" : "bg-ice text-on-ice"
                   }`}
                 >
                   {p.isAdmin ? "Retirer admin" : "Rendre admin"}
-                </button>
-              </form>
+                </SubmitButton>
+              </AdminForm>
             )}
           </div>
         );

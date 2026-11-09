@@ -9,8 +9,9 @@ import { importCalendarCsv } from "@/lib/admin/calendarImport";
 import { deleteStage, recomputeSeasonStreaks } from "@/lib/admin/raceResults";
 import { stageCategoryFields, stageLabel } from "@/lib/stageCategory";
 import type { CsvActionResult } from "../_components/CsvImportPanel";
+import { adminFormAction } from "@/lib/admin/formAction";
 
-export async function createSeason(formData: FormData) {
+export const createSeason = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const { error } = await createAdminClient().from("seasons").insert({
     label: String(formData.get("label")),
@@ -21,13 +22,13 @@ export async function createSeason(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin");
-}
+});
 
 /**
  * Jokers de fin de saison (01/11/2026) : à activer quand la dernière course est notée. Le
  * classement retire alors les résultats effacés par les jokers ; réversible (désactiver).
  */
-export async function setJokersApplied(formData: FormData) {
+export const setJokersApplied = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const { error } = await createAdminClient()
     .from("seasons")
@@ -36,9 +37,9 @@ export async function setJokersApplied(formData: FormData) {
   if (error) throw new Error(`${error.message} (migration 0030 appliquée ?)`);
 
   revalidatePath("/admin");
-}
+});
 
-export async function activateSeason(formData: FormData) {
+export const activateSeason = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const admin = createAdminClient();
   const seasonId = String(formData.get("season_id"));
@@ -49,9 +50,9 @@ export async function activateSeason(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin", "layout");
-}
+});
 
-export async function createStage(formData: FormData) {
+export const createStage = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const { error } = await createAdminClient().from("stages").insert({
     season_id: String(formData.get("season_id")),
@@ -65,9 +66,9 @@ export async function createStage(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin");
-}
+});
 
-export async function createRace(formData: FormData) {
+export const createRace = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const sex = String(formData.get("sex"));
   const specialRule = String(formData.get("special_rule"));
@@ -102,7 +103,7 @@ export async function createRace(formData: FormData) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/admin");
-}
+});
 
 export async function importCalendar(seasonId: string, csvText: string): Promise<CsvActionResult> {
   await requireAdmin();
@@ -118,25 +119,25 @@ export async function importCalendar(seasonId: string, csvText: string): Promise
   };
 }
 
-export async function removeStage(formData: FormData) {
+export const removeStage = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   await deleteStage(createAdminClient(), String(formData.get("stage_id")));
   revalidatePath("/admin", "layout");
-}
+});
 
 /**
  * Supprime une saison et, par cascade en base, tout ce qui lui appartient : étapes, courses,
  * athlètes, cotes, pronostics, résultats, points, ligues, cartes, Pépites.
  */
-export async function removeSeason(formData: FormData) {
+export const removeSeason = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const { error } = await createAdminClient().from("seasons").delete().eq("id", String(formData.get("season_id")));
   if (error) throw new Error(error.message);
   revalidatePath("/admin", "layout");
-}
+});
 
 /** Modifie les infos d'une étape (lieu, pays, dates, catégorie ×1 / ×2 / ×0), comme le crayon des courses. */
-export async function updateStage(formData: FormData) {
+export const updateStage = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const startsOn = String(formData.get("starts_on"));
   const endsOn = String(formData.get("ends_on"));
@@ -174,4 +175,4 @@ export async function updateStage(formData: FormData) {
   revalidatePath("/admin", "layout");
   revalidatePath("/", "layout");
   redirect("/admin");
-}
+});
