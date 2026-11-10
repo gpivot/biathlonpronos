@@ -46,7 +46,7 @@ export function BottomNavBar({
             {content}
           </a>
         ) : (
-          <Link key={href} href={href} className={className}>
+          <Link key={href} href={href} className={className} data-guest-lock>
             {content}
           </Link>
         );
