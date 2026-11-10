@@ -19,7 +19,7 @@ export async function getLeaderboard(supabase: SupabaseClient, seasonId: string)
   try {
     // Plus de 1000 lignes dès quelques courses avec beaucoup de joueurs : lecture par pages.
     ledger = await fetchAll<any>((from, to) =>
-      supabase.from("score_ledger").select("id, user_id, points, profiles(pseudo)").eq("season_id", seasonId).eq("counts_in_standings", true).order("id").range(from, to)
+      supabase.from("score_ledger").select("id, user_id, points, profiles!inner(pseudo, signup_pending)").eq("profiles.signup_pending", false).eq("season_id", seasonId).eq("counts_in_standings", true).order("id").range(from, to)
     );
   } catch (error) {
     console.error("getLeaderboard:", (error as Error).message);

@@ -8,7 +8,7 @@ import { fetchIbuResults, fetchIbuStartList, fetchIbuStartNations } from "@/lib/
 import { matchStartList, matchStartNations, saveStartList, saveStartNations } from "@/lib/admin/startListImport";
 import { placeGeneralStartList, type OpeningRace } from "@/lib/admin/startListOpening";
 import { RELAY_FORMATS } from "@/lib/raceFormats";
-import { notifyRaceResults } from "@/lib/notifications/jobs";
+import { notifyGuestResults, notifyRaceResults } from "@/lib/notifications/jobs";
 import { redirect } from "next/navigation";
 import {
   deleteRace,
@@ -41,6 +41,10 @@ export async function submitResults(
     const pushNote = await notifyRaceResults(admin, raceId).catch(
       (error) => ` Notification non envoyée : ${error instanceof Error ? error.message : "erreur inconnue"}.`
     );
+    // Invités « e-mail seulement » : leur score les attend, e-mail avec code privé (migration 0045).
+    const guestNote = await notifyGuestResults(admin, raceId).catch(
+      (error) => ` E-mail des invités non envoyé : ${error instanceof Error ? error.message : "erreur inconnue"}.`
+    );
     revalidatePath("/admin", "layout");
     return {
       status: "success",
@@ -48,7 +52,8 @@ export async function submitResults(
         `Résultats enregistrés, ${summary.scoredPredictions} pronostic(s) noté(s), séries 10/10 recalculées.` +
         (pursuitRescored ? " Poursuite de l'étape renotée avec ses nouvelles cotes." : "") +
         massStartNote +
-        pushNote,
+        pushNote +
+        guestNote,
     };
   } catch (err) {
     return { status: "error", message: err instanceof Error ? err.message : "Erreur inconnue." };
