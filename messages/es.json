@@ -567,7 +567,10 @@
     "opinionTitle": "La opinión de Biathlonpronos",
     "bonusQuestionsLine": "Preguntas extra",
     "malusScale_tour_de_pena_4": "Biatleta no pronosticado → 5 vueltas, -100 pts (sin pronóstico: -300)",
-    "offStandingsNotice": "Carrera fuera de clasificación: tiene su propia clasificación, pero sus puntos no cuentan para la temporada (sin dorsal rojo, carta bonus, ×2 ni Diamante oculto)."
+    "offStandingsNotice": "Carrera fuera de clasificación: tiene su propia clasificación, pero sus puntos no cuentan para la temporada (sin dorsal rojo, carta bonus, ×2 ni Diamante oculto).",
+    "signupInviteTitle": "¿Y tu clasificación?",
+    "signupInviteBody": "Crea tu cuenta gratis para descubrir tu clasificación, pronosticar la próxima carrera y acceder a todas las funciones.",
+    "signupInviteButton": "Crear mi cuenta gratis"
   },
   "PredictionForm": {
     "chooseThree": "Elige 3 biatletas",
@@ -636,7 +639,9 @@
     "codeUnknownEmail": "No hay ninguna cuenta con este correo.",
     "oauthUnavailable": "El inicio de sesión con {provider} aún no está disponible. Usa tu correo electrónico por ahora.",
     "oauthFailed": "Error al iniciar sesión ({detail}). Inténtalo de nuevo o usa tu correo electrónico.",
-    "oauthNoEmail": "Esta cuenta no nos ha compartido una dirección de correo. Permite compartir el correo o inicia sesión con tu correo electrónico."
+    "oauthNoEmail": "Esta cuenta no nos ha compartido una dirección de correo. Permite compartir el correo o inicia sesión con tu correo electrónico.",
+    "codeHave": "Introduce tu e-mail y el código recibido.",
+    "codeAlready": "Ya tengo un código"
   },
   "Support": {
     "title": "Soporte",
@@ -1010,7 +1015,14 @@
     "lockedBackToRace": "Volver a la carrera",
     "accountTitle": "Crea tu cuenta gratuita",
     "accountIntro": "Sin contraseña: basta con un código recibido por e-mail. Después podrás navegar por toda la app.",
-    "accountVerify": "Crear mi cuenta"
+    "accountVerify": "Crear mi cuenta",
+    "emailTitle": "Confirma tu pronóstico",
+    "emailIntro": "En cuanto termine la carrera, recibe tu código privado por e-mail para descubrir tu puntuación.",
+    "emailPrivacy": "Tu e-mail sigue siendo privado: solo sirve para enviarte tu puntuación.",
+    "emailSubmit": "Confirmar mi pronóstico",
+    "invalidEmail": "Esta dirección de e-mail no es válida.",
+    "saveFailed": "No se ha podido confirmar tu pronóstico, inténtalo de nuevo en un momento.",
+    "welcomeEmailBody": "Tu pronóstico está confirmado. En cuanto termine la carrera, tu código privado llegará a {email} para descubrir tu puntuación."
   },
   "BonusQuestions": {
     "sectionTitle": "Preguntas extra",
@@ -1059,7 +1071,13 @@
     "footer": "Recibes este email porque juegas a Biathlonpronos.",
     "manage": "Gestionar mis notificaciones",
     "unsubscribe": "Dejar de recibir estos emails",
-    "supportReplyPushTitle": "💬 Biathlonpronos te ha respondido"
+    "supportReplyPushTitle": "💬 Biathlonpronos te ha respondido",
+    "guestResultsSubject": "🏁 {race} en {location}: tu puntuación está lista",
+    "guestResultsTitle": "¡Tu puntuación está lista!",
+    "guestResultsBody": "La carrera {race} en {location} ha terminado. Descubre tu puntuación y el detalle de tus puntos.",
+    "guestResultsCodeLabel": "Tu código privado:",
+    "guestResultsCodeHint": "En la app: pantalla de inicio de sesión, «Iniciar sesión con un código recibido por e-mail» y luego «Ya tengo un código».",
+    "guestResultsButton": "Descubrir mi puntuación"
   },
   "Unsubscribe": {
     "title": "Darse de baja",
@@ -1072,6 +1090,22 @@
     "manageHint": "Puedes cambiar de opinión en cualquier momento desde tu perfil.",
     "invalid": "Este enlace ya no es válido. Puedes gestionar tus emails desde tu perfil.",
     "toProfile": "Ir a mi perfil"
+  },
+  "CompleteSignup": {
+    "title": "Crea tu cuenta gratuita",
+    "intro": "Tu puntuación se conserva: elige tu apodo para aparecer en las clasificaciones. Cuenta: {email}",
+    "pseudo": "Apodo (visible en las clasificaciones)",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "privacy": "Tu nombre y apellido siguen siendo privados; solo tu apodo es visible para los demás jugadores.",
+    "privacyLink": "Privacidad",
+    "submit": "Crear mi cuenta",
+    "saving": "Creando…",
+    "error_pseudoLength": "Tu apodo debe tener entre 2 y 20 caracteres.",
+    "error_pseudoTaken": "Este apodo ya está cogido, elige otro.",
+    "error_missingName": "Indica tu nombre y apellido.",
+    "error_notPending": "Tu cuenta ya está creada.",
+    "error_unknown": "Se ha producido un error, inténtalo de nuevo."
   },
   "Tutorial": {
     "stepOf": "{step} / {total}",
