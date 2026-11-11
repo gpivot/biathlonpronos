@@ -1072,5 +1072,19 @@
     "manageHint": "Du kannst das jederzeit in deinem Profil ändern.",
     "invalid": "Dieser Link ist nicht mehr gültig. Du kannst deine E-Mails in deinem Profil verwalten.",
     "toProfile": "Zu meinem Profil"
+  },
+  "Tutorial": {
+    "stepOf": "{step} / {total}",
+    "skip": "Überspringen",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "start": "Los geht's!",
+    "place": "{rank}.",
+    "step1Title": "Wähle deine 3 Biathleten",
+    "step1Body": "Tippe in der Liste des Rennens auf ihre Namen, um sie zu deinem Tipp hinzuzufügen, und bestätige. Bis zum Start kannst du ihn ändern.",
+    "step2Title": "Quote und Multiplikator",
+    "step2Body": "Jeder Biathlet hat eine Quote: Je höher sie ist, desto riskanter der Tipp… und desto mehr bringt er. Landet er in den Top 10, wird seine Quote je nach Platz multipliziert. Ab Platz 11 gibt es keine Punkte.",
+    "step3Title": "So werden deine Punkte berechnet",
+    "step3Body": "Für jeden deiner 3 Biathleten: Quote × Multiplikator seines Platzes. Alles wird addiert, dazu kommen Boni, wenn alle 3 in den Top 10, den Top 5 oder auf dem Podium landen."
   }
 }
