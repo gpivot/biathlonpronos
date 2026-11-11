@@ -9,6 +9,8 @@ import { getRaceDisplayStatus } from "@/lib/raceStatus";
 import { getAdminProfile, getClock } from "@/lib/clock";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PredictionForm, type AthleteWithOdds } from "./PredictionForm";
+import { FirstPredictionTutorial } from "@/components/FirstPredictionTutorial";
+import { tutorialSteps } from "./tutorialSteps";
 import { RelayPredictionForm, type NationWithOdds } from "./RelayPredictionForm";
 import { RuleInfoButton } from "./RuleInfoButton";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
@@ -435,6 +437,8 @@ export default async function RacePage({
                   startGaps={startGaps}
                 />
               )}
+              {/* Premier pronostic d'un invité (« Je joue ») : 3 pop-ups pour apprendre à jouer. */}
+              {!isRelay && (!user || user.is_anonymous) && <FirstPredictionTutorial steps={await tutorialSteps()} />}
             </>
           ))}
 
@@ -676,3 +680,4 @@ function RaceNavLink({ raceId, label, direction }: { raceId: string | null; labe
     </Link>
   );
 }
+
