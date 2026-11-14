@@ -124,6 +124,12 @@ export default async function AdminRacePage({ params }: { params: Promise<{ race
   const nationList = isRelay ? await getNationStartList(admin, race.id) : null;
   const bonusQuestions = await getAdminBonusQuestions(admin, race, now);
 
+  // Liste de départ connue : le tableau de saisie ne montre que ses biathlètes (ou nations),
+  // plus ceux qui ont déjà un résultat enregistré.
+  const allowed =
+    startList?.status === "known" ? new Set(Object.keys(startList.order)) : nationList ? new Set(nationList.nations) : null;
+  if (allowed) candidates = candidates.filter((c) => allowed.has(c.id) || c.existingResult);
+
   return (
     <div className="flex flex-col gap-4">
       <BackLinks raceId={race.id} />
