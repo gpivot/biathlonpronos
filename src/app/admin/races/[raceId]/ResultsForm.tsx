@@ -13,6 +13,8 @@ import {
   type ResultsCsvCandidate,
 } from "@/lib/admin/resultsCsv";
 import { formatShootings, parseShootings, shootingCount, totalMisses } from "@/lib/shootings";
+import { filterBySearch } from "@/lib/searchFilter";
+import { SearchField } from "@/components/SearchField";
 
 export interface CandidateRow extends ResultsCsvCandidate {
   id: string;
@@ -71,6 +73,14 @@ export function ResultsForm({
   const [result, setResult] = useState<SubmitResultsState | null>(null);
   const [csvReport, setCsvReport] = useState<{ ok: boolean; message: string; warnings: string[] } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [search, setSearch] = useState("");
+  // Filtre d'affichage seulement : les lignes masquées gardent leur saisie et sont enregistrées.
+  const visibleCandidates = filterBySearch(
+    candidates,
+    search,
+    (c) => [c.name, c.firstName, c.lastName, c.nationCode, c.nationName],
+    (c) => c.nationCode
+  );
 
   const isAthleteMode = mode === "athlete";
   const showTimeGap = isAthleteMode && format === "sprint";
@@ -217,6 +227,20 @@ export function ResultsForm({
         )}
       </div>
 
+      <div className="flex flex-col gap-1">
+        <SearchField
+          value={search}
+          onChange={setSearch}
+          placeholder={isAthleteMode ? "Rechercher un biathlète par nom ou pays" : "Rechercher une nation"}
+          clearLabel="Effacer la recherche"
+        />
+        {search.trim() !== "" && (
+          <div className="text-xs text-text-dim">
+            {visibleCandidates.length} sur {candidates.length} affiché(s). Les lignes masquées gardent leur saisie.
+          </div>
+        )}
+      </div>
+
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="w-full text-sm">
           <thead>
@@ -238,7 +262,7 @@ export function ResultsForm({
             </tr>
           </thead>
           <tbody>
-            {candidates.map((candidate) => {
+            {visibleCandidates.map((candidate) => {
               const row = rows[candidate.id];
               return (
                 <tr key={candidate.id} className="border-b border-border/50">
