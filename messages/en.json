@@ -408,7 +408,12 @@
     "joinError": "Invalid invite code.",
     "backToList": "← Back to my leagues",
     "notAMember": "You're not a member of this league.",
-    "inviteCodeLabel": "Invite code"
+    "inviteCodeLabel": "Invite code",
+    "copyInviteButton": "Copy invite message",
+    "inviteCopied": "Copied! Paste it into WhatsApp",
+    "copyInviteHint": "A message ready to paste into WhatsApp, texts…",
+    "inviteCopyError": "Copying didn't work: type the code in by hand.",
+    "inviteMessage": "🎯 Join my league \"{name}\" on Biathlonpronos, the biathlon prediction game!\n\n1. Sign up at {url}\n2. Go to the Leagues tab, \"Join with a code\"\n3. Enter the code: {code}\n\nYour turn to play! 🏆"
   },
   "Classement": {
     "title": "Standings",

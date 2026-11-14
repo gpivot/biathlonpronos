@@ -4,6 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { BottomNav } from "@/components/BottomNav";
 import { getLeaderboard } from "@/lib/leaderboard";
+import { CopyInviteButton } from "./CopyInviteButton";
 
 export const dynamic = "force-dynamic";
 
@@ -54,11 +55,14 @@ export default async function LeagueDetailPage({ params }: { params: Promise<{ l
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between rounded-2xl border border-border bg-card px-4 py-3">
-              <span className="text-xs text-text-dim">{t("inviteCodeLabel")}</span>
-              <span className="font-display text-base font-bold tracking-widest text-ice">
-                {league.invite_code}
-              </span>
+            <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card px-4 py-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-text-dim">{t("inviteCodeLabel")}</span>
+                <span className="font-display text-base font-bold tracking-widest text-ice">
+                  {league.invite_code}
+                </span>
+              </div>
+              <CopyInviteButton leagueName={league.name} code={league.invite_code} />
             </div>
 
             <div className="flex flex-col gap-2">

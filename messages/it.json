@@ -408,7 +408,12 @@
     "joinError": "Codice di invito non valido.",
     "backToList": "← Torna alle mie leghe",
     "notAMember": "Non fai parte di questa lega.",
-    "inviteCodeLabel": "Codice di invito"
+    "inviteCodeLabel": "Codice di invito",
+    "copyInviteButton": "Copia messaggio di invito",
+    "inviteCopied": "Copiato! Incollalo su WhatsApp",
+    "copyInviteHint": "Un messaggio pronto da incollare su WhatsApp, SMS…",
+    "inviteCopyError": "Copia non riuscita: ricopia il codice a mano.",
+    "inviteMessage": "🎯 Entra nella mia lega «{name}» su Biathlonpronos, il gioco di pronostici del biathlon!\n\n1. Registrati su {url}\n2. Vai nella scheda Leghe, «Entra con un codice»\n3. Inserisci il codice: {code}\n\nTocca a te! 🏆"
   },
   "Classement": {
     "title": "Classifica",

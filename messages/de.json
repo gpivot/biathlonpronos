@@ -408,7 +408,12 @@
     "joinError": "Ungültiger Einladungscode.",
     "backToList": "← Zurück zu meinen Ligen",
     "notAMember": "Du bist kein Mitglied dieser Liga.",
-    "inviteCodeLabel": "Einladungscode"
+    "inviteCodeLabel": "Einladungscode",
+    "copyInviteButton": "Einladung kopieren",
+    "inviteCopied": "Kopiert! In WhatsApp einfügen",
+    "copyInviteHint": "Eine fertige Nachricht für WhatsApp, SMS…",
+    "inviteCopyError": "Kopieren hat nicht geklappt: Code bitte von Hand abschreiben.",
+    "inviteMessage": "🎯 Tritt meiner Liga „{name}“ bei Biathlonpronos bei, dem Biathlon-Tippspiel!\n\n1. Registriere dich auf {url}\n2. Geh zum Tab Ligen, „Mit Code beitreten“\n3. Gib den Code ein: {code}\n\nJetzt bist du dran! 🏆"
   },
   "Classement": {
     "title": "Rangliste",

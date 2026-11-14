@@ -408,7 +408,12 @@
     "joinError": "Código de invitación no válido.",
     "backToList": "← Volver a mis ligas",
     "notAMember": "No eres miembro de esta liga.",
-    "inviteCodeLabel": "Código de invitación"
+    "inviteCodeLabel": "Código de invitación",
+    "copyInviteButton": "Copiar mensaje de invitación",
+    "inviteCopied": "¡Copiado! Pégalo en WhatsApp",
+    "copyInviteHint": "Un mensaje listo para pegar en WhatsApp, SMS…",
+    "inviteCopyError": "No se pudo copiar: escribe el código a mano.",
+    "inviteMessage": "🎯 ¡Únete a mi liga «{name}» en Biathlonpronos, el juego de pronósticos de biatlón!\n\n1. Regístrate en {url}\n2. Ve a la pestaña Ligas, «Unirse con un código»\n3. Introduce el código: {code}\n\n¡Te toca jugar! 🏆"
   },
   "Classement": {
     "title": "Clasificación",
