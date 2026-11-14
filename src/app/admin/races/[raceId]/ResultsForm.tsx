@@ -191,7 +191,7 @@ export function ResultsForm({
           {(isAthleteMode ? ATHLETE_RESULTS_HEADERS : NATION_RESULTS_HEADERS).join(";")}
         </code>
         <div className="flex flex-wrap gap-2">
-          <input ref={fileInputRef} type="file" accept=".csv,text/csv" onChange={handleCsvFile} className="hidden" />
+          <input ref={fileInputRef} type="file" accept=".csv,.txt,text/csv,text/plain" onChange={handleCsvFile} className="hidden" />
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}

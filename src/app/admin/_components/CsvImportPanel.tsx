@@ -67,7 +67,7 @@ export function CsvImportPanel({
         {headers.join(";")}
       </code>
       <div className="flex flex-wrap items-center gap-2">
-        <input ref={inputRef} type="file" accept=".csv,text/csv" onChange={handleFile} className="hidden" />
+        <input ref={inputRef} type="file" accept=".csv,.txt,text/csv,text/plain" onChange={handleFile} className="hidden" />
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
