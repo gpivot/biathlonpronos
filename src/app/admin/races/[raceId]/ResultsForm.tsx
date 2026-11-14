@@ -169,8 +169,6 @@ export function ResultsForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <SubmitBar submitting={submitting} result={result} />
-
       <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-4">
         <div className="text-sm font-semibold">Récupérer les résultats</div>
         <div className="flex flex-wrap items-center gap-2">
@@ -228,12 +226,17 @@ export function ResultsForm({
       </div>
 
       <div className="flex flex-col gap-1">
-        <SearchField
-          value={search}
-          onChange={setSearch}
-          placeholder={isAthleteMode ? "Rechercher un biathlète par nom ou pays" : "Rechercher une nation"}
-          clearLabel="Effacer la recherche"
-        />
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="min-w-[240px] flex-1">
+            <SearchField
+              value={search}
+              onChange={setSearch}
+              placeholder={isAthleteMode ? "Rechercher un biathlète par nom ou pays" : "Rechercher une nation"}
+              clearLabel="Effacer la recherche"
+            />
+          </div>
+          <SubmitBar submitting={submitting} result={result} />
+        </div>
         {search.trim() !== "" && (
           <div className="text-xs text-text-dim">
             {visibleCandidates.length} sur {candidates.length} affiché(s). Les lignes masquées gardent leur saisie.
