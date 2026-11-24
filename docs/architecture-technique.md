@@ -818,6 +818,9 @@ l'URL (`?portee=ligue&ligue=…&periode=etapes&etape=…&course=…`) pour qu'un
   qu'ils n'ont rien marqué, même avant la 1re course : ça donne envie de rejoindre. Ex æquo à 0
   classés par pseudo. L'encadré « Mon classement » (et l'accueil) garde « – » tant qu'on n'a pas
   de point. La vue « Par étapes » est inchangée (seuls ceux qui ont des points ou un prono).
+- **Flamme de série au classement** (24/11/2026, décision de Guillaume) : en noir et blanc quand la
+  série retombe à 0 ; masquée pour un joueur qui n'a encore jamais lancé de série (aucune course
+  comptée où il a marqué des points).
 - **Saison / Par étapes.** « Saison » : classement général (globes compris), comme avant ; la liste
   « Meilleures séries en cours » n'apparaît qu'en Général + Saison. « Par étapes » : un menu des
   étapes (par défaut la dernière étape commencée) et un menu des courses (« Toute l'étape » par

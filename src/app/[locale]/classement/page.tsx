@@ -6,6 +6,7 @@ import { HeaderActions } from "@/components/HeaderActions";
 import { ArrowLeftIcon } from "@/components/icons";
 import { getClock } from "@/lib/clock";
 import { getLeaderboard } from "@/lib/leaderboard";
+import { fetchAll } from "@/lib/admin/fetchAll";
 import { getPlayerBadges, type PlayerBadges } from "@/lib/playerBadges";
 import { HelpButton } from "@/components/HelpButton";
 import { LeaderBib, PlayerBadgesRow, StageLeaderBib } from "@/components/PlayerBadgesRow";
@@ -28,14 +29,33 @@ import { JokersCard } from "@/components/JokersCard";
 
 export const dynamic = "force-dynamic";
 
-/** Séries en cours (10/10) de tous les joueurs, 0 compris (série retombée) : rien avant la 1re course notée (cf. getCurrentStreak). */
+/**
+ * Séries en cours (10/10) : rien avant la 1re course notée (cf. getCurrentStreak). Une série retombée
+ * à 0 garde sa flamme en noir et blanc ; un joueur qui n'a encore jamais lancé de série (aucune
+ * course comptée avec des points) n'a pas de flamme (décision de Guillaume, 24/11/2026).
+ */
 async function getCurrentStreaks(supabase: ReturnType<typeof createClient>, seasonId: string): Promise<Map<string, number>> {
   if (!(await seasonHasFinishedRace(supabase, seasonId))) return new Map();
-  const { data } = await supabase
-    .from("streak_counters")
-    .select("user_id, current_streak")
-    .eq("season_id", seasonId);
-  return new Map((data ?? []).map((s: any) => [s.user_id as string, Number(s.current_streak)]));
+  const [{ data }, scored] = await Promise.all([
+    supabase.from("streak_counters").select("user_id, current_streak").eq("season_id", seasonId),
+    fetchAll<any>((from, to) =>
+      supabase
+        .from("score_ledger")
+        .select("id, user_id")
+        .eq("season_id", seasonId)
+        .eq("counts_in_standings", true)
+        .not("race_id", "is", null)
+        .gt("points", 0)
+        .order("id")
+        .range(from, to)
+    ).catch(() => [] as any[]),
+  ]);
+  const started = new Set(scored.map((r) => r.user_id as string));
+  return new Map(
+    (data ?? [])
+      .map((s: any) => [s.user_id as string, Number(s.current_streak)] as [string, number])
+      .filter(([userId, streak]) => streak > 0 || started.has(userId))
+  );
 }
 
 type SearchParams = { portee?: string; ligue?: string; periode?: string; etape?: string; course?: string };
