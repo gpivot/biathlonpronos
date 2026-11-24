@@ -405,7 +405,10 @@
     "pepiteSaved": "Pépite cachée enregistrée.",
     "pepiteEditableUntil": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde ({date}), puis définitive.",
     "pepiteEditableNoDate": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde, puis définitive.",
-    "pepiteLocked": "La 1re course de Coupe du Monde est partie : ta Pépite cachée ne peut plus être modifiée."
+    "pepiteLocked": "La 1re course de Coupe du Monde est partie : ta Pépite cachée ne peut plus être modifiée.",
+    "pickerEdit": "Modifier ce pronostic",
+    "pickerClose": "Fermer",
+    "pickSaved": "Enregistré"
   },
   "Ligues": {
     "title": "Mes ligues",

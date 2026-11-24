@@ -405,7 +405,10 @@
     "pepiteSaved": "Hidden Diamond saved.",
     "pepiteEditableUntil": "You can change it until the start of the first World Cup race ({date}); after that it's final.",
     "pepiteEditableNoDate": "You can change it until the start of the first World Cup race; after that it's final.",
-    "pepiteLocked": "The first World Cup race has started: your Hidden Diamond can no longer be changed."
+    "pepiteLocked": "The first World Cup race has started: your Hidden Diamond can no longer be changed.",
+    "pickerEdit": "Change this prediction",
+    "pickerClose": "Close",
+    "pickSaved": "Saved"
   },
   "Ligues": {
     "title": "My leagues",

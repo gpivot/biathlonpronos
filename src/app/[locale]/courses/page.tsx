@@ -8,6 +8,7 @@ import { getSeasonView, pickDefaultOpenStageId, type HiddenPepite } from "@/lib/
 import { HiddenPepiteCard } from "@/components/HiddenPepiteCard";
 import { getClock } from "@/lib/clock";
 import { isEquipeCardActive } from "@/lib/favoriteTeam";
+import { getFirstWorldCupRaceAt, seasonChoicesEditable } from "@/lib/seasonChoices";
 import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
 import { SeasonPredictionsAccordion, type SeasonPick } from "./SeasonPredictionsAccordion";
@@ -25,8 +26,10 @@ interface CalendarData {
   /** Pronostics de saison encore modifiables (avant le début de saison, comme /globes). */
   seasonPicksOpen: boolean;
   pepites: HiddenPepite[] | null;
+  /** Pépite cachée et équipe favorite encore modifiables (jusqu'à la 1re course de Coupe du Monde). */
+  choicesEditable: boolean;
   /** Ligne « Équipe favorite » des pronostics de saison (joueur connecté seulement). */
-  favoriteTeam: { label: string; nationCode: string } | { label: null; choosable: boolean } | undefined;
+  favoriteTeam: { label: string; nationCode: string; editable: boolean } | { label: null; choosable: boolean } | undefined;
   streak: number | null;
   cards: PlayerCards | null;
 }
@@ -45,23 +48,26 @@ async function getCalendarData(): Promise<CalendarData> {
     isAdmin = profile?.is_admin ?? false;
   }
 
-  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, seasonPicksOpen: false, pepites: null, favoriteTeam: undefined, streak: null, cards: null };
+  if (!season) return { seasonId: null, stages: [], isAdmin, seasonPicks: null, seasonPicksOpen: false, pepites: null, choicesEditable: false, favoriteTeam: undefined, streak: null, cards: null };
 
   const { now } = await getClock();
   // Invité (session anonyme) : vu comme un visiteur tant que son compte n'est pas créé.
   const playerId = userResult.user && !userResult.user.is_anonymous ? userResult.user.id : null;
-  const [{ stages, seasonPicks, pepites, streak, cards }, favoriteTeam] = await Promise.all([
+  const [{ stages, seasonPicks, pepites, streak, cards }, firstWorldCupRaceAt] = await Promise.all([
     getSeasonView(supabase, season, playerId, now),
-    playerId ? getFavoriteTeamLine(supabase, season.id, playerId) : Promise.resolve(undefined),
+    playerId ? getFirstWorldCupRaceAt(supabase, season.id) : Promise.resolve(null),
   ]);
-  return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, pepites, favoriteTeam, streak, cards };
+  const choicesEditable = !!playerId && seasonChoicesEditable(firstWorldCupRaceAt, now);
+  const favoriteTeam = playerId ? await getFavoriteTeamLine(supabase, season.id, playerId, choicesEditable) : undefined;
+  return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, pepites, choicesEditable, favoriteTeam, streak, cards };
 }
 
 /** Équipe favorite choisie (« France Femmes »), ou encore à choisir tant que la carte Équipe n'est pas active. */
 async function getFavoriteTeamLine(
   supabase: ReturnType<typeof createClient>,
   seasonId: string,
-  userId: string
+  userId: string,
+  choicesEditable: boolean
 ): Promise<CalendarData["favoriteTeam"]> {
   const { data } = await supabase
     .from("favorite_teams")
@@ -72,7 +78,9 @@ async function getFavoriteTeamLine(
   if (!data) return { label: null, choosable: !(await isEquipeCardActive(supabase, userId, seasonId)) };
   const tSex = await getTranslations("Sex");
   const name = (data as any).nations?.name ?? data.nation_code;
-  return { label: `${name} ${tSex(data.sex as "F")}`, nationCode: data.nation_code };
+  // Modifiable jusqu'à la 1re course de Coupe du Monde, sauf carte Équipe déjà active.
+  const editable = choicesEditable && !(await isEquipeCardActive(supabase, userId, seasonId));
+  return { label: `${name} ${tSex(data.sex as "F")}`, nationCode: data.nation_code, editable };
 }
 
 export default async function CoursesPage({
@@ -86,7 +94,7 @@ export default async function CoursesPage({
   // Arrivée depuis « L'étape de la semaine » de l'accueil : cette étape est dépliée d'office.
   const { etape } = await searchParams;
   const t = await getTranslations("Courses");
-  const { seasonId, stages, isAdmin, seasonPicks, seasonPicksOpen, pepites, favoriteTeam, streak, cards } = await getCalendarData();
+  const { seasonId, stages, isAdmin, seasonPicks, seasonPicksOpen, pepites, choicesEditable, favoriteTeam, streak, cards } = await getCalendarData();
   const requestedStageId = etape && stages.some((s) => s.id === etape) ? etape : null;
 
   return (
@@ -107,7 +115,7 @@ export default async function CoursesPage({
 
         {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} open={seasonPicksOpen} favoriteTeam={favoriteTeam} />}
 
-        {pepites && <HiddenPepiteCard pepites={pepites} />}
+        {pepites && <HiddenPepiteCard pepites={pepites} editable={choicesEditable} />}
 
         {streak != null && <StreakCard current={streak} cards={cards ?? undefined} seasonId={seasonId ?? undefined} />}
 

@@ -24,11 +24,17 @@ const CATEGORIES = [
 ] as const;
 
 /** Choix des pronostics de saison : favoris d'abord (cote croissante), puis par nom à cote égale. */
-function byOddsThenLabel(a: { odds: number; label: string }, b: { odds: number; label: string }) {
-  return Number(a.odds) - Number(b.odds) || a.label.localeCompare(b.label);
+function byOddsThenLabel(a: { odds: number; name: string }, b: { odds: number; name: string }) {
+  return Number(a.odds) - Number(b.odds) || a.name.localeCompare(b.name);
 }
 
-export default async function GlobesPage() {
+/**
+ * `?modifier=` : arrivée depuis une ligne de « Mes pronostics de saison » ou de la Pépite cachée
+ * (Calendrier) : la liste de ce prono s'ouvre d'office. Valeurs : une catégorie (gros_globe_f…),
+ * pepite_F, pepite_H ou equipe.
+ */
+export default async function GlobesPage({ searchParams }: { searchParams: Promise<{ modifier?: string }> }) {
+  const { modifier = null } = await searchParams;
   const supabase = createClient();
   const t = await getTranslations("Globes");
 
@@ -122,7 +128,7 @@ export default async function GlobesPage() {
       .filter(([, e]) => e.athlete?.sex === sex && isPepiteEligibleOdds(e.values))
       .map(([id, e]) => {
         const odds = Math.min(...e.values);
-        return { id, label: `${fullAthleteName(e.athlete)} (${e.athlete.nation_code}) — ×${odds}`, nationCode: e.athlete.nation_code as string, odds };
+        return { id, name: fullAthleteName(e.athlete), nationCode: e.athlete.nation_code as string, odds };
       })
       .sort(byOddsThenLabel);
   const pickByCategory = new Map((existingPicks ?? []).map((p) => [p.category, p]));
@@ -145,7 +151,7 @@ export default async function GlobesPage() {
         isNation: true,
         initialPick: existing?.nation_code ?? null,
         options: (odds ?? [])
-          .map((o) => ({ id: o.nation_code as string, label: `${nameByNationCode.get(o.nation_code!) ?? o.nation_code} — ×${o.value}`, nationCode: o.nation_code as string, odds: Number(o.value) }))
+          .map((o) => ({ id: o.nation_code as string, name: nameByNationCode.get(o.nation_code!) ?? (o.nation_code as string), nationCode: o.nation_code as string, odds: Number(o.value) }))
           .sort(byOddsThenLabel),
       });
     } else {
@@ -164,7 +170,7 @@ export default async function GlobesPage() {
           .filter((o: any) => o.athletes?.sex === c.sex)
           .map((o: any) => ({
             id: o.athlete_id,
-            label: `${fullAthleteName(o.athletes)} (${o.athletes.nation_code}) — ×${o.value}`,
+            name: fullAthleteName(o.athletes),
             nationCode: o.athletes.nation_code,
             odds: Number(o.value),
           }))
@@ -186,7 +192,7 @@ export default async function GlobesPage() {
           {t("lockedMessage")}
         </div>
       ) : (
-        <GlobesForm seasonId={season.id} categories={categories} />
+        <GlobesForm seasonId={season.id} categories={categories} editCategory={modifier} />
       )}
 
       <div className="flex flex-col gap-3">
@@ -201,6 +207,7 @@ export default async function GlobesPage() {
           fromTalent={!!pepiteBySex.get("F")?.active_from}
           editable={choicesEditable}
           editDeadline={editDeadline}
+          autoOpen={modifier === "pepite_F"}
         />
         <PepiteForm
           sex="H"
@@ -213,6 +220,7 @@ export default async function GlobesPage() {
           fromTalent={!!pepiteBySex.get("H")?.active_from}
           editable={choicesEditable}
           editDeadline={editDeadline}
+          autoOpen={modifier === "pepite_H"}
         />
       </div>
 
@@ -225,6 +233,7 @@ export default async function GlobesPage() {
           locked={equipeActive}
           editable={choicesEditable && !equipeActive}
           editDeadline={editDeadline}
+          autoEdit={modifier === "equipe"}
         />
       )}
     </div>

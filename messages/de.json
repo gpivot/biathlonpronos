@@ -405,7 +405,10 @@
     "pepiteSaved": "Versteckter Rohdiamant gespeichert.",
     "pepiteEditableUntil": "Änderbar bis zum Start des ersten Weltcuprennens ({date}), danach endgültig.",
     "pepiteEditableNoDate": "Änderbar bis zum Start des ersten Weltcuprennens, danach endgültig.",
-    "pepiteLocked": "Das erste Weltcuprennen hat begonnen: Dein versteckter Rohdiamant kann nicht mehr geändert werden."
+    "pepiteLocked": "Das erste Weltcuprennen hat begonnen: Dein versteckter Rohdiamant kann nicht mehr geändert werden.",
+    "pickerEdit": "Diesen Tipp ändern",
+    "pickerClose": "Schließen",
+    "pickSaved": "Gespeichert"
   },
   "Ligues": {
     "title": "Meine Ligen",

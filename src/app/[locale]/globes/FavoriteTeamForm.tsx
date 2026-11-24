@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import { nationFlagEmoji } from "@/lib/nationFlags";
+import { ChoicePicker } from "@/components/ChoicePicker";
 
 /**
  * Équipe favorite (nation + sexe) : premier choix possible à tout moment tant que la carte Équipe
@@ -19,6 +20,7 @@ export function FavoriteTeamForm({
   locked,
   editable = false,
   editDeadline = null,
+  autoEdit = false,
 }: {
   seasonId: string;
   nations: { code: string; name: string }[];
@@ -28,11 +30,13 @@ export function FavoriteTeamForm({
   editable?: boolean;
   /** Date et heure de ce départ, déjà formatées (null si pas encore au calendrier). */
   editDeadline?: string | null;
+  /** Arrivée depuis la ligne « Équipe favorite » du Calendrier : modification ouverte d'office. */
+  autoEdit?: boolean;
 }) {
   const [nationCode, setNationCode] = useState(initial?.nationCode ?? nations[0]?.code ?? "");
   const [sex, setSex] = useState<"H" | "F">(initial?.sex ?? "F");
   const [chosen, setChosen] = useState(initial);
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState(autoEdit && editable && !!initial);
   const [confirming, setConfirming] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +44,7 @@ export function FavoriteTeamForm({
   const supabase = createClient();
   const router = useRouter();
   const t = useTranslations("Compte");
+  const tForm = useTranslations("PredictionForm");
   const nationName = (code: string) => nations.find((n) => n.code === code)?.name ?? code;
   const sexLabel = (s: "H" | "F") => (s === "F" ? t("women") : t("men"));
 
@@ -110,20 +115,21 @@ export function FavoriteTeamForm({
           <p className="text-[12px] leading-relaxed text-text-dim">{t("favoriteTeamHint")}</p>
           {deadlineHint && <p className="text-[12px] leading-relaxed text-text-dim">{deadlineHint}</p>}
           <div className="flex gap-2">
-            <select
-              value={nationCode}
-              onChange={(e) => {
-                setNationCode(e.target.value);
-                setConfirming(false);
-              }}
-              className="flex-1 rounded-xl border border-border bg-bg px-3 py-2 text-sm"
-            >
-              {nations.map((n) => (
-                <option key={n.code} value={n.code}>
-                  {n.name}
-                </option>
-              ))}
-            </select>
+            <div className="min-w-0 flex-1">
+              <ChoicePicker
+                title={t("favoriteTeamTitle")}
+                icon={<span className="text-xl leading-none">❤️</span>}
+                options={nations.map((n) => ({ id: n.code, name: n.name, nationCode: n.code }))}
+                value={nationCode}
+                onChange={(code) => {
+                  setNationCode(code);
+                  setConfirming(false);
+                }}
+                searchPlaceholder={tForm("searchNation")}
+                defaultOpen={autoEdit}
+                onCard
+              />
+            </div>
             <select
               value={sex}
               onChange={(e) => {

@@ -405,7 +405,10 @@
     "pepiteSaved": "Diamante oculto guardado.",
     "pepiteEditableUntil": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo ({date}); después será definitivo.",
     "pepiteEditableNoDate": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo; después será definitivo.",
-    "pepiteLocked": "La 1.ª carrera de la Copa del Mundo ya ha salido: tu Diamante oculto ya no se puede cambiar."
+    "pepiteLocked": "La 1.ª carrera de la Copa del Mundo ya ha salido: tu Diamante oculto ya no se puede cambiar.",
+    "pickerEdit": "Modificar este pronóstico",
+    "pickerClose": "Cerrar",
+    "pickSaved": "Guardado"
   },
   "Ligues": {
     "title": "Mis ligas",

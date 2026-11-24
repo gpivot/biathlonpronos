@@ -1646,3 +1646,20 @@ Coupe du Monde de la saison, puis verrouillées.
   `season_choices_editable`, nouvelle version du trigger `pepites_check`, et politique RLS
   « favorite_teams: update own until first race » (modification refusée après le départ ou si la
   carte Équipe est active ; toujours pas de suppression par le joueur).
+
+## Modifier un prono de saison en un appui, liste avec drapeaux (24/11/2026)
+
+- Calendrier, encadré « Mes pronostics de saison » : tant que c'est modifiable, chaque ligne est un
+  lien (crayon à droite) vers `/globes?modifier=<catégorie>` qui ouvre directement la liste de ce
+  prono. Mêmes règles qu'avant : les 6 globes jusqu'au début de saison (`starts_on`), l'équipe
+  favorite (`?modifier=equipe`) et la Pépite cachée (`?modifier=pepite_F` / `pepite_H`, encadré
+  « Pépite cachée ») jusqu'au départ de la 1re course de Coupe du Monde, sauf carte Équipe active,
+  Pépite révélée ou choisie avec la carte Talent. Verrouillé : ligne simple, sans lien. Sur une
+  ligne de Pépite modifiable, la pastille « Pas encore révélée » laisse la place au crayon.
+- Les menus déroulants natifs de `/globes` (globes, Pépite, carte Talent, nation de l'équipe
+  favorite) sont remplacés par `ChoicePicker` (`src/components/ChoicePicker.tsx`) : un champ qui
+  montre le choix (drapeau, nom, cote) et ouvre une fenêtre (bas d'écran sur mobile) avec la
+  recherche par nom ou code pays et la liste, drapeau à gauche, cote à droite.
+- Globes et Pépite : le choix s'enregistre dès qu'il est fait dans la liste (« ✓ Enregistré »), il
+  n'y a plus de bouton « Valider » global. L'équipe favorite garde sa confirmation, la carte Talent
+  son bouton « Jouer la carte ».

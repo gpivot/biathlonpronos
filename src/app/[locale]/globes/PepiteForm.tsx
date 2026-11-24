@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { visibleOptions, type GlobeOption } from "./GlobesForm";
-import { SearchField } from "@/components/SearchField";
+import type { GlobeOption } from "./GlobesForm";
+import { ChoicePicker } from "@/components/ChoicePicker";
 
 export function PepiteForm({
   sex,
@@ -18,6 +18,7 @@ export function PepiteForm({
   fromTalent = false,
   editable = false,
   editDeadline = null,
+  autoOpen = false,
 }: {
   sex: "H" | "F";
   seasonId: string;
@@ -33,6 +34,8 @@ export function PepiteForm({
   editable?: boolean;
   /** Date et heure de ce départ, déjà formatées (null si pas encore au calendrier). */
   editDeadline?: string | null;
+  /** Liste ouverte d'office (arrivée depuis l'encadré « Pépite cachée » du Calendrier). */
+  autoOpen?: boolean;
 }) {
   // Pépite choisie avant la règle « toutes les cotes ≥ 30 » et plus éligible : le choix se rouvre.
   // (Une pépite choisie avec la carte Talent reste définitive.)
@@ -41,7 +44,6 @@ export function PepiteForm({
   const locked = !!initialPick && !noLongerEligible && (!editable || fromTalent);
   const [savedPick, setSavedPick] = useState(noLongerEligible ? null : initialPick);
   const [pick, setPick] = useState(noLongerEligible ? "" : initialPick ?? "");
-  const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -61,8 +63,10 @@ export function PepiteForm({
           ? t("pepiteLocked")
           : null;
 
-  async function submit() {
+  // Le choix s'enregistre dès qu'il est fait dans la liste (24/11/2026).
+  async function submit(pick: string) {
     if (!pick || pick === savedPick) return;
+    setPick(pick);
     setSaving(true);
     setError(null);
     setSaved(false);
@@ -87,6 +91,7 @@ export function PepiteForm({
 
     setSaving(false);
     if (error) {
+      setPick(savedPick ?? "");
       const message = error.message ?? "";
       setError(
         message.includes("pepite_not_eligible")
@@ -128,35 +133,21 @@ export function PepiteForm({
         </>
       ) : (
         <>
-          {!locked && (
-            <SearchField value={search} onChange={setSearch} placeholder={tForm("searchAthlete")} clearLabel={tForm("searchClear")} />
-          )}
-          <select
+          <ChoicePicker
+            title={`${t("pepiteTitle")} — ${sex === "F" ? tCompte("women") : tCompte("men")}`}
+            icon={<span className="text-xl leading-none">❄️</span>}
+            options={options}
             value={pick}
-            onChange={(e) => setPick(e.target.value)}
-            disabled={locked}
-            className="rounded-xl border border-border bg-bg px-3 py-2.5 text-sm disabled:opacity-60"
-          >
-            <option value="">{t("noPick")}</option>
-            {visibleOptions(options, search, pick).map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+            onChange={submit}
+            searchPlaceholder={tForm("searchAthlete")}
+            disabled={locked || saving}
+            defaultOpen={autoOpen && !locked}
+            onCard
+          />
 
+          {saving && <div className="text-xs text-text-dim">{t("saving")}</div>}
           {error && <div className="text-xs text-red">{error}</div>}
-          {saved && !error && <div className="text-xs text-ice">{t("pepiteSaved")}</div>}
-
-          {!locked && (
-            <button
-              onClick={submit}
-              disabled={!pick || pick === savedPick || saving}
-              className="self-start rounded-xl bg-ice px-4 py-2 font-display text-sm font-bold text-on-ice disabled:opacity-40"
-            >
-              {saving ? t("saving") : savedPick ? t("pepiteUpdate") : t("pepiteSubmit")}
-            </button>
-          )}
+          {saved && !error && <div className="text-xs text-ice">✓ {t("pepiteSaved")}</div>}
         </>
       )}
     </div>
@@ -186,7 +177,6 @@ function TalentCardForm({
   const router = useRouter();
   const [mode, setMode] = useState<"reactivate" | "new">("reactivate");
   const [pick, setPick] = useState("");
-  const [search, setSearch] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -228,25 +218,15 @@ function TalentCardForm({
         {t("talentNew")}
       </label>
       {mode === "new" && (
-        <>
-          <SearchField value={search} onChange={setSearch} placeholder={tForm("searchAthlete")} clearLabel={tForm("searchClear")} />
-          <select
-            value={pick}
-            onChange={(e) => setPick(e.target.value)}
-            className="rounded-xl border border-border bg-bg px-3 py-2.5 text-sm"
-          >
-            <option value="">{t("noPick")}</option>
-            {visibleOptions(
-              options.filter((o) => o.id !== revealedId),
-              search,
-              pick
-            ).map((o) => (
-              <option key={o.id} value={o.id}>
-                {o.label}
-              </option>
-            ))}
-          </select>
-        </>
+        <ChoicePicker
+          title={t("talentNew")}
+          icon={<span className="text-xl leading-none">🃏</span>}
+          options={options.filter((o) => o.id !== revealedId)}
+          value={pick}
+          onChange={setPick}
+          searchPlaceholder={tForm("searchAthlete")}
+          onCard
+        />
       )}
       {error && <div className="text-xs text-red">{error}</div>}
       <button

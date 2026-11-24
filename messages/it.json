@@ -405,7 +405,10 @@
     "pepiteSaved": "Pepita nascosta salvata.",
     "pepiteEditableUntil": "Modificabile fino alla partenza della 1ª gara di Coppa del Mondo ({date}), poi definitiva.",
     "pepiteEditableNoDate": "Modificabile fino alla partenza della 1ª gara di Coppa del Mondo, poi definitiva.",
-    "pepiteLocked": "La 1ª gara di Coppa del Mondo è partita: la tua Pepita nascosta non può più essere modificata."
+    "pepiteLocked": "La 1ª gara di Coppa del Mondo è partita: la tua Pepita nascosta non può più essere modificata.",
+    "pickerEdit": "Modifica questo pronostico",
+    "pickerClose": "Chiudi",
+    "pickSaved": "Salvato"
   },
   "Ligues": {
     "title": "Le mie leghe",
