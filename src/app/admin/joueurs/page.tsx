@@ -98,7 +98,7 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
         </p>
       </div>
 
-      <RetentionStats retention={retention} signIns={signIns} totalPlayers={playerProfiles.length} />
+      <RetentionStats retention={retention} signIns={signIns} totalPlayers={registeredCount} />
 
       <AdminForm action={purgeGuests} successMessage="Invités de plus de 7 jours purgés ✓" className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3 text-xs text-text-dim">
         <span className="flex-1">
