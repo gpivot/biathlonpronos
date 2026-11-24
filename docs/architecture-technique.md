@@ -504,7 +504,10 @@ Statistiques de rétention (24/11/2026, `RetentionStats.tsx`, `src/lib/admin/ret
 de la page : (1) connexions sur 24 h / 7 j / 30 j, calculées sur `last_sign_in_at` de Supabase Auth
 (hors invités). Ce n'est pas un nombre de visites : un joueur resté connecté n'est compté qu'au
 moment où il s'identifie. Un vrai compteur de visites demanderait Vercel Web Analytics (tableau de
-bord Vercel) ou une table de suivi (migration), non fait à ce jour. (2) Graphique du nombre de
+bord Vercel), branché le 24/11/2026 par le script `/_vercel/insights/script.js` dans
+`src/app/[locale]/layout.tsx` (pas de dépendance npm : `@vercel/analytics` entre en conflit de peer
+deps avec vitest), mentionné dans la politique de confidentialité. Il ne compte rien tant que
+l'onglet Analytics n'est pas activé dans le projet Vercel. (2) Graphique du nombre de
 pronostiqueurs distincts par course de la saison active, pour les courses dont le départ est passé
 (horloge simulée prise en compte), groupées par étape ; invités anonymes exclus, étapes hors
 classement en barres pâles ; tableau détaillé dépliable.
