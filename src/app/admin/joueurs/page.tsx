@@ -13,7 +13,7 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
 
   // L'email n'est pas dans `profiles` : il vient des comptes Supabase Auth (clé service_role).
   const [{ data: profiles }, { data: authData }] = await Promise.all([
-    admin.from("profiles").select("id, pseudo, is_admin, created_at"),
+    admin.from("profiles").select("id, pseudo, is_admin, created_at, signup_pending"),
     admin.auth.admin.listUsers({ perPage: 1000 }),
   ]);
   const authUsers = authData?.users ?? [];
@@ -42,20 +42,27 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
     .sort((a, b) => Number(b.isAdmin) - Number(a.isAdmin) || a.pseudo.localeCompare(b.pseudo, "fr"));
 
   const adminCount = playerProfiles.filter((p) => p.is_admin).length;
+  // Invités « e-mail seulement » : compte créé mais inscription pas terminée (absents des classements).
+  const pendingCount = playerProfiles.filter((p) => p.signup_pending).length;
+  const registeredCount = playerProfiles.length - pendingCount;
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-xl font-bold">Joueurs & rôles</h1>
         <p className="text-sm text-text-dim">
-          {playerProfiles.length} joueurs inscrits, dont {adminCount} admin{adminCount > 1 ? "s" : ""}. Un admin a
-          accès à tout le back-office.
+          {registeredCount} joueurs inscrits (comptés au classement), dont {adminCount} admin
+          {adminCount > 1 ? "s" : ""}
+          {pendingCount > 0 &&
+            `, + ${pendingCount} invité${pendingCount > 1 ? "s" : ""} « e-mail seulement » en attente d'inscription (dans la liste ci-dessous, hors classement)`}
+          . Un admin a accès à tout le back-office.
         </p>
       </div>
 
       <AdminForm action={purgeGuests} successMessage="Invités de plus de 7 jours purgés ✓" className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3 text-xs text-text-dim">
         <span className="flex-1">
-          {guestIds.size} invité{guestIds.size > 1 ? "s" : ""} en cours (bouton « Jouer » sans compte). Ceux qui n&apos;ont
+          + {guestIds.size} invité{guestIds.size > 1 ? "s" : ""} anonyme{guestIds.size > 1 ? "s" : ""} en cours (bouton « Jouer » sans compte), non
+          compté{guestIds.size > 1 ? "s" : ""} ci-dessus. Ceux qui n&apos;ont
           pas créé leur compte au bout de 7 jours sont supprimés chaque nuit si pg_cron est activé, sinon avec ce bouton.
         </span>
         <SubmitButton pendingLabel="Purge…" savedLabel="Purgé ✓" className="rounded border border-border px-3 py-1 font-semibold text-frost">
