@@ -1,5 +1,5 @@
 // Iconographie — traits fins, cohérents avec la planche d'identité graphique
-// (projet claude.ai "Biathlopronos", canevas "Identité graphique Biathlonpronos").
+// (projet claude.ai "Biathlopronos", canevas "Identité graphique BiathlonPronos").
 // Jamais d'emoji comme icône d'interface : uniquement du SVG.
 
 type IconProps = { className?: string };

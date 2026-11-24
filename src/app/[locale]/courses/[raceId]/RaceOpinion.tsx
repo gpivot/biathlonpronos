@@ -1,4 +1,4 @@
-/** Encadré « L'avis de Biathlonpronos » : commentaire de l'admin sur la course (masqué s'il est vide). */
+/** Encadré « L'avis de BiathlonPronos » : commentaire de l'admin sur la course (masqué s'il est vide). */
 export function RaceOpinion({ title, text }: { title: string; text: string }) {
   return (
     <div className="flex flex-col gap-2 rounded-2xl border border-border bg-card p-4">

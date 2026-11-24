@@ -8,7 +8,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
  */
 const config: CapacitorConfig = {
   appId: "fr.biathlonpronos.app",
-  appName: "Biathlonpronos",
+  appName: "BiathlonPronos",
   // Pages locales : seulement l'écran affiché quand le site est injoignable (pas de réseau).
   webDir: "www",
   server: {

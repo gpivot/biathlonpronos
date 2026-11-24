@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Biathlonpronos",
+    "title": "BiathlonPronos",
     "description": "Tippe auf Biathlonrennen. Fordere deine Freunde heraus."
   },
   "Nav": {
@@ -134,7 +134,7 @@
     "mockX2": "3 ×2-Boni",
     "faqEyebrow": "Fragen?",
     "faqTitle": "Alles, was du vor dem Start wissen musst",
-    "faq_free_q": "Ist Biathlonpronos wirklich kostenlos?",
+    "faq_free_q": "Ist BiathlonPronos wirklich kostenlos?",
     "faq_free_a": "Ja, zu 100 %. Kein echtes Geld, keine Geldgewinne: Man spielt aus Spaß, für den Ruhm und das Gelbe Trikot.",
     "faq_account_q": "Brauche ich ein Konto, um anzufangen?",
     "faq_account_a": "Nicht sofort. Tippe auf „Ich spiele“: Das nächste Rennen öffnet sich und du gibst deinen Tipp ab. Ein Konto brauchst du erst beim Bestätigen, mit einem einfachen Code per E-Mail, ohne Passwort.",
@@ -168,7 +168,7 @@
     "footerFaq": "Häufige Fragen",
     "footerSignIn": "Anmelden",
     "footerLegal": "Rechtliches",
-    "footerDisclaimer": "Biathlonpronos ist ein unabhängiges Biathlon-Tippspiel. Kein Echtgeldeinsatz. Keine Geldgewinne.",
+    "footerDisclaimer": "BiathlonPronos ist ein unabhängiges Biathlon-Tippspiel. Kein Echtgeldeinsatz. Keine Geldgewinne.",
     "footerSupport": "Support",
     "footerPrivacy": "Datenschutzerklärung",
     "footerTerms": "Nutzungsbedingungen"
@@ -344,7 +344,7 @@
     "emailTo": "E-Mails gehen an {email}",
     "appleRelay": "Von Apple verborgene Adresse: Apple leitet unsere E-Mails an dich weiter.",
     "appInstalled": "App auf {count, plural, one {# Handy} other {# Handys}} installiert",
-    "getApp": "Installiere die Biathlonpronos-App auf deinem Handy, um auch Hinweise zu erhalten, darunter die Live-Bonusfragen.",
+    "getApp": "Installiere die BiathlonPronos-App auf deinem Handy, um auch Hinweise zu erhalten, darunter die Live-Bonusfragen.",
     "notificationsSaveError": "Einstellung nicht gespeichert, bitte erneut versuchen.",
     "deleteConfirmTitle": "Konto endgültig löschen?",
     "deleteConfirmBody": "Dein Profil, deine Tipps, Punkte, Karten und Ligaplätze werden sofort gelöscht. Von dir gegründete Ligen gehen an das älteste Mitglied über. Dies kann nicht rückgängig gemacht werden.",
@@ -415,7 +415,7 @@
     "inviteCopied": "Kopiert! In WhatsApp einfügen",
     "copyInviteHint": "Eine fertige Nachricht für WhatsApp, SMS…",
     "inviteCopyError": "Kopieren hat nicht geklappt: Code bitte von Hand abschreiben.",
-    "inviteMessage": "🎯 Tritt meiner Liga „{name}“ bei Biathlonpronos bei, dem Biathlon-Tippspiel!\n\n1. Registriere dich auf {url}\n2. Geh zum Tab Ligen, „Mit Code beitreten“\n3. Gib den Code ein: {code}\n\nJetzt bist du dran! 🏆"
+    "inviteMessage": "🎯 Tritt meiner Liga „{name}“ bei BiathlonPronos bei, dem Biathlon-Tippspiel!\n\n1. Registriere dich auf {url}\n2. Geh zum Tab Ligen, „Mit Code beitreten“\n3. Gib den Code ein: {code}\n\nJetzt bist du dran! 🏆"
   },
   "Classement": {
     "title": "Rangliste",
@@ -571,7 +571,7 @@
     "countdownUnitHours": "Std",
     "countdownUnitMinutes": "Min",
     "countdownUnitSeconds": "Sek",
-    "opinionTitle": "Die Meinung von Biathlonpronos",
+    "opinionTitle": "Die Meinung von BiathlonPronos",
     "bonusQuestionsLine": "Bonusfragen",
     "malusScale_tour_de_pena_4": "Nicht getippter Biathlet → 5 Strafrunden, -100 Pkt. (kein Tipp: -300)",
     "offStandingsNotice": "Rennen außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant).",
@@ -686,7 +686,7 @@
       }
     ],
     "helpTitle": "Hilfe & Regeln",
-    "helpBody": "Lies die Regeln, um zu erfahren, wie das Spiel funktioniert, wie Punkte berechnet werden, wie Bonuskarten wirken und welche Funktionen Biathlonpronos bietet.",
+    "helpBody": "Lies die Regeln, um zu erfahren, wie das Spiel funktioniert, wie Punkte berechnet werden, wie Bonuskarten wirken und welche Funktionen BiathlonPronos bietet.",
     "helpButton": "Hilfe ansehen",
     "back": "Start",
     "privacy": "Datenschutzerklärung",
@@ -699,12 +699,12 @@
     "deleteData": "Gelöscht werden: dein Konto (E-Mail, Vorname, Nachname, Pseudonym), deine Tipps und Punkte, deine Ligamitgliedschaften, deine Einstellungen und Benachrichtigungs-Tokens. Nach dieser Frist werden keine personenbezogenen Daten aufbewahrt."
   },
   "SupportMessages": {
-    "title": "Unterhaltung mit Biathlonpronos",
-    "loginRequired": "Melde dich an, um dem Biathlonpronos-Team zu schreiben.",
+    "title": "Unterhaltung mit BiathlonPronos",
+    "loginRequired": "Melde dich an, um dem BiathlonPronos-Team zu schreiben.",
     "emptyTitle": "Änderung vorschlagen",
     "emptyBody": "Ein Fehler in einem Ergebnis, einer Quote oder einem Namen? Eine Idee, um das Spiel zu verbessern? Schreib uns hier: Wir antworten in der App, und du bekommst eine Benachrichtigung, wenn du sie auf deinem Handy hast.",
     "placeholderFirst": "Schreib deine Nachricht…",
-    "placeholderReply": "Biathlonpronos antworten…",
+    "placeholderReply": "BiathlonPronos antworten…",
     "send": "Senden",
     "invalid": "Nachricht leer oder zu lang (maximal 2000 Zeichen).",
     "tooMany": "Viele Nachrichten in kurzer Zeit: Versuch es in einer Stunde noch einmal.",
@@ -718,7 +718,7 @@
       {
         "title": "1. Einleitung",
         "paragraphs": [
-          "Biathlonpronos („die Anwendung“) respektiert die Privatsphäre seiner Nutzer. Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten erhoben werden, wie sie verwendet werden und welche Rechte Sie haben."
+          "BiathlonPronos („die Anwendung“) respektiert die Privatsphäre seiner Nutzer. Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten erhoben werden, wie sie verwendet werden und welche Rechte Sie haben."
         ]
       },
       {
@@ -804,13 +804,13 @@
       {
         "title": "1. Gegenstand",
         "paragraphs": [
-          "Diese Nutzungsbedingungen regeln die Nutzung der Webanwendung Biathlonpronos (im Folgenden „die Anwendung“). Mit dem Zugriff auf die Anwendung akzeptieren Sie diese Nutzungsbedingungen vorbehaltlos."
+          "Diese Nutzungsbedingungen regeln die Nutzung der Webanwendung BiathlonPronos (im Folgenden „die Anwendung“). Mit dem Zugriff auf die Anwendung akzeptieren Sie diese Nutzungsbedingungen vorbehaltlos."
         ]
       },
       {
         "title": "2. Beschreibung des Dienstes",
         "paragraphs": [
-          "Biathlonpronos ist eine Anwendung für Tipps auf Biathlonrennen, mit der Nutzer:"
+          "BiathlonPronos ist eine Anwendung für Tipps auf Biathlonrennen, mit der Nutzer:"
         ],
         "bullets": [
           "Die bestplatzierten Biathleten und Nationen jedes Rennens tippen können",
@@ -838,7 +838,7 @@
       {
         "title": "4. Spielregeln",
         "paragraphs": [
-          "Biathlonpronos ist ein Tippspiel ohne Echtgeldeinsatz. Mit den Leistungen in der Anwendung ist kein finanzieller Gewinn verbunden. Es handelt sich um ein Tippspiel zum Spaß und für die Community."
+          "BiathlonPronos ist ein Tippspiel ohne Echtgeldeinsatz. Mit den Leistungen in der Anwendung ist kein finanzieller Gewinn verbunden. Es handelt sich um ein Tippspiel zum Spaß und für die Community."
         ],
         "link": {
           "href": "/regles",
@@ -863,7 +863,7 @@
       {
         "title": "6. Geistiges Eigentum",
         "paragraphs": [
-          "Alle Elemente der Anwendung (Texte, Grafiken, Logo, Code) sind Eigentum von Biathlonpronos. Jede auch nur teilweise Vervielfältigung ohne schriftliche Genehmigung ist untersagt."
+          "Alle Elemente der Anwendung (Texte, Grafiken, Logo, Code) sind Eigentum von BiathlonPronos. Jede auch nur teilweise Vervielfältigung ohne schriftliche Genehmigung ist untersagt."
         ]
       },
       {
@@ -879,7 +879,7 @@
       {
         "title": "8. Haftungsbeschränkung",
         "paragraphs": [
-          "Biathlonpronos bemüht sich, die Verfügbarkeit und Zuverlässigkeit der Anwendung sicherzustellen, kann jedoch keine unterbrechungsfreie Verfügbarkeit garantieren. Wir haften nicht für technische Störungen außerhalb unseres Einflussbereichs und nicht für Änderungen am offiziellen Rennkalender oder an den offiziellen Ergebnissen."
+          "BiathlonPronos bemüht sich, die Verfügbarkeit und Zuverlässigkeit der Anwendung sicherzustellen, kann jedoch keine unterbrechungsfreie Verfügbarkeit garantieren. Wir haften nicht für technische Störungen außerhalb unseres Einflussbereichs und nicht für Änderungen am offiziellen Rennkalender oder an den offiziellen Ergebnissen."
         ]
       },
       {
@@ -1015,7 +1015,7 @@
     "noRace": "Gerade ist kein Rennen für Tipps geöffnet.",
     "seeCalendar": "Kalender ansehen",
     "lockedTitle": "Registriere dich, um weiterzumachen",
-    "lockedBody": "<link>Registriere dich kostenlos, indem du hier klickst</link>, und entdecke alle Facetten von Biathlonpronos: Ranglisten, Ligen mit Freunden, Saisontipps, Bonuskarten…",
+    "lockedBody": "<link>Registriere dich kostenlos, indem du hier klickst</link>, und entdecke alle Facetten von BiathlonPronos: Ranglisten, Ligen mit Freunden, Saisontipps, Bonuskarten…",
     "lockedSignUp": "Kostenlos registrieren",
     "lockedSignIn": "Ich habe schon ein Konto",
     "lockedContinue": "Weiter mit meinem Tipp",
@@ -1068,17 +1068,17 @@
     "resultsPushTitle": "🏁 Ergebnisse: {race}",
     "resultsPushBody": "{location}: Du holst {points, plural, one {# Pkt.} other {# Pkt.}}. Sieh dir die Details und die Wertung an.",
     "weeklySubject": "🏁 Deine Biathlon-Woche: {points, plural, one {# Pkt.} other {# Pkt.}}",
-    "weeklyTitle": "Deine Woche bei Biathlonpronos",
+    "weeklyTitle": "Deine Woche bei BiathlonPronos",
     "weeklyIntro": "Hier sind deine Punkte aus den Rennen dieser Woche.",
     "weeklyNotPlayed": "nicht getippt",
     "weeklyPoints": "{points, plural, one {# Pkt.} other {# Pkt.}}",
     "weeklyTotal": "Summe der Woche",
     "weeklyButton": "Zur Wertung",
-    "newsButton": "Biathlonpronos öffnen",
-    "footer": "Du erhältst diese E-Mail, weil du bei Biathlonpronos mitspielst.",
+    "newsButton": "BiathlonPronos öffnen",
+    "footer": "Du erhältst diese E-Mail, weil du bei BiathlonPronos mitspielst.",
     "manage": "Benachrichtigungen verwalten",
     "unsubscribe": "Diese E-Mails nicht mehr erhalten",
-    "supportReplyPushTitle": "💬 Biathlonpronos hat dir geantwortet",
+    "supportReplyPushTitle": "💬 BiathlonPronos hat dir geantwortet",
     "guestResultsSubject": "🏁 {race} in {location}: deine Punktzahl ist da",
     "guestResultsTitle": "Deine Punktzahl ist da!",
     "guestResultsBody": "Das Rennen {race} in {location} ist vorbei. Entdecke deine Punktzahl und wie sie zustande kommt.",

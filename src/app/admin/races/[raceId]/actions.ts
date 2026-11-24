@@ -265,7 +265,7 @@ export const updateRace = adminFormAction(async (formData: FormData) => {
   revalidatePath("/admin", "layout");
 });
 
-/** « L'avis de Biathlonpronos » de la course ; un texte vide masque la rubrique sur la page course. */
+/** « L'avis de BiathlonPronos » de la course ; un texte vide masque la rubrique sur la page course. */
 export const updateRaceOpinion = adminFormAction(async (formData: FormData) => {
   await requireAdmin();
   const raceId = String(formData.get("race_id"));

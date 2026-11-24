@@ -8,7 +8,7 @@ import { MessageComposer } from "./MessageComposer";
 export const dynamic = "force-dynamic";
 
 /**
- * « Suggérer une modification » : conversation du joueur avec l'équipe Biathlonpronos, reprise de
+ * « Suggérer une modification » : conversation du joueur avec l'équipe BiathlonPronos, reprise de
  * VéloPronos. Les réponses s'écrivent depuis /admin/messages. Ouvrir la page marque les réponses
  * comme lues (la pastille du profil disparaît).
  */
@@ -57,7 +57,7 @@ export default async function SupportMessagesPage() {
           messages.map((m) =>
             m.from_admin ? (
               <div key={m.id} className="mr-10 self-start rounded-2xl bg-card2 px-4 py-3">
-                <div className="font-display text-[12px] font-bold text-ice">Biathlonpronos</div>
+                <div className="font-display text-[12px] font-bold text-ice">BiathlonPronos</div>
                 <p className="whitespace-pre-wrap break-words text-[14px] text-frost">{m.body}</p>
                 <div className="mt-1 text-right text-[11px] text-text-dim">{format.format(new Date(m.created_at))}</div>
               </div>

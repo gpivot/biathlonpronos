@@ -10,7 +10,7 @@ import { sendPush } from "@/lib/push/send";
 const MAX_PER_HOUR = 20;
 
 /**
- * Le joueur écrit à l'équipe Biathlonpronos (« Suggérer une modification »). La table n'est
+ * Le joueur écrit à l'équipe BiathlonPronos (« Suggérer une modification »). La table n'est
  * accessible qu'au serveur (migration 0037) : on vérifie ici que le joueur est connecté. Les
  * admins reçoivent une notification sur leur téléphone (s'il a l'appli), en français.
  */

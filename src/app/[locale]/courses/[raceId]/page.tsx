@@ -226,7 +226,7 @@ export default async function RacePage({
   // Pronostics ouverts le lundi qui précède l'étape, à 17 h (voir predictionWindow.ts).
   const predictionsOpen = isPredictionOpen(stage.starts_on, now, stage.predictions_open_on);
   const showForm = displayStatus === "upcoming" && hasOdds && !startListPending && predictionsOpen;
-  // « L'avis de Biathlonpronos » saisi dans le back-office ; rubrique masquée s'il est vide.
+  // « L'avis de BiathlonPronos » saisi dans le back-office ; rubrique masquée s'il est vide.
   const opinion = typeof race.opinion === "string" ? race.opinion.trim() : "";
   const hasPrediction = isRelay ? Boolean(initialNationSelection) : initialAthleteSelection.length > 0;
 

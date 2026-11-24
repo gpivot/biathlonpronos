@@ -10,7 +10,7 @@ import { SimulatedClockBanner } from "@/components/SimulatedClockBanner";
 import { AdminFeedbackProvider } from "./_components/AdminFeedback";
 import "../globals.css";
 
-export const metadata: Metadata = { title: "Biathlonpronos — Admin" };
+export const metadata: Metadata = { title: "BiathlonPronos — Admin" };
 
 // Comme le reste du site : sans viewport-fit=cover, env(safe-area-inset-*) vaut 0 dans l'appli
 // iPhone et le haut de l'admin passe sous la barre d'état (flèche retour impossible à toucher).

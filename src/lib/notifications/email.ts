@@ -7,7 +7,7 @@
  */
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.biathlonpronos.fr").replace(/\/$/, "");
-const DEFAULT_FROM = "Biathlonpronos <notifications@biathlonpronos.fr>";
+const DEFAULT_FROM = "BiathlonPronos <notifications@biathlonpronos.fr>";
 
 export interface OutgoingEmail {
   to: string;

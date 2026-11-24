@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Biathlonpronos",
+    "title": "BiathlonPronos",
     "description": "Predict biathlon races. Challenge your friends."
   },
   "Nav": {
@@ -134,7 +134,7 @@
     "mockX2": "3 ×2 boosts",
     "faqEyebrow": "Questions?",
     "faqTitle": "Everything to know before the start",
-    "faq_free_q": "Is Biathlonpronos really free?",
+    "faq_free_q": "Is BiathlonPronos really free?",
     "faq_free_a": "Yes, 100%. No real money, no cash prizes: you play for fun, glory and the yellow bib.",
     "faq_account_q": "Do I need an account to start?",
     "faq_account_a": "Not right away. Tap \"I'm in\": the next race opens and you make your picks. You're only asked for an account when you confirm, with a simple code sent by email, no password.",
@@ -168,7 +168,7 @@
     "footerFaq": "FAQ",
     "footerSignIn": "Sign in",
     "footerLegal": "Legal",
-    "footerDisclaimer": "Biathlonpronos is an independent biathlon prediction game. No real money wagered. No financial winnings.",
+    "footerDisclaimer": "BiathlonPronos is an independent biathlon prediction game. No real money wagered. No financial winnings.",
     "footerSupport": "Support",
     "footerPrivacy": "Privacy policy",
     "footerTerms": "Terms"
@@ -344,7 +344,7 @@
     "emailTo": "Emails go to {email}",
     "appleRelay": "Address hidden by Apple: it forwards our emails to you.",
     "appInstalled": "App installed on {count, plural, one {# phone} other {# phones}}",
-    "getApp": "Install the Biathlonpronos app on your phone to also get alerts, including live bonus questions.",
+    "getApp": "Install the BiathlonPronos app on your phone to also get alerts, including live bonus questions.",
     "notificationsSaveError": "Setting not saved, please try again.",
     "deleteConfirmTitle": "Delete your account for good?",
     "deleteConfirmBody": "Your profile, predictions, points, cards and league places will be erased right away. Leagues you created pass to their longest-standing member. This cannot be undone.",
@@ -415,7 +415,7 @@
     "inviteCopied": "Copied! Paste it into WhatsApp",
     "copyInviteHint": "A message ready to paste into WhatsApp, texts…",
     "inviteCopyError": "Copying didn't work: type the code in by hand.",
-    "inviteMessage": "🎯 Join my league \"{name}\" on Biathlonpronos, the biathlon prediction game!\n\n1. Sign up at {url}\n2. Go to the Leagues tab, \"Join with a code\"\n3. Enter the code: {code}\n\nYour turn to play! 🏆"
+    "inviteMessage": "🎯 Join my league \"{name}\" on BiathlonPronos, the biathlon prediction game!\n\n1. Sign up at {url}\n2. Go to the Leagues tab, \"Join with a code\"\n3. Enter the code: {code}\n\nYour turn to play! 🏆"
   },
   "Classement": {
     "title": "Standings",
@@ -571,7 +571,7 @@
     "countdownUnitHours": "h",
     "countdownUnitMinutes": "min",
     "countdownUnitSeconds": "s",
-    "opinionTitle": "Biathlonpronos' take",
+    "opinionTitle": "BiathlonPronos' take",
     "bonusQuestionsLine": "Bonus questions",
     "malusScale_tour_de_pena_4": "Biathlete not picked → 5 loops, -100 pts (no pick at all: -300)",
     "offStandingsNotice": "Unranked race: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond).",
@@ -686,7 +686,7 @@
       }
     ],
     "helpTitle": "Help & Rules",
-    "helpBody": "Read the rules for how the game works, points calculation, bonus cards and every Biathlonpronos feature.",
+    "helpBody": "Read the rules for how the game works, points calculation, bonus cards and every BiathlonPronos feature.",
     "helpButton": "See help",
     "back": "Home",
     "privacy": "Privacy policy",
@@ -699,12 +699,12 @@
     "deleteData": "Deleted: your account (email, first name, last name, username), your predictions and points, your league memberships, your settings and notification tokens. No personal data is kept after this period."
   },
   "SupportMessages": {
-    "title": "Conversation with Biathlonpronos",
-    "loginRequired": "Sign in to write to the Biathlonpronos team.",
+    "title": "Conversation with BiathlonPronos",
+    "loginRequired": "Sign in to write to the BiathlonPronos team.",
     "emptyTitle": "Suggest a change",
     "emptyBody": "A mistake in a result, an odd or a name? An idea to improve the game? Write to us here: we reply in the app, and you get a notification if you have it on your phone.",
     "placeholderFirst": "Write your message…",
-    "placeholderReply": "Reply to Biathlonpronos…",
+    "placeholderReply": "Reply to BiathlonPronos…",
     "send": "Send",
     "invalid": "Empty or too long message (2,000 characters max).",
     "tooMany": "Lots of messages in a short time: try again in an hour.",
@@ -718,7 +718,7 @@
       {
         "title": "1. Introduction",
         "paragraphs": [
-          "Biathlonpronos (\"the Application\") respects its users' privacy. This privacy policy explains what personal data is collected, how it is used, and what your rights are."
+          "BiathlonPronos (\"the Application\") respects its users' privacy. This privacy policy explains what personal data is collected, how it is used, and what your rights are."
         ]
       },
       {
@@ -804,13 +804,13 @@
       {
         "title": "1. Purpose",
         "paragraphs": [
-          "These Terms of Use govern the use of the Biathlonpronos web application (hereinafter \"the Application\"). By accessing the Application, you accept these Terms without reservation."
+          "These Terms of Use govern the use of the BiathlonPronos web application (hereinafter \"the Application\"). By accessing the Application, you accept these Terms without reservation."
         ]
       },
       {
         "title": "2. Description of the service",
         "paragraphs": [
-          "Biathlonpronos is a biathlon race prediction application allowing users to:"
+          "BiathlonPronos is a biathlon race prediction application allowing users to:"
         ],
         "bullets": [
           "Predict the best-placed biathletes and nations in each race",
@@ -838,7 +838,7 @@
       {
         "title": "4. Game rules",
         "paragraphs": [
-          "Biathlonpronos is a prediction game with no real money involved. No financial gain is associated with performance in the application. It is a prediction game for fun and community."
+          "BiathlonPronos is a prediction game with no real money involved. No financial gain is associated with performance in the application. It is a prediction game for fun and community."
         ],
         "link": {
           "href": "/regles",
@@ -863,7 +863,7 @@
       {
         "title": "6. Intellectual property",
         "paragraphs": [
-          "All elements of the Application (texts, graphics, logo, code) are the property of Biathlonpronos. Any reproduction, even partial, without written permission is prohibited."
+          "All elements of the Application (texts, graphics, logo, code) are the property of BiathlonPronos. Any reproduction, even partial, without written permission is prohibited."
         ]
       },
       {
@@ -879,7 +879,7 @@
       {
         "title": "8. Limitation of liability",
         "paragraphs": [
-          "Biathlonpronos strives to ensure the availability and reliability of the Application, but cannot guarantee uninterrupted availability. We cannot be held liable for technical failures beyond our control, nor for changes to the official race calendar or results."
+          "BiathlonPronos strives to ensure the availability and reliability of the Application, but cannot guarantee uninterrupted availability. We cannot be held liable for technical failures beyond our control, nor for changes to the official race calendar or results."
         ]
       },
       {
@@ -1015,7 +1015,7 @@
     "noRace": "No race is open for predictions right now.",
     "seeCalendar": "See the calendar",
     "lockedTitle": "Sign up to go further",
-    "lockedBody": "<link>Sign up for free by clicking here</link> to discover everything Biathlonpronos has to offer: standings, leagues with friends, season predictions, bonus cards…",
+    "lockedBody": "<link>Sign up for free by clicking here</link> to discover everything BiathlonPronos has to offer: standings, leagues with friends, season predictions, bonus cards…",
     "lockedSignUp": "Sign up for free",
     "lockedSignIn": "I already have an account",
     "lockedContinue": "Continue my prediction",
@@ -1068,17 +1068,17 @@
     "resultsPushTitle": "🏁 Results: {race}",
     "resultsPushBody": "{location}: you score {points, plural, one {# pt} other {# pts}}. See the details and the standings.",
     "weeklySubject": "🏁 Your biathlon week: {points, plural, one {# pt} other {# pts}}",
-    "weeklyTitle": "Your week on Biathlonpronos",
+    "weeklyTitle": "Your week on BiathlonPronos",
     "weeklyIntro": "Here are your points for this week's races.",
     "weeklyNotPlayed": "not played",
     "weeklyPoints": "{points, plural, one {# pt} other {# pts}}",
     "weeklyTotal": "Week total",
     "weeklyButton": "See the standings",
-    "newsButton": "Open Biathlonpronos",
-    "footer": "You're receiving this email because you play Biathlonpronos.",
+    "newsButton": "Open BiathlonPronos",
+    "footer": "You're receiving this email because you play BiathlonPronos.",
     "manage": "Manage my notifications",
     "unsubscribe": "Stop receiving these emails",
-    "supportReplyPushTitle": "💬 Biathlonpronos replied to you",
+    "supportReplyPushTitle": "💬 BiathlonPronos replied to you",
     "guestResultsSubject": "🏁 {race} in {location}: your score is ready",
     "guestResultsTitle": "Your score is ready!",
     "guestResultsBody": "The {race} in {location} is over. Discover your score and how your points were earned.",

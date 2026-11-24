@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "Biathlonpronos",
+    "title": "BiathlonPronos",
     "description": "Pronostique les courses de biathlon. Défie tes amis."
   },
   "Nav": {
@@ -134,7 +134,7 @@
     "mockX2": "3 bonus ×2",
     "faqEyebrow": "Des questions ?",
     "faqTitle": "Tout savoir avant le départ",
-    "faq_free_q": "Biathlonpronos est-il vraiment gratuit ?",
+    "faq_free_q": "BiathlonPronos est-il vraiment gratuit ?",
     "faq_free_a": "Oui, à 100 %. Aucune mise d'argent réel, aucun gain financier : on joue pour le plaisir, la gloire et le dossard jaune.",
     "faq_account_q": "Faut-il créer un compte pour commencer ?",
     "faq_account_a": "Pas tout de suite. Touche « Je joue » : la prochaine course s'ouvre et tu fais ton prono. Le compte n'est demandé qu'au moment de valider, avec un simple code reçu par e-mail, sans mot de passe.",
@@ -168,7 +168,7 @@
     "footerFaq": "Questions fréquentes",
     "footerSignIn": "Se connecter",
     "footerLegal": "Légal",
-    "footerDisclaimer": "Biathlonpronos est un jeu de pronostics biathlon indépendant. Aucune mise d'argent réel. Aucun gain financier.",
+    "footerDisclaimer": "BiathlonPronos est un jeu de pronostics biathlon indépendant. Aucune mise d'argent réel. Aucun gain financier.",
     "footerSupport": "Support",
     "footerPrivacy": "Politique de confidentialité",
     "footerTerms": "CGU"
@@ -344,7 +344,7 @@
     "emailTo": "Les e-mails partent à {email}",
     "appleRelay": "Adresse masquée par Apple : il te transfère nos e-mails.",
     "appInstalled": "Appli installée sur {count, plural, one {# téléphone} other {# téléphones}}",
-    "getApp": "Installe l'appli Biathlonpronos sur ton téléphone pour recevoir aussi les alertes, dont les questions bonus en direct.",
+    "getApp": "Installe l'appli BiathlonPronos sur ton téléphone pour recevoir aussi les alertes, dont les questions bonus en direct.",
     "notificationsSaveError": "Réglage non enregistré, réessaie.",
     "deleteConfirmTitle": "Supprimer définitivement ton compte ?",
     "deleteConfirmBody": "Ton profil, tes pronostics, tes points, tes cartes et ta place dans les ligues seront effacés tout de suite. Les ligues que tu as créées passent au membre le plus ancien. Cette action est irréversible.",
@@ -415,7 +415,7 @@
     "inviteCopied": "Copié ! Colle-le dans WhatsApp",
     "copyInviteHint": "Un message prêt à coller dans WhatsApp, SMS…",
     "inviteCopyError": "La copie n'a pas marché : recopie le code à la main.",
-    "inviteMessage": "🎯 Rejoins ma ligue « {name} » sur Biathlonpronos, le jeu de pronostics biathlon !\n\n1. Inscris-toi sur {url}\n2. Va dans l'onglet Ligues, « Rejoindre avec un code »\n3. Entre le code : {code}\n\nÀ toi de jouer ! 🏆"
+    "inviteMessage": "🎯 Rejoins ma ligue « {name} » sur BiathlonPronos, le jeu de pronostics biathlon !\n\n1. Inscris-toi sur {url}\n2. Va dans l'onglet Ligues, « Rejoindre avec un code »\n3. Entre le code : {code}\n\nÀ toi de jouer ! 🏆"
   },
   "Classement": {
     "title": "Classement",
@@ -571,7 +571,7 @@
     "countdownUnitHours": "h",
     "countdownUnitMinutes": "min",
     "countdownUnitSeconds": "s",
-    "opinionTitle": "L'avis de Biathlonpronos",
+    "opinionTitle": "L'avis de BiathlonPronos",
     "bonusQuestionsLine": "Questions bonus",
     "malusScale_tour_de_pena_4": "Biathlète non pronostiqué → 5 tours d'office, -100 pts (pas de prono : -300)",
     "offStandingsNotice": "Course hors classement : elle a son propre classement, mais ses points ne comptent pas pour la saison (pas de dossard rouge, de carte bonus, de ×2 ni de Pépite).",
@@ -686,7 +686,7 @@
       }
     ],
     "helpTitle": "Aide & Règlement",
-    "helpBody": "Consulte le règlement pour les règles du jeu, le calcul des points, les cartes bonus et toutes les fonctionnalités de Biathlonpronos.",
+    "helpBody": "Consulte le règlement pour les règles du jeu, le calcul des points, les cartes bonus et toutes les fonctionnalités de BiathlonPronos.",
     "helpButton": "Voir l'aide",
     "back": "Accueil",
     "privacy": "Politique de confidentialité",
@@ -699,12 +699,12 @@
     "deleteData": "Sont supprimés : ton compte (e-mail, prénom, nom, pseudo), tes pronostics et tes points, ta participation aux ligues, tes réglages et tes jetons de notification. Aucune donnée personnelle n'est conservée après ce délai."
   },
   "SupportMessages": {
-    "title": "Conversation avec Biathlonpronos",
-    "loginRequired": "Connecte-toi pour écrire à l'équipe Biathlonpronos.",
+    "title": "Conversation avec BiathlonPronos",
+    "loginRequired": "Connecte-toi pour écrire à l'équipe BiathlonPronos.",
     "emptyTitle": "Suggérer une modification",
     "emptyBody": "Une erreur dans un résultat, une cote, un nom ? Une idée pour améliorer le jeu ? Écris-nous ici : on te répond dans l'appli, et tu reçois une notification si tu l'as sur ton téléphone.",
     "placeholderFirst": "Écris ton message…",
-    "placeholderReply": "Réponds à Biathlonpronos…",
+    "placeholderReply": "Réponds à BiathlonPronos…",
     "send": "Envoyer",
     "invalid": "Message vide ou trop long (2000 caractères maximum).",
     "tooMany": "Beaucoup de messages en peu de temps : réessaie dans une heure.",
@@ -718,7 +718,7 @@
       {
         "title": "1. Introduction",
         "paragraphs": [
-          "Biathlonpronos (« l'Application ») respecte la vie privée de ses utilisateurs. La présente politique de confidentialité explique quelles données personnelles sont collectées, comment elles sont utilisées, et quels sont vos droits."
+          "BiathlonPronos (« l'Application ») respecte la vie privée de ses utilisateurs. La présente politique de confidentialité explique quelles données personnelles sont collectées, comment elles sont utilisées, et quels sont vos droits."
         ]
       },
       {
@@ -804,13 +804,13 @@
       {
         "title": "1. Objet",
         "paragraphs": [
-          "Les présentes Conditions Générales d'Utilisation (CGU) régissent l'utilisation de l'application web Biathlonpronos (ci-après « l'Application »). En accédant à l'Application, vous acceptez sans réserve les présentes CGU."
+          "Les présentes Conditions Générales d'Utilisation (CGU) régissent l'utilisation de l'application web BiathlonPronos (ci-après « l'Application »). En accédant à l'Application, vous acceptez sans réserve les présentes CGU."
         ]
       },
       {
         "title": "2. Description du service",
         "paragraphs": [
-          "Biathlonpronos est une application de pronostics sur les courses de biathlon permettant aux utilisateurs de :"
+          "BiathlonPronos est une application de pronostics sur les courses de biathlon permettant aux utilisateurs de :"
         ],
         "bullets": [
           "Pronostiquer les biathlètes et les nations les mieux classés de chaque course",
@@ -838,7 +838,7 @@
       {
         "title": "4. Règles du jeu",
         "paragraphs": [
-          "Biathlonpronos est un jeu de pronostics sans mise d'argent réelle. Aucun gain financier n'est associé aux performances dans l'application. Il s'agit d'un jeu de prédiction à vocation ludique et communautaire."
+          "BiathlonPronos est un jeu de pronostics sans mise d'argent réelle. Aucun gain financier n'est associé aux performances dans l'application. Il s'agit d'un jeu de prédiction à vocation ludique et communautaire."
         ],
         "link": {
           "href": "/regles",
@@ -863,7 +863,7 @@
       {
         "title": "6. Propriété intellectuelle",
         "paragraphs": [
-          "L'ensemble des éléments de l'Application (textes, graphiques, logo, code) sont la propriété de Biathlonpronos. Toute reproduction, même partielle, sans autorisation écrite est interdite."
+          "L'ensemble des éléments de l'Application (textes, graphiques, logo, code) sont la propriété de BiathlonPronos. Toute reproduction, même partielle, sans autorisation écrite est interdite."
         ]
       },
       {
@@ -879,7 +879,7 @@
       {
         "title": "8. Limitation de responsabilité",
         "paragraphs": [
-          "Biathlonpronos s'efforce d'assurer la disponibilité et la fiabilité de l'Application, mais ne peut garantir une disponibilité sans interruption. Nous ne saurions être tenus responsables des dysfonctionnements techniques indépendants de notre volonté, ni des modifications du calendrier ou des résultats officiels des courses."
+          "BiathlonPronos s'efforce d'assurer la disponibilité et la fiabilité de l'Application, mais ne peut garantir une disponibilité sans interruption. Nous ne saurions être tenus responsables des dysfonctionnements techniques indépendants de notre volonté, ni des modifications du calendrier ou des résultats officiels des courses."
         ]
       },
       {
@@ -1015,7 +1015,7 @@
     "noRace": "Aucune course n'est ouverte aux pronostics pour l'instant.",
     "seeCalendar": "Voir le calendrier",
     "lockedTitle": "Inscris-toi pour aller plus loin",
-    "lockedBody": "<link>Inscris-toi gratuitement en cliquant ici</link> pour découvrir toutes les facettes de Biathlonpronos : classements, ligues entre amis, pronostics de saison, cartes bonus…",
+    "lockedBody": "<link>Inscris-toi gratuitement en cliquant ici</link> pour découvrir toutes les facettes de BiathlonPronos : classements, ligues entre amis, pronostics de saison, cartes bonus…",
     "lockedSignUp": "M'inscrire gratuitement",
     "lockedSignIn": "J'ai déjà un compte",
     "lockedContinue": "Continuer mon pronostic",
@@ -1068,17 +1068,17 @@
     "resultsPushTitle": "🏁 Résultats : {race}",
     "resultsPushBody": "{location} : tu marques {points, plural, one {# pt} other {# pts}}. Découvre le détail et le classement.",
     "weeklySubject": "🏁 Ta semaine de biathlon : {points, plural, one {# pt} other {# pts}}",
-    "weeklyTitle": "Ta semaine sur Biathlonpronos",
+    "weeklyTitle": "Ta semaine sur BiathlonPronos",
     "weeklyIntro": "Voici tes points sur les courses de la semaine.",
     "weeklyNotPlayed": "non jouée",
     "weeklyPoints": "{points, plural, one {# pt} other {# pts}}",
     "weeklyTotal": "Total de la semaine",
     "weeklyButton": "Voir le classement",
-    "newsButton": "Ouvrir Biathlonpronos",
-    "footer": "Tu reçois cet e-mail parce que tu joues à Biathlonpronos.",
+    "newsButton": "Ouvrir BiathlonPronos",
+    "footer": "Tu reçois cet e-mail parce que tu joues à BiathlonPronos.",
     "manage": "Gérer mes notifications",
     "unsubscribe": "Ne plus recevoir ces e-mails",
-    "supportReplyPushTitle": "💬 Biathlonpronos t'a répondu",
+    "supportReplyPushTitle": "💬 BiathlonPronos t'a répondu",
     "guestResultsSubject": "🏁 {race} à {location} : ton score est prêt",
     "guestResultsTitle": "Ton score est prêt !",
     "guestResultsBody": "La course {race} à {location} est terminée. Découvre ton score et le détail de tes points.",

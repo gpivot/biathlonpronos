@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 /**
  * Messagerie « Suggérer une modification » (migration 0037) : une conversation par joueur avec
- * l'équipe Biathlonpronos. Table réservée au serveur : toujours lue avec la clé service, après
+ * l'équipe BiathlonPronos. Table réservée au serveur : toujours lue avec la clé service, après
  * avoir vérifié qui est connecté.
  */
 export interface SupportMessage {
