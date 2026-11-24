@@ -1154,5 +1154,10 @@
     "codeSubmit": "Meine Punktzahl entdecken",
     "verifying": "Wird geprüft…",
     "codeWrong": "Falscher oder abgelaufener Code. Nutze den zuletzt per E-Mail erhaltenen Code."
+  },
+  "Social": {
+    "title": "Folge uns",
+    "instagram": "BiathlonPronos auf Instagram (neuer Tab)",
+    "facebook": "BiathlonPronos auf Facebook (neuer Tab)"
   }
 }

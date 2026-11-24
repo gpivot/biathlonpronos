@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { AppleIcon, LogoMark, PlayIcon } from "@/components/icons";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { FaqList } from "@/components/FaqList";
+import { SocialLinks } from "@/components/SocialLinks";
 import { LeagueMockup, PickMockup, ScoreMockup, StrategyMockup } from "./Mockups";
 
 // Page d'accueil visiteur (non connecté) : accroche avec les boutons « Je teste le jeu » / « Je crée mon compte », puis 4 points
@@ -70,6 +71,8 @@ export async function Landing() {
           <StoreBadge href={PLAY_STORE_URL} icon={<PlayIcon className="h-6 w-6" />} caption={t("playStoreGet")} store="Google Play" />
         </div>
 
+        <SocialLinks withTitle className="relative mt-6" />
+
         <div aria-hidden className="relative mt-14 flex h-9 w-6 justify-center rounded-full border-2 border-text-dim/60 pt-1.5">
           <div className="h-2 w-1 animate-bounce rounded-full bg-text-dim" />
         </div>
@@ -133,6 +136,7 @@ export async function Landing() {
               <Wordmark className="text-base" />
             </div>
             <LocaleSwitcher />
+            <SocialLinks className="sm:items-start" />
           </div>
           <FooterColumn
             title={t("footerGame")}

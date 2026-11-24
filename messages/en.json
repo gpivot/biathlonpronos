@@ -1154,5 +1154,10 @@
     "codeSubmit": "Discover my score",
     "verifying": "Checking…",
     "codeWrong": "Wrong or expired code. Use the latest code you received by e-mail."
+  },
+  "Social": {
+    "title": "Follow us",
+    "instagram": "BiathlonPronos on Instagram (opens in a new tab)",
+    "facebook": "BiathlonPronos on Facebook (opens in a new tab)"
   }
 }

@@ -1154,5 +1154,10 @@
     "codeSubmit": "Descubrir mi puntuación",
     "verifying": "Comprobando…",
     "codeWrong": "Código incorrecto o caducado. Usa el último código recibido por e-mail."
+  },
+  "Social": {
+    "title": "Síguenos",
+    "instagram": "BiathlonPronos en Instagram (nueva pestaña)",
+    "facebook": "BiathlonPronos en Facebook (nueva pestaña)"
   }
 }
