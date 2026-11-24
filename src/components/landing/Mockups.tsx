@@ -43,7 +43,7 @@ export async function PickMockup() {
   const picks = [
     { flag: "🇫🇷", name: "L. Jeanmonnot", odds: 8 },
     { flag: "🇫🇷", name: "J. Braisaz-Bouchet", odds: 12 },
-    { flag: "🇸🇰", name: "P. Fialkova", odds: 22 },
+    { flag: "🇨🇭", name: "A. Baserga", odds: 22 },
   ];
   return (
     <Phone>
@@ -82,7 +82,7 @@ export async function ScoreMockup() {
     { rank: 3, flag: "🇫🇷", name: "J. Simon", odds: 6, mult: 13, mine: false },
     { rank: 4, flag: "🇸🇪", name: "E. Öberg", odds: 5, mult: 10, mine: false },
     { rank: 5, flag: "🇮🇹", name: "L. Vittozzi", odds: 4, mult: 7, mine: false },
-    { rank: 6, flag: "🇸🇰", name: "P. Fialkova", odds: 22, mult: 5, mine: true },
+    { rank: 6, flag: "🇨🇭", name: "A. Baserga", odds: 22, mult: 5, mine: true },
   ];
   return (
     <Phone>
