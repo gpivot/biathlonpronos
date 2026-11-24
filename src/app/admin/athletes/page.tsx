@@ -29,6 +29,15 @@ const oddsInputClass = "w-14 rounded border border-border bg-card px-1.5 py-1 te
 
 type OddsMap = Record<string, number>;
 
+/**
+ * Clé React qui change dès que les cotes en base changent (import CSV, autre onglet…). Les champs
+ * sont non contrôlés (defaultValue) : sans cette clé, un champ déjà modifié à la main garde son
+ * ancienne valeur à l'écran après un import, et un clic sur « OK » la réenregistrerait.
+ */
+function oddsKey(id: string, odds: OddsMap): string {
+  return `${id}|${Object.entries(odds).sort(([a], [b]) => a.localeCompare(b)).map(([f, v]) => `${f}=${v}`).join(",")}`;
+}
+
 /** Ligne de cotes d'une nation ou d'une équipe : quelques champs et un bouton. */
 function NationOddsForm({
   seasonId,
@@ -213,6 +222,7 @@ export default async function AdminAthletesPage({
 
               <div className="flex flex-col gap-4 border-t border-border px-4 py-3">
                 <NationOddsForm
+                  key={oddsKey(`${nation.code}|`, mixed)}
                   seasonId={season.id}
                   nationCode={nation.code}
                   nationSex=""
@@ -229,6 +239,7 @@ export default async function AdminAthletesPage({
                   return (
                     <div key={sex.value} className="flex flex-col gap-2">
                       <NationOddsForm
+                        key={oddsKey(`${nation.code}|${sex.value}`, nationOdds.get(`${nation.code}|${sex.value}`) ?? {})}
                         seasonId={season.id}
                         nationCode={nation.code}
                         nationSex={sex.value}
@@ -260,7 +271,7 @@ export default async function AdminAthletesPage({
                                 const current = athleteOdds.get(athlete.id) ?? {};
                                 const hasOdds = Object.keys(current).length > 0;
                                 return (
-                                  <tr key={athlete.id} className="border-t border-border/40">
+                                  <tr key={oddsKey(athlete.id, current)} className="border-t border-border/40">
                                     <td className={`whitespace-nowrap px-2 py-1 ${hasOdds ? "" : "text-text-dim"}`}>
                                       <AdminForm
                                         id={formId}
