@@ -304,7 +304,7 @@
     "back": "← Volver",
     "loginRequired": "Inicia sesión para acceder a tu cuenta.",
     "favoriteTeamTitle": "Equipo favorito",
-    "favoriteTeamHint": "Una nación + un sexo (p. ej. Francia Mujeres). Seguirás sus victorias y podios en la portada, y contará con la carta bonus Equipo. Elección definitiva para la temporada.",
+    "favoriteTeamHint": "Una nación + un sexo (p. ej. Francia Mujeres). Seguirás sus victorias y podios en la portada, y contará con la carta bonus Equipo.",
     "women": "Mujeres",
     "men": "Hombres",
     "save": "Guardar",
@@ -357,7 +357,12 @@
     "avatarChange": "Cambiar icono",
     "avatarTitle": "Elige tu icono",
     "avatarNone": "Ninguno (inicial de tu apodo)",
-    "avatarError": "Icono no guardado, vuelve a intentarlo."
+    "avatarError": "Icono no guardado, vuelve a intentarlo.",
+    "favoriteTeamEditableUntil": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo ({date}); después será definitivo para la temporada.",
+    "favoriteTeamEditableNoDate": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo; después será definitivo para la temporada.",
+    "favoriteTeamEdit": "Cambiar",
+    "favoriteTeamWarningEditable": "Eliges {team}. Contará con la carta bonus Equipo. ¿Confirmas?",
+    "favoriteTeamLockedNow": "La 1.ª carrera de la Copa del Mundo ya ha salido: tu equipo favorito ya no se puede cambiar."
   },
   "Globes": {
     "back": "← Volver",
@@ -386,7 +391,7 @@
     "pepiteTitle": "Tu Diamante oculto",
     "pepiteHint": "Un outsider elegido al inicio de la temporada, uno por sexo: todas sus cuotas (sprint, persecución, individual, salida en masa, globo…) deben ser de al menos 30. Nadie más lo ve. Se juega en secreto en todas las carreras: en su primer Top 10 de la temporada, sus puntos en esa carrera se suman a tu puntuación. Entonces se revela y vuelve a ser un atleta como los demás. Hasta entonces, no puedes incluirlo en tus pronósticos de carrera.",
     "pepiteClaimed": "Diamante oculto revelado: ¡bonus conseguido!",
-    "pepiteSubmit": "Confirmar mi Diamante oculto (definitivo)",
+    "pepiteSubmit": "Confirmar mi Diamante oculto",
     "pepiteNotEligible": "Este atleta no es elegible: todas sus cuotas deben ser de al menos 30.",
     "pepiteNoLongerEligible": "Tu Diamante ya no es elegible con la nueva regla (todas sus cuotas deben ser de al menos 30). Elige otro.",
     "talentTitle": "Carta Talento",
@@ -395,7 +400,12 @@
     "talentNew": "Elegir un nuevo Diamante",
     "talentSubmit": "Jugar la carta Talento",
     "talentInPrediction": "Este biatleta está en uno de tus próximos pronósticos: quítalo primero.",
-    "talentError": "No se ha podido jugar la carta. Inténtalo de nuevo."
+    "talentError": "No se ha podido jugar la carta. Inténtalo de nuevo.",
+    "pepiteUpdate": "Cambiar mi Diamante oculto",
+    "pepiteSaved": "Diamante oculto guardado.",
+    "pepiteEditableUntil": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo ({date}); después será definitivo.",
+    "pepiteEditableNoDate": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo; después será definitivo.",
+    "pepiteLocked": "La 1.ª carrera de la Copa del Mundo ya ha salido: tu Diamante oculto ya no se puede cambiar."
   },
   "Ligues": {
     "title": "Mis ligas",

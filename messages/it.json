@@ -304,7 +304,7 @@
     "back": "← Indietro",
     "loginRequired": "Accedi per entrare nel tuo account.",
     "favoriteTeamTitle": "Squadra preferita",
-    "favoriteTeamHint": "Una nazione + un sesso (es. Francia Donne). Seguirai le sue vittorie e i suoi podi in home, e varrà con la carta bonus Squadra. Scelta definitiva per la stagione.",
+    "favoriteTeamHint": "Una nazione + un sesso (es. Francia Donne). Seguirai le sue vittorie e i suoi podi in home, e varrà con la carta bonus Squadra.",
     "women": "Donne",
     "men": "Uomini",
     "save": "Salva",
@@ -357,7 +357,12 @@
     "avatarChange": "Cambia icona",
     "avatarTitle": "Scegli la tua icona",
     "avatarNone": "Nessuna (iniziale del nickname)",
-    "avatarError": "Icona non salvata, riprova."
+    "avatarError": "Icona non salvata, riprova.",
+    "favoriteTeamEditableUntil": "Modificabile fino alla partenza della 1ª gara di Coppa del Mondo ({date}), poi definitiva per la stagione.",
+    "favoriteTeamEditableNoDate": "Modificabile fino alla partenza della 1ª gara di Coppa del Mondo, poi definitiva per la stagione.",
+    "favoriteTeamEdit": "Modifica",
+    "favoriteTeamWarningEditable": "Scegli {team}. Varrà con la carta bonus Squadra. Confermi?",
+    "favoriteTeamLockedNow": "La 1ª gara di Coppa del Mondo è partita: la squadra preferita non può più essere modificata."
   },
   "Globes": {
     "back": "← Indietro",
@@ -386,7 +391,7 @@
     "pepiteTitle": "La tua Pepita nascosta",
     "pepiteHint": "Un outsider scelto a inizio stagione, uno per sesso: tutte le sue quote (sprint, inseguimento, individuale, mass start, globo…) devono essere almeno 30. Nessun altro la vede. Viene giocata di nascosto in tutte le gare: alla sua prima Top 10 della stagione, i suoi punti in quella gara si aggiungono al tuo punteggio. Viene quindi rivelata e torna a essere un atleta come gli altri. Fino ad allora, non puoi inserirla nei tuoi pronostici di gara.",
     "pepiteClaimed": "Pepita nascosta rivelata: bonus ottenuto!",
-    "pepiteSubmit": "Conferma la mia Pepita nascosta (definitiva)",
+    "pepiteSubmit": "Conferma la mia Pepita nascosta",
     "pepiteNotEligible": "Questo atleta non è idoneo: tutte le sue quote devono essere almeno 30.",
     "pepiteNoLongerEligible": "La tua Pepita non è più idonea con la nuova regola (tutte le quote devono essere almeno 30). Scegline un'altra.",
     "talentTitle": "Carta Talento",
@@ -395,7 +400,12 @@
     "talentNew": "Scegli una nuova Pepita",
     "talentSubmit": "Gioca la carta Talento",
     "talentInPrediction": "Questo biatleta è in uno dei tuoi prossimi pronostici: toglilo prima.",
-    "talentError": "Non è stato possibile giocare la carta. Riprova."
+    "talentError": "Non è stato possibile giocare la carta. Riprova.",
+    "pepiteUpdate": "Modifica la mia Pepita nascosta",
+    "pepiteSaved": "Pepita nascosta salvata.",
+    "pepiteEditableUntil": "Modificabile fino alla partenza della 1ª gara di Coppa del Mondo ({date}), poi definitiva.",
+    "pepiteEditableNoDate": "Modificabile fino alla partenza della 1ª gara di Coppa del Mondo, poi definitiva.",
+    "pepiteLocked": "La 1ª gara di Coppa del Mondo è partita: la tua Pepita nascosta non può più essere modificata."
   },
   "Ligues": {
     "title": "Le mie leghe",

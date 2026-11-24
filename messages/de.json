@@ -304,7 +304,7 @@
     "back": "← Zurück",
     "loginRequired": "Melde dich an, um auf dein Konto zuzugreifen.",
     "favoriteTeamTitle": "Lieblingsteam",
-    "favoriteTeamHint": "Eine Nation + ein Geschlecht (z. B. Frankreich Frauen). Du verfolgst ihre Siege und Podestplätze auf der Startseite, und sie zählt für die Bonuskarte Team. Endgültige Wahl für die Saison.",
+    "favoriteTeamHint": "Eine Nation + ein Geschlecht (z. B. Frankreich Frauen). Du verfolgst ihre Siege und Podestplätze auf der Startseite, und sie zählt für die Bonuskarte Team.",
     "women": "Frauen",
     "men": "Männer",
     "save": "Speichern",
@@ -357,7 +357,12 @@
     "avatarChange": "Symbol ändern",
     "avatarTitle": "Wähle dein Symbol",
     "avatarNone": "Keins (Anfangsbuchstabe des Spielernamens)",
-    "avatarError": "Symbol nicht gespeichert, bitte versuch es noch einmal."
+    "avatarError": "Symbol nicht gespeichert, bitte versuch es noch einmal.",
+    "favoriteTeamEditableUntil": "Änderbar bis zum Start des ersten Weltcuprennens ({date}), danach endgültig für die Saison.",
+    "favoriteTeamEditableNoDate": "Änderbar bis zum Start des ersten Weltcuprennens, danach endgültig für die Saison.",
+    "favoriteTeamEdit": "Ändern",
+    "favoriteTeamWarningEditable": "Du wählst {team}. Es zählt für die Bonuskarte Team. Bestätigen?",
+    "favoriteTeamLockedNow": "Das erste Weltcuprennen hat begonnen: Dein Lieblingsteam kann nicht mehr geändert werden."
   },
   "Globes": {
     "back": "← Zurück",
@@ -386,7 +391,7 @@
     "pepiteTitle": "Dein versteckter Rohdiamant",
     "pepiteHint": "Ein Außenseiter, zu Saisonbeginn gewählt, einer pro Geschlecht: Alle seine Quoten (Sprint, Verfolgung, Einzel, Massenstart, Kugel…) müssen mindestens 30 betragen. Niemand sonst sieht ihn. Er wird verdeckt in jedem Rennen gespielt: Bei seiner ersten Top-10-Platzierung der Saison werden seine Punkte aus diesem Rennen deinem Punktestand gutgeschrieben. Dann ist er aufgedeckt und wieder ein normaler Athlet. Bis dahin kannst du ihn nicht in deine Renntipps aufnehmen.",
     "pepiteClaimed": "Versteckter Rohdiamant aufgedeckt: Bonus erhalten!",
-    "pepiteSubmit": "Meinen versteckten Rohdiamanten bestätigen (endgültig)",
+    "pepiteSubmit": "Meinen versteckten Rohdiamanten bestätigen",
     "pepiteNotEligible": "Dieser Athlet ist nicht wählbar: Alle seine Quoten müssen mindestens 30 betragen.",
     "pepiteNoLongerEligible": "Dein Rohdiamant ist nach der neuen Regel nicht mehr wählbar (alle Quoten müssen mindestens 30 betragen). Wähle einen anderen.",
     "talentTitle": "Talent-Karte",
@@ -395,7 +400,12 @@
     "talentNew": "Neuen Rohdiamanten wählen",
     "talentSubmit": "Talent-Karte spielen",
     "talentInPrediction": "Dieser Biathlet steht in einem deiner kommenden Tipps: entferne ihn zuerst.",
-    "talentError": "Die Karte konnte nicht gespielt werden. Versuch es noch einmal."
+    "talentError": "Die Karte konnte nicht gespielt werden. Versuch es noch einmal.",
+    "pepiteUpdate": "Meinen versteckten Rohdiamanten ändern",
+    "pepiteSaved": "Versteckter Rohdiamant gespeichert.",
+    "pepiteEditableUntil": "Änderbar bis zum Start des ersten Weltcuprennens ({date}), danach endgültig.",
+    "pepiteEditableNoDate": "Änderbar bis zum Start des ersten Weltcuprennens, danach endgültig.",
+    "pepiteLocked": "Das erste Weltcuprennen hat begonnen: Dein versteckter Rohdiamant kann nicht mehr geändert werden."
   },
   "Ligues": {
     "title": "Meine Ligen",

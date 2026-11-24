@@ -1,5 +1,5 @@
 import { fullAthleteName } from "@/lib/athleteName";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { createClient, getAuthUser } from "@/lib/supabase/server";
 import { GlobesForm, type GlobeCategoryConfig } from "./GlobesForm";
@@ -9,6 +9,8 @@ import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { getClock } from "@/lib/clock";
 import { isPepiteEligibleOdds } from "@/lib/scoring";
 import { fetchAll } from "@/lib/admin/fetchAll";
+import { getFirstWorldCupRaceAt, seasonChoicesEditable } from "@/lib/seasonChoices";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 
 export const dynamic = "force-dynamic";
 
@@ -61,7 +63,7 @@ export default async function GlobesPage() {
     );
   }
 
-  const [{ data: existingPicks }, { data: nations }, { data: pepites }, pepiteOdds, { data: favoriteTeam }, equipeActive] = await Promise.all([
+  const [{ data: existingPicks }, { data: nations }, { data: pepites }, pepiteOdds, { data: favoriteTeam }, equipeActive, firstWorldCupRaceAt] = await Promise.all([
     supabase
       .from("season_predictions")
       .select("category, athlete_id, nation_code")
@@ -82,7 +84,13 @@ export default async function GlobesPage() {
     ),
     supabase.from("favorite_teams").select("nation_code, sex").eq("user_id", user.id).eq("season_id", season.id).maybeSingle(),
     isEquipeCardActive(supabase, user.id, season.id),
+    getFirstWorldCupRaceAt(supabase, season.id),
   ]);
+  // Pépite cachée et équipe favorite : modifiables jusqu'au départ de la 1re course de Coupe du Monde.
+  const choicesEditable = seasonChoicesEditable(firstWorldCupRaceAt, now);
+  const editDeadline = firstWorldCupRaceAt
+    ? new Intl.DateTimeFormat(await getLocale(), { timeZone: DISPLAY_TIME_ZONE, dateStyle: "long", timeStyle: "short" }).format(firstWorldCupRaceAt)
+    : null;
   // Carte Talent en main, et nom des pépites révélées (réactivables avec elle).
   const claimedIds = (pepites ?? []).filter((p) => p.bonus_claimed).map((p) => p.athlete_id as string);
   const [{ data: talentCard }, { data: claimedAthletes }] = await Promise.all([
@@ -191,6 +199,8 @@ export default async function GlobesPage() {
           talentCardId={talentCard?.id ?? null}
           revealedName={claimedNameById.get(pepiteBySex.get("F")?.athlete_id ?? "") ?? null}
           fromTalent={!!pepiteBySex.get("F")?.active_from}
+          editable={choicesEditable}
+          editDeadline={editDeadline}
         />
         <PepiteForm
           sex="H"
@@ -201,16 +211,20 @@ export default async function GlobesPage() {
           talentCardId={talentCard?.id ?? null}
           revealedName={claimedNameById.get(pepiteBySex.get("H")?.athlete_id ?? "") ?? null}
           fromTalent={!!pepiteBySex.get("H")?.active_from}
+          editable={choicesEditable}
+          editDeadline={editDeadline}
         />
       </div>
 
-      {/* Équipe favorite : pas verrouillée au début de saison, seulement par la carte Équipe. */}
+      {/* Équipe favorite : premier choix possible tant que la carte Équipe n'est pas active ; modifiable jusqu'à la 1re course de Coupe du Monde. */}
       {(nations ?? []).length > 0 && (
         <FavoriteTeamForm
           seasonId={season.id}
           nations={[...nations!].sort((a, b) => a.name.localeCompare(b.name))}
           initial={favoriteTeam ? { nationCode: favoriteTeam.nation_code, sex: favoriteTeam.sex as "H" | "F" } : null}
           locked={equipeActive}
+          editable={choicesEditable && !equipeActive}
+          editDeadline={editDeadline}
         />
       )}
     </div>

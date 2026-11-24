@@ -1622,3 +1622,27 @@ Les Server Actions de ces formulaires sont enveloppées par `adminFormAction`
 lancée, car Next.js masque le texte des erreurs en production. Toute nouvelle action de formulaire
 de l'admin doit suivre ce modèle. Les formulaires qui avaient déjà leur propre retour (résultats,
 globes, horloge, notifications, questions bonus, imports CSV) sont inchangés.
+
+## Pépite cachée et équipe favorite modifiables jusqu'à la 1re course de Coupe du Monde (24/11/2026)
+
+**Demande de Guillaume** : la Pépite cachée et l'équipe favorite étaient grisées dès qu'on les avait
+choisies. Elles sont désormais modifiables sur `/globes` jusqu'au départ de la première course de
+Coupe du Monde de la saison, puis verrouillées.
+- « Première course de Coupe du Monde » = la course qui part le plus tôt parmi les étapes ×1 qui
+  comptent au classement (`coefficient = 1` et `counts_in_standings`) : une étape « Autre (×0) »
+  (ex. pré-saison) ne compte pas. Sans aucune course au calendrier, c'est modifiable.
+  `getFirstWorldCupRaceAt` / `seasonChoicesEditable` (`src/lib/seasonChoices.ts`) côté code,
+  `first_world_cup_race_at` / `season_choices_editable` côté base (horloge simulée de l'admin
+  comprise via `effective_now()`).
+- L'heure limite est affichée sous chaque choix (« Modifiable jusqu'au départ de la 1re course de
+  Coupe du Monde (date) »). Après, message « ne peut plus être modifiée ».
+- **Inchangé** (à confirmer) : un joueur qui n'a encore rien choisi peut toujours faire son premier
+  choix après cette course (Pépite : à tout moment ; équipe favorite : tant que la carte Équipe
+  n'est pas active), et ce choix est alors définitif. Une Pépite devenue inéligible peut toujours
+  être remplacée ; une Pépite choisie avec la carte Talent reste définitive.
+- Nouveau garde-fou : une Pépite (premier choix ou modification) ne peut pas être un biathlète déjà
+  présent dans un de ses pronostics de course pas encore partie (même règle que la carte Talent).
+- Migration **0046_choix_saison_modifiables.sql** : fonctions `first_world_cup_race_at` et
+  `season_choices_editable`, nouvelle version du trigger `pepites_check`, et politique RLS
+  « favorite_teams: update own until first race » (modification refusée après le départ ou si la
+  carte Équipe est active ; toujours pas de suppression par le joueur).
