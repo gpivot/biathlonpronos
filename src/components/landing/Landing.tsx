@@ -5,7 +5,7 @@ import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import { FaqList } from "@/components/FaqList";
 import { LeagueMockup, PickMockup, ScoreMockup, StrategyMockup } from "./Mockups";
 
-// Page d'accueil visiteur (non connecté) : accroche avec le bouton « Je joue », puis 4 points
+// Page d'accueil visiteur (non connecté) : accroche avec les boutons « Je teste le jeu » / « Je crée mon compte », puis 4 points
 // illustrés par des mini-écrans commentés façon tutoriel, une FAQ, un dernier appel à jouer et le
 // pied de page. Les joueurs connectés voient le dashboard à la place (cf. src/app/[locale]/page.tsx).
 const FEATURES = [
@@ -42,13 +42,22 @@ export async function Landing() {
 
         <p className="relative mt-5 max-w-md text-base leading-relaxed text-text-dim sm:text-lg">{t("heroSubtitle")}</p>
 
-        {/* Parcours d'invité : on joue tout de suite, le compte n'est demandé qu'à la validation du pronostic. */}
-        <Link
-          href="/jouer"
-          className="relative mt-8 rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
-        >
-          {t("heroCta")} →
-        </Link>
+        {/* Deux entrées : tester tout de suite (parcours d'invité, le compte n'est demandé qu'à la
+            validation du pronostic) ou créer son compte directement. */}
+        <div className="relative mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
+          <Link
+            href="/jouer"
+            className="rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
+          >
+            {t("heroCtaTry")} →
+          </Link>
+          <Link
+            href="/sign-in?mode=signup"
+            className="rounded-2xl border-2 border-blue/70 bg-card/60 px-8 py-4 font-display text-base font-extrabold text-text transition hover:border-teal hover:text-frost sm:text-lg"
+          >
+            {t("heroCtaSignUp")}
+          </Link>
+        </div>
         <Link href="/sign-in" className="relative mt-4 text-sm font-medium text-text-dim hover:text-frost">
           {t("heroSignIn")}
         </Link>
@@ -57,8 +66,8 @@ export async function Landing() {
           {t("appStoresTitle")}
         </div>
         <div className="relative mt-3 flex flex-wrap justify-center gap-3">
-          <StoreBadge icon={<AppleIcon className="h-6 w-6" />} caption={t("appStoreSoon")} store="App Store" />
-          <StoreBadge icon={<PlayIcon className="h-6 w-6" />} caption={t("appStoreSoon")} store="Google Play" />
+          <StoreBadge href={APP_STORE_URL} icon={<AppleIcon className="h-6 w-6" />} caption={t("appStoreGet")} store="App Store" />
+          <StoreBadge href={PLAY_STORE_URL} icon={<PlayIcon className="h-6 w-6" />} caption={t("playStoreGet")} store="Google Play" />
         </div>
 
         <div aria-hidden className="relative mt-14 flex h-9 w-6 justify-center rounded-full border-2 border-text-dim/60 pt-1.5">
@@ -112,7 +121,7 @@ export async function Landing() {
           href="/jouer"
           className="mt-7 inline-block rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
         >
-          {t("heroCta")} →
+          {t("heroCtaTry")} →
         </Link>
       </section>
 
@@ -190,15 +199,23 @@ function SectionTitle({ eyebrow, title }: { eyebrow: string; title: string }) {
   );
 }
 
-// L'application mobile n'existe pas encore : badges « bientôt disponible », non cliquables.
-function StoreBadge({ icon, caption, store }: { icon: React.ReactNode; caption: string; store: string }) {
+// Fiches des applis mobiles (identifiant « fr.biathlonpronos.app », cf. mobile/capacitor.config.ts).
+const APP_STORE_URL = "https://apps.apple.com/app/biathlonpronos/id6830079046";
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=fr.biathlonpronos.app";
+
+function StoreBadge({ href, icon, caption, store }: { href: string; icon: React.ReactNode; caption: string; store: string }) {
   return (
-    <div className="flex items-center gap-2.5 rounded-xl border border-border bg-card/60 px-4 py-2 text-left text-text-dim">
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-2.5 rounded-xl border border-border bg-card/60 px-4 py-2 text-left text-text transition hover:border-blue/70"
+    >
       {icon}
       <div className="leading-tight">
-        <div className="text-[10px]">{caption}</div>
+        <div className="text-[10px] text-text-dim">{caption}</div>
         <div className="font-display text-sm font-bold">{store}</div>
       </div>
-    </div>
+    </a>
   );
 }
