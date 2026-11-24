@@ -66,7 +66,7 @@
     "favoriteTeamPodiums": "{count, plural, one {# podium} other {# podiums}}",
     "nextStageTitle": "Next stage",
     "seasonPicksTitle": "Season predictions",
-    "seasonPicksHint": "Big globes, best young athletes, best nations and your Hidden Diamonds: enter them before the season starts!",
+    "seasonPicksHint": "Big globes, best young athletes, best nations and your Hidden Diamonds: make your 8 picks before your first race prediction!",
     "seasonPicksDone": "All set. You can still change your mind until the season starts.",
     "seasonPicksButton": "Enter my season predictions",
     "seasonPicksEdit": "Edit my season predictions",
@@ -78,7 +78,10 @@
     "pepiteRevealRank": "{rank, selectordinal, one {#st} two {#nd} few {#rd} other {#th}}",
     "lastResultExtra_missingPicks": "Biathletes not picked (5 loops each)",
     "lastResultExtra_fusee": "Rocket card",
-    "lastResultExtra_gachette": "Trigger card"
+    "lastResultExtra_gachette": "Trigger card",
+    "seasonPicksRule": "They stay open until the start of the first race you predict, and at the latest until the start of the women's mass start in Le Grand-Bornand. After that, everything is closed.",
+    "seasonPicksDeadline": "For you: until {date}.",
+    "seasonPicksDoneUntil": "All set. You can still change your mind until {date}."
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -367,10 +370,10 @@
   "Globes": {
     "back": "← Back",
     "title": "Season predictions",
-    "intro": "6 big predictions before the season starts: overall winner, best young athlete and best nation, for both men and women.",
+    "intro": "6 big season predictions: overall winner, best young athlete and best nation, for both men and women.",
     "noSeason": "No active season right now.",
     "loginRequired": "Log in to make your season predictions.",
-    "lockedMessage": "Season predictions have been locked since the season started.",
+    "lockedMessage": "Season predictions are closed: they close as soon as the first race you predicted starts, and for everyone since the women's mass start in Le Grand-Bornand.",
     "noPick": "— Choose —",
     "infoLabel": "What does this ranking mean?",
     "category_gros_globe_f": "Overall Winner Women",
@@ -403,12 +406,15 @@
     "talentError": "The card couldn't be played. Try again.",
     "pepiteUpdate": "Change my Hidden Diamond",
     "pepiteSaved": "Hidden Diamond saved.",
-    "pepiteEditableUntil": "You can change it until the start of the first World Cup race ({date}); after that it's final.",
+    "pepiteEditableUntil": "You can change it until {date}; after that it's final.",
     "pepiteEditableNoDate": "You can change it until the start of the first World Cup race; after that it's final.",
-    "pepiteLocked": "The first World Cup race has started: your Hidden Diamond can no longer be changed.",
+    "pepiteLocked": "Season predictions are closed: your Hidden Diamond can no longer be changed.",
     "pickerEdit": "Change this prediction",
     "pickerClose": "Close",
-    "pickSaved": "Saved"
+    "pickSaved": "Saved",
+    "openRule": "Open until the start of the first race you predict, and at the latest until the start of the women's mass start in Le Grand-Bornand.",
+    "openUntil": "For you: until {date}.",
+    "pepiteClosed": "Season predictions are closed: you can no longer choose a Hidden Diamond."
   },
   "Ligues": {
     "title": "My leagues",

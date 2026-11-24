@@ -1663,3 +1663,36 @@ Coupe du Monde de la saison, puis verrouillées.
 - Globes et Pépite : le choix s'enregistre dès qu'il est fait dans la liste (« ✓ Enregistré »), il
   n'y a plus de bouton « Valider » global. L'équipe favorite garde sa confirmation, la carte Talent
   son bouton « Jouer la carte ».
+
+## Ouverture des pronostics de saison : jusqu'à sa 1re course pronostiquée, au plus tard le Grand-Bornand (24/11/2026)
+
+Demande de Guillaume : laisser les pronostics de saison ouverts pour les nouveaux joueurs avant leur
+premier pronostic, et tout fermer au départ de la mass start femmes du Grand-Bornand.
+
+- **Règle appliquée** (globes + Pépites cachées) : chaque joueur peut les faire ou les modifier
+  jusqu'au départ de la **première course qu'il pronostique** (étape qui compte au classement ; les
+  étapes « Autre (×0) » ne comptent pas), et **au plus tard** jusqu'au départ de la mass start
+  femmes du Grand-Bornand (course trouvée par lieu contenant « bornand », format `mass_start`, sexe F ;
+  à défaut, repli sur la 1re course de Coupe du Monde). Comme la 1re course qu'un joueur pronostique
+  ne peut pas partir avant la 1re course de Coupe du Monde, tout le monde peut modifier jusque-là.
+- **Interprétation « à confirmer »** : « avant leur premier pronostic » est lu comme « avant le
+  **départ** de la première course pronostiquée », pas « avant l'enregistrement » : un nouveau joueur
+  arrive souvent par le bouton « Jouer » (pronostic de course d'abord, compte ensuite) ; avec une
+  lecture stricte, ses pronos de saison seraient fermés dès son arrivée. Tant que sa course n'est pas
+  partie, il ne profite d'aucun résultat, donc pas d'avantage.
+- **Pépite cachée** : même règle que les globes (premier choix compris ; avant, un premier choix
+  restait possible à tout moment). Toujours possibles hors délai : remplacer une Pépite devenue
+  inéligible, la carte Talent. **Équipe favorite** : inchangée (0046), car la carte Équipe peut
+  obliger à en choisir une en cours de saison.
+- Avant 0047, **rien n'empêchait côté base** d'écrire un pronostic de saison après le début de
+  saison (seul l'écran le bloquait via `seasons.starts_on`, qui n'est plus utilisé pour ça).
+- Migration **0047_ouverture_pronos_saison.sql** : fonctions `season_picks_closing_race_at`,
+  `season_picks_closes_at` (pour `auth.uid()`), `season_picks_open` ; politiques RLS
+  insert/update/delete de `season_predictions` à la place de « write own » ; trigger `pepites_check`
+  (erreur `pepite_closed` pour un premier choix hors délai). Côté app : `getSeasonPicksWindow`
+  (`src/lib/seasonChoices.ts`), utilisée par `/globes`, le Calendrier et l'accueil.
+- Accueil : l'encadré « Pronostics de saison » (x / 8, règle, date limite du joueur, bouton) est en
+  haut de l'encadré Saison tant que c'est ouvert et incomplet (ou complet avant la 1re course, pour
+  changer d'avis). La « Série en cours » reste affichée dès qu'une course de la saison est partie.
+- Inchangé : les pronos de saison des autres restent lisibles depuis le début de saison (0018) ; un
+  retardataire peut donc les voir avant de choisir (risque jugé faible, cotes publiques).

@@ -66,7 +66,7 @@
     "favoriteTeamPodiums": "{count, plural, =0 {0 podium} one {# podium} other {# podiums}}",
     "nextStageTitle": "Prochaine étape",
     "seasonPicksTitle": "Pronostics de saison",
-    "seasonPicksHint": "Gros globes, meilleurs jeunes, meilleures nations et tes Pépites cachées : à saisir avant le début de la saison !",
+    "seasonPicksHint": "Gros globes, meilleurs jeunes, meilleures nations et tes Pépites cachées : fais tes 8 choix avant ton premier pronostic de course !",
     "seasonPicksDone": "Tout est saisi. Tu peux encore changer d'avis jusqu'au début de la saison.",
     "seasonPicksButton": "Saisir mes pronostics de saison",
     "seasonPicksEdit": "Modifier mes pronostics de saison",
@@ -78,7 +78,10 @@
     "pepiteRevealRank": "{rank, selectordinal, one {#er} other {#e}}",
     "lastResultExtra_missingPicks": "Biathlètes non pronostiqués (5 tours d'office)",
     "lastResultExtra_fusee": "Carte Fusée",
-    "lastResultExtra_gachette": "Carte Gâchette"
+    "lastResultExtra_gachette": "Carte Gâchette",
+    "seasonPicksRule": "Ils restent ouverts jusqu'au départ de la première course que tu pronostiques, et au plus tard jusqu'au départ de la mass start femmes du Grand-Bornand. Ensuite, tout est fermé.",
+    "seasonPicksDeadline": "Pour toi : jusqu'au {date}.",
+    "seasonPicksDoneUntil": "Tout est saisi. Tu peux encore changer d'avis jusqu'au {date}."
   },
   "Landing": {
     "heroTitle": "Pronostique les courses de biathlon.",
@@ -367,10 +370,10 @@
   "Globes": {
     "back": "← Retour",
     "title": "Pronostics de saison",
-    "intro": "6 grands pronostics avant le début de saison : gros globe, meilleur(e) jeune et meilleure nation, pour les hommes et les femmes.",
+    "intro": "6 grands pronostics de saison : gros globe, meilleur(e) jeune et meilleure nation, pour les hommes et les femmes.",
     "noSeason": "Aucune saison active pour le moment.",
     "loginRequired": "Connecte-toi pour faire tes pronostics de saison.",
-    "lockedMessage": "Les pronostics de saison sont verrouillés depuis le début de la saison.",
+    "lockedMessage": "Les pronostics de saison sont fermés : ils le sont dès le départ de la première course que tu as pronostiquée, et pour tout le monde depuis la mass start femmes du Grand-Bornand.",
     "noPick": "— Choisir —",
     "infoLabel": "Que représente ce classement ?",
     "category_gros_globe_f": "Gros Globe Femmes",
@@ -403,12 +406,15 @@
     "talentError": "La carte n'a pas pu être jouée. Réessaie.",
     "pepiteUpdate": "Modifier ma Pépite cachée",
     "pepiteSaved": "Pépite cachée enregistrée.",
-    "pepiteEditableUntil": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde ({date}), puis définitive.",
+    "pepiteEditableUntil": "Modifiable jusqu'au {date}, puis définitive.",
     "pepiteEditableNoDate": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde, puis définitive.",
-    "pepiteLocked": "La 1re course de Coupe du Monde est partie : ta Pépite cachée ne peut plus être modifiée.",
+    "pepiteLocked": "Les pronostics de saison sont fermés : ta Pépite cachée ne peut plus être modifiée.",
     "pickerEdit": "Modifier ce pronostic",
     "pickerClose": "Fermer",
-    "pickSaved": "Enregistré"
+    "pickSaved": "Enregistré",
+    "openRule": "Ouverts jusqu'au départ de la première course que tu pronostiques, et au plus tard jusqu'au départ de la mass start femmes du Grand-Bornand.",
+    "openUntil": "Pour toi : jusqu'au {date}.",
+    "pepiteClosed": "Les pronostics de saison sont fermés : tu ne peux plus choisir de Pépite cachée."
   },
   "Ligues": {
     "title": "Mes ligues",

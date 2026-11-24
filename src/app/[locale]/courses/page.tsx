@@ -8,7 +8,7 @@ import { getSeasonView, pickDefaultOpenStageId, type HiddenPepite } from "@/lib/
 import { HiddenPepiteCard } from "@/components/HiddenPepiteCard";
 import { getClock } from "@/lib/clock";
 import { isEquipeCardActive } from "@/lib/favoriteTeam";
-import { getFirstWorldCupRaceAt, seasonChoicesEditable } from "@/lib/seasonChoices";
+import { getFirstWorldCupRaceAt, getSeasonPicksWindow, seasonChoicesEditable } from "@/lib/seasonChoices";
 import { CalendarAccordion, type CalendarStage } from "./CalendarAccordion";
 import { CalendarImportButton } from "./CalendarImportButton";
 import { SeasonPredictionsAccordion, type SeasonPick } from "./SeasonPredictionsAccordion";
@@ -23,10 +23,10 @@ interface CalendarData {
   isAdmin: boolean;
   /** null : visiteur non connecté. */
   seasonPicks: SeasonPick[] | null;
-  /** Pronostics de saison encore modifiables (avant le début de saison, comme /globes). */
+  /** Pronostics de saison (globes et Pépites) encore ouverts pour ce joueur, comme /globes (0047). */
   seasonPicksOpen: boolean;
   pepites: HiddenPepite[] | null;
-  /** Pépite cachée et équipe favorite encore modifiables (jusqu'à la 1re course de Coupe du Monde). */
+  /** Équipe favorite encore modifiable (jusqu'à la 1re course de Coupe du Monde). */
   choicesEditable: boolean;
   /** Ligne « Équipe favorite » des pronostics de saison (joueur connecté seulement). */
   favoriteTeam: { label: string; nationCode: string; editable: boolean } | { label: null; choosable: boolean } | undefined;
@@ -58,8 +58,11 @@ async function getCalendarData(): Promise<CalendarData> {
     playerId ? getFirstWorldCupRaceAt(supabase, season.id) : Promise.resolve(null),
   ]);
   const choicesEditable = !!playerId && seasonChoicesEditable(firstWorldCupRaceAt, now);
-  const favoriteTeam = playerId ? await getFavoriteTeamLine(supabase, season.id, playerId, choicesEditable) : undefined;
-  return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: new Date(season.starts_on) > now, pepites, choicesEditable, favoriteTeam, streak, cards };
+  const [favoriteTeam, picksWindow] = await Promise.all([
+    playerId ? getFavoriteTeamLine(supabase, season.id, playerId, choicesEditable) : Promise.resolve(undefined),
+    playerId ? getSeasonPicksWindow(supabase, season.id, playerId, now, firstWorldCupRaceAt) : Promise.resolve(null),
+  ]);
+  return { seasonId: season.id, stages, isAdmin, seasonPicks, seasonPicksOpen: picksWindow?.open ?? false, pepites, choicesEditable, favoriteTeam, streak, cards };
 }
 
 /** Équipe favorite choisie (« France Femmes »), ou encore à choisir tant que la carte Équipe n'est pas active. */
@@ -115,7 +118,7 @@ export default async function CoursesPage({
 
         {seasonPicks && <SeasonPredictionsAccordion picks={seasonPicks} open={seasonPicksOpen} favoriteTeam={favoriteTeam} />}
 
-        {pepites && <HiddenPepiteCard pepites={pepites} editable={choicesEditable} />}
+        {pepites && <HiddenPepiteCard pepites={pepites} editable={seasonPicksOpen} />}
 
         {streak != null && <StreakCard current={streak} cards={cards ?? undefined} seasonId={seasonId ?? undefined} />}
 

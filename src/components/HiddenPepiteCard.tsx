@@ -14,7 +14,7 @@ export function HiddenPepiteCard({
   editable = false,
 }: {
   pepites: HiddenPepite[];
-  /** Jusqu'au départ de la 1re course de Coupe du Monde : chaque ligne ouvre la modification de cette Pépite. */
+  /** Pronostics de saison ouverts pour ce joueur (0047) : chaque ligne ouvre le choix ou la modification de cette Pépite. */
   editable?: boolean;
 }) {
   const t = useTranslations("Courses");
@@ -89,12 +89,14 @@ export function HiddenPepiteCard({
               ) : (
                 <>
                   <div className="flex-1 text-[12px] text-text-dim">{t("pepiteNone")}</div>
+                  {editable && (
                   <Link
                     href={`/globes?modifier=pepite_${p.sex}`}
                     className="whitespace-nowrap rounded-full bg-ice px-3 py-1 font-display text-[12px] font-bold text-on-ice"
                   >
                     {t("pepiteChoose")}
                   </Link>
+                  )}
                 </>
               )}
             </div>

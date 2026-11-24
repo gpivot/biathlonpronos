@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { seasonChoicesEditable } from "../seasonChoices";
+import { seasonChoicesEditable, seasonPicksClosesAt } from "../seasonChoices";
 
 describe("seasonChoicesEditable", () => {
   const firstRace = new Date("2026-11-29T12:15:00Z");
@@ -15,5 +15,37 @@ describe("seasonChoicesEditable", () => {
 
   it("reste modifiable tant qu'aucune course n'est au calendrier", () => {
     expect(seasonChoicesEditable(null, new Date("2027-01-01T00:00:00Z"))).toBe(true);
+  });
+});
+
+describe("seasonPicksClosesAt (pronos de saison : 1re course pronostiquée, au plus tard Grand-Bornand)", () => {
+  const firstWorldCupRaceAt = new Date("2026-11-26T15:10:00Z");
+  const closingRaceAt = new Date("2026-12-20T13:15:00Z");
+
+  it("joueur qui a pronostiqué Kontiolahti : fermé au départ de cette course", () => {
+    const firstPredictedRaceAt = new Date("2026-11-26T15:10:00Z");
+    expect(seasonPicksClosesAt({ firstPredictedRaceAt, closingRaceAt, firstWorldCupRaceAt })).toEqual(firstPredictedRaceAt);
+  });
+
+  it("nouveau joueur sans pronostic : ouvert jusqu'à la mass start femmes du Grand-Bornand", () => {
+    const closesAt = seasonPicksClosesAt({ firstPredictedRaceAt: null, closingRaceAt, firstWorldCupRaceAt });
+    expect(closesAt).toEqual(closingRaceAt);
+    expect(seasonChoicesEditable(closesAt, new Date("2026-12-05T10:00:00Z"))).toBe(true);
+    expect(seasonChoicesEditable(closesAt, new Date("2026-12-20T13:15:00Z"))).toBe(false);
+  });
+
+  it("1re course pronostiquée après le Grand-Bornand : c'est le Grand-Bornand qui ferme", () => {
+    const firstPredictedRaceAt = new Date("2027-01-08T13:00:00Z");
+    expect(seasonPicksClosesAt({ firstPredictedRaceAt, closingRaceAt, firstWorldCupRaceAt })).toEqual(closingRaceAt);
+  });
+
+  it("Grand-Bornand absent du calendrier : repli sur la 1re course de Coupe du Monde", () => {
+    expect(seasonPicksClosesAt({ firstPredictedRaceAt: null, closingRaceAt: null, firstWorldCupRaceAt })).toEqual(firstWorldCupRaceAt);
+  });
+
+  it("calendrier vide : pas de date, donc ouvert", () => {
+    const closesAt = seasonPicksClosesAt({ firstPredictedRaceAt: null, closingRaceAt: null, firstWorldCupRaceAt: null });
+    expect(closesAt).toBeNull();
+    expect(seasonChoicesEditable(closesAt, new Date())).toBe(true);
   });
 });

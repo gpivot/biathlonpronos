@@ -66,7 +66,7 @@
     "favoriteTeamPodiums": "{count, plural, one {# Podest} other {# Podeste}}",
     "nextStageTitle": "Nächste Etappe",
     "seasonPicksTitle": "Saisontipps",
-    "seasonPicksHint": "Große Kugeln, beste Nachwuchsathleten, beste Nationen und deine versteckten Rohdiamanten: vor dem Saisonstart eintragen!",
+    "seasonPicksHint": "Große Kugeln, beste Nachwuchsathleten, beste Nationen und deine versteckten Rohdiamanten: Triff deine 8 Tipps vor deinem ersten Renntipp!",
     "seasonPicksDone": "Alles eingetragen. Bis zum Saisonstart kannst du noch ändern.",
     "seasonPicksButton": "Meine Saisontipps eingeben",
     "seasonPicksEdit": "Meine Saisontipps ändern",
@@ -78,7 +78,10 @@
     "pepiteRevealRank": "{rank}.",
     "lastResultExtra_missingPicks": "Nicht getippte Biathleten (je 5 Strafrunden)",
     "lastResultExtra_fusee": "Karte Rakete",
-    "lastResultExtra_gachette": "Karte Abzug"
+    "lastResultExtra_gachette": "Karte Abzug",
+    "seasonPicksRule": "Sie bleiben offen bis zum Start des ersten Rennens, das du tippst, spätestens bis zum Start des Massenstarts der Frauen in Le Grand-Bornand. Danach ist alles geschlossen.",
+    "seasonPicksDeadline": "Für dich: bis {date}.",
+    "seasonPicksDoneUntil": "Alles eingetragen. Bis {date} kannst du noch ändern."
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
@@ -367,10 +370,10 @@
   "Globes": {
     "back": "← Zurück",
     "title": "Saisontipps",
-    "intro": "6 große Tipps vor Saisonbeginn: Gesamtsieger, beste/r Nachwuchsathlet/in und beste Nation, jeweils für Männer und Frauen.",
+    "intro": "6 große Saisontipps: Gesamtsieger, beste/r Nachwuchsathlet/in und beste Nation, jeweils für Männer und Frauen.",
     "noSeason": "Derzeit keine aktive Saison.",
     "loginRequired": "Melde dich an, um deine Saisontipps abzugeben.",
-    "lockedMessage": "Die Saisontipps sind seit Saisonbeginn gesperrt.",
+    "lockedMessage": "Die Saisontipps sind geschlossen: Sie schließen mit dem Start des ersten Rennens, das du getippt hast, und für alle seit dem Massenstart der Frauen in Le Grand-Bornand.",
     "noPick": "— Auswählen —",
     "infoLabel": "Was bedeutet diese Wertung?",
     "category_gros_globe_f": "Gesamtsiegerin Frauen",
@@ -403,12 +406,15 @@
     "talentError": "Die Karte konnte nicht gespielt werden. Versuch es noch einmal.",
     "pepiteUpdate": "Meinen versteckten Rohdiamanten ändern",
     "pepiteSaved": "Versteckter Rohdiamant gespeichert.",
-    "pepiteEditableUntil": "Änderbar bis zum Start des ersten Weltcuprennens ({date}), danach endgültig.",
+    "pepiteEditableUntil": "Änderbar bis {date}, danach endgültig.",
     "pepiteEditableNoDate": "Änderbar bis zum Start des ersten Weltcuprennens, danach endgültig.",
-    "pepiteLocked": "Das erste Weltcuprennen hat begonnen: Dein versteckter Rohdiamant kann nicht mehr geändert werden.",
+    "pepiteLocked": "Die Saisontipps sind geschlossen: Dein versteckter Rohdiamant kann nicht mehr geändert werden.",
     "pickerEdit": "Diesen Tipp ändern",
     "pickerClose": "Schließen",
-    "pickSaved": "Gespeichert"
+    "pickSaved": "Gespeichert",
+    "openRule": "Offen bis zum Start des ersten Rennens, das du tippst, spätestens bis zum Start des Massenstarts der Frauen in Le Grand-Bornand.",
+    "openUntil": "Für dich: bis {date}.",
+    "pepiteClosed": "Die Saisontipps sind geschlossen: Du kannst keinen versteckten Rohdiamanten mehr wählen."
   },
   "Ligues": {
     "title": "Meine Ligen",
