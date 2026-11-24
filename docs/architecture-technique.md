@@ -500,6 +500,15 @@ Server Action `setAdminRole` revérifie que l'appelant est admin (`src/lib/admin
 car une Server Action peut être appelée sans passer par le layout `/admin`. Un admin ne peut pas se
 retirer son propre rôle, pour ne pas se fermer l'accès au back-office.
 
+Statistiques de rétention (24/11/2026, `RetentionStats.tsx`, `src/lib/admin/retention.ts`), en haut
+de la page : (1) connexions sur 24 h / 7 j / 30 j, calculées sur `last_sign_in_at` de Supabase Auth
+(hors invités). Ce n'est pas un nombre de visites : un joueur resté connecté n'est compté qu'au
+moment où il s'identifie. Un vrai compteur de visites demanderait Vercel Web Analytics (tableau de
+bord Vercel) ou une table de suivi (migration), non fait à ce jour. (2) Graphique du nombre de
+pronostiqueurs distincts par course de la saison active, pour les courses dont le départ est passé
+(horloge simulée prise en compte), groupées par étape ; invités anonymes exclus, étapes hors
+classement en barres pâles ; tableau détaillé dépliable.
+
 ### Horloge simulée pour l'admin (octobre 2026)
 
 Page `/admin/horloge` : un admin règle une date/heure fictive, en heure de Paris (saisie libre,

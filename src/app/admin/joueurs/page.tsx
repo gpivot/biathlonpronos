@@ -2,6 +2,11 @@ import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { PlayerList, type PlayerRow } from "./PlayerList";
 import { purgeGuests } from "./actions";
 import { AdminForm, SubmitButton } from "../_components/AdminForm";
+import { RetentionStats } from "./RetentionStats";
+import { raceLabel } from "../_components/labels";
+import { getClock } from "@/lib/clock";
+import { fetchAll } from "@/lib/admin/fetchAll";
+import { buildRetention, countRecentSignIns, type RetentionRace } from "@/lib/admin/retention";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +48,40 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
 
   const adminCount = playerProfiles.filter((p) => p.is_admin).length;
 
+  // Rétention : pronostiqueurs par course fermée (départ passé) de la saison active.
+  const { now } = await getClock();
+  const { data: season } = await admin.from("seasons").select("id").eq("status", "active").maybeSingle();
+  const { data: stages } = season
+    ? await admin
+        .from("stages")
+        .select("id, location, counts_in_standings, races(id, format, sex, locks_at)")
+        .eq("season_id", season.id)
+    : { data: [] as any[] };
+  const closedRaces: RetentionRace[] = (stages ?? []).flatMap((stage: any) =>
+    (stage.races ?? [])
+      .filter((race: any) => new Date(race.locks_at) <= now)
+      .map((race: any) => ({
+        id: race.id,
+        label: raceLabel(race),
+        stageId: stage.id,
+        stageLocation: stage.location,
+        locksAt: race.locks_at,
+        offStandings: stage.counts_in_standings === false,
+      }))
+  );
+  const raceIds = closedRaces.map((r) => r.id);
+  const predictions = raceIds.length
+    ? await fetchAll<{ user_id: string; race_id: string }>((from, to) =>
+        admin.from("predictions").select("user_id, race_id").in("race_id", raceIds).order("id").range(from, to)
+      )
+    : [];
+  const retention = buildRetention(closedRaces, predictions, guestIds);
+  const signIns = {
+    day: countRecentSignIns(authUsers, now, 1),
+    week: countRecentSignIns(authUsers, now, 7),
+    month: countRecentSignIns(authUsers, now, 30),
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
@@ -52,6 +91,8 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
           accès à tout le back-office.
         </p>
       </div>
+
+      <RetentionStats retention={retention} signIns={signIns} totalPlayers={playerProfiles.length} />
 
       <AdminForm action={purgeGuests} successMessage="Invités de plus de 7 jours purgés ✓" className="flex flex-wrap items-center gap-3 rounded-lg border border-border p-3 text-xs text-text-dim">
         <span className="flex-1">
