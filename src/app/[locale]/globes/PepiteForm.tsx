@@ -30,7 +30,7 @@ export function PepiteForm({
   revealedName?: string | null;
   /** Pépite choisie ou réactivée avec la carte Talent. */
   fromTalent?: boolean;
-  /** Modifiable jusqu'au départ de la 1re course de Coupe du Monde (migration 0046). */
+  /** Pronostics de saison encore ouverts pour ce joueur (migration 0047) : premier choix et modification. */
   editable?: boolean;
   /** Date et heure de ce départ, déjà formatées (null si pas encore au calendrier). */
   editDeadline?: string | null;
@@ -40,8 +40,8 @@ export function PepiteForm({
   // Pépite choisie avant la règle « toutes les cotes ≥ 30 » et plus éligible : le choix se rouvre.
   // (Une pépite choisie avec la carte Talent reste définitive.)
   const noLongerEligible = !!initialPick && !alreadyClaimed && !fromTalent && !options.some((o) => o.id === initialPick);
-  // Sinon, modifiable jusqu'au départ de la 1re course de Coupe du Monde, puis verrouillée.
-  const locked = !!initialPick && !noLongerEligible && (!editable || fromTalent);
+  // Sinon, choix et modification tant que les pronostics de saison sont ouverts pour ce joueur.
+  const locked = initialPick ? !noLongerEligible && (!editable || fromTalent) : !editable;
   const [savedPick, setSavedPick] = useState(noLongerEligible ? null : initialPick);
   const [pick, setPick] = useState(noLongerEligible ? "" : initialPick ?? "");
   const [saving, setSaving] = useState(false);
@@ -61,7 +61,7 @@ export function PepiteForm({
           : t("pepiteEditableNoDate")
         : initialPick
           ? t("pepiteLocked")
-          : null;
+          : t("pepiteClosed");
 
   // Le choix s'enregistre dès qu'il est fait dans la liste (24/11/2026).
   async function submit(pick: string) {
@@ -100,7 +100,9 @@ export function PepiteForm({
             ? t("talentInPrediction")
             : message.includes("pepite_definitive")
               ? t("pepiteLocked")
-              : message
+              : message.includes("pepite_closed")
+                ? t("pepiteClosed")
+                : message
       );
       return;
     }

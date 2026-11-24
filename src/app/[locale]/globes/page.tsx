@@ -9,7 +9,7 @@ import { isEquipeCardActive } from "@/lib/favoriteTeam";
 import { getClock } from "@/lib/clock";
 import { isPepiteEligibleOdds } from "@/lib/scoring";
 import { fetchAll } from "@/lib/admin/fetchAll";
-import { getFirstWorldCupRaceAt, seasonChoicesEditable } from "@/lib/seasonChoices";
+import { getFirstWorldCupRaceAt, getSeasonPicksWindow, seasonChoicesEditable } from "@/lib/seasonChoices";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 
 export const dynamic = "force-dynamic";
@@ -52,7 +52,6 @@ export default async function GlobesPage({ searchParams }: { searchParams: Promi
   }
 
   const { now } = await getClock();
-  const isLocked = new Date(season.starts_on) <= now;
 
   const {
     data: { user },
@@ -92,11 +91,15 @@ export default async function GlobesPage({ searchParams }: { searchParams: Promi
     isEquipeCardActive(supabase, user.id, season.id),
     getFirstWorldCupRaceAt(supabase, season.id),
   ]);
-  // Pépite cachée et équipe favorite : modifiables jusqu'au départ de la 1re course de Coupe du Monde.
+  // Équipe favorite : modifiable jusqu'au départ de la 1re course de Coupe du Monde (0046).
   const choicesEditable = seasonChoicesEditable(firstWorldCupRaceAt, now);
-  const editDeadline = firstWorldCupRaceAt
-    ? new Intl.DateTimeFormat(await getLocale(), { timeZone: DISPLAY_TIME_ZONE, dateStyle: "long", timeStyle: "short" }).format(firstWorldCupRaceAt)
-    : null;
+  const formatDate = new Intl.DateTimeFormat(await getLocale(), { timeZone: DISPLAY_TIME_ZONE, dateStyle: "long", timeStyle: "short" });
+  const editDeadline = firstWorldCupRaceAt ? formatDate.format(firstWorldCupRaceAt) : null;
+  // Globes et Pépites : ouverts jusqu'à la 1re course pronostiquée du joueur, au plus tard la mass
+  // start femmes du Grand-Bornand (0047).
+  const picksWindow = await getSeasonPicksWindow(supabase, season.id, user.id, now, firstWorldCupRaceAt);
+  const isLocked = !picksWindow.open;
+  const picksDeadline = picksWindow.closesAt ? formatDate.format(picksWindow.closesAt) : null;
   // Carte Talent en main, et nom des pépites révélées (réactivables avec elle).
   const claimedIds = (pepites ?? []).filter((p) => p.bonus_claimed).map((p) => p.athlete_id as string);
   const [{ data: talentCard }, { data: claimedAthletes }] = await Promise.all([
@@ -185,6 +188,11 @@ export default async function GlobesPage({ searchParams }: { searchParams: Promi
       <div className="flex flex-col gap-1">
         <div className="font-display text-lg font-bold">{t("title")}</div>
         <p className="text-[13px] leading-relaxed text-text-dim">{t("intro")}</p>
+        {!isLocked && (
+          <p className="text-[12px] leading-relaxed text-gold">
+            {t("openRule")} {picksDeadline && t("openUntil", { date: picksDeadline })}
+          </p>
+        )}
       </div>
 
       {isLocked ? (
@@ -205,8 +213,8 @@ export default async function GlobesPage({ searchParams }: { searchParams: Promi
           talentCardId={talentCard?.id ?? null}
           revealedName={claimedNameById.get(pepiteBySex.get("F")?.athlete_id ?? "") ?? null}
           fromTalent={!!pepiteBySex.get("F")?.active_from}
-          editable={choicesEditable}
-          editDeadline={editDeadline}
+          editable={picksWindow.open}
+          editDeadline={picksDeadline}
           autoOpen={modifier === "pepite_F"}
         />
         <PepiteForm
@@ -218,8 +226,8 @@ export default async function GlobesPage({ searchParams }: { searchParams: Promi
           talentCardId={talentCard?.id ?? null}
           revealedName={claimedNameById.get(pepiteBySex.get("H")?.athlete_id ?? "") ?? null}
           fromTalent={!!pepiteBySex.get("H")?.active_from}
-          editable={choicesEditable}
-          editDeadline={editDeadline}
+          editable={picksWindow.open}
+          editDeadline={picksDeadline}
           autoOpen={modifier === "pepite_H"}
         />
       </div>

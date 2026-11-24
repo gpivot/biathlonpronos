@@ -66,7 +66,7 @@
     "favoriteTeamPodiums": "{count, plural, one {# podio} other {# podios}}",
     "nextStageTitle": "Próxima etapa",
     "seasonPicksTitle": "Pronósticos de temporada",
-    "seasonPicksHint": "Grandes globos, mejores jóvenes, mejores naciones y tus Diamantes ocultos: ¡introdúcelos antes del inicio de la temporada!",
+    "seasonPicksHint": "Grandes globos, mejores jóvenes, mejores naciones y tus Diamantes ocultos: ¡haz tus 8 elecciones antes de tu primer pronóstico de carrera!",
     "seasonPicksDone": "Todo listo. Puedes cambiar de opinión hasta el inicio de la temporada.",
     "seasonPicksButton": "Introducir mis pronósticos de temporada",
     "seasonPicksEdit": "Modificar mis pronósticos de temporada",
@@ -78,7 +78,10 @@
     "pepiteRevealRank": "{rank}.º",
     "lastResultExtra_missingPicks": "Biatletas no pronosticados (5 vueltas cada uno)",
     "lastResultExtra_fusee": "Carta Cohete",
-    "lastResultExtra_gachette": "Carta Gatillo"
+    "lastResultExtra_gachette": "Carta Gatillo",
+    "seasonPicksRule": "Siguen abiertos hasta la salida de la primera carrera que pronostiques y, como muy tarde, hasta la salida de la mass start femenina de Le Grand-Bornand. Después, todo queda cerrado.",
+    "seasonPicksDeadline": "Para ti: hasta el {date}.",
+    "seasonPicksDoneUntil": "Todo listo. Puedes cambiar de opinión hasta el {date}."
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -367,10 +370,10 @@
   "Globes": {
     "back": "← Volver",
     "title": "Pronósticos de temporada",
-    "intro": "6 grandes pronósticos antes del inicio de la temporada: ganador de la general, mejor joven y mejor nación, tanto en hombres como en mujeres.",
+    "intro": "6 grandes pronósticos de temporada: ganador de la general, mejor joven y mejor nación, tanto en hombres como en mujeres.",
     "noSeason": "No hay ninguna temporada activa en este momento.",
     "loginRequired": "Inicia sesión para hacer tus pronósticos de temporada.",
-    "lockedMessage": "Los pronósticos de temporada están bloqueados desde el inicio de la temporada.",
+    "lockedMessage": "Los pronósticos de temporada están cerrados: se cierran con la salida de la primera carrera que pronosticaste y, para todos, desde la mass start femenina de Le Grand-Bornand.",
     "noPick": "— Elegir —",
     "infoLabel": "¿Qué representa esta clasificación?",
     "category_gros_globe_f": "Ganadora de la general (mujeres)",
@@ -403,12 +406,15 @@
     "talentError": "No se ha podido jugar la carta. Inténtalo de nuevo.",
     "pepiteUpdate": "Cambiar mi Diamante oculto",
     "pepiteSaved": "Diamante oculto guardado.",
-    "pepiteEditableUntil": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo ({date}); después será definitivo.",
+    "pepiteEditableUntil": "Puedes cambiarlo hasta el {date}; después será definitivo.",
     "pepiteEditableNoDate": "Puedes cambiarlo hasta la salida de la 1.ª carrera de la Copa del Mundo; después será definitivo.",
-    "pepiteLocked": "La 1.ª carrera de la Copa del Mundo ya ha salido: tu Diamante oculto ya no se puede cambiar.",
+    "pepiteLocked": "Los pronósticos de temporada están cerrados: tu Diamante oculto ya no se puede cambiar.",
     "pickerEdit": "Modificar este pronóstico",
     "pickerClose": "Cerrar",
-    "pickSaved": "Guardado"
+    "pickSaved": "Guardado",
+    "openRule": "Abiertos hasta la salida de la primera carrera que pronostiques y, como muy tarde, hasta la salida de la mass start femenina de Le Grand-Bornand.",
+    "openUntil": "Para ti: hasta el {date}.",
+    "pepiteClosed": "Los pronósticos de temporada están cerrados: ya no puedes elegir un Diamante oculto."
   },
   "Ligues": {
     "title": "Mis ligas",
