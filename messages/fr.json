@@ -304,7 +304,7 @@
     "back": "← Retour",
     "loginRequired": "Connecte-toi pour accéder à ton compte.",
     "favoriteTeamTitle": "Équipe favorite",
-    "favoriteTeamHint": "Une nation + un sexe (ex. France Femmes). Tu suivras ses victoires et ses podiums sur l'accueil, et elle servira avec la carte bonus Équipe. Choix définitif pour la saison.",
+    "favoriteTeamHint": "Une nation + un sexe (ex. France Femmes). Tu suivras ses victoires et ses podiums sur l'accueil, et elle servira avec la carte bonus Équipe.",
     "women": "Femmes",
     "men": "Hommes",
     "save": "Enregistrer",
@@ -357,7 +357,12 @@
     "avatarChange": "Changer de picto",
     "avatarTitle": "Choisis ton picto",
     "avatarNone": "Aucun (initiale du pseudo)",
-    "avatarError": "Picto non enregistré, réessaie."
+    "avatarError": "Picto non enregistré, réessaie.",
+    "favoriteTeamEditableUntil": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde ({date}), puis définitive pour la saison.",
+    "favoriteTeamEditableNoDate": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde, puis définitive pour la saison.",
+    "favoriteTeamEdit": "Modifier",
+    "favoriteTeamWarningEditable": "Tu choisis {team}. Elle servira avec la carte bonus Équipe. Tu confirmes ?",
+    "favoriteTeamLockedNow": "La 1re course de Coupe du Monde est partie : l'équipe favorite ne peut plus être modifiée."
   },
   "Globes": {
     "back": "← Retour",
@@ -386,7 +391,7 @@
     "pepiteTitle": "Ta Pépite cachée",
     "pepiteHint": "Un outsider misé en début de saison, un par sexe : toutes ses cotes (sprint, poursuite, individuel, mass start, globe…) doivent être d'au moins 30. Personne d'autre ne la voit. Elle est jouée en caché sur toutes les courses : dès son premier Top 10 de la saison, ses points sur cette course s'ajoutent à ton score. Elle est alors révélée et redevient une biathlète comme les autres. D'ici là, tu ne peux pas la mettre dans tes pronostics de course.",
     "pepiteClaimed": "Pépite cachée révélée : bonus obtenu !",
-    "pepiteSubmit": "Valider ma Pépite cachée (définitif)",
+    "pepiteSubmit": "Valider ma Pépite cachée",
     "pepiteNotEligible": "Ce biathlète n'est pas éligible : toutes ses cotes doivent être d'au moins 30.",
     "pepiteNoLongerEligible": "Ta Pépite n'est plus éligible avec la nouvelle règle (toutes ses cotes doivent être d'au moins 30). Choisis-en une autre.",
     "talentTitle": "Carte Talent",
@@ -395,7 +400,12 @@
     "talentNew": "Choisir une nouvelle pépite",
     "talentSubmit": "Jouer la carte Talent",
     "talentInPrediction": "Ce biathlète est dans un de tes pronostics à venir : retire-le d'abord.",
-    "talentError": "La carte n'a pas pu être jouée. Réessaie."
+    "talentError": "La carte n'a pas pu être jouée. Réessaie.",
+    "pepiteUpdate": "Modifier ma Pépite cachée",
+    "pepiteSaved": "Pépite cachée enregistrée.",
+    "pepiteEditableUntil": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde ({date}), puis définitive.",
+    "pepiteEditableNoDate": "Modifiable jusqu'au départ de la 1re course de Coupe du Monde, puis définitive.",
+    "pepiteLocked": "La 1re course de Coupe du Monde est partie : ta Pépite cachée ne peut plus être modifiée."
   },
   "Ligues": {
     "title": "Mes ligues",

@@ -304,7 +304,7 @@
     "back": "← Back",
     "loginRequired": "Log in to access your account.",
     "favoriteTeamTitle": "Favorite team",
-    "favoriteTeamHint": "A nation + a gender (e.g. France Women). You'll follow its wins and podiums on the home page, and it will count with the Team bonus card. Final choice for the season.",
+    "favoriteTeamHint": "A nation + a gender (e.g. France Women). You'll follow its wins and podiums on the home page, and it will count with the Team bonus card.",
     "women": "Women",
     "men": "Men",
     "save": "Save",
@@ -357,7 +357,12 @@
     "avatarChange": "Change picture",
     "avatarTitle": "Pick your icon",
     "avatarNone": "None (first letter of your username)",
-    "avatarError": "Icon not saved, please try again."
+    "avatarError": "Icon not saved, please try again.",
+    "favoriteTeamEditableUntil": "You can change it until the start of the first World Cup race ({date}); after that it's final for the season.",
+    "favoriteTeamEditableNoDate": "You can change it until the start of the first World Cup race; after that it's final for the season.",
+    "favoriteTeamEdit": "Change",
+    "favoriteTeamWarningEditable": "You're choosing {team}. It will count with the Team bonus card. Confirm?",
+    "favoriteTeamLockedNow": "The first World Cup race has started: your favorite team can no longer be changed."
   },
   "Globes": {
     "back": "← Back",
@@ -386,7 +391,7 @@
     "pepiteTitle": "Your Hidden Diamond",
     "pepiteHint": "An outsider picked at the start of the season, one per sex: all of their odds (sprint, pursuit, individual, mass start, globe…) must be at least 30. Nobody else can see it. It is played secretly on every race: on their first Top 10 of the season, their points in that race are added to your score. They are then revealed and become a regular athlete again. Until then, you can't include them in your race picks.",
     "pepiteClaimed": "Hidden Diamond revealed: bonus earned!",
-    "pepiteSubmit": "Confirm my Hidden Diamond (final)",
+    "pepiteSubmit": "Confirm my Hidden Diamond",
     "pepiteNotEligible": "This athlete is not eligible: all of their odds must be at least 30.",
     "pepiteNoLongerEligible": "Your Hidden Diamond is no longer eligible under the new rule (all of their odds must be at least 30). Pick another one.",
     "talentTitle": "Talent card",
@@ -395,7 +400,12 @@
     "talentNew": "Pick a new Diamond",
     "talentSubmit": "Play the Talent card",
     "talentInPrediction": "This biathlete is in one of your upcoming picks: remove them first.",
-    "talentError": "The card couldn't be played. Try again."
+    "talentError": "The card couldn't be played. Try again.",
+    "pepiteUpdate": "Change my Hidden Diamond",
+    "pepiteSaved": "Hidden Diamond saved.",
+    "pepiteEditableUntil": "You can change it until the start of the first World Cup race ({date}); after that it's final.",
+    "pepiteEditableNoDate": "You can change it until the start of the first World Cup race; after that it's final.",
+    "pepiteLocked": "The first World Cup race has started: your Hidden Diamond can no longer be changed."
   },
   "Ligues": {
     "title": "My leagues",
