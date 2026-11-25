@@ -462,6 +462,13 @@ velopronos.fr), avec la même typographie.
   côté interface uniquement). **Migration 0016 à coller dans Supabase** : la policy « profiles:
   update own » laissait un joueur modifier n'importe quelle colonne de son profil, y compris
   `is_admin` ; la migration limite la mise à jour côté client à la colonne `pseudo`.
+- **Pseudo sur l'accueil** (demande du 25/11/2026) : en haut de la carte Saison, le pseudo avec un
+  petit crayon pour le modifier sur place (`components/HomePseudo.tsx`). Tant que le joueur garde
+  le pseudo d'origine, un encart doré « Choisis ton nom de champion ! » le remplace. Pseudo
+  d'origine = partie avant le @ de l'e-mail (ce que la base attribue à l'inscription Apple/Google,
+  ex. relais Apple `x7k2qp9mzd@privaterelay.appleid.com`) ou « Invité » (`lib/defaultPseudo.ts`),
+  détecté sans migration. *À confirmer* : un joueur qui a volontairement choisi la partie avant le @
+  de son e-mail comme pseudo voit aussi l'encart, jusqu'à ce qu'il le change.
 - **Thème clair / sombre fonctionnel** (Profil > Apparence). Les couleurs de `tailwind.config.ts`
   pointent vers des variables CSS (`src/app/globals.css`) : palette sombre par défaut, palette
   claire sous `html.light`. Le choix est mémorisé dans le navigateur (localStorage `theme`) et
