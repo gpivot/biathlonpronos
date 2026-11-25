@@ -32,7 +32,8 @@ export function seasonChoicesEditable(firstWorldCupRaceAt: Date | null, now: Dat
  * joueur pronostique ne peut pas partir avant la 1re course de Coupe du Monde, tout le monde peut
  * modifier jusque-là ; après, seuls les nouveaux joueurs (aucune course pronostiquée déjà partie)
  * peuvent encore les saisir.
- * Même règle côté base : season_picks_closes_at / season_picks_open (migration 0047).
+ * Exception (25/11/2026) : pour un invité devenu joueur, la course jouée en invité ne compte pas.
+ * Même règle côté base : season_picks_closes_at / season_picks_open (migrations 0047 et 0048).
  */
 export const SEASON_PICKS_CLOSING_RACE = { locationLike: "%bornand%", format: "mass_start", sex: "F" } as const;
 
@@ -51,18 +52,41 @@ export async function getSeasonPicksClosingRaceAt(supabase: SupabaseClient, seas
   return data?.locks_at ? new Date(data.locks_at as string) : null;
 }
 
-/** Départ de la 1re course (qui compte au classement) que le joueur a pronostiquée, partie ou non. */
-export async function getFirstPredictedRaceAt(supabase: SupabaseClient, seasonId: string, userId: string): Promise<Date | null> {
+/**
+ * Départ de la 1re course (qui compte au classement) que le joueur a pronostiquée, partie ou non.
+ * Invité devenu joueur (Guillaume, 25/11/2026) : les courses jouées en invité, parties avant la
+ * création de son compte (profiles.account_completed_at, migration 0048), ne comptent pas. Sinon
+ * ses pronostics de saison seraient déjà fermés quand il s'inscrit avec le code reçu après le
+ * résultat.
+ */
+export function firstPredictedRaceAt(raceStarts: Date[], accountCompletedAt: Date | null): Date | null {
+  const times = raceStarts
+    .map((d) => d.getTime())
+    .filter((t) => !Number.isNaN(t) && (accountCompletedAt === null || t > accountCompletedAt.getTime()));
+  return times.length > 0 ? new Date(Math.min(...times)) : null;
+}
+
+export async function getFirstPredictedRaceAt(
+  supabase: SupabaseClient,
+  seasonId: string,
+  userId: string,
+  accountCompletedAt: Date | null
+): Promise<Date | null> {
   const { data } = await supabase
     .from("predictions")
     .select("races!inner(locks_at, stages!inner(season_id, counts_in_standings))")
     .eq("user_id", userId)
     .eq("races.stages.season_id", seasonId)
     .eq("races.stages.counts_in_standings", true);
-  const times = ((data ?? []) as any[])
-    .map((p) => (p.races?.locks_at ? new Date(p.races.locks_at as string).getTime() : NaN))
-    .filter((t) => !Number.isNaN(t));
-  return times.length > 0 ? new Date(Math.min(...times)) : null;
+  const starts = ((data ?? []) as any[]).filter((p) => p.races?.locks_at).map((p) => new Date(p.races.locks_at as string));
+  return firstPredictedRaceAt(starts, accountCompletedAt);
+}
+
+/** Date de création du compte d'un invité (null : inscrit directement, ou avant la migration 0048). */
+export async function getAccountCompletedAt(supabase: SupabaseClient, userId: string): Promise<Date | null> {
+  const { data } = await supabase.from("profiles").select("account_completed_at").eq("id", userId).maybeSingle();
+  const value = (data as { account_completed_at?: string | null } | null)?.account_completed_at;
+  return value ? new Date(value) : null;
 }
 
 /**
@@ -88,6 +112,8 @@ export interface SeasonPicksWindow {
   /** Date de fermeture pour ce joueur (null : pas encore de course au calendrier). */
   closesAt: Date | null;
   firstWorldCupRaceAt: Date | null;
+  /** Invité devenu joueur : date de création de son compte (null sinon). */
+  accountCompletedAt: Date | null;
 }
 
 export async function getSeasonPicksWindow(
@@ -97,11 +123,14 @@ export async function getSeasonPicksWindow(
   now: Date,
   firstWorldCupRaceAt?: Date | null
 ): Promise<SeasonPicksWindow> {
-  const [firstWc, closingRaceAt, firstPredictedRaceAt] = await Promise.all([
+  const [firstWc, closingRaceAt, { accountCompletedAt, firstPredictedRaceAt }] = await Promise.all([
     firstWorldCupRaceAt !== undefined ? Promise.resolve(firstWorldCupRaceAt) : getFirstWorldCupRaceAt(supabase, seasonId),
     getSeasonPicksClosingRaceAt(supabase, seasonId),
-    getFirstPredictedRaceAt(supabase, seasonId, userId),
+    getAccountCompletedAt(supabase, userId).then(async (accountCompletedAt) => ({
+      accountCompletedAt,
+      firstPredictedRaceAt: await getFirstPredictedRaceAt(supabase, seasonId, userId, accountCompletedAt),
+    })),
   ]);
   const closesAt = seasonPicksClosesAt({ firstPredictedRaceAt, closingRaceAt, firstWorldCupRaceAt: firstWc });
-  return { open: seasonChoicesEditable(closesAt, now), closesAt, firstWorldCupRaceAt: firstWc };
+  return { open: seasonChoicesEditable(closesAt, now), closesAt, firstWorldCupRaceAt: firstWc, accountCompletedAt };
 }

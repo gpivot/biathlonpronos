@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { seasonChoicesEditable, seasonPicksClosesAt } from "../seasonChoices";
+import { firstPredictedRaceAt, seasonChoicesEditable, seasonPicksClosesAt } from "../seasonChoices";
 
 describe("seasonChoicesEditable", () => {
   const firstRace = new Date("2026-11-29T12:15:00Z");
@@ -47,5 +47,32 @@ describe("seasonPicksClosesAt (pronos de saison : 1re course pronostiquée, au p
     const closesAt = seasonPicksClosesAt({ firstPredictedRaceAt: null, closingRaceAt: null, firstWorldCupRaceAt: null });
     expect(closesAt).toBeNull();
     expect(seasonChoicesEditable(closesAt, new Date())).toBe(true);
+  });
+});
+
+describe("firstPredictedRaceAt (invité devenu joueur, 0048)", () => {
+  const guestRace = new Date("2026-11-29T12:15:00Z");
+  const nextRace = new Date("2026-12-04T13:00:00Z");
+
+  it("joueur inscrit directement : sa 1re course pronostiquée", () => {
+    expect(firstPredictedRaceAt([nextRace, guestRace], null)).toEqual(guestRace);
+  });
+
+  it("la course jouée en invité, partie avant la création du compte, ne compte pas", () => {
+    const accountCompletedAt = new Date("2026-11-30T09:00:00Z");
+    expect(firstPredictedRaceAt([guestRace], accountCompletedAt)).toBeNull();
+    expect(firstPredictedRaceAt([guestRace, nextRace], accountCompletedAt)).toEqual(nextRace);
+  });
+
+  it("compte créé avant le départ de la course jouée en invité : elle compte", () => {
+    expect(firstPredictedRaceAt([guestRace], new Date("2026-11-28T09:00:00Z"))).toEqual(guestRace);
+  });
+
+  it("après l'inscription : ouverts jusqu'au Grand-Bornand tant qu'il n'a pas pronostiqué d'autre course", () => {
+    const closingRaceAt = new Date("2026-12-20T13:15:00Z");
+    const first = firstPredictedRaceAt([guestRace], new Date("2026-11-30T09:00:00Z"));
+    const closesAt = seasonPicksClosesAt({ firstPredictedRaceAt: first, closingRaceAt, firstWorldCupRaceAt: guestRace });
+    expect(closesAt).toEqual(closingRaceAt);
+    expect(seasonChoicesEditable(closesAt, new Date("2026-11-30T10:00:00Z"))).toBe(true);
   });
 });

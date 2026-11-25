@@ -127,7 +127,12 @@ export async function completeGuestSignup(input: {
     return { ok: false, error: "unknown" };
   }
 
-  const { error } = await admin.from("profiles").update({ pseudo, signup_pending: false }).eq("id", user.id);
+  // account_completed_at (0048) : les courses jouées en invité, déjà parties, n'empêchent pas de
+  // faire ensuite ses pronostics de saison (cf. getFirstPredictedRaceAt).
+  const { error } = await admin
+    .from("profiles")
+    .update({ pseudo, signup_pending: false, account_completed_at: new Date().toISOString() })
+    .eq("id", user.id);
   if (error) {
     console.error("completeGuestSignup (profil):", error.message);
     return { ok: false, error: "unknown" };

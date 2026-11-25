@@ -9,23 +9,32 @@ export const SEASON_PICKS_TOTAL = 8;
  * Haut de l'encadré « Saison » de l'accueil : invitation à faire ses pronostics de saison tant
  * qu'ils sont ouverts pour le joueur (jusqu'à sa 1re course pronostiquée, au plus tard la mass
  * start femmes du Grand-Bornand, migration 0047), avec la règle expliquée et sa date limite.
+ * welcome : invité qui vient de créer son compte (0048) : il a joué une course, il lui reste ses
+ * pronostics de saison, à saisir avant le prochain départ (closesAt).
  */
-export function SeasonPicksInvite({ chosen, closesAt }: { chosen: number; closesAt: string | null }) {
+export function SeasonPicksInvite({ chosen, closesAt, welcome = false }: { chosen: number; closesAt: string | null; welcome?: boolean }) {
   const t = useTranslations("Home");
   const done = chosen >= SEASON_PICKS_TOTAL;
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-gold/40 bg-gold-soft px-3 py-3">
       <div className="flex items-center gap-2">
         <span className="text-lg">🏆</span>
-        <div className="flex-1 font-display text-[13px] font-bold text-gold">{t("seasonPicksTitle")}</div>
+        <div className="flex-1 font-display text-[13px] font-bold text-gold">{t(welcome ? "seasonPicksWelcomeTitle" : "seasonPicksTitle")}</div>
         <div className="font-display text-[13px] font-extrabold tabular-nums text-gold">
           {chosen} / {SEASON_PICKS_TOTAL}
         </div>
       </div>
       <div className="text-[11px] leading-relaxed text-text-dim">
-        {done ? (closesAt ? t("seasonPicksDoneUntil", { date: closesAt }) : t("seasonPicksDone")) : t("seasonPicksHint")}
+        {done
+          ? closesAt
+            ? t("seasonPicksDoneUntil", { date: closesAt })
+            : t("seasonPicksDone")
+          : t(welcome ? "seasonPicksWelcomeHint" : "seasonPicksHint")}
       </div>
-      {!done && (
+      {welcome && !done && closesAt && (
+        <div className="text-[11px] font-semibold leading-relaxed text-frost">{t("seasonPicksWelcomeDeadline", { date: closesAt })}</div>
+      )}
+      {!done && !welcome && (
         <div className="text-[11px] leading-relaxed text-text-dim">
           {t("seasonPicksRule")}
           {closesAt && <span className="font-semibold text-frost"> {t("seasonPicksDeadline", { date: closesAt })}</span>}
