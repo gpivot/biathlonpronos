@@ -54,7 +54,7 @@ interface HomeData {
    * Invitation aux pronostics de saison (6 globes + 2 Pépites) : tant qu'ils sont ouverts pour le
    * joueur (0047) et incomplets, ou avant la 1re course même complets (pour changer d'avis). null sinon.
    */
-  seasonPicks: { chosen: number; closesAt: string | null } | null;
+  seasonPicks: { chosen: number; closesAt: string | null; welcome: boolean } | null;
   /** Une course de la saison est déjà partie : la « Série en cours » s'affiche. */
   seasonStarted: boolean;
   /** Pas encore d'équipe favorite et carte Équipe pas active : invitation à la choisir. */
@@ -149,7 +149,14 @@ async function getHomeData(): Promise<HomeData> {
           const chosen = (globes ?? 0) + (pepites ?? 0);
           // Saison lancée et tout est saisi : plus besoin d'inviter (modifiable depuis le Calendrier).
           if (seasonStarted && chosen >= SEASON_PICKS_TOTAL) return null;
-          return { chosen, closesAt: window.closesAt?.toISOString() ?? null };
+          // Invité devenu joueur (0048), pronostics de saison incomplets : encadré de bienvenue, avec
+          // pour date limite le prochain départ (la règle exacte, sa prochaine course pronostiquée,
+          // peut aller plus loin s'il saute des courses ; on affiche la date la plus prudente).
+          const welcome = window.accountCompletedAt !== null && chosen < SEASON_PICKS_TOTAL;
+          const nextDepartureAt = (upcomingRaces ?? [])[0]?.locks_at ? new Date((upcomingRaces as any[])[0].locks_at as string) : null;
+          const closesAt =
+            welcome && nextDepartureAt && (!window.closesAt || nextDepartureAt < window.closesAt) ? nextDepartureAt : window.closesAt;
+          return { chosen, closesAt: closesAt?.toISOString() ?? null, welcome };
         })
       : Promise.resolve(null),
     supabase
@@ -251,6 +258,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             {seasonPicks && (
               <SeasonPicksInvite
                 chosen={seasonPicks.chosen}
+                welcome={seasonPicks.welcome}
                 closesAt={
                   seasonPicks.closesAt
                     ? new Intl.DateTimeFormat(locale, { timeZone: DISPLAY_TIME_ZONE, dateStyle: "long", timeStyle: "short" }).format(new Date(seasonPicks.closesAt))

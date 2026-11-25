@@ -81,7 +81,10 @@
     "lastResultExtra_gachette": "Karte Abzug",
     "seasonPicksRule": "Sie bleiben offen bis zum Start des ersten Rennens, das du tippst, spätestens bis zum Start des Massenstarts der Frauen in Le Grand-Bornand. Danach ist alles geschlossen.",
     "seasonPicksDeadline": "Für dich: bis {date}.",
-    "seasonPicksDoneUntil": "Alles eingetragen. Bis {date} kannst du noch ändern."
+    "seasonPicksDoneUntil": "Alles eingetragen. Bis {date} kannst du noch ändern.",
+    "seasonPicksWelcomeTitle": "Willkommen! Vervollständige deine Saisontipps",
+    "seasonPicksWelcomeHint": "Du hast das Spiel bei einem Rennen getestet. Um die ganze Saison mitzuspielen, gib auch deine 8 Saisontipps ab: große Kugeln, beste Nachwuchsathleten, beste Nationen und deine versteckten Rohdiamanten.",
+    "seasonPicksWelcomeDeadline": "Du hast bis zum nächsten Start am {date} Zeit. Danach sind sie geschlossen."
   },
   "Landing": {
     "heroTitle": "Tippe auf die Biathlonrennen.",
@@ -174,7 +177,10 @@
     "footerDisclaimer": "BiathlonPronos ist ein unabhängiges Biathlon-Tippspiel. Kein Echtgeldeinsatz. Keine Geldgewinne.",
     "footerSupport": "Support",
     "footerPrivacy": "Datenschutzerklärung",
-    "footerTerms": "Nutzungsbedingungen"
+    "footerTerms": "Nutzungsbedingungen",
+    "heroCtaSignUpHint": "Voller Zugang: alle Funktionen und alle Tipps (Rennen, Saison, Ligen).",
+    "heroCtaTryHint": "Ohne Anmeldung: nur ein Tipp auf das nächste Rennen, zum Ausprobieren.",
+    "finalCtaTry": "Oder teste zuerst einen Tipp, ohne Anmeldung"
   },
   "Regles": {
     "title": "Die Regeln",

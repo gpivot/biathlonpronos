@@ -1717,3 +1717,28 @@ premier pronostic, et tout fermer au départ de la mass start femmes du Grand-Bo
   changer d'avis). La « Série en cours » reste affichée dès qu'une course de la saison est partie.
 - Inchangé : les pronos de saison des autres restent lisibles depuis le début de saison (0018) ; un
   retardataire peut donc les voir avant de choisir (risque jugé faible, cotes publiques).
+
+## Invités devenus joueurs : pronostics de saison rouverts, boutons de l'accueil clarifiés (25/11/2026)
+
+Incohérence relevée par Guillaume : un invité (« Je teste le jeu ») pronostique une course, reçoit
+son code après le résultat et crée son compte. Son compte garde ses pronostics, donc la course jouée
+en invité comptait comme sa « 1re course pronostiquée » (règle 0047), déjà partie : ses pronostics de
+saison étaient fermés dès son inscription.
+
+- **Règle (validée par Guillaume, option A)** : les courses jouées en invité, parties avant la
+  création de son compte, ne comptent pas. Une fois inscrit, il peut faire ses pronostics de saison
+  jusqu'au départ de la prochaine course qu'il pronostique, au plus tard le Grand-Bornand.
+- **Base (migration 0048)** : `profiles.account_completed_at` (fixée par `completeGuestSignup`, clé
+  service ; protégée par le trigger `protect_signup_pending`) ; `season_picks_closes_at` ignore les
+  courses dont `locks_at <= account_completed_at`. Côté app : `firstPredictedRaceAt` /
+  `getAccountCompletedAt` (`src/lib/seasonChoices.ts`). Les invités inscrits avant 0048 n'ont pas de
+  date (null) : règle 0047 inchangée pour eux (aucun cas réel, la saison n'avait pas commencé).
+- **Accueil du nouvel inscrit** : l'encadré Pronostics de saison devient « Bienvenue ! Complète tes
+  pronostics de saison », avec pour date limite **le prochain départ** (date la plus prudente : la
+  règle exacte va plus loin s'il ne pronostique pas la prochaine course). « À confirmer » : afficher
+  la date prudente plutôt que la règle exacte, jugée plus claire.
+- **Page d'accueil visiteur** : « Je crée mon compte » devient le bouton principal (« Accès complet :
+  toutes les fonctionnalités et tous les pronos (courses, saison, ligues) ») ; « Je teste le jeu »
+  passe en second, plus discret (« Sans inscription : juste un prono sur la prochaine course, pour
+  voir »). Le dernier appel en bas de page mène aussi à la création de compte, avec un lien discret
+  « Ou teste d'abord un prono, sans inscription ».

@@ -81,7 +81,10 @@
     "lastResultExtra_gachette": "Trigger card",
     "seasonPicksRule": "They stay open until the start of the first race you predict, and at the latest until the start of the women's mass start in Le Grand-Bornand. After that, everything is closed.",
     "seasonPicksDeadline": "For you: until {date}.",
-    "seasonPicksDoneUntil": "All set. You can still change your mind until {date}."
+    "seasonPicksDoneUntil": "All set. You can still change your mind until {date}.",
+    "seasonPicksWelcomeTitle": "Welcome! Complete your season picks",
+    "seasonPicksWelcomeHint": "You tried the game on one race. To play the whole season, also make your 8 season picks: big globes, best young athletes, best nations and your Hidden Diamonds.",
+    "seasonPicksWelcomeDeadline": "You have until the next start, on {date}, to make them. After that, they close."
   },
   "Landing": {
     "heroTitle": "Predict the biathlon races.",
@@ -174,7 +177,10 @@
     "footerDisclaimer": "BiathlonPronos is an independent biathlon prediction game. No real money wagered. No financial winnings.",
     "footerSupport": "Support",
     "footerPrivacy": "Privacy policy",
-    "footerTerms": "Terms"
+    "footerTerms": "Terms",
+    "heroCtaSignUpHint": "Full access: every feature and every pick (races, season, leagues).",
+    "heroCtaTryHint": "No sign-up: just one pick on the next race, to see what it's like.",
+    "finalCtaTry": "Or try one pick first, no sign-up"
   },
   "Regles": {
     "title": "The rules",

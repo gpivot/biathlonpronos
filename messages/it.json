@@ -81,7 +81,10 @@
     "lastResultExtra_gachette": "Carta Grilletto",
     "seasonPicksRule": "Restano aperti fino alla partenza della prima gara che pronostichi e, al più tardi, fino alla partenza della mass start femminile di Le Grand-Bornand. Poi tutto è chiuso.",
     "seasonPicksDeadline": "Per te: fino al {date}.",
-    "seasonPicksDoneUntil": "Tutto inserito. Puoi ancora cambiare idea fino al {date}."
+    "seasonPicksDoneUntil": "Tutto inserito. Puoi ancora cambiare idea fino al {date}.",
+    "seasonPicksWelcomeTitle": "Benvenuto! Completa i tuoi pronostici di stagione",
+    "seasonPicksWelcomeHint": "Hai provato il gioco su una gara. Per giocare tutta la stagione, fai anche i tuoi 8 pronostici di stagione: grandi globi, migliori giovani, migliori nazioni e le tue Pepite.",
+    "seasonPicksWelcomeDeadline": "Hai tempo fino alla prossima partenza, il {date}, per farli. Poi saranno chiusi."
   },
   "Landing": {
     "heroTitle": "Pronostica le gare di biathlon.",
@@ -174,7 +177,10 @@
     "footerDisclaimer": "BiathlonPronos è un gioco di pronostici sul biathlon indipendente. Nessuna puntata in denaro reale. Nessuna vincita in denaro.",
     "footerSupport": "Assistenza",
     "footerPrivacy": "Informativa sulla privacy",
-    "footerTerms": "Termini"
+    "footerTerms": "Termini",
+    "heroCtaSignUpHint": "Accesso completo: tutte le funzioni e tutti i pronostici (gare, stagione, leghe).",
+    "heroCtaTryHint": "Senza registrazione: solo un pronostico sulla prossima gara, per provare.",
+    "finalCtaTry": "Oppure prova prima un pronostico, senza registrazione"
   },
   "Regles": {
     "title": "Il regolamento",
