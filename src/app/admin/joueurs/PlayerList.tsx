@@ -11,6 +11,13 @@ export interface PlayerRow {
   createdAt: string;
 }
 
+const signupDate = new Intl.DateTimeFormat("fr-FR", {
+  timeZone: "Europe/Paris",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
 export function PlayerList({ players, meId }: { players: PlayerRow[]; meId: string | null }) {
   return (
     <div className="flex flex-col gap-2">
@@ -35,6 +42,7 @@ export function PlayerList({ players, meId }: { players: PlayerRow[]; meId: stri
                 {p.fullName ? `${p.fullName} · ` : ""}
                 {p.email || "email inconnu"}
               </div>
+              <div className="text-[11px] text-text-dim">Inscrit le {signupDate.format(new Date(p.createdAt))}</div>
             </div>
             {isMe ? null : (
               <AdminForm

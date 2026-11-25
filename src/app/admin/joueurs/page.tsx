@@ -7,10 +7,19 @@ import { raceLabel } from "../_components/labels";
 import { getClock } from "@/lib/clock";
 import { fetchAll } from "@/lib/admin/fetchAll";
 import { buildRetention, countRecentSignIns, type RetentionRace } from "@/lib/admin/retention";
+import Link from "next/link";
+
+/** Choix de tri de la liste des joueurs (paramètre `tri` de l'URL). */
+const SORTS = [
+  { key: "admins", label: "Admins d'abord" },
+  { key: "recents", label: "Derniers arrivés" },
+  { key: "alpha", label: "A → Z" },
+] as const;
+type SortKey = (typeof SORTS)[number]["key"];
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminPlayersPage({ searchParams }: { searchParams: { q?: string } }) {
+export default async function AdminPlayersPage({ searchParams }: { searchParams: { q?: string; tri?: string } }) {
   const admin = createAdminClient();
   const {
     data: { user: me },
@@ -31,6 +40,7 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
   const playerProfiles = (profiles ?? []).filter((p) => !guestIds.has(p.id));
 
   const q = (searchParams.q ?? "").trim().toLowerCase();
+  const sort: SortKey = SORTS.some((o) => o.key === searchParams.tri) ? (searchParams.tri as SortKey) : "admins";
   const players: PlayerRow[] = playerProfiles
     .map((p) => ({
       id: p.id,
@@ -43,8 +53,14 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
     .filter(
       (p) => !q || p.pseudo.toLowerCase().includes(q) || p.email.toLowerCase().includes(q) || p.fullName.toLowerCase().includes(q)
     )
-    // Admins d'abord, puis ordre alphabétique des pseudos.
-    .sort((a, b) => Number(b.isAdmin) - Number(a.isAdmin) || a.pseudo.localeCompare(b.pseudo, "fr"));
+    .sort((a, b) => {
+      const alpha = a.pseudo.localeCompare(b.pseudo, "fr");
+      // Derniers arrivés : date d'inscription la plus récente en haut.
+      if (sort === "recents") return b.createdAt.localeCompare(a.createdAt) || alpha;
+      if (sort === "alpha") return alpha;
+      // Par défaut : admins d'abord, puis ordre alphabétique des pseudos.
+      return Number(b.isAdmin) - Number(a.isAdmin) || alpha;
+    });
 
   const adminCount = playerProfiles.filter((p) => p.is_admin).length;
   // Invités « e-mail seulement » : compte créé mais inscription pas terminée (absents des classements).
@@ -112,6 +128,7 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
       </AdminForm>
 
       <form className="flex gap-2">
+        {sort !== "admins" && <input type="hidden" name="tri" value={sort} />}
         <input
           name="q"
           defaultValue={searchParams.q ?? ""}
@@ -122,6 +139,28 @@ export default async function AdminPlayersPage({ searchParams }: { searchParams:
           Rechercher
         </button>
       </form>
+
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-text-dim">Trier :</span>
+        {SORTS.map((o) => {
+          const params = new URLSearchParams();
+          if (searchParams.q) params.set("q", searchParams.q);
+          if (o.key !== "admins") params.set("tri", o.key);
+          const qs = params.toString();
+          const active = o.key === sort;
+          return (
+            <Link
+              key={o.key}
+              href={`/admin/joueurs${qs ? `?${qs}` : ""}`}
+              className={`rounded-full px-3 py-1 font-semibold ${
+                active ? "bg-ice text-on-ice" : "border border-border text-text-dim hover:text-text"
+              }`}
+            >
+              {o.label}
+            </Link>
+          );
+        })}
+      </div>
 
       <PlayerList players={players} meId={me?.id ?? null} />
     </div>
