@@ -81,7 +81,10 @@
     "lastResultExtra_gachette": "Carta Gatillo",
     "seasonPicksRule": "Siguen abiertos hasta la salida de la primera carrera que pronostiques y, como muy tarde, hasta la salida de la mass start femenina de Le Grand-Bornand. Después, todo queda cerrado.",
     "seasonPicksDeadline": "Para ti: hasta el {date}.",
-    "seasonPicksDoneUntil": "Todo listo. Puedes cambiar de opinión hasta el {date}."
+    "seasonPicksDoneUntil": "Todo listo. Puedes cambiar de opinión hasta el {date}.",
+    "seasonPicksWelcomeTitle": "¡Bienvenido! Completa tus pronósticos de temporada",
+    "seasonPicksWelcomeHint": "Has probado el juego en una carrera. Para jugar toda la temporada, haz también tus 8 pronósticos de temporada: grandes globos, mejores jóvenes, mejores naciones y tus Diamantes ocultos.",
+    "seasonPicksWelcomeDeadline": "Tienes hasta la próxima salida, el {date}, para hacerlos. Después, se cierran."
   },
   "Landing": {
     "heroTitle": "Pronostica las carreras de biatlón.",
@@ -174,7 +177,10 @@
     "footerDisclaimer": "BiathlonPronos es un juego independiente de pronósticos de biatlón. Sin apuestas con dinero real. Sin ganancias económicas.",
     "footerSupport": "Soporte",
     "footerPrivacy": "Política de privacidad",
-    "footerTerms": "Condiciones de uso"
+    "footerTerms": "Condiciones de uso",
+    "heroCtaSignUpHint": "Acceso completo: todas las funciones y todos los pronósticos (carreras, temporada, ligas).",
+    "heroCtaTryHint": "Sin registro: solo un pronóstico en la próxima carrera, para ver.",
+    "finalCtaTry": "O prueba primero un pronóstico, sin registro"
   },
   "Regles": {
     "title": "Las reglas",

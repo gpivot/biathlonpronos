@@ -6,7 +6,7 @@ import { FaqList } from "@/components/FaqList";
 import { SocialLinks } from "@/components/SocialLinks";
 import { LeagueMockup, PickMockup, ScoreMockup, StrategyMockup } from "./Mockups";
 
-// Page d'accueil visiteur (non connecté) : accroche avec les boutons « Je teste le jeu » / « Je crée mon compte », puis 4 points
+// Page d'accueil visiteur (non connecté) : accroche avec les boutons « Je crée mon compte » (principal) / « Je teste le jeu », puis 4 points
 // illustrés par des mini-écrans commentés façon tutoriel, une FAQ, un dernier appel à jouer et le
 // pied de page. Les joueurs connectés voient le dashboard à la place (cf. src/app/[locale]/page.tsx).
 const FEATURES = [
@@ -43,21 +43,28 @@ export async function Landing() {
 
         <p className="relative mt-5 max-w-md text-base leading-relaxed text-text-dim sm:text-lg">{t("heroSubtitle")}</p>
 
-        {/* Deux entrées : tester tout de suite (parcours d'invité, le compte n'est demandé qu'à la
-            validation du pronostic) ou créer son compte directement. */}
-        <div className="relative mt-8 flex w-full max-w-md flex-col gap-3 sm:max-w-none sm:flex-row sm:justify-center">
-          <Link
-            href="/jouer"
-            className="rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
-          >
-            {t("heroCtaTry")} →
-          </Link>
-          <Link
-            href="/sign-in?mode=signup"
-            className="rounded-2xl border-2 border-blue/70 bg-card/60 px-8 py-4 font-display text-base font-extrabold text-text transition hover:border-teal hover:text-frost sm:text-lg"
-          >
-            {t("heroCtaSignUp")}
-          </Link>
+        {/* Deux entrées (Guillaume, 25/11/2026) : créer son compte est l'entrée principale (accès
+            complet, pronos de saison compris) ; « Je teste le jeu » reste possible, en second, pour
+            un seul prono sans inscription (parcours d'invité). Chaque bouton dit ce qu'il ouvre. */}
+        <div className="relative mt-8 flex w-full max-w-md flex-col gap-4 sm:max-w-2xl sm:flex-row sm:items-start sm:justify-center">
+          <div className="flex flex-1 flex-col items-center gap-2">
+            <Link
+              href="/sign-in?mode=signup"
+              className="w-full rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
+            >
+              {t("heroCtaSignUp")} →
+            </Link>
+            <p className="max-w-xs text-[13px] leading-snug text-text">{t("heroCtaSignUpHint")}</p>
+          </div>
+          <div className="flex flex-1 flex-col items-center gap-2">
+            <Link
+              href="/jouer"
+              className="w-full rounded-2xl border border-border bg-card/60 px-8 py-3.5 font-display text-[15px] font-bold text-text-dim transition hover:border-blue/70 hover:text-frost sm:py-4 sm:text-base"
+            >
+              {t("heroCtaTry")}
+            </Link>
+            <p className="max-w-xs text-[13px] leading-snug text-text-dim">{t("heroCtaTryHint")}</p>
+          </div>
         </div>
         <Link href="/sign-in" className="relative mt-4 text-sm font-medium text-text-dim hover:text-frost">
           {t("heroSignIn")}
@@ -121,10 +128,14 @@ export async function Landing() {
         <h2 className="mx-auto max-w-xl font-display text-3xl font-extrabold tracking-tight sm:text-4xl">{t("finalTitle")}</h2>
         <p className="mx-auto mt-3 max-w-md text-base text-text-dim">{t("finalSubtitle")}</p>
         <Link
-          href="/jouer"
+          href="/sign-in?mode=signup"
           className="mt-7 inline-block rounded-2xl bg-gradient-to-r from-blue to-teal px-8 py-4 font-display text-base font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] transition hover:brightness-110 sm:text-lg"
         >
-          {t("heroCtaTry")} →
+          {t("heroCtaSignUp")} →
+        </Link>
+        <p className="mx-auto mt-3 max-w-xs text-[13px] text-text-dim">{t("heroCtaSignUpHint")}</p>
+        <Link href="/jouer" className="mt-4 inline-block text-sm font-medium text-text-dim underline underline-offset-4 hover:text-frost">
+          {t("finalCtaTry")}
         </Link>
       </section>
 

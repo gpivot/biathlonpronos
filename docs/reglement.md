@@ -96,7 +96,7 @@ Ce barème s'applique aux relais hommes, femmes, mixtes et mixtes simples propos
 
 Avant le début de la saison, chaque joueur effectue 6 grands pronostics.
 
-**Quand les faire (24/11/2026)** : tu peux les saisir ou les modifier jusqu'au départ de la première course que tu pronostiques, et au plus tard jusqu'au départ de la mass start femmes du Grand-Bornand. Ensuite, tout est fermé. Un nouveau joueur arrivé en cours de saison peut donc encore les faire, tant qu'il n'a pas de course pronostiquée déjà partie. Même règle pour la Pépite cachée.
+**Quand les faire (24/11/2026)** : tu peux les saisir ou les modifier jusqu'au départ de la première course que tu pronostiques, et au plus tard jusqu'au départ de la mass start femmes du Grand-Bornand. Ensuite, tout est fermé. Un nouveau joueur arrivé en cours de saison peut donc encore les faire, tant qu'il n'a pas de course pronostiquée déjà partie. Même règle pour la Pépite cachée. Si tu as d'abord testé le jeu sans inscription (« Je teste le jeu »), la course jouée avant de créer ton compte ne compte pas : une fois inscrit, tu peux encore les faire jusqu'au départ de ta prochaine course pronostiquée (25/11/2026).
 
 **Femmes** : vainqueure du classement général de la Coupe du monde ; meilleure jeune ; meilleure nation.
 **Hommes** : vainqueur du classement général de la Coupe du monde ; meilleur jeune ; meilleure nation.
