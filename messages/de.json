@@ -602,7 +602,8 @@
     "offStandingsNotice": "Rennen außer Wertung: Es hat seine eigene Rangliste, aber seine Punkte zählen nicht für die Saison (kein rotes Trikot, keine Bonuskarte, kein ×2, kein Rohdiamant).",
     "signupInviteTitle": "Und deine Platzierung?",
     "signupInviteBody": "Erstelle kostenlos dein Konto, um deine Platzierung zu sehen, das nächste Rennen zu tippen und alle Funktionen zu nutzen.",
-    "signupInviteButton": "Kostenloses Konto erstellen"
+    "signupInviteButton": "Kostenloses Konto erstellen",
+    "offStartNationWarning": "{nation} steht nicht auf der Startliste dieser Staffel: Wähle eine andere Nation, sonst bringt dein Tipp keine Punkte."
   },
   "PredictionForm": {
     "chooseThree": "Wähle 3 Biathleten",
@@ -648,7 +649,9 @@
     "cardFusee": "Rakete",
     "cardGachette": "Abzug",
     "fuseeActive": "Karte auf dieser Etappe: +100 / +50 / +20 Pkt. für deine Biathleten mit den 3 schnellsten Laufzeiten.",
-    "gachetteActive": "Karte auf dieser Etappe: +100 Pkt. pro Biathlet mit 20/20 am Schießstand (+50 für 10/10 im Sprint)."
+    "gachetteActive": "Karte auf dieser Etappe: +100 Pkt. pro Biathlet mit 20/20 am Schießstand (+50 für 10/10 im Sprint).",
+    "notStarting": "nicht am Start",
+    "offStartWarning": "{count, plural, one {{names} steht nicht auf der Startliste: Ersetze diese Wahl, sonst bringt sie keine Punkte.} other {{names} stehen nicht auf der Startliste: Ersetze diese Wahl, sonst bringen sie keine Punkte.}}"
   },
   "SignIn": {
     "prompt": "Melde dich an, um fortzufahren",
@@ -1110,7 +1113,9 @@
     "guestResultsBody": "Das Rennen {race} in {location} ist vorbei. Entdecke deine Punktzahl und wie sie zustande kommt.",
     "guestResultsCodeLabel": "Dein privater Code:",
     "guestResultsCodeHint": "In der App: Anmeldebildschirm, „Mit einem per E-Mail erhaltenen Code anmelden“, dann „Ich habe schon einen Code“.",
-    "guestResultsButton": "Meine Punktzahl entdecken"
+    "guestResultsButton": "Meine Punktzahl entdecken",
+    "offStartPushTitle": "⚠️ {race}: Wahl ersetzen",
+    "offStartPushBody": "{count, plural, one {{names} ist nicht am Start. Ersetze diese Wahl vor dem Rennen.} other {{names} sind nicht am Start. Ersetze diese Wahl vor dem Rennen.}}"
   },
   "Unsubscribe": {
     "title": "Abmelden",

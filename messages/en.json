@@ -602,7 +602,8 @@
     "offStandingsNotice": "Unranked race: it has its own ranking, but its points don't count towards the season (no red bib, bonus card, ×2 or Hidden Diamond).",
     "signupInviteTitle": "What about your ranking?",
     "signupInviteBody": "Create your free account to see your ranking, predict the next race and access every feature.",
-    "signupInviteButton": "Create my free account"
+    "signupInviteButton": "Create my free account",
+    "offStartNationWarning": "{nation} is not on the start list for this relay: choose another nation, otherwise your prediction will score no points."
   },
   "PredictionForm": {
     "chooseThree": "Pick 3 biathletes",
@@ -648,7 +649,9 @@
     "cardFusee": "Rocket",
     "cardGachette": "Trigger",
     "fuseeActive": "card played on this stage: +100 / +50 / +20 pts for your biathletes with the 3 fastest ski times.",
-    "gachetteActive": "card played on this stage: +100 pts per biathlete who shoots 20/20 (+50 for a 10/10 in the sprint)."
+    "gachetteActive": "card played on this stage: +100 pts per biathlete who shoots 20/20 (+50 for a 10/10 in the sprint).",
+    "notStarting": "not starting",
+    "offStartWarning": "{count, plural, one {{names} is not on the start list: replace this pick, otherwise it will score no points.} other {{names} are not on the start list: replace these picks, otherwise they will score no points.}}"
   },
   "SignIn": {
     "prompt": "Sign in to continue",
@@ -1110,7 +1113,9 @@
     "guestResultsBody": "The {race} in {location} is over. Discover your score and how your points were earned.",
     "guestResultsCodeLabel": "Your private code:",
     "guestResultsCodeHint": "In the app: sign-in screen, “Sign in with a code sent by e-mail”, then “I already have a code”.",
-    "guestResultsButton": "Discover my score"
+    "guestResultsButton": "Discover my score",
+    "offStartPushTitle": "⚠️ {race}: pick to replace",
+    "offStartPushBody": "{count, plural, one {{names} is not starting. Replace this pick before the race.} other {{names} are not starting. Replace these picks before the race.}}"
   },
   "Unsubscribe": {
     "title": "Unsubscribe",

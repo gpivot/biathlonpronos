@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { isPredictionOpen } from "@/lib/predictionWindow";
+import { RELAY_FORMATS } from "@/lib/raceFormats";
 import { sendPush } from "@/lib/push/send";
 import { readServiceAccount } from "@/lib/push/fcm";
 import { escapeHtml, isEmailConfigured, renderEmail, sendEmails, siteUrl, SITE_URL, unsubscribeUrl, type OutgoingEmail } from "./email";
@@ -11,7 +12,7 @@ import {
   type PlayerEmail,
   type PlayerSettings,
 } from "./preferences";
-import { areResultsFresh, isReminderWindow, planReminders, REMINDER_LEAD_MS, sumPoints, weeklyRecapRef, type ReminderRace } from "./plan";
+import { areResultsFresh, isReminderWindow, offStartPicks, planReminders, REMINDER_LEAD_MS, sumPoints, weeklyRecapRef, type ReminderRace } from "./plan";
 import { notificationTexts, parisTime, raceName, type NotificationTexts } from "./texts";
 
 /**
@@ -229,6 +230,70 @@ export async function notifyRaceResults(admin: SupabaseClient, raceId: string, n
   );
   await recordSends(admin, report.userIds.map((userId) => ({ kind: "results", ref: raceId, user_id: userId, channel: "push" as const })));
   return report.sent > 0 ? ` Résultats notifiés sur ${report.sent} téléphone(s).` : "";
+}
+
+// ---------------------------------------------------------------------------------------------
+// Choix absent de la liste de départ (migration 0049)
+// ---------------------------------------------------------------------------------------------
+
+/**
+ * Après l'enregistrement d'une liste de départ (officielle IBU ou provisoire) : chaque joueur
+ * dont le pronostic validé contient un biathlète (ou, au relais, une nation) absent de la liste
+ * reçoit une notification sur son téléphone pour le remplacer. Le pronostic n'est jamais
+ * modifié. Course pas encore partie seulement ; réglage « Rappel de pronostic ». Une seule
+ * notification par joueur et par ensemble de choix concernés (une nouvelle liste qui écarte un
+ * autre biathlète renotifie).
+ */
+export async function notifyOffStartPicks(admin: SupabaseClient, raceId: string, now = new Date()): Promise<string> {
+  if (!readServiceAccount()) return "";
+  const { data: race, error } = await admin.from("races").select("id, locks_at, format, sex").eq("id", raceId).single();
+  if (error || !race) return "";
+  if (new Date(race.locks_at).getTime() <= now.getTime()) return "";
+  const relay = RELAY_FORMATS.includes(race.format);
+
+  const [{ data: list, error: listError }, { data: predictions, error: predError }] = await Promise.all([
+    relay
+      ? admin.from("race_start_nations").select("nation_code").eq("race_id", raceId)
+      : admin.from("race_start_lists").select("athlete_id").eq("race_id", raceId),
+    admin.from("predictions").select("user_id, athlete_ids, nation_code").eq("race_id", raceId),
+  ]);
+  if (listError) throw new Error(listError.message);
+  if (predError) throw new Error(predError.message);
+  const startIds = (list ?? []).map((row: any) => (relay ? row.nation_code : row.athlete_id) as string);
+  const missing = offStartPicks(
+    (predictions ?? []).map((p: any) => ({ user_id: p.user_id, picks: relay ? [p.nation_code] : p.athlete_ids ?? [] })),
+    startIds
+  );
+  if (missing.size === 0) return "";
+
+  const refOf = (userId: string) => `${raceId}:${missing.get(userId)!.join(",")}`;
+  const refs = [...new Set([...missing.keys()].map(refOf))];
+  const sent = await alreadySent(admin, "start_list", refs, "push");
+  const userIds = [...missing.keys()].filter((id) => !sent.has(`${refOf(id)}:${id}`));
+  if (userIds.length === 0) return "";
+
+  // Noms affichés dans la notification (biathlètes) ou codes nation (relais).
+  const names = new Map<string, string>();
+  if (!relay) {
+    const ids = [...new Set([...missing.values()].flat())];
+    const { data: athletes } = await admin.from("athletes").select("id, first_name, last_name").in("id", ids);
+    for (const a of athletes ?? []) names.set(a.id, `${a.first_name} ${a.last_name}`.trim());
+  }
+
+  const report = await sendPush(
+    ({ userId, locale }) => {
+      const texts = notificationTexts(locale);
+      const picks = (missing.get(userId) ?? []).map((id) => names.get(id) ?? id);
+      return {
+        title: texts.t("offStartPushTitle", { race: raceName(texts, race) }),
+        body: texts.t("offStartPushBody", { names: picks.join(", "), count: picks.length }),
+        url: `/courses/${raceId}`,
+      };
+    },
+    { userIds, preference: "reminder_push" }
+  );
+  await recordSends(admin, report.userIds.map((userId) => ({ kind: "start_list", ref: refOf(userId), user_id: userId, channel: "push" as const })));
+  return report.sent > 0 ? ` ${report.sent} joueur(s) prévenu(s) sur leur téléphone d'un choix absent de la liste.` : "";
 }
 
 // ---------------------------------------------------------------------------------------------

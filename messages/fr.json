@@ -602,7 +602,8 @@
     "offStandingsNotice": "Course hors classement : elle a son propre classement, mais ses points ne comptent pas pour la saison (pas de dossard rouge, de carte bonus, de ×2 ni de Pépite).",
     "signupInviteTitle": "Et ton classement ?",
     "signupInviteBody": "Crée ton compte gratuitement pour découvrir ton classement, pronostiquer la prochaine course et avoir accès à toutes les fonctionnalités.",
-    "signupInviteButton": "Créer mon compte gratuitement"
+    "signupInviteButton": "Créer mon compte gratuitement",
+    "offStartNationWarning": "{nation} n'est pas au départ de ce relais : choisis une autre nation, sinon ton pronostic ne te rapportera aucun point."
   },
   "PredictionForm": {
     "chooseThree": "Choisis 3 biathlètes",
@@ -648,7 +649,9 @@
     "cardFusee": "Fusée",
     "cardGachette": "Gâchette",
     "fuseeActive": "carte posée sur cette étape : +100 / +50 / +20 pts pour tes biathlètes aux 3 meilleurs temps de ski.",
-    "gachetteActive": "carte posée sur cette étape : +100 pts par biathlète qui fait 20/20 au tir (+50 pour un 10/10 au sprint)."
+    "gachetteActive": "carte posée sur cette étape : +100 pts par biathlète qui fait 20/20 au tir (+50 pour un 10/10 au sprint).",
+    "notStarting": "pas au départ",
+    "offStartWarning": "{count, plural, one {{names} n'est pas au départ de cette course : remplace ce choix, sinon il ne te rapportera aucun point.} other {{names} ne sont pas au départ de cette course : remplace ces choix, sinon ils ne te rapporteront aucun point.}}"
   },
   "SignIn": {
     "prompt": "Connectez-vous pour continuer",
@@ -1110,7 +1113,9 @@
     "guestResultsBody": "La course {race} à {location} est terminée. Découvre ton score et le détail de tes points.",
     "guestResultsCodeLabel": "Ton code privé :",
     "guestResultsCodeHint": "Dans l'appli : écran de connexion, « Se connecter avec un code reçu par e-mail », puis « J'ai déjà un code ».",
-    "guestResultsButton": "Découvrir mon score"
+    "guestResultsButton": "Découvrir mon score",
+    "offStartPushTitle": "⚠️ {race} : choix à remplacer",
+    "offStartPushBody": "{count, plural, one {{names} n'est pas au départ. Remplace ce choix avant la course.} other {{names} ne sont pas au départ. Remplace ces choix avant la course.}}"
   },
   "Unsubscribe": {
     "title": "Se désabonner",
