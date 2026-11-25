@@ -177,10 +177,104 @@ export function ibuResultsToCsv(
   );
 }
 
+const IBU_TIMEOUT_MS = 10_000;
+
 async function getJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${IBU_API}/${path}`, { cache: "no-store", headers: { Accept: "application/json" } });
+  let response: Response;
+  try {
+    response = await fetch(`${IBU_API}/${path}`, {
+      cache: "no-store",
+      headers: { Accept: "application/json" },
+      signal: AbortSignal.timeout(IBU_TIMEOUT_MS),
+    });
+  } catch {
+    throw new Error("Le site de résultats de l'IBU ne répond pas : réessaie dans quelques minutes.");
+  }
   if (!response.ok) throw new Error(`IBU : réponse ${response.status} pour ${path}`);
   return response.json() as Promise<T>;
+}
+
+/* ───────────── Repli : pages publiques de biathlonworld.com ───────────── */
+
+/**
+ * Depuis novembre 2026, l'API biathlonresults.com répond 401 (accès fermé). Le site officiel
+ * biathlonworld.com (Next.js) embarque les mêmes données, au même format, dans le JSON
+ * `__NEXT_DATA__` de ses pages : calendrier (étapes et courses de l'étape en cours), liste de
+ * départ (`/startlist/<RaceId>`) et résultats (`/results/<RaceId>`). On s'y rabat quand l'API échoue.
+ */
+const IBU_SITE = "https://www.biathlonworld.com";
+
+/** Partie pure (testée) : `pageProps` du JSON `__NEXT_DATA__` d'une page HTML Next.js. */
+export function extractNextPageProps(html: string): Record<string, any> | null {
+  const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/);
+  if (!m) return null;
+  try {
+    return JSON.parse(m[1])?.props?.pageProps ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function getSitePage(path: string): Promise<Record<string, any>> {
+  let response: Response;
+  try {
+    response = await fetch(`${IBU_SITE}${path}`, {
+      cache: "no-store",
+      headers: { Accept: "text/html", "User-Agent": "Mozilla/5.0 (compatible; BiathlonPronos)" },
+      signal: AbortSignal.timeout(IBU_TIMEOUT_MS),
+    });
+  } catch {
+    throw new Error("Le site biathlonworld.com ne répond pas : réessaie dans quelques minutes.");
+  }
+  if (!response.ok) throw new Error(`biathlonworld.com : réponse ${response.status} pour ${path}`);
+  const props = extractNextPageProps(await response.text());
+  if (!props) throw new Error(`biathlonworld.com : page ${path} illisible (format du site changé ?).`);
+  return props;
+}
+
+type IbuRacePage = { Results?: IbuResultRow[]; Competition?: IbuCompetition & { ShortDescription?: string } };
+
+/** Course IBU (liste de départ ou résultats) : API, à défaut la page biathlonworld.com. */
+async function getRacePage(raceId: string, kind: "startlist" | "results"): Promise<IbuRacePage> {
+  try {
+    return await getJson<IbuRacePage>(`Results?RaceId=${encodeURIComponent(raceId)}`);
+  } catch (apiError) {
+    try {
+      const props = await getSitePage(`/${kind}/${encodeURIComponent(raceId)}`);
+      return (props.startlistInitialState ?? props.resultsInitialState ?? {}) as IbuRacePage;
+    } catch {
+      throw apiError;
+    }
+  }
+}
+
+/** Partie pure (testée) : identifiant IBU déduit de l'étape, ex. BT2627SWRLCP01 + SM + IN. */
+export function guessRaceId(eventId: string, race: { format: string; sex: string | null }): string | null {
+  const discipline = DISCIPLINE_BY_FORMAT[race.format];
+  return discipline ? `${eventId}${categoryFor(race.format, race.sex)}${discipline}` : null;
+}
+
+/** Repli sans API : étape lue dans le calendrier biathlonworld.com, course retrouvée par son identifiant. */
+async function findIbuRaceOnSite({ stage, race }: IbuRaceLookup): Promise<{ raceId: string; description: string }> {
+  const calendar = await getSitePage("/calendar");
+  const events = (calendar.eventInitialState?.events ?? []) as IbuEvent[];
+  const event = pickEvent(events, stage);
+  if (!event) throw new Error(`Aucune étape IBU trouvée pour ${stage.location} (${stage.starts_on}) dans le calendrier biathlonworld.com.`);
+
+  let competitions: IbuCompetition[] =
+    calendar.eventInitialState?.selectedEvent?.EventId === event.EventId ? calendar.competitionsInitialState ?? [] : [];
+  if (!pickCompetition(competitions, race)) {
+    const guess = guessRaceId(event.EventId, race);
+    const page = guess ? await getSitePage(`/results/${guess}`).catch(() => null) : null;
+    const competition = page?.resultsInitialState?.Competition as IbuCompetition | undefined;
+    competitions = competition?.RaceId ? [competition] : [];
+  }
+  const competition = pickCompetition(competitions, race);
+  if (!competition) throw new Error(`Course introuvable dans l'étape IBU ${event.EventId} : saisis son identifiant à la main.`);
+  return {
+    raceId: competition.RaceId,
+    description: `${event.ShortDescription ?? event.EventId} — ${competition.ShortDescription ?? competition.RaceId}`,
+  };
 }
 
 export interface IbuFetchResult {
@@ -205,7 +299,13 @@ async function findIbuRace({ seasonLabel, stage, race, forcedRaceId }: IbuRaceLo
   const seasonId = ibuSeasonIdForDate(stage.starts_on) ?? ibuSeasonId(seasonLabel);
   if (!seasonId) throw new Error(`Saison « ${seasonLabel} » : identifiant IBU introuvable.`);
   // Level 1 = Coupe du monde, Championnats du monde et JO compris.
-  const events = await getJson<IbuEvent[]>(`Events?SeasonId=${seasonId}&Level=1`);
+  let events: IbuEvent[];
+  try {
+    events = await getJson<IbuEvent[]>(`Events?SeasonId=${seasonId}&Level=1`);
+  } catch {
+    // API fermée ou en panne : on passe par le calendrier du site officiel.
+    return findIbuRaceOnSite({ seasonLabel, stage, race });
+  }
   const event = pickEvent(events, stage);
   if (!event) throw new Error(`Aucune étape IBU trouvée pour ${stage.location} (${stage.starts_on}).`);
 
@@ -225,9 +325,7 @@ export async function fetchIbuResults(params: IbuRaceLookup & { mode: "athlete" 
   const { raceId, description: foundDescription } = await findIbuRace(params);
   let description = foundDescription;
 
-  const data = await getJson<{ Results?: IbuResultRow[]; Competition?: { ShortDescription?: string } }>(
-    `Results?RaceId=${encodeURIComponent(raceId)}`
-  );
+  const data = await getRacePage(raceId, "results");
   const rows = data.Results ?? [];
   if (rows.length === 0) throw new Error(`Pas encore de résultats publiés par l'IBU pour ${raceId}.`);
   if (forcedRaceId) description = data.Competition?.ShortDescription ?? raceId;
@@ -288,9 +386,7 @@ export function ibuRowsToStartList(rows: IbuResultRow[]): IbuStartEntry[] {
 export async function fetchIbuStartList(params: IbuRaceLookup): Promise<{ raceId: string; description: string; entries: IbuStartEntry[] }> {
   const { raceId, description: foundDescription } = await findIbuRace(params);
   let description = foundDescription;
-  const data = await getJson<{ Results?: IbuResultRow[]; Competition?: { ShortDescription?: string } }>(
-    `Results?RaceId=${encodeURIComponent(raceId)}`
-  );
+  const data = await getRacePage(raceId, "startlist");
   if (params.forcedRaceId) description = data.Competition?.ShortDescription ?? raceId;
   const entries = ibuRowsToStartList(data.Results ?? []);
   if (entries.length === 0) throw new Error(`L'IBU n'a pas encore publié la liste de départ de ${description}.`);
@@ -317,9 +413,7 @@ export function ibuRowsToStartNations(rows: IbuResultRow[]): { position: number;
 export async function fetchIbuStartNations(params: IbuRaceLookup): Promise<{ raceId: string; description: string; nations: { position: number; nation: string }[] }> {
   const { raceId, description: foundDescription } = await findIbuRace(params);
   let description = foundDescription;
-  const data = await getJson<{ Results?: IbuResultRow[]; Competition?: { ShortDescription?: string } }>(
-    `Results?RaceId=${encodeURIComponent(raceId)}`
-  );
+  const data = await getRacePage(raceId, "startlist");
   if (params.forcedRaceId) description = data.Competition?.ShortDescription ?? raceId;
   const nations = ibuRowsToStartNations(data.Results ?? []);
   if (nations.length === 0) throw new Error(`L'IBU n'a pas encore publié la liste de départ de ${description}.`);

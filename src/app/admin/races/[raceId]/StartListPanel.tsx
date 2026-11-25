@@ -37,7 +37,9 @@ export function StartListPanel({
     try {
       setReport(kind === "ibu" ? await loadIbuStartList(raceId, ibuRaceId || undefined) : await loadGeneralStartList(raceId));
     } catch (err) {
-      setReport({ ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", unmatched: [] });
+      // Erreur côté serveur (coupure, délai dépassé) : le message brut de Next.js est en anglais et vague.
+      console.error(err);
+      setReport({ ok: false, message: "Le serveur n'a pas pu lire le site de l'IBU (délai dépassé ou erreur). Réessaie dans un instant ; si ça recommence, colle l'identifiant IBU de la course (ex. BT2627SWRLCP01SMIN, à la fin de l'adresse de la liste de départ sur biathlonworld.com).", unmatched: [] });
     } finally {
       setLoading(null);
     }
@@ -96,7 +98,7 @@ export function StartListPanel({
           value={ibuRaceId}
           onChange={(e) => setIbuRaceId(e.target.value)}
           placeholder="Identifiant IBU (facultatif)"
-          title="À renseigner seulement si la course n'est pas retrouvée automatiquement (visible dans l'adresse de la course sur biathlonresults.com)"
+          title="À renseigner seulement si la course n'est pas retrouvée automatiquement (fin de l'adresse de la course sur biathlonworld.com, ex. BT2627SWRLCP01SMIN)"
           className="w-60 rounded border border-border bg-bg px-2 py-1.5 text-xs"
         />
       </div>

@@ -96,6 +96,15 @@ export interface IbuImportState {
 
 /** Classement officiel IBU de la course, au format CSV, pour pré-remplir le formulaire (rien n'est enregistré). */
 export async function loadIbuResults(raceId: string, forcedIbuRaceId?: string): Promise<IbuImportState> {
+  try {
+    return await loadIbuResultsUnsafe(raceId, forcedIbuRaceId);
+  } catch (err) {
+    // Jamais d'erreur levée : en production, Next.js n'en afficherait qu'un message anglais générique.
+    return { ok: false, message: `Récupération IBU impossible : ${err instanceof Error ? err.message : "erreur inconnue"}`, warnings: [] };
+  }
+}
+
+async function loadIbuResultsUnsafe(raceId: string, forcedIbuRaceId?: string): Promise<IbuImportState> {
   await requireAdmin();
   const admin = createAdminClient();
 
@@ -133,8 +142,13 @@ export interface StartListImportState {
  * biathlètes (ou nations), avec les cotes déjà validées. Ré-exécutable.
  */
 export async function loadIbuStartList(raceId: string, forcedIbuRaceId?: string): Promise<StartListImportState> {
-  await requireAdmin();
-  return importIbuStartList(createAdminClient(), raceId, forcedIbuRaceId);
+  try {
+    await requireAdmin();
+    return await importIbuStartList(createAdminClient(), raceId, forcedIbuRaceId);
+  } catch (err) {
+    // Jamais d'erreur levée : en production, Next.js n'en afficherait qu'un message anglais générique.
+    return { ok: false, message: `Liste de départ non récupérée : ${err instanceof Error ? err.message : "erreur inconnue"}`, unmatched: [] };
+  }
 }
 
 async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, raceId: string, forcedIbuRaceId?: string): Promise<StartListImportState> {
@@ -218,6 +232,14 @@ export const clearStartList = adminFormAction(async (formData: FormData) => {
  * officielle. La tâche planifiée le fait toute seule à l'ouverture ; ce bouton sert à la refaire.
  */
 export async function loadGeneralStartList(raceId: string): Promise<StartListImportState> {
+  try {
+    return await loadGeneralStartListUnsafe(raceId);
+  } catch (err) {
+    return { ok: false, message: `Liste provisoire non enregistrée : ${err instanceof Error ? err.message : "erreur inconnue"}`, unmatched: [] };
+  }
+}
+
+async function loadGeneralStartListUnsafe(raceId: string): Promise<StartListImportState> {
   await requireAdmin();
   const admin = createAdminClient();
   const { data: race } = await admin

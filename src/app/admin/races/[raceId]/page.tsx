@@ -28,6 +28,7 @@ import { AdminForm, SubmitButton } from "../../_components/AdminForm";
 const inputClass = "rounded border border-border bg-bg px-2 py-1.5 text-sm";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 60; // lecture IBU (API puis repli biathlonworld.com) depuis les actions de la page
 
 export default async function AdminRacePage({ params }: { params: Promise<{ raceId: string }> }) {
   const { raceId } = await params;

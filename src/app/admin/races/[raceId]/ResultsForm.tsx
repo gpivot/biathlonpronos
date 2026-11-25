@@ -127,7 +127,8 @@ export function ResultsForm({
       if (outcome.ok && outcome.csv) applyCsv(outcome.csv, `${outcome.message} `, outcome.warnings);
       else setCsvReport({ ok: false, message: outcome.message, warnings: [] });
     } catch (err) {
-      setCsvReport({ ok: false, message: err instanceof Error ? err.message : "Erreur IBU inconnue.", warnings: [] });
+      console.error(err);
+      setCsvReport({ ok: false, message: "Le serveur n'a pas pu lire le site de l'IBU (délai dépassé ou erreur). Réessaie dans un instant, ou colle l'identifiant IBU de la course.", warnings: [] });
     } finally {
       setIbuLoading(false);
     }
@@ -184,7 +185,7 @@ export function ResultsForm({
             value={ibuRaceId}
             onChange={(e) => setIbuRaceId(e.target.value)}
             placeholder="Identifiant IBU (facultatif)"
-            title="À renseigner seulement si la course n'est pas retrouvée automatiquement, ex. BT2627SWRLCP01SWSP (visible dans l'adresse de la course sur biathlonresults.com)"
+            title="À renseigner seulement si la course n'est pas retrouvée automatiquement (fin de l'adresse de la course sur biathlonworld.com, ex. BT2627SWRLCP01SWSP)"
             className="w-60 rounded border border-border bg-bg px-2 py-1.5 text-xs"
           />
         </div>

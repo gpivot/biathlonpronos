@@ -608,6 +608,17 @@ Gâchette = 0 faute (`ShootingTotal`), Fusée = rang 1 de l'analyse temps de ski
 TypeId `CRST`, sinon à cocher à la main), écart = `Behind`, DNF/DNS ignorés, relais = lignes
 d'équipe. Les noms sont comparés aussi sous forme translittérée (Öberg = OEBERG, Bø = BOE). Champ
 facultatif pour forcer l'identifiant IBU de la course si la correspondance automatique échoue.
+- **API fermée le 25/11/2026** : `biathlonresults.com/modules/sportapi/api` répond désormais 401
+  à toutes les requêtes (Events, Competitions, Results, Cups). Repli automatique sur le site officiel
+  `biathlonworld.com`, qui embarque les mêmes données au même format dans le JSON `__NEXT_DATA__`
+  de ses pages : `/calendar` (étapes de la saison en cours + courses de l'étape en cours),
+  `/startlist/<RaceId>` et `/results/<RaceId>`. Pour une étape qui n'est pas l'étape en cours,
+  l'identifiant est déduit (`<EventId><SW|SM|MX><SP|PU|IN|MS|RL|SR>`, ex. BT2627SWRLCP01SMIN) puis
+  vérifié sur la page. Délai de 10 s par appel, `maxDuration` 60 s sur la page admin d'une course,
+  et les actions ne lèvent plus d'erreur (message en français au lieu du message anglais générique
+  de Next.js). **Pas de repli** pour les généraux (`Cups`, liste provisoire du lundi) ni pour le
+  temps de ski (`AnalyticResults`, carte Fusée à cocher à la main) : leurs pages n'exposent pas ces
+  données.
 - **Non testé contre l'IBU depuis l'environnement de Claude** (accès réseau refusé) : structure de
   l'API reprise de son usage connu, logique de correspondance couverte par des tests unitaires. À
   vérifier en vrai sur la préversion Vercel. Conditions d'utilisation de l'API IBU non vérifiées.
