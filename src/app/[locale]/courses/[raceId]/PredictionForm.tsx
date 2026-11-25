@@ -40,6 +40,7 @@ export function PredictionForm({
   x2UsesRemaining,
   startOrder = {},
   startGaps = {},
+  pickedOffList = [],
 }: {
   raceId: string;
   format: string;
@@ -63,6 +64,11 @@ export function PredictionForm({
   startOrder?: Record<string, number>;
   /** Poursuite : retard au départ en secondes entières par athlète. */
   startGaps?: Record<string, number>;
+  /**
+   * Biathlètes du pronostic enregistré absents de la liste de départ : jamais retirés d'office,
+   * affichés avec la mention « pas au départ » pour que le joueur les remplace.
+   */
+  pickedOffList?: AthleteWithOdds[];
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
   const [cardChoice, setCardChoice] = useState<CardChoice>(activeCard ?? "none");
@@ -194,7 +200,9 @@ export function PredictionForm({
     (a) => a.nation_code
   );
 
-  const athleteById = new Map(athletes.map((a) => [a.athlete_id, a]));
+  const athleteById = new Map([...pickedOffList, ...athletes].map((a) => [a.athlete_id, a]));
+  const offListIds = new Set(pickedOffList.map((a) => a.athlete_id));
+  const offListSelected = selected.filter((id) => offListIds.has(id));
   // Pronostic enregistré et inchangé : « Ton pronostic est validé ! » remplace le bouton.
   const unsaved =
     savedState.key !== "" &&
@@ -206,6 +214,15 @@ export function PredictionForm({
 
   return (
     <div className="flex flex-col gap-4">
+      {offListSelected.length > 0 && (
+        <div role="alert" className="rounded-2xl border border-red/50 bg-red/10 p-3.5 text-[13px] leading-relaxed text-frost">
+          ⚠️{" "}
+          {t("offStartWarning", {
+            count: offListSelected.length,
+            names: offListSelected.map((id) => shortAthleteName(athleteById.get(id))).join(", "),
+          })}
+        </div>
+      )}
       {/* Cartes bonus en haut du formulaire (demande de Guillaume). */}
       {quatriemeChoixActive && (
         <div className="rounded-2xl border border-gold/40 bg-gold-soft p-3.5 text-[13px] leading-relaxed text-frost">
@@ -259,7 +276,8 @@ export function PredictionForm({
       <PredictionSummary
         picks={selected.map((id) => {
           const a = athleteById.get(id);
-          return { key: id, label: shortAthleteName(a), nationCode: a?.nation_code ?? "" };
+          const label = shortAthleteName(a);
+          return { key: id, label: offListIds.has(id) ? `${label} · ${t("notStarting")}` : label, nationCode: a?.nation_code ?? "" };
         })}
         requiredCount={requiredCount}
         onRemove={toggle}

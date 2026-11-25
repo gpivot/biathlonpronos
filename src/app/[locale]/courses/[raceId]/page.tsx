@@ -79,6 +79,8 @@ export default async function RacePage({
   let nationsWithOdds: NationWithOdds[] = [];
   let initialAthleteSelection: string[] = [];
   let initialNationSelection: string | null = null;
+  // Relais : nation du pronostic validé absente de la liste de départ enregistrée.
+  let nationOffList = false;
   // Pépites cachées pas encore révélées : jouées en caché sur toutes les courses, donc hors pronostic.
   let hiddenPepiteIds: string[] = [];
   let availableCards: { id: string; card_type: string }[] = [];
@@ -151,6 +153,9 @@ export default async function RacePage({
         .eq("race_id", race.id)
         .maybeSingle();
       initialNationSelection = existing?.nation_code ?? null;
+      nationOffList = Boolean(
+        initialNationSelection && nationStartList && nationStartList.nations.length > 0 && !nationStartList.nations.includes(initialNationSelection)
+      );
       initialBonusX2 = existing?.bonus_x2_used ?? false;
     }
   } else {
@@ -221,6 +226,22 @@ export default async function RacePage({
   // Filtre seulement la liste du formulaire : l'affichage « en cours » garde toutes les cotes.
   const selectableAthletes =
     startList.status === "known" ? athletesWithOdds.filter((a) => startOrder[a.athlete_id] != null) : athletesWithOdds;
+  // Pronostic validé avec un biathlète absent de la liste (liste publiée après le pronostic) : le
+  // choix est conservé et affiché avec la mention « pas au départ », jamais retiré d'office.
+  const offListIds = startList.status === "known" ? initialAthleteSelection.filter((id) => startOrder[id] == null) : [];
+  const missingNames = offListIds.filter((id) => !athletesWithOdds.some((a) => a.athlete_id === id));
+  const { data: offListExtra } =
+    missingNames.length > 0
+      ? await supabase.from("athletes").select("id, first_name, last_name, nation_code").in("id", missingNames)
+      : { data: [] as { id: string; first_name: string; last_name: string; nation_code: string }[] };
+  const pickedOffList: AthleteWithOdds[] = offListIds.map(
+    (id) =>
+      athletesWithOdds.find((a) => a.athlete_id === id) ??
+      (() => {
+        const a = (offListExtra ?? []).find((x) => x.id === id);
+        return { athlete_id: id, first_name: a?.first_name ?? "", last_name: a?.last_name ?? "?", nation_code: a?.nation_code ?? "", value: 0 };
+      })()
+  );
 
   const hasOdds = isRelay ? nationsWithOdds.length > 0 : athletesWithOdds.length > 0;
   // Pronostics ouverts le lundi qui précède l'étape, à 17 h (voir predictionWindow.ts).
@@ -407,6 +428,11 @@ export default async function RacePage({
             </div>
           ) : (
             <>
+              {isRelay && nationOffList && (
+                <div role="alert" className="rounded-2xl border border-red/50 bg-red/10 p-3.5 text-[13px] leading-relaxed text-frost">
+                  ⚠️ {t("offStartNationWarning", { nation: initialNationSelection ?? "" })}
+                </div>
+              )}
               {isRelay ? (
                 <RelayPredictionForm
                   raceId={race.id}
@@ -435,6 +461,7 @@ export default async function RacePage({
                   // Mass start : pas d'écart de départ, tri par cote seulement (la liste ne sert qu'à filtrer).
                   startOrder={race.format === "poursuite" ? startOrder : {}}
                   startGaps={startGaps}
+                  pickedOffList={pickedOffList}
                 />
               )}
               {/* Premier pronostic d'un invité (« Je joue ») : 3 pop-ups pour apprendre à jouer. */}

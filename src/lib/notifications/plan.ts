@@ -71,3 +71,22 @@ export function weeklyRecapRef(now: Date): string | null {
 export function sumPoints(rows: { points: number | string }[]): number {
   return Math.round(rows.reduce((total, row) => total + Number(row.points), 0));
 }
+
+/**
+ * Choix d'un pronostic absents de la liste de départ enregistrée (biathlètes, ou nation d'un
+ * relais). Liste vide (aucune liste enregistrée) : rien n'est signalé, tout le monde est proposé.
+ * Renvoie, par joueur, les choix concernés (triés, sans doublon).
+ */
+export function offStartPicks(
+  predictions: { user_id: string; picks: (string | null | undefined)[] }[],
+  startIds: Iterable<string>
+): Map<string, string[]> {
+  const inList = new Set(startIds);
+  const result = new Map<string, string[]>();
+  if (inList.size === 0) return result;
+  for (const p of predictions) {
+    const missing = [...new Set(p.picks.filter((id): id is string => Boolean(id) && !inList.has(id as string)))].sort();
+    if (missing.length > 0) result.set(p.user_id, missing);
+  }
+  return result;
+}

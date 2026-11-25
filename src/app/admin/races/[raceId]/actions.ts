@@ -8,7 +8,7 @@ import { fetchIbuResults, fetchIbuStartList, fetchIbuStartNations } from "@/lib/
 import { matchStartList, matchStartNations, saveStartList, saveStartNations } from "@/lib/admin/startListImport";
 import { placeGeneralStartList, type OpeningRace } from "@/lib/admin/startListOpening";
 import { RELAY_FORMATS } from "@/lib/raceFormats";
-import { notifyGuestResults, notifyRaceResults } from "@/lib/notifications/jobs";
+import { notifyGuestResults, notifyOffStartPicks, notifyRaceResults } from "@/lib/notifications/jobs";
 import { redirect } from "next/navigation";
 import {
   deleteRace,
@@ -136,6 +136,11 @@ export interface StartListImportState {
   unmatched: string[];
 }
 
+/** Prévient les joueurs dont un choix n'est pas dans la liste enregistrée (le pronostic n'est pas modifié). */
+async function offStartNote(admin: ReturnType<typeof createAdminClient>, raceId: string): Promise<string> {
+  return notifyOffStartPicks(admin, raceId).catch((err) => ` Notification des choix hors liste impossible : ${err instanceof Error ? err.message : "erreur inconnue"}.`);
+}
+
 /**
  * Liste de départ officielle IBU (toutes les courses ; relais : les nations engagées) : enregistrée
  * directement, elle remplace la liste provisoire du général. La course n'affiche ensuite que ces
@@ -174,10 +179,11 @@ async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, r
         return { ok: false, message: `Aucune nation de la liste IBU (${ibu.nations.length}) n'a de cote pour ce relais : rien enregistré.`, unmatched: matched.unmatched };
       }
       await saveStartNations(admin, raceId, matched.rows);
-      revalidatePath("/admin", "layout");
+      revalidatePath("/", "layout");
+      const note = await offStartNote(admin, raceId);
       return {
         ok: true,
-        message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} nation(s) sur ${ibu.nations.length} avec leur cote.`,
+        message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} nation(s) sur ${ibu.nations.length} avec leur cote.${note}`,
         unmatched: matched.unmatched,
       };
     } catch (err) {
@@ -206,10 +212,11 @@ async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, r
       return { ok: false, message: `Aucun biathlète de la liste IBU (${ibu.entries.length}) n'a de cote pour ce format : rien enregistré.`, unmatched: matched.unmatched };
     }
     await saveStartList(admin, raceId, matched.rows);
-    revalidatePath("/admin", "layout");
+    revalidatePath("/", "layout");
+    const note = await offStartNote(admin, raceId);
     return {
       ok: true,
-      message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} biathlète(s) sur ${ibu.entries.length} avec leur cote.`,
+      message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} biathlète(s) sur ${ibu.entries.length} avec leur cote.${note}`,
       unmatched: matched.unmatched,
     };
   } catch (err) {
@@ -250,8 +257,9 @@ async function loadGeneralStartListUnsafe(raceId: string): Promise<StartListImpo
   if (!race) return { ok: false, message: "Course introuvable.", unmatched: [] };
   try {
     const report = await placeGeneralStartList(admin, race as unknown as OpeningRace);
-    revalidatePath("/admin", "layout");
-    return { ok: true, message: `Liste provisoire enregistrée : ${report}.`, unmatched: [] };
+    revalidatePath("/", "layout");
+    const note = await offStartNote(admin, raceId);
+    return { ok: true, message: `Liste provisoire enregistrée : ${report}.${note}`, unmatched: [] };
   } catch (err) {
     return { ok: false, message: `Liste provisoire non enregistrée : ${err instanceof Error ? err.message : "erreur IBU inconnue"}.`, unmatched: [] };
   }

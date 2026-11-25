@@ -602,7 +602,8 @@
     "offStandingsNotice": "Gara fuori classifica: ha la sua classifica, ma i suoi punti non contano per la stagione (niente pettorale rosso, carta bonus, ×2 né Pepita).",
     "signupInviteTitle": "E la tua classifica?",
     "signupInviteBody": "Crea gratis il tuo account per scoprire la tua classifica, pronosticare la prossima gara e accedere a tutte le funzionalità.",
-    "signupInviteButton": "Crea il mio account gratis"
+    "signupInviteButton": "Crea il mio account gratis",
+    "offStartNationWarning": "{nation} non è nella lista di partenza di questa staffetta: scegli un'altra nazione, altrimenti il tuo pronostico non ti darà punti."
   },
   "PredictionForm": {
     "chooseThree": "Scegli 3 biatleti",
@@ -648,7 +649,9 @@
     "cardFusee": "Razzo",
     "cardGachette": "Grilletto",
     "fuseeActive": "carta posata su questa tappa: +100 / +50 / +20 pt per i tuoi biatleti con i 3 migliori tempi sugli sci.",
-    "gachetteActive": "carta posata su questa tappa: +100 pt per ogni biatleta che fa 20/20 al tiro (+50 per un 10/10 nella sprint)."
+    "gachetteActive": "carta posata su questa tappa: +100 pt per ogni biatleta che fa 20/20 al tiro (+50 per un 10/10 nella sprint).",
+    "notStarting": "non al via",
+    "offStartWarning": "{count, plural, one {{names} non è nella lista di partenza: sostituisci questa scelta, altrimenti non ti darà punti.} other {{names} non sono nella lista di partenza: sostituisci queste scelte, altrimenti non ti daranno punti.}}"
   },
   "SignIn": {
     "prompt": "Accedi per continuare",
@@ -1110,7 +1113,9 @@
     "guestResultsBody": "La gara {race} a {location} è finita. Scopri il tuo punteggio e il dettaglio dei punti.",
     "guestResultsCodeLabel": "Il tuo codice privato:",
     "guestResultsCodeHint": "Nell'app: schermata di accesso, «Accedi con un codice ricevuto via e-mail», poi «Ho già un codice».",
-    "guestResultsButton": "Scopri il mio punteggio"
+    "guestResultsButton": "Scopri il mio punteggio",
+    "offStartPushTitle": "⚠️ {race}: scelta da sostituire",
+    "offStartPushBody": "{count, plural, one {{names} non è al via. Sostituisci questa scelta prima della gara.} other {{names} non sono al via. Sostituisci queste scelte prima della gara.}}"
   },
   "Unsubscribe": {
     "title": "Annulla iscrizione",

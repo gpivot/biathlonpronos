@@ -1628,9 +1628,15 @@ semaine » plus haut).
   de chaque course (sprint, individuel, relais compris), à cliquer à la main dès la publication (en
   général la veille vers 17-18 h). Elle remplace la liste provisoire. Bouton « Replacer les
   60 premiers du général » pour refaire la liste provisoire, « Effacer la liste » pour tout proposer.
-- **Limite connue** : un joueur qui a déjà choisi un biathlète (ou une nation) retiré par la liste
-  définitive garde son pronostic ; le biathlète n'apparaît plus dans la liste du formulaire. Pas
-  de notification pour l'instant.
+- **Choix absent de la liste (25/11/2026, demande de Guillaume)** : un pronostic validé n'est
+  jamais modifié par une liste de départ. Le biathlète absent reste dans le pronostic, affiché
+  dans le récapitulatif avec la mention « pas au départ » et un encadré rouge en haut du
+  formulaire (relais : encadré sur la nation). S'il n'est pas remplacé, il ne rapporte aucun point
+  (il n'a pas de résultat). À chaque enregistrement d'une liste depuis l'admin (IBU ou « Replacer
+  les 60 premiers »), les joueurs concernés reçoivent une notification sur leur téléphone
+  (`notifyOffStartPicks`, réglage « Rappel de pronostic », une fois par joueur et par ensemble de
+  choix, type `start_list` de `notification_sends`, migration 0049). Pas d'e-mail pour l'instant
+  (**à confirmer**).
 - Le verrou à J-7 / lundi 17 h reste appliqué par l'affichage seulement (la base ne bloque que la
   fermeture au départ, comme avant).
 - Textes mis à jour dans les 5 langues : FAQ de l'accueil (`faq_when_a`), nouvelle carte « Quand
