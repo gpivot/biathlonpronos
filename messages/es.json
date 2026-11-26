@@ -478,8 +478,8 @@
     "myRankingTitle": "Mi clasificación",
     "playerPepiteRevealed": "{sex, select, F {Diamante oculto femenino revelado:} other {Diamante oculto masculino revelado:}}",
     "playerPepiteLabel": "{sex, select, F {Diamante oculto femenino} other {Diamante oculto masculino}}",
-    "playerSeasonPicksHidden": "Sus globos aparecerán el {date}, cuando nadie pueda ya modificar sus pronósticos de temporada (como en una carrera, a la salida).",
-    "playerSeasonPicksHiddenNoDate": "Sus globos aparecerán cuando nadie pueda ya modificar sus pronósticos de temporada."
+    "playerSeasonPicksHidden": "Sus globos aparecerán en la salida de su primera carrera pronosticada, a más tardar el {date} (como en una carrera: visibles cuando ya no pueda modificarlos).",
+    "playerSeasonPicksHiddenNoDate": "Sus globos aparecerán en la salida de su primera carrera pronosticada."
   },
   "Courses": {
     "title": "Mi temporada",

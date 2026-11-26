@@ -478,8 +478,8 @@
     "myRankingTitle": "Mon classement",
     "playerPepiteRevealed": "{sex, select, F {Pépite cachée Femmes révélée :} other {Pépite cachée Hommes révélée :}}",
     "playerPepiteLabel": "{sex, select, F {Pépite cachée Femmes} other {Pépite cachée Hommes}}",
-    "playerSeasonPicksHidden": "Ses globes apparaîtront le {date}, quand plus personne ne pourra modifier ses pronostics de saison (comme pour une course, au départ).",
-    "playerSeasonPicksHiddenNoDate": "Ses globes apparaîtront quand plus personne ne pourra modifier ses pronostics de saison."
+    "playerSeasonPicksHidden": "Ses globes apparaîtront au départ de sa première course pronostiquée, au plus tard le {date} (comme pour une course : visibles une fois qu'il ne peut plus les modifier).",
+    "playerSeasonPicksHiddenNoDate": "Ses globes apparaîtront au départ de sa première course pronostiquée."
   },
   "Courses": {
     "title": "Ma saison",
