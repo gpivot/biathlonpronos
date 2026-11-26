@@ -476,7 +476,10 @@
     "noStages": "Aucune étape programmée pour le moment.",
     "noPicks": "Pas de pronostic",
     "myRankingTitle": "Mon classement",
-    "playerPepiteRevealed": "{sex, select, F {Pépite cachée Femmes révélée :} other {Pépite cachée Hommes révélée :}}"
+    "playerPepiteRevealed": "{sex, select, F {Pépite cachée Femmes révélée :} other {Pépite cachée Hommes révélée :}}",
+    "playerPepiteLabel": "{sex, select, F {Pépite cachée Femmes} other {Pépite cachée Hommes}}",
+    "playerSeasonPicksHidden": "Ses globes apparaîtront le {date}, quand plus personne ne pourra modifier ses pronostics de saison (comme pour une course, au départ).",
+    "playerSeasonPicksHiddenNoDate": "Ses globes apparaîtront quand plus personne ne pourra modifier ses pronostics de saison."
   },
   "Courses": {
     "title": "Ma saison",
@@ -494,6 +497,7 @@
     "toPlayButton": "À jouer",
     "seasonPredictionsTitle": "Mes pronostics de saison",
     "seasonPredictionsTitleOther": "Pronostics de saison",
+    "seasonPredictionsHidden": "Pas encore visibles",
     "seasonPredictionsCount": "{chosen} sur {total} choisis",
     "seasonPredictionsNone": "Pas encore choisi",
     "seasonPredictionsLink": "Voir ou modifier mes pronostics de saison",

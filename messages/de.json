@@ -476,7 +476,10 @@
     "noStages": "Noch keine Etappe geplant.",
     "noPicks": "Kein Tipp",
     "myRankingTitle": "Meine Platzierung",
-    "playerPepiteRevealed": "{sex, select, F {Versteckter Rohdiamant Frauen aufgedeckt:} other {Versteckter Rohdiamant Männer aufgedeckt:}}"
+    "playerPepiteRevealed": "{sex, select, F {Versteckter Rohdiamant Frauen aufgedeckt:} other {Versteckter Rohdiamant Männer aufgedeckt:}}",
+    "playerPepiteLabel": "{sex, select, F {Versteckter Rohdiamant Frauen} other {Versteckter Rohdiamant Männer}}",
+    "playerSeasonPicksHidden": "Die Kugeln erscheinen am {date}, sobald niemand mehr seine Saisontipps ändern kann (wie bei einem Rennen, beim Start).",
+    "playerSeasonPicksHiddenNoDate": "Die Kugeln erscheinen, sobald niemand mehr seine Saisontipps ändern kann."
   },
   "Courses": {
     "title": "Meine Saison",
@@ -494,6 +497,7 @@
     "toPlayButton": "Jetzt tippen",
     "seasonPredictionsTitle": "Meine Saisontipps",
     "seasonPredictionsTitleOther": "Saisontipps",
+    "seasonPredictionsHidden": "Noch nicht sichtbar",
     "seasonPredictionsCount": "{chosen} von {total} gewählt",
     "seasonPredictionsNone": "Noch nicht gewählt",
     "seasonPredictionsLink": "Saisontipps ansehen oder ändern",

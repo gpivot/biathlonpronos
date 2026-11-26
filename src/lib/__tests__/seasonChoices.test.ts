@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { firstPredictedRaceAt, seasonChoicesEditable, seasonPicksClosesAt } from "../seasonChoices";
+import { firstPredictedRaceAt, seasonChoicesEditable, seasonPicksClosesAt, seasonPicksPublicAt } from "../seasonChoices";
 
 describe("seasonChoicesEditable", () => {
   const firstRace = new Date("2026-11-29T12:15:00Z");
@@ -74,5 +74,22 @@ describe("firstPredictedRaceAt (invité devenu joueur, 0048)", () => {
     const closesAt = seasonPicksClosesAt({ firstPredictedRaceAt: first, closingRaceAt, firstWorldCupRaceAt: guestRace });
     expect(closesAt).toEqual(closingRaceAt);
     expect(seasonChoicesEditable(closesAt, new Date("2026-11-30T10:00:00Z"))).toBe(true);
+  });
+});
+
+describe("seasonPicksPublicAt (globes des autres joueurs visibles quand plus personne ne peut modifier)", () => {
+  const grandBornand = new Date("2026-12-13T13:15:00Z");
+  const firstWorldCup = new Date("2026-11-29T12:15:00Z");
+
+  it("mass start femmes du Grand-Bornand au calendrier : c'est elle", () => {
+    expect(seasonPicksPublicAt(grandBornand, firstWorldCup)).toEqual(grandBornand);
+  });
+
+  it("Grand-Bornand absent : repli sur la 1re course de Coupe du Monde", () => {
+    expect(seasonPicksPublicAt(null, firstWorldCup)).toEqual(firstWorldCup);
+  });
+
+  it("rien au calendrier : pas encore visibles", () => {
+    expect(seasonPicksPublicAt(null, null)).toBeNull();
   });
 });

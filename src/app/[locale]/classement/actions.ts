@@ -43,7 +43,8 @@ export async function getPlayerSeason(userId: string): Promise<PlayerSeason | nu
   return {
     ...view,
     pseudo: profile.pseudo ?? "?",
-    defaultOpenStageId: pickDefaultOpenStageId(view.stages),
+    // Étapes hors classement (ex. pré-saison) masquées dans le pop-up : jamais ouvertes par défaut.
+    defaultOpenStageId: pickDefaultOpenStageId(view.stages.filter((s) => s.counts_in_standings !== false)),
     rank: rankIndex >= 0 ? rankIndex + 1 : null,
     points: rankIndex >= 0 ? leaderboard[rankIndex].points : 0,
     badges: badges.get(userId) ?? NO_BADGES,

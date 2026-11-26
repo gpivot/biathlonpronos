@@ -6,7 +6,7 @@ import { CloseIcon } from "@/components/icons";
 import { StreakCard } from "@/components/StreakCard";
 import { BonusCardsList } from "@/components/BonusCardsList";
 import { PlayerBadgesRow } from "@/components/PlayerBadgesRow";
-import { nationFlagEmoji } from "@/lib/nationFlags";
+import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { CalendarAccordion } from "../courses/CalendarAccordion";
 import { SeasonPredictionsAccordion } from "../courses/SeasonPredictionsAccordion";
 import { getPlayerSeason, type PlayerSeason } from "./actions";
@@ -47,6 +47,9 @@ export function PlayerSeasonButton({
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<PlayerSeason | null>(null);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+
+  // Étapes hors classement (« Autre (×0) », ex. pré-saison à Geilo) : sans intérêt dans la fiche d'un joueur.
+  const rankedStages = data?.stages.filter((s) => s.counts_in_standings !== false) ?? [];
 
   const show = async () => {
     setOpen(true);
@@ -99,7 +102,8 @@ export function PlayerSeasonButton({
               </button>
             </div>
 
-            <div className="flex flex-col gap-3 overflow-y-auto">
+            {/* [&>*]:shrink-0 : sans ça, les encadrés « overflow-hidden » (pronostics de saison) s'écrasent à 0 px quand la liste déborde. */}
+            <div className="flex flex-col gap-3 overflow-y-auto [&>*]:shrink-0">
               {state === "loading" && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerLoading")}</div>}
               {state === "error" && <div className="py-6 text-center text-[13px] text-text-dim">{t("playerError")}</div>}
               {data && stage && (
@@ -136,19 +140,6 @@ export function PlayerSeasonButton({
                         <div className="text-xs text-text-dim">{tHome("pointsLabel")}</div>
                       </div>
                     </div>
-                    {/* Pépite cachée révélée : son nom en haut du pop-up (invisible tant qu'elle ne l'est pas). */}
-                    {data.pepites
-                      ?.filter((p) => p.revealed && p.name)
-                      .map((p) => (
-                        <div key={p.sex} className="flex items-center gap-2 border-t border-border pt-2.5 text-[13px] text-text-dim">
-                          <span className="text-base">❄️</span>
-                          {t("playerPepiteRevealed", { sex: p.sex })}
-                          <span className="font-semibold text-ice">
-                            {p.nationCode && `${nationFlagEmoji(p.nationCode)} `}
-                            {p.name}
-                          </span>
-                        </div>
-                      ))}
                     {data.cards && data.cards.cards.length > 0 && (
                       <div className="flex flex-col gap-1.5 border-t border-border pt-2.5">
                         <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">
@@ -157,20 +148,40 @@ export function PlayerSeasonButton({
                         <BonusCardsList cards={data.cards.cards} compact />
                       </div>
                     )}
-                    {data.favoriteTeam && (
-                      <div className="flex items-center gap-2 text-[13px] text-text-dim">
-                        <span className="text-base">{nationFlagEmoji(data.favoriteTeam.nationCode)}</span>
-                        {t("playerFavoriteTeam")}
-                        <span className="font-semibold text-frost">
-                          {data.favoriteTeam.name} {tSex(data.favoriteTeam.sex)}
-                        </span>
-                      </div>
-                    )}
                   </div>
-                  {data.seasonPicks && <SeasonPredictionsAccordion picks={data.seasonPicks} readOnly />}
+                  {data.seasonPicks && (
+                    <SeasonPredictionsAccordion
+                      picks={data.seasonPicks}
+                      readOnly
+                      // Pépites cachées : seulement celles déjà révélées (les autres ne quittent jamais le serveur).
+                      revealedPepites={(data.pepites ?? []).flatMap((p) =>
+                        p.revealed && p.name ? [{ sex: p.sex, name: p.name, nationCode: p.nationCode }] : []
+                      )}
+                      favoriteTeam={
+                        data.favoriteTeam
+                          ? { label: `${data.favoriteTeam.name} ${tSex(data.favoriteTeam.sex)}`, nationCode: data.favoriteTeam.nationCode }
+                          : undefined
+                      }
+                      hiddenNote={
+                        data.seasonPicksHiddenUntil === undefined
+                          ? null
+                          : data.seasonPicksHiddenUntil
+                            ? t("playerSeasonPicksHidden", {
+                                date: new Intl.DateTimeFormat(locale, {
+                                  timeZone: DISPLAY_TIME_ZONE,
+                                  day: "numeric",
+                                  month: "long",
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                }).format(new Date(data.seasonPicksHiddenUntil)),
+                              })
+                            : t("playerSeasonPicksHiddenNoDate")
+                      }
+                    />
+                  )}
                   {data.streak != null && <StreakCard current={data.streak} />}
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
-                  <CalendarAccordion stages={data.stages} defaultOpenStageId={data.defaultOpenStageId} locale={locale} readOnly />
+                  <CalendarAccordion stages={rankedStages} defaultOpenStageId={data.defaultOpenStageId} locale={locale} readOnly />
                 </>
               )}
             </div>

@@ -134,3 +134,23 @@ export async function getSeasonPicksWindow(
   const closesAt = seasonPicksClosesAt({ firstPredictedRaceAt, closingRaceAt, firstWorldCupRaceAt: firstWc });
   return { open: seasonChoicesEditable(closesAt, now), closesAt, firstWorldCupRaceAt: firstWc, accountCompletedAt };
 }
+
+/**
+ * Pronostics de saison d'un AUTRE joueur (pop-up du Classement) : visibles seulement quand plus
+ * personne ne peut modifier les siens, c'est-à-dire au départ de la mass start femmes du
+ * Grand-Bornand (à défaut, la 1re course de Coupe du Monde). Avant, un nouveau joueur pourrait
+ * copier ceux des autres. Même logique que les pronostics de course, visibles au départ.
+ * Même règle côté base : policy « season_predictions: read all once closed » (migration 0050).
+ * null : rien au calendrier, donc pas encore visibles.
+ */
+export function seasonPicksPublicAt(closingRaceAt: Date | null, firstWorldCupRaceAt: Date | null): Date | null {
+  return closingRaceAt ?? firstWorldCupRaceAt;
+}
+
+export async function getSeasonPicksPublicAt(supabase: SupabaseClient, seasonId: string): Promise<Date | null> {
+  const [closingRaceAt, firstWc] = await Promise.all([
+    getSeasonPicksClosingRaceAt(supabase, seasonId),
+    getFirstWorldCupRaceAt(supabase, seasonId),
+  ]);
+  return seasonPicksPublicAt(closingRaceAt, firstWc);
+}

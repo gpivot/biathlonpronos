@@ -8,6 +8,7 @@ import { getCurrentStreak } from "./streakCounter";
 import { isPredictionOpen, predictionOpensOn } from "./predictionWindow";
 import { getPlayerCards, type PlayerCards } from "./bonusCards";
 import { areJokersApplied, loadSeasonJokers } from "./jokers";
+import { getSeasonPicksPublicAt } from "./seasonChoices";
 
 /** Une course effacée par les jokers de fin de saison, telle qu'affichée dans « Mon classement » (page Classement). */
 export interface JokerLine {
@@ -33,7 +34,8 @@ export interface SeasonJokers {
  * pronostic, son bonus ×2 et ses points, plus ses pronostics de saison (globes) et ses Pépites cachées.
  * Sert aussi au pop-up d'un joueur du Classement (`isOwner` false) : on n'y montre que ce qui
  * ne permet pas de copier, c'est-à-dire les pronostics des courses déjà parties, les globes
- * une fois la saison commencée et une Pépite une fois révélée (bonus obtenu). Les règles
+ * une fois les pronostics de saison fermés pour tout le monde (mass start femmes du
+ * Grand-Bornand, cf. seasonPicksPublicAt) et une Pépite une fois révélée (bonus obtenu). Les règles
  * d'accès Supabase (migration 0018) appliquent la même chose côté base.
  */
 
@@ -73,6 +75,11 @@ export interface SeasonView {
   streak: number | null;
   /** Cartes bonus (crédits à choisir et cartes prises), null pour un visiteur. */
   cards: PlayerCards | null;
+  /**
+   * Chez un autre joueur, globes pas encore visibles : date (ISO) à laquelle ils le seront
+   * (null : date inconnue). Absent (undefined) quand ils sont visibles.
+   */
+  seasonPicksHiddenUntil?: string | null;
 }
 
 export async function getSeasonView(
@@ -82,8 +89,9 @@ export async function getSeasonView(
   now: Date,
   isOwner = true
 ): Promise<SeasonView> {
-  const seasonStarted = new Date(season.starts_on) <= now;
-  const showSeasonPicks = isOwner || seasonStarted;
+  // Globes d'un autre joueur : seulement une fois fermés pour tout le monde (pas de copie possible).
+  const publicAt = isOwner ? null : await getSeasonPicksPublicAt(supabase, season.id);
+  const showSeasonPicks = isOwner || (publicAt !== null && publicAt <= now);
 
   const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards] = await Promise.all([
     userId
@@ -219,7 +227,14 @@ export async function getSeasonView(
       .sort((a: any, b: any) => new Date(a.locks_at).getTime() - new Date(b.locks_at).getTime()),
   }));
 
-  return { stages: mapped, seasonPicks, pepites: hiddenPepites, streak, cards };
+  return {
+    stages: mapped,
+    seasonPicks,
+    pepites: hiddenPepites,
+    streak,
+    cards,
+    ...(showSeasonPicks ? {} : { seasonPicksHiddenUntil: publicAt?.toISOString() ?? null }),
+  };
 }
 
 /**

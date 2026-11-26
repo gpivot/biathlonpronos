@@ -1766,3 +1766,28 @@ saison étaient fermés dès son inscription.
   passe en second, plus discret (« Sans inscription : juste un prono sur la prochaine course, pour
   voir »). Le dernier appel en bas de page mène aussi à la création de compte, avec un lien discret
   « Ou teste d'abord un prono, sans inscription ».
+
+## Pop-up joueur du Classement : étapes hors classement masquées, pronostics de saison (26/11/2026)
+
+Demande de Guillaume : dans le pop-up d'un joueur, masquer les étapes qui ne comptent pas (ex.
+Geilo, pré-saison) et montrer ses pronostics de saison en accordéon, sans ses Pépites cachées non
+révélées.
+
+- **Étapes hors classement** (« Autre (×0) », `counts_in_standings = false`) : retirées de la liste
+  du pop-up (`PlayerSeasonButton`), et jamais ouvertes par défaut (`getPlayerSeason`). Elles
+  restent dans « Ma saison » du joueur lui-même.
+- **Accordéon « Pronostics de saison »** : il existait déjà mais s'écrasait à 0 px (encadré
+  `overflow-hidden` dans une colonne qui défile) ; corrigé (`[&>*]:shrink-0`). Il regroupe
+  maintenant les 6 globes, les Pépites cachées **révélées** (❄️) et l'équipe favorite (sorties de
+  l'encadré du classement). Une Pépite non révélée n'est jamais envoyée au navigateur (filtrée dans
+  `getSeasonView`, et la base ne la donne pas : « pepites: read all once revealed », 0018).
+- **Quand voit-on les globes d'un autre joueur ? (à confirmer)** Avant : dès le début de saison.
+  Mais depuis 0047, un joueur qui n'a pas encore pronostiqué de course peut les saisir ou les
+  modifier jusqu'à la mass start femmes du Grand-Bornand : il pourrait copier. Choix : ils sont
+  visibles par tous **au départ de la mass start femmes du Grand-Bornand** (à défaut, la 1re course
+  de Coupe du Monde), quand plus personne ne peut modifier, comme les pronostics de course visibles à
+  leur départ. D'ici là, l'accordéon affiche « Pas encore visibles » avec la date, et garde l'équipe
+  favorite (toujours visible, 0019). Côté app : `seasonPicksPublicAt` / `getSeasonPicksPublicAt`
+  (`src/lib/seasonChoices.ts`), utilisée par `getSeasonView`. Côté base : migration **0050**
+  (policy « season_predictions: read all once closed », remplace celle de 0018) pour que l'API ne
+  les donne pas non plus avant.

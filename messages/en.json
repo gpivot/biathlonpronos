@@ -476,7 +476,10 @@
     "noStages": "No stage scheduled yet.",
     "noPicks": "No prediction",
     "myRankingTitle": "My ranking",
-    "playerPepiteRevealed": "{sex, select, F {Women's Hidden Diamond revealed:} other {Men's Hidden Diamond revealed:}}"
+    "playerPepiteRevealed": "{sex, select, F {Women's Hidden Diamond revealed:} other {Men's Hidden Diamond revealed:}}",
+    "playerPepiteLabel": "{sex, select, F {Women's Hidden Diamond} other {Men's Hidden Diamond}}",
+    "playerSeasonPicksHidden": "Their globes will appear on {date}, once nobody can change their season predictions anymore (just like a race, at the start).",
+    "playerSeasonPicksHiddenNoDate": "Their globes will appear once nobody can change their season predictions anymore."
   },
   "Courses": {
     "title": "My season",
@@ -494,6 +497,7 @@
     "toPlayButton": "Play",
     "seasonPredictionsTitle": "My season predictions",
     "seasonPredictionsTitleOther": "Season predictions",
+    "seasonPredictionsHidden": "Not visible yet",
     "seasonPredictionsCount": "{chosen} of {total} chosen",
     "seasonPredictionsNone": "Not chosen yet",
     "seasonPredictionsLink": "See or edit my season predictions",

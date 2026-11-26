@@ -26,8 +26,14 @@ export function SeasonPredictionsAccordion({
   readOnly = false,
   open: picksOpen = false,
   favoriteTeam,
+  revealedPepites = [],
+  hiddenNote = null,
 }: {
   picks: SeasonPick[];
+  /** Pop-up d'un autre joueur : ses Pépites cachées déjà révélées (jamais les autres). */
+  revealedPepites?: { sex: "F" | "H"; name: string; nationCode: string | null }[];
+  /** Pop-up d'un autre joueur : globes pas encore visibles, avec la raison (remplace les 6 lignes). */
+  hiddenNote?: string | null;
   readOnly?: boolean;
   /**
    * Équipe favorite du joueur (sa propre saison seulement) : « France Femmes », ou null si pas encore
@@ -41,6 +47,7 @@ export function SeasonPredictionsAccordion({
   const t = useTranslations("Courses");
   const tGlobes = useTranslations("Globes");
   const tCompte = useTranslations("Compte");
+  const tClassement = useTranslations("Classement");
   const chosen = picks.filter((p) => p.name).length;
 
   return (
@@ -49,14 +56,17 @@ export function SeasonPredictionsAccordion({
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gold-soft text-lg">🏆</div>
         <div className="flex flex-1 flex-col gap-0.5">
           <div className="text-sm font-semibold">{readOnly ? t("seasonPredictionsTitleOther") : t("seasonPredictionsTitle")}</div>
-          <div className="text-xs text-text-dim">{t("seasonPredictionsCount", { chosen, total: picks.length })}</div>
+          <div className="text-xs text-text-dim">
+            {hiddenNote ? t("seasonPredictionsHidden") : t("seasonPredictionsCount", { chosen, total: picks.length })}
+          </div>
         </div>
         <ChevronDownIcon className={`h-4 w-4 flex-shrink-0 text-text-dim transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
         <div className="flex flex-col gap-2 border-t border-border px-3 py-3">
-          {picks.map((pick) => (
+          {hiddenNote && <div className="px-1 text-[12px] leading-relaxed text-text-dim">{hiddenNote}</div>}
+          {!hiddenNote && picks.map((pick) => (
             <PickRow
               key={pick.key}
               // Tant que c'est modifiable, chaque ligne ouvre directement la modification de ce prono.
@@ -82,6 +92,26 @@ export function SeasonPredictionsAccordion({
                 ) : (
                   <div className="text-[12px] text-text-dim">{t("seasonPredictionsNone")}</div>
                 )
+              }
+            />
+          ))}
+          {revealedPepites.map((pepite) => (
+            <PickRow
+              key={`pepite-${pepite.sex}`}
+              href={null}
+              showPencil={false}
+              editLabel={tGlobes("pickerEdit")}
+              label={
+                <>
+                  <span className="w-5 flex-shrink-0 text-center">❄️</span>
+                  {tClassement("playerPepiteLabel", { sex: pepite.sex })}
+                </>
+              }
+              value={
+                <div className="flex min-w-0 items-center gap-1.5 text-[13px] font-semibold text-ice">
+                  {pepite.nationCode && <span>{nationFlagEmoji(pepite.nationCode)}</span>}
+                  <span className="truncate">{pepite.name}</span>
+                </div>
               }
             />
           ))}
