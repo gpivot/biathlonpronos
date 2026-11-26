@@ -1814,3 +1814,8 @@ autres : place dans la course, barre proportionnelle aux points rapportés, poin
   `getRaceResult` sans la place parmi les pronostiqueurs (`withPlayerRank: false`).
 - Pop-up d'un joueur sur la page d'une course : la Pépite révélée y est ajoutée (encadré « Sa Pépite
   cachée est révélée ! »), pour expliquer l'écart entre la somme des choix et le total.
+
+**Pépite et ×2 (26/11/2026).** Les points de la Pépite révélée sont doublés quand le joueur a posé
+son bonus ×2 perso sur la course, ou sur une étape à coefficient ×2 (Mondiaux/JO), sans cumul.
+Ça farte, Team Nation et Fête nationale ne s'y appliquent pas (à confirmer). Les courses déjà notées
+ne changent pas tant qu'on ne les renote pas dans l'admin.
