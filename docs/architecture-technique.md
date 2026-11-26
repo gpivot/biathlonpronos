@@ -1820,3 +1820,22 @@ autres : place dans la course, barre proportionnelle aux points rapportés, poin
 son bonus ×2 perso sur la course, ou sur une étape à coefficient ×2 (Mondiaux/JO), sans cumul.
 Ça farte, Team Nation et Fête nationale ne s'y appliquent pas (à confirmer). Les courses déjà notées
 ne changent pas tant qu'on ne les renote pas dans l'admin.
+
+## « % des joueurs » par biathlète (26/11/2026)
+
+- Sur la page d'une course, chaque biathlète (nation en relais) a en fond de ligne un dégradé bleu
+  glacier proportionnel à la part des joueurs qui l'ont choisi, dans le style des barres de points
+  de la fiche joueur (l'or reste réservé aux points). Le chiffre n'est pas affiché : une bulle
+  « 62 % ont déjà choisi ce biathlète » (« cette biathlète », « cette nation ») apparaît au survol
+  de la ligne, ou au toucher sur mobile (`src/components/PickShareBar.tsx`). Choix de Guillaume
+  (variante B des maquettes, chiffre au survol seulement).
+- Affiché dans le formulaire (avant le départ), sur « Mon pronostic » pendant la course et sur le
+  classement de la course terminée. Recalculé à chaque affichage, donc à jour après chaque prono.
+- **Anti-copie** : avant le départ, la RLS (0018) cache toujours les pronostics des autres. Les
+  pourcentages sont calculés côté serveur avec la clé service_role (`src/lib/pickSharesData.ts`) et
+  seuls des totaux sortent du serveur, à partir de `PICK_SHARE_MIN_PLAYERS` = 20 pronostics
+  (`src/lib/pickShares.ts`), pour qu'un % ne trahisse pas le prono d'un joueur ; en dessous, une
+  ligne indique le seuil. Après le départ, affichés quel que soit le nombre de joueurs. Pas de
+  migration. Seuil de 20 : **à confirmer**.
+- Un joueur compte une fois par biathlète choisi (la somme dépasse 100 % en individuel) ; les
+  invités comptent comme les autres joueurs.

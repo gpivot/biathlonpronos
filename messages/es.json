@@ -624,6 +624,11 @@
     "offStartNationWarning": "{nation} no está en la lista de salida de este relevo: elige otra nación, si no, tu pronóstico no te dará puntos."
   },
   "PredictionForm": {
+    "pickShare_H": "El {pct} % ya ha elegido a este biatleta",
+    "pickShare_F": "El {pct} % ya ha elegido a esta biatleta",
+    "pickShare_nation": "El {pct} % ya ha elegido esta nación",
+    "pickSharesInfo": "La barra azul muestra el porcentaje de jugadores que han hecho esta elección ({count} pronósticos): pasa el ratón o toca una línea para ver el %.",
+    "pickSharesPending": "El % de jugadores por elección se mostrará a partir de {min} pronósticos ({count} por ahora).",
     "chooseThree": "Elige 3 biatletas",
     "chooseNation": "Elige una nación",
     "loginRequired": "Inicia sesión para confirmar tu pronóstico.",

@@ -624,6 +624,11 @@
     "offStartNationWarning": "{nation} non è nella lista di partenza di questa staffetta: scegli un'altra nazione, altrimenti il tuo pronostico non ti darà punti."
   },
   "PredictionForm": {
+    "pickShare_H": "Il {pct}% ha già scelto questo biatleta",
+    "pickShare_F": "Il {pct}% ha già scelto questa biatleta",
+    "pickShare_nation": "Il {pct}% ha già scelto questa nazione",
+    "pickSharesInfo": "La barra blu mostra la quota di giocatori che hanno fatto questa scelta ({count} pronostici): passa il mouse o tocca una riga per vedere la %.",
+    "pickSharesPending": "La % di giocatori per scelta apparirà da {min} pronostici ({count} finora).",
     "chooseThree": "Scegli 3 biatleti",
     "chooseNation": "Scegli una nazione",
     "loginRequired": "Accedi per confermare il tuo pronostico.",

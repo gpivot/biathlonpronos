@@ -11,6 +11,7 @@ import { RuleInfoButton } from "./RuleInfoButton";
 import { filterBySearch } from "@/lib/searchFilter";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
+import { PickShareBar } from "@/components/PickShareBar";
 import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
 export type NationWithOdds = {
@@ -27,6 +28,8 @@ export function RelayPredictionForm({
   initialBonusX2,
   x2Eligible,
   x2UsesRemaining,
+  pickShares = null,
+  pickSharesNote = null,
 }: {
   raceId: string;
   format: string;
@@ -35,6 +38,9 @@ export function RelayPredictionForm({
   initialBonusX2: boolean;
   x2Eligible: boolean;
   x2UsesRemaining: number;
+  /** % des joueurs ayant choisi chaque nation (null : pas assez de pronostics, voir pickShares.ts). */
+  pickShares?: Record<string, number> | null;
+  pickSharesNote?: string | null;
 }) {
   const [selected, setSelected] = useState<string | null>(initialSelection);
   const [bonusX2, setBonusX2] = useState(initialBonusX2);
@@ -142,6 +148,7 @@ export function RelayPredictionForm({
       </div>
 
       <SearchField value={search} onChange={setSearch} placeholder={t("searchNation")} clearLabel={t("searchClear")} />
+      {pickSharesNote && <div className="-mt-1 px-1 text-[11px] leading-snug text-text-dim">{pickSharesNote}</div>}
 
       <div className="flex flex-col gap-2">
         {visibleNations.length === 0 && (
@@ -157,10 +164,13 @@ export function RelayPredictionForm({
               onClick={() => {
                 setSelected(n.nation_code);
               }}
-              className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
+              className={`group relative isolate flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
                 isSelected ? "border-ice bg-ice-soft" : "border-border bg-card"
               }`}
             >
+              {pickShares && (
+                <PickShareBar pct={pickShares[n.nation_code] ?? 0} label={t("pickShare_nation", { pct: pickShares[n.nation_code] ?? 0 })} />
+              )}
               <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{nationFlagEmoji(n.nation_code)}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{n.name}</span>

@@ -624,6 +624,11 @@
     "offStartNationWarning": "{nation} is not on the start list for this relay: choose another nation, otherwise your prediction will score no points."
   },
   "PredictionForm": {
+    "pickShare_H": "{pct}% have already picked this biathlete",
+    "pickShare_F": "{pct}% have already picked this biathlete",
+    "pickShare_nation": "{pct}% have already picked this nation",
+    "pickSharesInfo": "The blue bar shows the share of players who made this pick ({count} predictions): hover or tap a line to see the %.",
+    "pickSharesPending": "The % of players per pick will show from {min} predictions ({count} so far).",
     "chooseThree": "Pick 3 biathletes",
     "chooseNation": "Pick a nation",
     "loginRequired": "Log in to confirm your prediction.",

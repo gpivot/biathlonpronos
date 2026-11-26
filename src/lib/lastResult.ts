@@ -47,6 +47,8 @@ export interface LastResultPick {
 
 /** Une ligne du classement de la course, avec les points du barème (cote × rang). */
 export interface RaceResultRow {
+  /** athlete_id (nation_code en relais) : sert au « % des joueurs ». */
+  key: string;
   rank: number;
   name: string;
   nationCode: string;
@@ -334,6 +336,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   const rankMultipliers = relay ? RELAY_RANK_MULTIPLIERS : RANK_MULTIPLIERS;
   const predictedKeys = new Set<string>(prediction?.nation_code ? [prediction.nation_code] : prediction?.athlete_ids ?? []);
   const scoredRows = resultRows.map((r) => ({
+    key: (r.athlete_id ?? r.nation_code) as string,
     rank: r.rank,
     name: rowName(r),
     nationCode: rowNation(r),
