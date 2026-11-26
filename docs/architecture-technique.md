@@ -1791,3 +1791,11 @@ révélées.
   (`src/lib/seasonChoices.ts`), utilisée par `getSeasonView`. Côté base : migration **0050**
   (policy « season_predictions: read all once closed », remplace celle de 0018) pour que l'API ne
   les donne pas non plus avant.
+
+**Mise à jour (Guillaume, 26/11/2026, validé)** : les globes d'un autre joueur sont visibles dès
+que **les siens** sont fermés, c'est-à-dire au départ de sa 1re course pronostiquée (règles 0047 et
+0048), au plus tard la mass start femmes du Grand-Bornand. Un invité (« Je teste le jeu ») n'a pas
+accès aux classements, donc ne peut pas copier. Côté app : `getSeasonPicksWindow` appelée pour ce
+joueur dans `getSeasonView` (seules ses courses parties sont lisibles, la date affichée est donc
+« au plus tard »). Côté base : migration **0051** (`season_picks_closes_at_for(saison, joueur)`,
+policy « season_predictions: read once player closed », remplace celle de 0050).

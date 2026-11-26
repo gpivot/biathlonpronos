@@ -478,8 +478,8 @@
     "myRankingTitle": "My ranking",
     "playerPepiteRevealed": "{sex, select, F {Women's Hidden Diamond revealed:} other {Men's Hidden Diamond revealed:}}",
     "playerPepiteLabel": "{sex, select, F {Women's Hidden Diamond} other {Men's Hidden Diamond}}",
-    "playerSeasonPicksHidden": "Their globes will appear on {date}, once nobody can change their season predictions anymore (just like a race, at the start).",
-    "playerSeasonPicksHiddenNoDate": "Their globes will appear once nobody can change their season predictions anymore."
+    "playerSeasonPicksHidden": "Their globes will appear when their first predicted race starts, on {date} at the latest (just like a race: visible once they can no longer change them).",
+    "playerSeasonPicksHiddenNoDate": "Their globes will appear when their first predicted race starts."
   },
   "Courses": {
     "title": "My season",

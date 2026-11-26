@@ -478,8 +478,8 @@
     "myRankingTitle": "Meine Platzierung",
     "playerPepiteRevealed": "{sex, select, F {Versteckter Rohdiamant Frauen aufgedeckt:} other {Versteckter Rohdiamant Männer aufgedeckt:}}",
     "playerPepiteLabel": "{sex, select, F {Versteckter Rohdiamant Frauen} other {Versteckter Rohdiamant Männer}}",
-    "playerSeasonPicksHidden": "Die Kugeln erscheinen am {date}, sobald niemand mehr seine Saisontipps ändern kann (wie bei einem Rennen, beim Start).",
-    "playerSeasonPicksHiddenNoDate": "Die Kugeln erscheinen, sobald niemand mehr seine Saisontipps ändern kann."
+    "playerSeasonPicksHidden": "Die Kugeln erscheinen beim Start des ersten getippten Rennens, spätestens am {date} (wie bei einem Rennen: sichtbar, sobald sie nicht mehr geändert werden können).",
+    "playerSeasonPicksHiddenNoDate": "Die Kugeln erscheinen beim Start des ersten getippten Rennens."
   },
   "Courses": {
     "title": "Meine Saison",

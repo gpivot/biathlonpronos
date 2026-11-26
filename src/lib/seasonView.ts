@@ -8,7 +8,7 @@ import { getCurrentStreak } from "./streakCounter";
 import { isPredictionOpen, predictionOpensOn } from "./predictionWindow";
 import { getPlayerCards, type PlayerCards } from "./bonusCards";
 import { areJokersApplied, loadSeasonJokers } from "./jokers";
-import { getSeasonPicksPublicAt } from "./seasonChoices";
+import { getSeasonPicksWindow } from "./seasonChoices";
 
 /** Une course effacée par les jokers de fin de saison, telle qu'affichée dans « Mon classement » (page Classement). */
 export interface JokerLine {
@@ -34,8 +34,8 @@ export interface SeasonJokers {
  * pronostic, son bonus ×2 et ses points, plus ses pronostics de saison (globes) et ses Pépites cachées.
  * Sert aussi au pop-up d'un joueur du Classement (`isOwner` false) : on n'y montre que ce qui
  * ne permet pas de copier, c'est-à-dire les pronostics des courses déjà parties, les globes
- * une fois les pronostics de saison fermés pour tout le monde (mass start femmes du
- * Grand-Bornand, cf. seasonPicksPublicAt) et une Pépite une fois révélée (bonus obtenu). Les règles
+ * une fois ses pronostics de saison fermés (départ de sa 1re course pronostiquée, au plus tard
+ * le Grand-Bornand) et une Pépite une fois révélée (bonus obtenu). Les règles
  * d'accès Supabase (migration 0018) appliquent la même chose côté base.
  */
 
@@ -90,7 +90,10 @@ export async function getSeasonView(
   isOwner = true
 ): Promise<SeasonView> {
   // Globes d'un autre joueur : seulement une fois fermés pour tout le monde (pas de copie possible).
-  const publicAt = isOwner ? null : await getSeasonPicksPublicAt(supabase, season.id);
+  // (Guillaume, 26/11/2026) : dès que les siens sont fermés, c'est-à-dire au départ de sa 1re course
+  // pronostiquée, au plus tard la mass start femmes du Grand-Bornand (cf. getSeasonPicksWindow).
+  // Seules ses courses déjà parties sont lisibles ici : closesAt est donc une date « au plus tard ».
+  const publicAt = isOwner || !userId ? null : (await getSeasonPicksWindow(supabase, season.id, userId, now)).closesAt;
   const showSeasonPicks = isOwner || (publicAt !== null && publicAt <= now);
 
   const [{ data: predictionRows }, { data: ledger }, { data: seasonPredictions }, { data: pepiteRows }, streak, cards] = await Promise.all([
