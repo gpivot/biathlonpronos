@@ -1839,3 +1839,19 @@ ne changent pas tant qu'on ne les renote pas dans l'admin.
   migration. Seuil de 20 : **à confirmer**.
 - Un joueur compte une fois par biathlète choisi (la somme dépasse 100 % en individuel) ; les
   invités comptent comme les autres joueurs.
+
+## Page Règles en deux niveaux (26/11/2026)
+
+Pour rendre le jeu plus facile à comprendre (suite au comparatif des jeux concurrents), la page
+`/regles` est découpée en deux niveaux :
+
+- **« L'essentiel en 1 minute »**, toujours visible : 5 étapes (3 biathlètes, la cote, seul le
+  Top 10 marque avec le barème, les bonus de combinaison, une nation pour les relais), l'exemple
+  de résultat commenté et un bouton vers les courses.
+- **« Pour aller plus loin »** : 6 chapitres repliés (`<details>`, sans JavaScript) — Quand
+  pronostiquer, Cotes/poursuite/relais, Les bonus, Les courses spéciales, La saison, Le
+  classement. Chaque chapitre affiche une phrase d'accroche et une étiquette dorée qui dit quand
+  la règle entre en jeu (ex. « ×2 dès le début, cartes après 10 courses avec des points »).
+
+Le contenu des règles n'a pas changé (mêmes textes et mêmes constantes du moteur de scoring) ;
+le sommaire en pastilles est supprimé, les en-têtes repliables le remplacent.

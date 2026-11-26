@@ -19,10 +19,14 @@ import {
 // avec un picto, une phrase courte et un visuel (barème en tuiles, frise, exemple chiffré). Les
 // chiffres viennent des constantes du moteur de scoring, pour ne jamais diverger du calcul réel.
 
-const CHAPTERS = ["basics", "boosts", "special", "season", "standings"] as const;
+// Deux niveaux (26/11/2026) : « L'essentiel » toujours visible (ce qu'il faut pour jouer sa
+// 1re course), puis « Pour aller plus loin » en chapitres repliés, chacun avec le moment où il
+// entre en jeu dans la saison. Objectif : ne pas noyer le nouveau joueur sous toutes les règles.
+const CHAPTERS = ["when", "odds", "boosts", "special", "season", "standings"] as const;
 type Chapter = (typeof CHAPTERS)[number];
 const CHAPTER_EMOJI: Record<Chapter, string> = {
-  basics: "🎯",
+  when: "🗓️",
+  odds: "📊",
   boosts: "⚡",
   special: "⚠️",
   season: "🌐",
@@ -78,68 +82,61 @@ export default async function ReglesPage() {
           ))}
         </div>
 
-        <nav aria-label={t("tocTitle")} className="flex flex-col gap-2">
-          <div className="text-center font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-text-dim">
-            {t("tocTitle")}
+        {/* ───────────── L'essentiel ───────────── */}
+        <section id="essentiel" className="flex scroll-mt-4 flex-col gap-4">
+          <div className="text-center">
+            <div className="font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-ice">{t("essentialEyebrow")}</div>
+            <h2 className="font-display text-2xl font-extrabold leading-tight">{t("essentialTitle")}</h2>
           </div>
-          <div className="flex flex-wrap justify-center gap-2">
-            {CHAPTERS.map((c, i) => (
-              <a
-                key={c}
-                href={`#${c}`}
-                className="rounded-full border border-ice/40 bg-ice-soft px-3 py-1.5 font-display text-[12px] font-bold text-ice hover:bg-ice hover:text-on-ice"
-              >
-                {i + 1}. {t(`ch_${c}_title`)}
-              </a>
-            ))}
-          </div>
-        </nav>
 
-        {/* ───────────── 1. Les bases ───────────── */}
-        <ChapterBlock id="basics" index={1} eyebrow={t("ch_basics_eyebrow")} title={t("ch_basics_title")}>
-          <RuleCard emoji="🎯" title={t("pickTitle")} body={t("pickBody")}>
-            <Label>{t("scaleTitle")}</Label>
-            <div className="grid grid-cols-5 gap-1.5 text-center">
-              {Object.entries(RANK_MULTIPLIERS).map(([r, m]) => (
-                <div key={r} className={`rounded-xl py-1.5 ${Number(r) <= 3 ? "bg-gold-soft" : "bg-ice-soft"}`}>
-                  <div className="text-[10px] text-text-dim">{rank(Number(r))}</div>
-                  <div className={`font-display text-sm font-extrabold ${Number(r) <= 3 ? "text-gold" : "text-ice"}`}>×{m}</div>
+          <ol className="flex flex-col gap-3">
+            <EssentialStep n={1} emoji="🎯" title={t("essential1Title")} body={t("essential1Body")} />
+            <EssentialStep n={2} emoji="📊" title={t("essential2Title")} body={t("essential2Body")}>
+              <div className="flex flex-col gap-1">
+                <div className="h-2.5 rounded-full bg-gradient-to-r from-ice via-blue to-gold" />
+                <div className="flex justify-between text-[11px]">
+                  <span>
+                    <b className="font-display text-ice">{t("oddsFavorite")}</b> <span className="text-text-dim">· {t("oddsLow")}</span>
+                  </span>
+                  <span>
+                    <span className="text-text-dim">{t("oddsHigh")} ·</span> <b className="font-display text-gold">{t("oddsOutsider")}</b>
+                  </span>
                 </div>
-              ))}
-            </div>
-            <p className="text-[12px] text-text-dim">{t("scaleHint")}</p>
-            <Example>{t("pickExample")}</Example>
-          </RuleCard>
-
-          <RuleCard emoji="🗓️" title={t("whenTitle")} body={t("whenBody")}>
-            <ul className="flex flex-col gap-1.5 text-[12px] leading-relaxed text-text-dim">
-              <li>🔓 {t("whenOpen")}</li>
-              <li>👥 {t("whenField")}</li>
-              <li>⏱️ {t("whenQualified")}</li>
-              <li>🔒 {t("whenClose")}</li>
-            </ul>
-          </RuleCard>
-
-          <RuleCard emoji="🎁" title={t("comboTitle")} body={t("comboBody")}>
-            <div className="grid grid-cols-2 gap-2">
-              {(
-                [
-                  ["comboPodium", COMBINATION_BONUS.podium],
-                  ["comboTop5", COMBINATION_BONUS.top5],
-                  ["comboTop10", COMBINATION_BONUS.top10],
-                  ["comboPerfect", COMBINATION_BONUS.pronoParfait],
-                ] as const
-              ).map(([key, pts]) => (
-                <div key={key} className="flex flex-col gap-0.5 rounded-xl border border-green/40 bg-green/10 px-3 py-2">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-display text-[13px] font-extrabold">{t(`${key}Name`)}</span>
-                    <span className="font-display text-base font-extrabold text-green">+{pts}</span>
+              </div>
+            </EssentialStep>
+            <EssentialStep n={3} emoji="🏁" title={t("essential3Title")} body={t("essential3Body")}>
+              <div className="grid grid-cols-5 gap-1.5 text-center">
+                {Object.entries(RANK_MULTIPLIERS).map(([r, m]) => (
+                  <div key={r} className={`rounded-xl py-1.5 ${Number(r) <= 3 ? "bg-gold-soft" : "bg-ice-soft"}`}>
+                    <div className="text-[10px] text-text-dim">{rank(Number(r))}</div>
+                    <div className={`font-display text-sm font-extrabold ${Number(r) <= 3 ? "text-gold" : "text-ice"}`}>×{m}</div>
                   </div>
-                  <span className="text-[11px] leading-snug text-text-dim">{t(`${key}Desc`)}</span>
-                </div>
-              ))}
-            </div>
-          </RuleCard>
+                ))}
+              </div>
+              <Example>{t("pickExample")}</Example>
+            </EssentialStep>
+            <EssentialStep n={4} emoji="🎁" title={t("essential4Title")} body={t("essential4Body")}>
+              <div className="grid grid-cols-2 gap-2">
+                {(
+                  [
+                    ["comboPodium", COMBINATION_BONUS.podium],
+                    ["comboTop5", COMBINATION_BONUS.top5],
+                    ["comboTop10", COMBINATION_BONUS.top10],
+                    ["comboPerfect", COMBINATION_BONUS.pronoParfait],
+                  ] as const
+                ).map(([key, pts]) => (
+                  <div key={key} className="flex flex-col gap-0.5 rounded-xl border border-green/40 bg-green/10 px-3 py-2">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className="font-display text-[13px] font-extrabold">{t(`${key}Name`)}</span>
+                      <span className="font-display text-base font-extrabold text-green">+{pts}</span>
+                    </div>
+                    <span className="text-[11px] leading-snug text-text-dim">{t(`${key}Desc`)}</span>
+                  </div>
+                ))}
+              </div>
+            </EssentialStep>
+            <EssentialStep n={5} emoji="🤝" title={t("essential5Title")} body={t("essential5Body")} />
+          </ol>
 
           {/* Capture commentée reprise de l'accueil visiteur (mêmes pastilles et légendes). */}
           <div className="grid items-center gap-6 rounded-2xl border border-border bg-card/60 p-4 sm:grid-cols-2 sm:p-6">
@@ -159,18 +156,38 @@ export default async function ReglesPage() {
             <ScoreMockup />
           </div>
 
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-ice/40 bg-ice-soft p-4 text-center">
+            <p className="text-[14px] font-semibold leading-relaxed">✅ {t("essentialEnd")}</p>
+            <Link
+              href="/courses"
+              className="rounded-2xl bg-gradient-to-r from-blue to-teal px-6 py-3 font-display text-[14px] font-extrabold text-white hover:brightness-110"
+            >
+              {t("finalCta")} →
+            </Link>
+          </div>
+        </section>
+
+        {/* ───────────── Pour aller plus loin ───────────── */}
+        <section id="plus-loin" className="flex scroll-mt-4 flex-col gap-3">
+          <div className="text-center">
+            <div className="font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-text-dim">{t("moreEyebrow")}</div>
+            <h2 className="font-display text-2xl font-extrabold leading-tight">{t("moreTitle")}</h2>
+            <p className="mx-auto mt-1 max-w-md text-[13px] text-text-dim">{t("moreIntro")}</p>
+          </div>
+
+        <ChapterBlock id="when" title={t("ch_when_title")} teaser={t("ch_when_teaser")} tag={t("ch_when_tag")}>
+          <RuleCard emoji="🗓️" title={t("whenTitle")} body={t("whenBody")}>
+            <ul className="flex flex-col gap-1.5 text-[12px] leading-relaxed text-text-dim">
+              <li>🔓 {t("whenOpen")}</li>
+              <li>👥 {t("whenField")}</li>
+              <li>⏱️ {t("whenQualified")}</li>
+              <li>🔒 {t("whenClose")}</li>
+            </ul>
+          </RuleCard>
+        </ChapterBlock>
+
+        <ChapterBlock id="odds" title={t("ch_odds_title")} teaser={t("ch_odds_teaser")} tag={t("ch_odds_tag")}>
           <RuleCard emoji="📊" title={t("oddsTitle")} body={t("oddsBody")}>
-            <div className="flex flex-col gap-1">
-              <div className="h-2.5 rounded-full bg-gradient-to-r from-ice via-blue to-gold" />
-              <div className="flex justify-between text-[11px]">
-                <span>
-                  <b className="font-display text-ice">{t("oddsFavorite")}</b> <span className="text-text-dim">· {t("oddsLow")}</span>
-                </span>
-                <span>
-                  <span className="text-text-dim">{t("oddsHigh")} ·</span> <b className="font-display text-gold">{t("oddsOutsider")}</b>
-                </span>
-              </div>
-            </div>
             <div className="flex flex-wrap gap-1.5">
               {(["sprint", "poursuite", "individuel", "mass_start"] as const).map((f) => (
                 <span key={f} className="rounded-full border border-border bg-card2 px-2.5 py-1 font-display text-[11px] font-bold">
@@ -208,7 +225,7 @@ export default async function ReglesPage() {
         </ChapterBlock>
 
         {/* ───────────── 2. Les bonus ───────────── */}
-        <ChapterBlock id="boosts" index={2} eyebrow={t("ch_boosts_eyebrow")} title={t("ch_boosts_title")}>
+        <ChapterBlock id="boosts" title={t("ch_boosts_title")} teaser={t("ch_boosts_teaser")} tag={t("ch_boosts_tag")}>
           <div className="grid gap-4 sm:grid-cols-2">
             <RuleCard emoji="⚡" title={t("x2Title")} body={t("x2Body")}>
               <div className="flex items-center gap-2">
@@ -274,8 +291,8 @@ export default async function ReglesPage() {
         </ChapterBlock>
 
         {/* ───────────── 3. Les courses spéciales ───────────── */}
-        <ChapterBlock id="special" index={3} eyebrow={t("ch_special_eyebrow")} title={t("ch_special_title")}>
-          <p className="-mt-2 text-center text-[13px] text-text-dim">{t("specialIntro")}</p>
+        <ChapterBlock id="special" title={t("ch_special_title")} teaser={t("ch_special_teaser")} tag={t("ch_special_tag")}>
+          <p className="text-center text-[13px] text-text-dim">{t("specialIntro")}</p>
           <div className="grid gap-3 sm:grid-cols-2">
             <SpecialCard emoji="🎯" name={tFormat("specialRule_tour_de_pena")} value={`${TOUR_DE_PENA_MALUS_PER_LAP} pts`} body={t("penaDesc")} />
             <SpecialCard emoji="🌫️" name={tFormat("specialRule_brouillard")} value={t("fogValue")} body={t("fogDesc")} />
@@ -307,7 +324,7 @@ export default async function ReglesPage() {
         </ChapterBlock>
 
         {/* ───────────── 4. La saison ───────────── */}
-        <ChapterBlock id="season" index={4} eyebrow={t("ch_season_eyebrow")} title={t("ch_season_title")}>
+        <ChapterBlock id="season" title={t("ch_season_title")} teaser={t("ch_season_teaser")} tag={t("ch_season_tag")}>
           <RuleCard emoji="🌐" title={t("globesTitle")} body={t("globesBody")}>
             <div className="grid grid-cols-2 gap-2">
               {(["women", "men"] as const).map((sex) => (
@@ -359,7 +376,7 @@ export default async function ReglesPage() {
         </ChapterBlock>
 
         {/* ───────────── 5. Le classement ───────────── */}
-        <ChapterBlock id="standings" index={5} eyebrow={t("ch_standings_eyebrow")} title={t("ch_standings_title")}>
+        <ChapterBlock id="standings" title={t("ch_standings_title")} teaser={t("ch_standings_teaser")} tag={t("ch_standings_tag")}>
           <div className="grid gap-3 sm:grid-cols-3">
             <StandingCard icon={<LeaderBib className="h-9 w-9" />} title={t("generalTitle")} body={t("generalBody")} />
             <StandingCard icon={<StageLeaderBib className="h-9 w-9" />} title={t("stageTitle")} body={t("stageBody")} />
@@ -388,49 +405,74 @@ export default async function ReglesPage() {
           </div>
         </ChapterBlock>
 
+        </section>
+
         <div className="flex flex-col items-center gap-3 pt-2 text-center">
           <h2 className="font-display text-2xl font-extrabold">{t("finalTitle")}</h2>
           <p className="max-w-sm text-[13px] text-text-dim">{t("finalBody")}</p>
-          <Link
-            href="/courses"
-            className="rounded-2xl bg-gradient-to-r from-blue to-teal px-7 py-3.5 font-display text-[15px] font-extrabold text-white shadow-[0_10px_40px_-10px_oklch(0.62_0.19_255/0.7)] hover:brightness-110"
-          >
-            {t("finalCta")} →
-          </Link>
         </div>
       </div>
     </div>
   );
 }
 
+/** Chapitre replié de « Pour aller plus loin » : titre, phrase d'accroche et moment où il entre en jeu. */
 function ChapterBlock({
   id,
-  index,
-  eyebrow,
   title,
+  teaser,
+  tag,
   children,
 }: {
   id: Chapter;
-  index: number;
-  eyebrow: string;
   title: string;
+  teaser: string;
+  tag: string;
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="flex scroll-mt-4 flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue to-teal font-display text-lg font-extrabold text-white">
-          {index}
+    <details id={id} className="group scroll-mt-4 rounded-2xl border border-border bg-card/60">
+      <summary className="flex cursor-pointer list-none items-center gap-3 p-4 [&::-webkit-details-marker]:hidden">
+        <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-xl">{CHAPTER_EMOJI[id]}</span>
+        <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="font-display text-[16px] font-extrabold leading-tight">{title}</span>
+          <span className="text-[12px] leading-snug text-text-dim">{teaser}</span>
+          <span className="mt-0.5 self-start rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold text-gold">{tag}</span>
         </span>
-        <div>
-          <div className="font-display text-[11px] font-semibold uppercase tracking-[0.15em] text-text-dim">
-            {CHAPTER_EMOJI[id]} {eyebrow}
-          </div>
-          <h2 className="font-display text-2xl font-extrabold leading-tight">{title}</h2>
-        </div>
+        <span aria-hidden className="text-text-dim transition-transform group-open:rotate-180">▾</span>
+      </summary>
+      <div className="flex flex-col gap-4 px-3 pb-4 sm:px-4">{children}</div>
+    </details>
+  );
+}
+
+/** Une étape de « L'essentiel » : numéro, titre, phrase courte et visuel éventuel. */
+function EssentialStep({
+  n,
+  emoji,
+  title,
+  body,
+  children,
+}: {
+  n: number;
+  emoji: string;
+  title: string;
+  body: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <li className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4">
+      <div className="flex items-center gap-2.5">
+        <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue to-teal font-display text-sm font-extrabold text-white">
+          {n}
+        </span>
+        <h3 className="font-display text-base font-extrabold leading-tight">
+          {emoji} {title}
+        </h3>
       </div>
+      <p className="text-[13px] leading-relaxed text-text-dim">{body}</p>
       {children}
-    </section>
+    </li>
   );
 }
 
