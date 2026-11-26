@@ -624,6 +624,11 @@
     "offStartNationWarning": "{nation} steht nicht auf der Startliste dieser Staffel: Wähle eine andere Nation, sonst bringt dein Tipp keine Punkte."
   },
   "PredictionForm": {
+    "pickShare_H": "{pct} % haben diesen Biathleten schon gewählt",
+    "pickShare_F": "{pct} % haben diese Biathletin schon gewählt",
+    "pickShare_nation": "{pct} % haben diese Nation schon gewählt",
+    "pickSharesInfo": "Der blaue Balken zeigt den Anteil der Spieler mit dieser Wahl ({count} Tipps): Maus darüber oder Zeile antippen, um den % zu sehen.",
+    "pickSharesPending": "Der Anteil der Spieler pro Wahl wird ab {min} Tipps angezeigt (bisher {count}).",
     "chooseThree": "Wähle 3 Biathleten",
     "chooseNation": "Wähle eine Nation",
     "loginRequired": "Melde dich an, um deinen Tipp zu bestätigen.",

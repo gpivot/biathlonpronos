@@ -624,6 +624,11 @@
     "offStartNationWarning": "{nation} n'est pas au départ de ce relais : choisis une autre nation, sinon ton pronostic ne te rapportera aucun point."
   },
   "PredictionForm": {
+    "pickShare_H": "{pct} % ont déjà choisi ce biathlète",
+    "pickShare_F": "{pct} % ont déjà choisi cette biathlète",
+    "pickShare_nation": "{pct} % ont déjà choisi cette nation",
+    "pickSharesInfo": "La barre bleue montre la part des joueurs ayant fait ce choix ({count} pronostics) : passe la souris ou appuie sur une ligne pour voir le %.",
+    "pickSharesPending": "Le % de joueurs par choix s'affichera à partir de {min} pronostics ({count} pour l'instant).",
     "chooseThree": "Choisis 3 biathlètes",
     "chooseNation": "Choisis une nation",
     "loginRequired": "Connecte-toi pour valider ton pronostic.",

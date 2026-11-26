@@ -12,6 +12,7 @@ import { fullAthleteName, shortAthleteName } from "@/lib/athleteName";
 import { filterBySearch } from "@/lib/searchFilter";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
+import { PickShareBar } from "@/components/PickShareBar";
 import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
 
 export type AthleteWithOdds = {
@@ -41,6 +42,9 @@ export function PredictionForm({
   startOrder = {},
   startGaps = {},
   pickedOffList = [],
+  pickShares = null,
+  pickSharesNote = null,
+  pickShareSex = "H",
 }: {
   raceId: string;
   format: string;
@@ -68,6 +72,12 @@ export function PredictionForm({
    * Biathlètes du pronostic enregistré absents de la liste de départ : jamais retirés d'office,
    * affichés avec la mention « pas au départ » pour que le joueur les remplace.
    */
+  /** % des joueurs ayant choisi chaque biathlète (null : pas assez de pronostics, voir pickShares.ts). */
+  pickShares?: Record<string, number> | null;
+  /** Légende des % (ou seuil pas encore atteint), sous la recherche. */
+  pickSharesNote?: string | null;
+  /** Accord de la bulle du % (« ce biathlète » / « cette biathlète »). */
+  pickShareSex?: "H" | "F";
   pickedOffList?: AthleteWithOdds[];
 }) {
   const [selected, setSelected] = useState<string[]>(initialSelection);
@@ -335,6 +345,7 @@ export function PredictionForm({
       </div>
 
       <SearchField value={search} onChange={setSearch} placeholder={t("searchAthlete")} clearLabel={t("searchClear")} />
+      {pickSharesNote && <div className="-mt-1 px-1 text-[11px] leading-snug text-text-dim">{pickSharesNote}</div>}
 
       <div className="flex flex-col gap-2">
         {visibleAthletes.length === 0 && (
@@ -351,7 +362,7 @@ export function PredictionForm({
               key={a.athlete_id}
               onClick={() => toggle(a.athlete_id)}
               disabled={isPepite && !isSelected}
-              className={`flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
+              className={`group relative isolate flex items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-colors ${
                 isPepite && !isSelected
                   ? "border-border bg-card opacity-40"
                   : isCaFarteTarget
@@ -361,6 +372,12 @@ export function PredictionForm({
                     : "border-border bg-card"
               }`}
             >
+              {pickShares && (
+                <PickShareBar
+                  pct={pickShares[a.athlete_id] ?? 0}
+                  label={t(`pickShare_${pickShareSex}`, { pct: pickShares[a.athlete_id] ?? 0 })}
+                />
+              )}
               {sortBy === "start" && (
                 <div className="w-6 flex-shrink-0 text-center font-display text-xs font-bold text-text-dim">
                   {startOrder[a.athlete_id] ?? "–"}

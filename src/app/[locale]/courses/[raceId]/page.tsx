@@ -32,6 +32,9 @@ import { PepiteReveal } from "@/components/PepiteReveal";
 import { HelpButton } from "@/components/HelpButton";
 import { BonusPointsBadge, BonusQuestions } from "@/components/BonusQuestions";
 import { getRaceBonusQuestions } from "@/lib/bonusQuestions";
+import { getPickShares } from "@/lib/pickSharesData";
+import { PICK_SHARE_MIN_PLAYERS } from "@/lib/pickShares";
+import { PickShareBar } from "@/components/PickShareBar";
 
 export const dynamic = "force-dynamic";
 
@@ -43,11 +46,12 @@ export default async function RacePage({
   const { locale, raceId } = await params;
   const supabase = createClient();
   // Lancés ensemble : chaque lecture Supabase est un aller-retour réseau.
-  const [t, tFormat, tSex, tClassement, { data: race }, { now }, { data: authData }, adminProfile] = await Promise.all([
+  const [t, tFormat, tSex, tClassement, tForm, { data: race }, { now }, { data: authData }, adminProfile] = await Promise.all([
     getTranslations("Race"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
     getTranslations("Classement"),
+    getTranslations("PredictionForm"),
     supabase.from("races").select("*, stages(*)").eq("id", raceId).single(),
     getClock(),
     getAuthUser(),
@@ -205,7 +209,7 @@ export default async function RacePage({
   // Poursuite / mass start : seuls les qualifiés prennent le départ, dans l'ordre de la liste.
   // Sprint / individuel : top 60 du général à l'ouverture, puis liste officielle IBU.
   // Lectures indépendantes les unes des autres : lancées en même temps plutôt qu'à la suite.
-  const [startList, raceResult, players, ongoingBoard, bonusQuestions, { data: seasonRaces }] = await Promise.all([
+  const [startList, raceResult, players, ongoingBoard, bonusQuestions, { data: seasonRaces }, pickShareData] = await Promise.all([
     displayStatus === "upcoming" ? getStartList(supabase, race) : Promise.resolve({ status: "open" as const }),
     // Course notée : pronostic détaillé (place et points par choix) et classement avec les points du barème.
     displayStatus === "finished" ? getRaceResult(supabase, race.id, user?.id ?? null) : Promise.resolve(null),
@@ -219,7 +223,20 @@ export default async function RacePage({
       .select("id, locks_at, stages!inner(season_id)")
       .eq("stages.season_id", stage.season_id)
       .order("locks_at", { ascending: true }),
+    // % des joueurs par choix : avant le départ seulement à partir de PICK_SHARE_MIN_PLAYERS pronostics.
+    getPickShares(race.id, displayStatus !== "upcoming"),
   ]);
+  const pickShares = pickShareData?.visible ? pickShareData.shares : null;
+  const pickShareKey = isRelay ? "pickShare_nation" : race.sex === "F" ? "pickShare_F" : "pickShare_H";
+  const shareOf = (key: string | null | undefined) =>
+    pickShares && key ? { pct: pickShares[key] ?? 0, label: tForm(pickShareKey, { pct: pickShares[key] ?? 0 }) } : null;
+  const pickSharesNote = pickShareData
+    ? pickShareData.visible
+      ? tForm("pickSharesInfo", { count: pickShareData.total })
+      : pickShareData.total > 0
+        ? tForm("pickSharesPending", { min: PICK_SHARE_MIN_PLAYERS, count: pickShareData.total })
+        : null
+    : null;
   const startOrder: Record<string, number> = startList.status === "known" ? startList.order : {};
   const startGaps: Record<string, number> = startList.status === "known" ? startList.gaps : {};
   const startListPending = startList.status === "pending";
@@ -442,6 +459,8 @@ export default async function RacePage({
                   initialBonusX2={initialBonusX2}
                   x2Eligible={x2Eligible}
                   x2UsesRemaining={x2UsesRemaining}
+                  pickShares={pickShares}
+                  pickSharesNote={pickSharesNote}
                 />
               ) : (
                 <PredictionForm
@@ -462,6 +481,9 @@ export default async function RacePage({
                   startOrder={race.format === "poursuite" ? startOrder : {}}
                   startGaps={startGaps}
                   pickedOffList={pickedOffList}
+                  pickShares={pickShares}
+                  pickSharesNote={pickSharesNote}
+                  pickShareSex={race.sex === "F" ? "F" : "H"}
                 />
               )}
               {/* Premier pronostic d'un invité (« Je joue ») : 3 pop-ups pour apprendre à jouer. */}
@@ -481,11 +503,11 @@ export default async function RacePage({
                   {t("noPredictionMessage")}
                 </div>
               ) : isRelay ? (
-                <NationPickRow nation={nationsWithOdds.find((n) => n.nation_code === initialNationSelection)} />
+                <NationPickRow nation={nationsWithOdds.find((n) => n.nation_code === initialNationSelection)} share={shareOf(initialNationSelection)} />
               ) : (
                 <div className="flex flex-col gap-2">
                   {initialAthleteSelection.map((athleteId) => (
-                    <AthletePickRow key={athleteId} athlete={athletesWithOdds.find((a) => a.athlete_id === athleteId)} />
+                    <AthletePickRow key={athleteId} athlete={athletesWithOdds.find((a) => a.athlete_id === athleteId)} share={shareOf(athleteId)} />
                   ))}
                 </div>
               )}
@@ -617,11 +639,11 @@ export default async function RacePage({
                   {results.length > resultsTopCount ? (
                     <ShowMore
                       label={t("showFullRanking")}
-                      collapsed={results.filter((r) => r.rank <= resultsTopCount || r.mine).map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
-                      expanded={results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)}
+                      collapsed={results.filter((r) => r.rank <= resultsTopCount || r.mine).map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} share={shareOf(row.key)} />)}
+                      expanded={results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} share={shareOf(row.key)} />)}
                     />
                   ) : (
-                    results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} />)
+                    results.map((row) => <ResultRow key={`${row.rank}-${row.name}`} row={row} share={shareOf(row.key)} />)
                   )}
                 </div>
               )}
@@ -660,10 +682,11 @@ export default async function RacePage({
   );
 }
 
-function AthletePickRow({ athlete }: { athlete: AthleteWithOdds | undefined }) {
+function AthletePickRow({ athlete, share }: { athlete: AthleteWithOdds | undefined; share: { pct: number; label: string } | null }) {
   if (!athlete) return null;
   return (
-    <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+    <div className="group relative isolate flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+      {share && <PickShareBar pct={share.pct} label={share.label} />}
       <div className="text-base">{nationFlagEmoji(athlete.nation_code)}</div>
       <div className="flex-1 text-sm font-semibold">
         {fullAthleteName(athlete)}
@@ -673,10 +696,11 @@ function AthletePickRow({ athlete }: { athlete: AthleteWithOdds | undefined }) {
   );
 }
 
-function NationPickRow({ nation }: { nation: NationWithOdds | undefined }) {
+function NationPickRow({ nation, share }: { nation: NationWithOdds | undefined; share: { pct: number; label: string } | null }) {
   if (!nation) return null;
   return (
-    <div className="flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+    <div className="group relative isolate flex items-center gap-3.5 rounded-2xl border border-border bg-card px-4 py-3.5">
+      {share && <PickShareBar pct={share.pct} label={share.label} />}
       <div className="text-base">{nationFlagEmoji(nation.nation_code)}</div>
       <div className="flex-1 text-sm font-semibold">{nation.name}</div>
       <div className="font-display text-sm font-bold text-ice">×{nation.value}</div>
