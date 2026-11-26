@@ -1807,8 +1807,9 @@ Variante « barres compactes » validée par Guillaume (maquettes dans le dossie
 autres : place dans la course, barre proportionnelle aux points rapportés, points ; les bonus (Top 5,
 ×2, questions bonus…) en pastilles ; la Pépite révélée sur la course en ligne turquoise.
 - Classement **Saison** : pronostics de saison, puis toutes les courses de la saison dans l'ordre
-  du calendrier (sans accordéon). Le détail d'une course terminée se charge quand elle apparaît à
-  l'écran (lectures regroupées), les autres affichent « À venir » / « En cours ».
+  du calendrier. Chaque course terminée est un accordéon fermé (total visible) qui se déplie sur le
+  détail et un lien « Voir la course » ; le détail se charge à l'ouverture. Les autres affichent
+  « À venir » / « En cours » et mènent à la page de la course.
 - Classement **par étape** : l'accordéon de l'étape ; filtré sur une course, seule cette course.
 - Le détail vient de `getPlayerRaceDetails` (`classement/actions.ts`), qui réutilise
   `getRaceResult` sans la place parmi les pronostiqueurs (`withPlayerRank: false`).

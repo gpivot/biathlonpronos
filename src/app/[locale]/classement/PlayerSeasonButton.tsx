@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { StreakCard } from "@/components/StreakCard";
 import { BonusCardsList } from "@/components/BonusCardsList";
@@ -59,7 +59,7 @@ export function PlayerSeasonButton({
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   // Détail des courses terminées (points par biathlète, Pépite) : absent tant que pas chargé.
   const [details, setDetails] = useState<Record<string, PlayerRaceDetail | null>>({});
-  // Classement Saison : détail chargé quand la course apparaît à l'écran, regroupé en un appel.
+  // Classement Saison : détail chargé à l'ouverture d'une course (regroupé si plusieurs).
   const pendingRef = useRef<Set<string>>(new Set());
   const requestedRef = useRef<Set<string>>(new Set());
   const flushRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -245,7 +245,7 @@ export function PlayerSeasonButton({
                         race={race}
                         stage={raceStage}
                         locale={locale}
-                        onVisible={requestDetail}
+                        onOpen={requestDetail}
                         detail={<RaceDetail detail={details[race.id]} loaded={race.id in details} />}
                       />
                     ))}
@@ -267,84 +267,101 @@ function RaceDetail({ detail, loaded }: { detail: PlayerRaceDetail | null | unde
   return null;
 }
 
-/** Classement Saison : une course de la saison, avec son étape ; terminée, son total et son détail. */
+/**
+ * Classement Saison : une course de la saison, avec son étape. Terminée, elle se déplie en
+ * accordéon (détail des points, lien vers la course) pour que la liste reste lisible en fin de
+ * saison (Guillaume, 26/11/2026) ; son détail se charge à la première ouverture.
+ */
 function SeasonRaceCard({
   race,
   stage,
   locale,
   detail,
-  onVisible,
+  onOpen,
 }: {
   race: CalendarRace;
   stage: CalendarStage;
   locale: string;
   detail: ReactNode;
-  onVisible: (raceId: string) => void;
+  onOpen: (raceId: string) => void;
 }) {
   const tFormat = useTranslations("RaceFormat");
   const tSex = useTranslations("Sex");
   const tRace = useTranslations("Race");
+  const tHome = useTranslations("Home");
+  const [open, setOpen] = useState(false);
   const sex = displayedSex(race);
   const finished = race.displayStatus === "finished";
-  const ref = useRef<HTMLAnchorElement | null>(null);
-  const onVisibleRef = useRef(onVisible);
-  onVisibleRef.current = onVisible;
-  useEffect(() => {
-    const element = ref.current;
-    if (!finished || !element) return;
-    const observer = new IntersectionObserver((entries) => {
-      if (entries.some((e) => e.isIntersecting)) {
-        onVisibleRef.current(race.id);
-        observer.disconnect();
-      }
-    });
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [finished, race.id]);
-  return (
-    <Link
-      ref={ref}
-      href={`/courses/${race.id}`}
-      className={`flex flex-col gap-2.5 rounded-xl border bg-card px-3.5 py-3 ${stage.coefficient === 2 ? "border-gold/60" : "border-border"}`}
-    >
-      <div className="flex items-center gap-3">
-        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-          <div className={`truncate font-display text-[10px] font-bold uppercase tracking-wider ${stage.coefficient === 2 ? "text-gold" : "text-ice"}`}>
-            {nationFlagEmoji(stage.country_code)} {stage.location} ·{" "}
-            {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
-            {!finished &&
-              ` · ${new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}`}
-          </div>
-          <div className="text-sm font-semibold">
-            {tFormat(race.format)}
-            {sex ? ` ${tSex(sex)}` : ""}
-          </div>
+  const expandable = finished && race.points != null;
+  const championship = stage.coefficient === 2;
+
+  const header = (
+    <div className="flex w-full items-center gap-3">
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <div className={`truncate font-display text-[10px] font-bold uppercase tracking-wider ${championship ? "text-gold" : "text-ice"}`}>
+          {nationFlagEmoji(stage.country_code)} {stage.location} ·{" "}
+          {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
+          {!finished &&
+            ` · ${new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}`}
         </div>
-        {!finished && (
-          <div
-            className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${
-              race.displayStatus === "ongoing" ? "bg-gold-soft text-gold" : "border border-border text-text-dim"
-            }`}
-          >
-            {tRace(`status_${race.displayStatus}`)}
-          </div>
-        )}
-        {finished && race.points == null && (
-          <div className="whitespace-nowrap rounded-full bg-ice-soft px-2.5 py-1 font-display text-[11px] font-bold text-ice">
-            {tRace("status_finished")}
-          </div>
-        )}
-        {finished && race.points != null && (
-          <div className="flex flex-shrink-0 items-center gap-1.5">
-            <div className="whitespace-nowrap font-display text-lg font-extrabold text-gold">
-              {race.points > 0 ? "+" : ""}
-              {Math.round(race.points * 10) / 10} pts
-            </div>
-            <ChevronDownIcon className="h-3.5 w-3.5 -rotate-90 text-text-dim" />
-          </div>
-        )}
+        <div className="text-sm font-semibold">
+          {tFormat(race.format)}
+          {sex ? ` ${tSex(sex)}` : ""}
+        </div>
       </div>
-      {finished && detail}
-    </Link>
+      {expandable ? (
+        <div className="flex flex-shrink-0 items-center gap-1.5">
+          <div className="whitespace-nowrap font-display text-lg font-extrabold text-gold">
+            {race.points! > 0 ? "+" : ""}
+            {Math.round(race.points! * 10) / 10} pts
+          </div>
+          <ChevronDownIcon className={`h-4 w-4 text-text-dim transition-transform ${open ? "rotate-180" : ""}`} />
+        </div>
+      ) : (
+        <div
+          className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${
+            race.displayStatus === "ongoing"
+              ? "bg-gold-soft text-gold"
+              : finished
+                ? "bg-ice-soft text-ice"
+                : "border border-border text-text-dim"
+          }`}
+        >
+          {tRace(`status_${race.displayStatus}`)}
+        </div>
+      )}
+    </div>
+  );
+
+  const frame = `rounded-xl border bg-card px-3.5 py-3 ${championship ? "border-gold/60" : "border-border"}`;
+  if (!expandable) {
+    return (
+      <Link href={`/courses/${race.id}`} className={`flex ${frame}`}>
+        {header}
+      </Link>
+    );
+  }
+  return (
+    <div className={`flex flex-col gap-2.5 ${frame}`}>
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => {
+          if (!open) onOpen(race.id);
+          setOpen(!open);
+        }}
+        className="text-left"
+      >
+        {header}
+      </button>
+      {open && (
+        <>
+          {detail}
+          <Link href={`/courses/${race.id}`} className="self-center font-display text-[12px] font-bold text-ice">
+            {tHome("lastResultSeeRace")} ›
+          </Link>
+        </>
+      )}
+    </div>
   );
 }
