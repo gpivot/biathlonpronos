@@ -2,14 +2,22 @@
 
 import { useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { CloseIcon } from "@/components/icons";
 import { StreakCard } from "@/components/StreakCard";
 import { BonusCardsList } from "@/components/BonusCardsList";
 import { PlayerBadgesRow } from "@/components/PlayerBadgesRow";
 import { DISPLAY_TIME_ZONE } from "@/lib/displayTimeZone";
 import { CalendarAccordion } from "../courses/CalendarAccordion";
 import { SeasonPredictionsAccordion } from "../courses/SeasonPredictionsAccordion";
-import { getPlayerSeason, type PlayerSeason } from "./actions";
+import { getPlayerRaceDetails, getPlayerSeason, type PlayerRaceDetail, type PlayerSeason } from "./actions";
+import { PlayerRaceBars } from "./PlayerRaceBars";
+import { Link } from "@/i18n/navigation";
+import { ChevronDownIcon, CloseIcon } from "@/components/icons";
+import { nationFlagEmoji } from "@/lib/nationFlags";
+import { displayedSex } from "@/lib/raceLabel";
+import type { CalendarRace, CalendarStage } from "../courses/CalendarAccordion";
+
+/** Courses de la saison détaillées par paquets (chacune demande plusieurs lectures). */
+const SEASON_RACES_PAGE = 10;
 
 /** Classement « Par étapes » : le pop-up se limite à cette étape (demande de Guillaume, 04/11/2026). */
 export interface PlayerStageScope {
@@ -20,6 +28,8 @@ export interface PlayerStageScope {
   leader: boolean;
   /** Classement d'une seule course de l'étape (rang et points de cette course). */
   singleRace: boolean;
+  /** Cette course (classement d'une seule course) : la fiche ne montre qu'elle. */
+  raceId?: string | null;
 }
 
 /**
@@ -47,9 +57,25 @@ export function PlayerSeasonButton({
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<PlayerSeason | null>(null);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+  // Détail des courses terminées (points par biathlète, Pépite) : absent tant que pas chargé.
+  const [details, setDetails] = useState<Record<string, PlayerRaceDetail | null>>({});
+  const [seasonRaceCount, setSeasonRaceCount] = useState(SEASON_RACES_PAGE);
 
   // Étapes hors classement (« Autre (×0) », ex. pré-saison à Geilo) : sans intérêt dans la fiche d'un joueur.
   const rankedStages = data?.stages.filter((s) => s.counts_in_standings !== false) ?? [];
+  // Classement Saison : toutes ses courses terminées (pronostiquées ou Pépite), la plus récente en tête.
+  const playedRaces = playedRacesOf(rankedStages);
+
+  const loadDetails = async (raceIds: string[]) => {
+    if (raceIds.length === 0) return;
+    setDetails((prev) => ({ ...prev, ...Object.fromEntries(raceIds.map((id) => [id, prev[id] ?? null])) }));
+    try {
+      const loaded = await getPlayerRaceDetails(userId, raceIds);
+      setDetails((prev) => ({ ...prev, ...loaded }));
+    } catch {
+      // Sans détail, la course garde son total.
+    }
+  };
 
   const show = async () => {
     setOpen(true);
@@ -59,6 +85,16 @@ export function PlayerSeasonButton({
       const result = await getPlayerSeason(userId);
       setData(result);
       setState(result ? "idle" : "error");
+      if (result) {
+        const ranked = result.stages.filter((s) => s.counts_in_standings !== false);
+        void loadDetails(
+          stage
+            ? (result.stages.find((s) => s.id === stage.stageId)?.races ?? [])
+                .filter((r) => r.displayStatus === "finished" && (!stage.raceId || r.id === stage.raceId))
+                .map((r) => r.id)
+            : playedRacesOf(ranked).slice(0, SEASON_RACES_PAGE).map(({ race }) => race.id)
+        );
+      }
     } catch {
       setState("error");
     }
@@ -120,10 +156,14 @@ export function PlayerSeasonButton({
                   </div>
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
                   <CalendarAccordion
-                    stages={data.stages.filter((s) => s.id === stage.stageId)}
+                    // Classement d'une course : la fiche ne montre qu'elle.
+                    stages={data.stages
+                      .filter((s) => s.id === stage.stageId)
+                      .map((s) => (stage.raceId ? { ...s, races: s.races.filter((r) => r.id === stage.raceId) } : s))}
                     defaultOpenStageId={stage.stageId}
                     locale={locale}
                     readOnly
+                    renderRaceDetail={(raceId) => <RaceDetail detail={details[raceId]} loaded={raceId in details} />}
                   />
                 </>
               )}
@@ -180,8 +220,37 @@ export function PlayerSeasonButton({
                     />
                   )}
                   {data.streak != null && <StreakCard current={data.streak} />}
+                  <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">{t("playerRacesTitle")}</div>
+                  {playedRaces.length === 0 ? (
+                    <div className="text-[12px] text-text-dim">{t("playerNoRaces")}</div>
+                  ) : (
+                    <div className="flex flex-col gap-2">
+                      {playedRaces.slice(0, seasonRaceCount).map(({ race, stage: raceStage }) => (
+                        <SeasonRaceCard
+                          key={race.id}
+                          race={race}
+                          stage={raceStage}
+                          locale={locale}
+                          detail={<RaceDetail detail={details[race.id]} loaded={race.id in details} />}
+                        />
+                      ))}
+                      {playedRaces.length > seasonRaceCount && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            void loadDetails(
+                              playedRaces.slice(seasonRaceCount, seasonRaceCount + SEASON_RACES_PAGE).map(({ race }) => race.id)
+                            );
+                            setSeasonRaceCount((n) => n + SEASON_RACES_PAGE);
+                          }}
+                          className="rounded-full border border-border py-2 font-display text-[12px] font-bold text-ice"
+                        >
+                          {t("playerShowMoreRaces")}
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
-                  <CalendarAccordion stages={rankedStages} defaultOpenStageId={data.defaultOpenStageId} locale={locale} readOnly />
                 </>
               )}
             </div>
@@ -189,5 +258,66 @@ export function PlayerSeasonButton({
         </div>
       )}
     </>
+  );
+}
+
+/** Courses terminées d'un joueur (pronostiquées, ou avec des points comme une Pépite), la plus récente d'abord. */
+function playedRacesOf(stages: CalendarStage[]): { race: CalendarRace; stage: CalendarStage }[] {
+  return stages
+    .flatMap((stage) => stage.races.map((race) => ({ race, stage })))
+    .filter(({ race }) => race.displayStatus === "finished" && (race.names || race.points != null))
+    .sort((a, b) => b.race.locks_at.localeCompare(a.race.locks_at));
+}
+
+function RaceDetail({ detail, loaded }: { detail: PlayerRaceDetail | null | undefined; loaded: boolean }) {
+  const t = useTranslations("Classement");
+  if (detail) return <PlayerRaceBars detail={detail} />;
+  if (loaded && detail === null) return <div className="text-[11px] text-text-dim">{t("playerLoading")}</div>;
+  return null;
+}
+
+/** Classement Saison : une course terminée du joueur, avec son étape, son total et son détail. */
+function SeasonRaceCard({
+  race,
+  stage,
+  locale,
+  detail,
+}: {
+  race: CalendarRace;
+  stage: CalendarStage;
+  locale: string;
+  detail: ReactNode;
+}) {
+  const tFormat = useTranslations("RaceFormat");
+  const tSex = useTranslations("Sex");
+  const sex = displayedSex(race);
+  return (
+    <Link
+      href={`/courses/${race.id}`}
+      className={`flex flex-col gap-2.5 rounded-xl border bg-card px-3.5 py-3 ${stage.coefficient === 2 ? "border-gold/60" : "border-border"}`}
+    >
+      <div className="flex items-center gap-3">
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <div className={`truncate font-display text-[10px] font-bold uppercase tracking-wider ${stage.coefficient === 2 ? "text-gold" : "text-ice"}`}>
+            {nationFlagEmoji(stage.country_code)} {stage.location} ·{" "}
+            {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
+          </div>
+          <div className="text-sm font-semibold">
+            {tFormat(race.format)}
+            {sex ? ` ${tSex(sex)}` : ""}
+          </div>
+        </div>
+        {race.points != null && (
+          <div className="flex flex-shrink-0 items-center gap-1.5">
+            <div className="whitespace-nowrap font-display text-lg font-extrabold text-gold">
+              {race.points > 0 ? "+" : ""}
+              {Math.round(race.points * 10) / 10} pts
+            </div>
+            <ChevronDownIcon className="h-3.5 w-3.5 -rotate-90 text-text-dim" />
+          </div>
+        )}
+      </div>
+      {detail}
+    </Link>
   );
 }

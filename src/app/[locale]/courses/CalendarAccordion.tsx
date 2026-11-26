@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ChevronDownIcon } from "@/components/icons";
@@ -56,6 +56,8 @@ export function CalendarAccordion({
   scrollToStageId = null,
   locale,
   readOnly = false,
+  renderRaceDetail,
+  onStageOpen,
 }: {
   stages: CalendarStage[];
   defaultOpenStageId: string | null;
@@ -64,6 +66,10 @@ export function CalendarAccordion({
   locale: string;
   /** Saison d'un autre joueur (pop-up du Classement) : pas de « À jouer ». */
   readOnly?: boolean;
+  /** Fiche d'un joueur : détail d'une course terminée (points par biathlète, Pépite), sous son en-tête. */
+  renderRaceDetail?: (raceId: string) => ReactNode;
+  /** Appelé à l'ouverture d'une étape (chargement de son détail). */
+  onStageOpen?: (stageId: string) => void;
 }) {
   const [openStageId, setOpenStageId] = useState<string | null>(defaultOpenStageId);
   const t = useTranslations("Courses");
@@ -93,7 +99,10 @@ export function CalendarAccordion({
             }`}
           >
             <button
-              onClick={() => setOpenStageId(isOpen ? null : stage.id)}
+              onClick={() => {
+                setOpenStageId(isOpen ? null : stage.id);
+                if (!isOpen) onStageOpen?.(stage.id);
+              }}
               className="flex w-full items-center gap-3.5 px-4 py-3.5 text-left"
             >
               <div
@@ -149,11 +158,13 @@ export function CalendarAccordion({
                   <div className="px-1.5 py-2 text-[12px] text-text-dim">{t("noRacesInStage")}</div>
                 ) : (
                   stage.races.map((race) => {
+                    const detail = race.displayStatus === "finished" ? renderRaceDetail?.(race.id) : null;
                     const link = (
                       <Link
                         href={`/courses/${race.id}`}
-                        className="flex items-center gap-3 rounded-xl border border-border bg-bg px-3.5 py-3"
+                        className="flex flex-col gap-2.5 rounded-xl border border-border bg-bg px-3.5 py-3"
                       >
+                        <div className="flex items-center gap-3">
                         <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                           <div className="text-sm font-semibold">
                             {tFormat(race.format)}
@@ -164,7 +175,7 @@ export function CalendarAccordion({
                             {" · "}
                             {new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}
                           </div>
-                          {race.names && <div className="truncate text-xs text-frost">{race.names}</div>}
+                          {race.names && !detail && <div className="truncate text-xs text-frost">{race.names}</div>}
                           {race.predicted && race.displayStatus === "upcoming" && <PredictedBadge label={tRace("predicted")} />}
                           {race.bonusX2 && (
                             <div className="w-fit rounded-full bg-gold-soft px-2 py-0.5 font-display text-[10px] font-bold uppercase text-gold">
@@ -189,18 +200,31 @@ export function CalendarAccordion({
                             </span>
                           )}
                         </div>
-                        <div className="flex flex-shrink-0 flex-col items-end gap-1">
-                          <div
-                            className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[race.displayStatus]}`}
-                          >
-                            {tRace(`status_${race.displayStatus}`)}
-                          </div>
-                          {race.displayStatus === "finished" && race.points != null && (
-                            <div className="whitespace-nowrap font-display text-sm font-bold text-ice">
+                        {detail && race.points != null ? (
+                          // Fiche d'un joueur : total de la course en grand, le détail suit dessous.
+                          <div className="flex flex-shrink-0 items-center gap-1.5">
+                            <div className="whitespace-nowrap font-display text-lg font-extrabold text-gold">
+                              {race.points > 0 ? "+" : ""}
                               {Math.round(race.points * 10) / 10} pts
                             </div>
-                          )}
+                            <ChevronDownIcon className="h-3.5 w-3.5 -rotate-90 text-text-dim" />
+                          </div>
+                        ) : (
+                          <div className="flex flex-shrink-0 flex-col items-end gap-1">
+                            <div
+                              className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${STATUS_STYLES[race.displayStatus]}`}
+                            >
+                              {tRace(`status_${race.displayStatus}`)}
+                            </div>
+                            {race.displayStatus === "finished" && race.points != null && (
+                              <div className="whitespace-nowrap font-display text-sm font-bold text-ice">
+                                {Math.round(race.points * 10) / 10} pts
+                              </div>
+                            )}
+                          </div>
+                        )}
                         </div>
+                        {detail}
                       </Link>
                     );
                     if (!race.special_rule) return <div key={race.id}>{link}</div>;

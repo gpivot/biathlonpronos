@@ -220,7 +220,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                 userId={row.userId}
                 stage={
                   period === "stages" && stage
-                    ? { stageId: stage.id, rank: row.rank, points: row.points, leader: !race && stage.countsInStandings !== false && row.rank === 1 && row.points > 0, singleRace: !!race }
+                    ? { stageId: stage.id, rank: row.rank, points: row.points, leader: !race && stage.countsInStandings !== false && row.rank === 1 && row.points > 0, singleRace: !!race, raceId: race?.id ?? null }
                     : null
                 }
                 className={`flex items-center gap-3.5 rounded-2xl border px-4 py-3.5 ${

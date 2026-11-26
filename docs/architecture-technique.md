@@ -1799,3 +1799,17 @@ accès aux classements, donc ne peut pas copier. Côté app : `getSeasonPicksWin
 joueur dans `getSeasonView` (seules ses courses parties sont lisibles, la date affichée est donc
 « au plus tard »). Côté base : migration **0051** (`season_picks_closes_at_for(saison, joueur)`,
 policy « season_predictions: read once player closed », remplace celle de 0050).
+
+## Fiche d'un joueur : points par biathlète et Pépite révélée (26/11/2026)
+
+Variante « barres compactes » validée par Guillaume (maquettes dans le dossier projet
+`apercus/fiche-joueur/`). Chaque course terminée de la fiche montre ses biathlètes les uns sous les
+autres : place dans la course, barre proportionnelle aux points rapportés, points ; les bonus (Top 5,
+×2, questions bonus…) en pastilles ; la Pépite révélée sur la course en ligne turquoise.
+- Classement **Saison** : pronostics de saison, puis la liste de ses courses terminées (la plus
+  récente d'abord, chargées par 10 avec « Voir plus de courses »), sans les étapes en accordéon.
+- Classement **par étape** : l'accordéon de l'étape ; filtré sur une course, seule cette course.
+- Le détail vient de `getPlayerRaceDetails` (`classement/actions.ts`), qui réutilise
+  `getRaceResult` sans la place parmi les pronostiqueurs (`withPlayerRank: false`).
+- Pop-up d'un joueur sur la page d'une course : la Pépite révélée y est ajoutée (encadré « Sa Pépite
+  cachée est révélée ! »), pour expliquer l'écart entre la somme des choix et le total.
