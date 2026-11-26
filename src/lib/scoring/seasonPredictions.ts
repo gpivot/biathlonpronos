@@ -47,7 +47,9 @@ export function isPepiteEligibleOdds(allOdds: number[]): boolean {
   return allOdds.length > 0 && allOdds.every((v) => isPepiteEligible(Number(v)));
 }
 
-export function computePepiteBonus(oddsAtRace: number, rank: number): number {
+export function computePepiteBonus(oddsAtRace: number, rank: number, multiplier: 1 | 2 = 1): number {
   if (rank > 10) return 0;
-  return (RANK_MULTIPLIERS[rank] ?? 0) * oddsAtRace;
+  // Bonus ×2 perso du joueur sur la course, ou coefficient ×2 des Mondiaux/JO (non cumulables) :
+  // les points de la Pépite révélée sont doublés aussi (Guillaume, 26/11/2026).
+  return (RANK_MULTIPLIERS[rank] ?? 0) * oddsAtRace * multiplier;
 }
