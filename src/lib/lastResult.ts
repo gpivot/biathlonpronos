@@ -11,6 +11,7 @@ import { applyFuseeGachetteRules, skiRankOf } from "./scoring/fuseeGachette";
 import { shortAthleteName } from "./athleteName";
 import { getUserBonusQuestionPointsByRace } from "./bonusQuestions";
 import { getRacePlayers } from "./racePlayers";
+import { computePepiteBonus } from "./scoring/seasonPredictions";
 
 /**
  * Encart « Dernier résultat » de l'accueil (inspiré de VéloPronos) : la
@@ -353,6 +354,7 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
   // Pépite cachée révélée sur cette course : mise en avant à part (place, nom, points).
   const breakdownAll = (ledger?.breakdown ?? {}) as IndividualBreakdown;
   let pepite: LastResult["pepite"] = null;
+  let pepiteDoubledGain = 0;
   const pepiteBonus = Number(breakdownAll.pepiteBonus ?? 0);
   if (userId && !relay && pepiteBonus > 0) {
     let pepiteId = breakdownAll.pepiteAthleteId ?? null;
@@ -368,7 +370,13 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
       pepiteId = resultRows.find((r) => r.athlete_id && r.rank <= 10 && ids.has(r.athlete_id))?.athlete_id ?? null;
     }
     const row = pepiteId ? resultRows.find((r) => r.athlete_id === pepiteId) : null;
-    if (row) pepite = { rank: row.rank, name: rowName(row), nationCode: rowNation(row), points: pepiteBonus };
+    if (row) {
+      pepite = { rank: row.rank, name: rowName(row), nationCode: rowNation(row), points: pepiteBonus };
+      // Pépite doublée par le ×2 perso ou le coefficient Mondiaux/JO (26/11/2026) : retrouvée en
+      // comparant aux points simples (cote × barème), pour afficher le doublement dans la ligne ×2.
+      const odds = pepiteId ? oddsByKey.get(pepiteId) : undefined;
+      if (odds != null && Math.abs(pepiteBonus - 2 * computePepiteBonus(odds, row.rank)) < 0.01) pepiteDoubledGain = pepiteBonus / 2;
+    }
   }
 
   const base: Omit<LastResult, "prediction"> = {
@@ -481,8 +489,16 @@ async function buildRaceResult(supabase: SupabaseClient, race: any, userId: stri
     extras = computeIndividualExtras(breakdown);
   }
 
+  // Pépite doublée : ses points simples restent sur sa ligne, le doublement rejoint la ligne ×2.
+  let shownPepite = base.pepite;
+  if (pepiteDoubledGain > 0 && multiplierKind && shownPepite) {
+    shownPepite = { ...shownPepite, points: shownPepite.points - pepiteDoubledGain };
+    multiplierGain += pepiteDoubledGain;
+  }
+
   return {
     ...base,
+    pepite: shownPepite,
     prediction: {
       points: Math.round((points + bonusQuestionPoints) * 10) / 10,
       bonusQuestionPoints,
