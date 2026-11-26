@@ -1806,8 +1806,9 @@ Variante « barres compactes » validée par Guillaume (maquettes dans le dossie
 `apercus/fiche-joueur/`). Chaque course terminée de la fiche montre ses biathlètes les uns sous les
 autres : place dans la course, barre proportionnelle aux points rapportés, points ; les bonus (Top 5,
 ×2, questions bonus…) en pastilles ; la Pépite révélée sur la course en ligne turquoise.
-- Classement **Saison** : pronostics de saison, puis la liste de ses courses terminées (la plus
-  récente d'abord, chargées par 10 avec « Voir plus de courses »), sans les étapes en accordéon.
+- Classement **Saison** : pronostics de saison, puis toutes les courses de la saison dans l'ordre
+  du calendrier (sans accordéon). Le détail d'une course terminée se charge quand elle apparaît à
+  l'écran (lectures regroupées), les autres affichent « À venir » / « En cours ».
 - Classement **par étape** : l'accordéon de l'étape ; filtré sur une course, seule cette course.
 - Le détail vient de `getPlayerRaceDetails` (`classement/actions.ts`), qui réutilise
   `getRaceResult` sans la place parmi les pronostiqueurs (`withPlayerRank: false`).

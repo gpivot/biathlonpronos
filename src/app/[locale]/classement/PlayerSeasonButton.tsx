@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { StreakCard } from "@/components/StreakCard";
 import { BonusCardsList } from "@/components/BonusCardsList";
@@ -16,8 +16,8 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { displayedSex } from "@/lib/raceLabel";
 import type { CalendarRace, CalendarStage } from "../courses/CalendarAccordion";
 
-/** Courses de la saison détaillées par paquets (chacune demande plusieurs lectures). */
-const SEASON_RACES_PAGE = 10;
+/** Courses détaillées par paquets (chacune demande plusieurs lectures ; l'action en accepte 20). */
+const DETAIL_BATCH = 20;
 
 /** Classement « Par étapes » : le pop-up se limite à cette étape (demande de Guillaume, 04/11/2026). */
 export interface PlayerStageScope {
@@ -59,22 +59,41 @@ export function PlayerSeasonButton({
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
   // Détail des courses terminées (points par biathlète, Pépite) : absent tant que pas chargé.
   const [details, setDetails] = useState<Record<string, PlayerRaceDetail | null>>({});
-  const [seasonRaceCount, setSeasonRaceCount] = useState(SEASON_RACES_PAGE);
+  // Classement Saison : détail chargé quand la course apparaît à l'écran, regroupé en un appel.
+  const pendingRef = useRef<Set<string>>(new Set());
+  const requestedRef = useRef<Set<string>>(new Set());
+  const flushRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Étapes hors classement (« Autre (×0) », ex. pré-saison à Geilo) : sans intérêt dans la fiche d'un joueur.
   const rankedStages = data?.stages.filter((s) => s.counts_in_standings !== false) ?? [];
-  // Classement Saison : toutes ses courses terminées (pronostiquées ou Pépite), la plus récente en tête.
-  const playedRaces = playedRacesOf(rankedStages);
+  // Classement Saison : toutes les courses de la saison, dans l'ordre du calendrier (Guillaume, 26/11/2026).
+  const seasonRaces = rankedStages.flatMap((s) => s.races.map((race) => ({ race, stage: s })));
 
-  const loadDetails = async (raceIds: string[]) => {
+  const loadDetails = async (ids: string[]) => {
+    const raceIds = ids.filter((id) => !requestedRef.current.has(id));
     if (raceIds.length === 0) return;
+    raceIds.forEach((id) => requestedRef.current.add(id));
     setDetails((prev) => ({ ...prev, ...Object.fromEntries(raceIds.map((id) => [id, prev[id] ?? null])) }));
     try {
-      const loaded = await getPlayerRaceDetails(userId, raceIds);
-      setDetails((prev) => ({ ...prev, ...loaded }));
+      const batches = Array.from({ length: Math.ceil(raceIds.length / DETAIL_BATCH) }, (_, i) =>
+        raceIds.slice(i * DETAIL_BATCH, (i + 1) * DETAIL_BATCH)
+      );
+      const loaded = await Promise.all(batches.map((batch) => getPlayerRaceDetails(userId, batch)));
+      setDetails((prev) => Object.assign({ ...prev }, ...loaded));
     } catch {
       // Sans détail, la course garde son total.
     }
+  };
+
+  const requestDetail = (raceId: string) => {
+    pendingRef.current.add(raceId);
+    if (flushRef.current) return;
+    flushRef.current = setTimeout(() => {
+      flushRef.current = null;
+      const ids = Array.from(pendingRef.current);
+      pendingRef.current.clear();
+      void loadDetails(ids);
+    }, 150);
   };
 
   const show = async () => {
@@ -85,14 +104,12 @@ export function PlayerSeasonButton({
       const result = await getPlayerSeason(userId);
       setData(result);
       setState(result ? "idle" : "error");
-      if (result) {
-        const ranked = result.stages.filter((s) => s.counts_in_standings !== false);
+      // Filtre par étape : détail de ses courses terminées tout de suite (en Saison, à l'affichage de chaque course).
+      if (result && stage) {
         void loadDetails(
-          stage
-            ? (result.stages.find((s) => s.id === stage.stageId)?.races ?? [])
-                .filter((r) => r.displayStatus === "finished" && (!stage.raceId || r.id === stage.raceId))
-                .map((r) => r.id)
-            : playedRacesOf(ranked).slice(0, SEASON_RACES_PAGE).map(({ race }) => race.id)
+          (result.stages.find((s) => s.id === stage.stageId)?.races ?? [])
+            .filter((r) => r.displayStatus === "finished" && (!stage.raceId || r.id === stage.raceId))
+            .map((r) => r.id)
         );
       }
     } catch {
@@ -220,37 +237,19 @@ export function PlayerSeasonButton({
                     />
                   )}
                   {data.streak != null && <StreakCard current={data.streak} />}
-                  <div className="font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">{t("playerRacesTitle")}</div>
-                  {playedRaces.length === 0 ? (
-                    <div className="text-[12px] text-text-dim">{t("playerNoRaces")}</div>
-                  ) : (
-                    <div className="flex flex-col gap-2">
-                      {playedRaces.slice(0, seasonRaceCount).map(({ race, stage: raceStage }) => (
-                        <SeasonRaceCard
-                          key={race.id}
-                          race={race}
-                          stage={raceStage}
-                          locale={locale}
-                          detail={<RaceDetail detail={details[race.id]} loaded={race.id in details} />}
-                        />
-                      ))}
-                      {playedRaces.length > seasonRaceCount && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            void loadDetails(
-                              playedRaces.slice(seasonRaceCount, seasonRaceCount + SEASON_RACES_PAGE).map(({ race }) => race.id)
-                            );
-                            setSeasonRaceCount((n) => n + SEASON_RACES_PAGE);
-                          }}
-                          className="rounded-full border border-border py-2 font-display text-[12px] font-bold text-ice"
-                        >
-                          {t("playerShowMoreRaces")}
-                        </button>
-                      )}
-                    </div>
-                  )}
                   <div className="text-[11px] text-text-dim">{t("playerHiddenHint")}</div>
+                  <div className="flex flex-col gap-2">
+                    {seasonRaces.map(({ race, stage: raceStage }) => (
+                      <SeasonRaceCard
+                        key={race.id}
+                        race={race}
+                        stage={raceStage}
+                        locale={locale}
+                        onVisible={requestDetail}
+                        detail={<RaceDetail detail={details[race.id]} loaded={race.id in details} />}
+                      />
+                    ))}
+                  </div>
                 </>
               )}
             </div>
@@ -261,14 +260,6 @@ export function PlayerSeasonButton({
   );
 }
 
-/** Courses terminées d'un joueur (pronostiquées, ou avec des points comme une Pépite), la plus récente d'abord. */
-function playedRacesOf(stages: CalendarStage[]): { race: CalendarRace; stage: CalendarStage }[] {
-  return stages
-    .flatMap((stage) => stage.races.map((race) => ({ race, stage })))
-    .filter(({ race }) => race.displayStatus === "finished" && (race.names || race.points != null))
-    .sort((a, b) => b.race.locks_at.localeCompare(a.race.locks_at));
-}
-
 function RaceDetail({ detail, loaded }: { detail: PlayerRaceDetail | null | undefined; loaded: boolean }) {
   const t = useTranslations("Classement");
   if (detail) return <PlayerRaceBars detail={detail} />;
@@ -276,23 +267,43 @@ function RaceDetail({ detail, loaded }: { detail: PlayerRaceDetail | null | unde
   return null;
 }
 
-/** Classement Saison : une course terminée du joueur, avec son étape, son total et son détail. */
+/** Classement Saison : une course de la saison, avec son étape ; terminée, son total et son détail. */
 function SeasonRaceCard({
   race,
   stage,
   locale,
   detail,
+  onVisible,
 }: {
   race: CalendarRace;
   stage: CalendarStage;
   locale: string;
   detail: ReactNode;
+  onVisible: (raceId: string) => void;
 }) {
   const tFormat = useTranslations("RaceFormat");
   const tSex = useTranslations("Sex");
+  const tRace = useTranslations("Race");
   const sex = displayedSex(race);
+  const finished = race.displayStatus === "finished";
+  const ref = useRef<HTMLAnchorElement | null>(null);
+  const onVisibleRef = useRef(onVisible);
+  onVisibleRef.current = onVisible;
+  useEffect(() => {
+    const element = ref.current;
+    if (!finished || !element) return;
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        onVisibleRef.current(race.id);
+        observer.disconnect();
+      }
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [finished, race.id]);
   return (
     <Link
+      ref={ref}
       href={`/courses/${race.id}`}
       className={`flex flex-col gap-2.5 rounded-xl border bg-card px-3.5 py-3 ${stage.coefficient === 2 ? "border-gold/60" : "border-border"}`}
     >
@@ -301,13 +312,29 @@ function SeasonRaceCard({
           <div className={`truncate font-display text-[10px] font-bold uppercase tracking-wider ${stage.coefficient === 2 ? "text-gold" : "text-ice"}`}>
             {nationFlagEmoji(stage.country_code)} {stage.location} ·{" "}
             {new Date(race.locks_at).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" })}
+            {!finished &&
+              ` · ${new Date(race.locks_at).toLocaleTimeString(locale, { timeZone: DISPLAY_TIME_ZONE, hour: "2-digit", minute: "2-digit" })}`}
           </div>
           <div className="text-sm font-semibold">
             {tFormat(race.format)}
             {sex ? ` ${tSex(sex)}` : ""}
           </div>
         </div>
-        {race.points != null && (
+        {!finished && (
+          <div
+            className={`whitespace-nowrap rounded-full px-2.5 py-1 font-display text-[11px] font-bold ${
+              race.displayStatus === "ongoing" ? "bg-gold-soft text-gold" : "border border-border text-text-dim"
+            }`}
+          >
+            {tRace(`status_${race.displayStatus}`)}
+          </div>
+        )}
+        {finished && race.points == null && (
+          <div className="whitespace-nowrap rounded-full bg-ice-soft px-2.5 py-1 font-display text-[11px] font-bold text-ice">
+            {tRace("status_finished")}
+          </div>
+        )}
+        {finished && race.points != null && (
           <div className="flex flex-shrink-0 items-center gap-1.5">
             <div className="whitespace-nowrap font-display text-lg font-extrabold text-gold">
               {race.points > 0 ? "+" : ""}
@@ -317,7 +344,7 @@ function SeasonRaceCard({
           </div>
         )}
       </div>
-      {detail}
+      {finished && detail}
     </Link>
   );
 }
