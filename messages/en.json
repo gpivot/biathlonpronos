@@ -494,6 +494,7 @@
     "streakTitle": "Best current streaks",
     "streakCardTitle": "Current streak",
     "streakCardRemaining": "{count, plural, one {One more race for a bonus card} other {# more races for a bonus card}}",
+    "streakCardRestart": "Start a new streak of 10 good results to earn a bonus card.",
     "playerStageRankLabel": "in the stage standings",
     "playerRaceRankLabel": "in the race standings",
     "playerTitle": "Player",

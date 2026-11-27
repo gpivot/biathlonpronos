@@ -494,6 +494,7 @@
     "streakTitle": "Meilleures séries en cours",
     "streakCardTitle": "Série en cours",
     "streakCardRemaining": "{count, plural, one {Plus qu'une course pour une carte bonus} other {Plus que # courses pour une carte bonus}}",
+    "streakCardRestart": "Recommence une série de 10 bons résultats pour obtenir une carte bonus.",
     "playerStageRankLabel": "au classement de l'étape",
     "playerRaceRankLabel": "au classement de la course",
     "playerTitle": "Joueur",

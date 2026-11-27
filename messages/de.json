@@ -494,6 +494,7 @@
     "streakTitle": "Beste laufende Serien",
     "streakCardTitle": "Laufende Serie",
     "streakCardRemaining": "{count, plural, one {Noch ein Rennen bis zur Bonuskarte} other {Noch # Rennen bis zur Bonuskarte}}",
+    "streakCardRestart": "Starte eine neue Serie von 10 guten Ergebnissen, um eine Bonuskarte zu bekommen.",
     "playerStageRankLabel": "in der Etappenwertung",
     "playerRaceRankLabel": "in der Rennwertung",
     "playerTitle": "Spieler",

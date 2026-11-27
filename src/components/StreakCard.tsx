@@ -27,6 +27,10 @@ export function StreakCard({
   const t = useTranslations("Classement");
   const tGlossary = useTranslations("Glossary");
   const remaining = STREAK_TARGET - current;
+  // Série à zéro (retombée ou pas encore lancée) : flamme éteinte en noir et blanc + message de relance.
+  const reset = current === 0;
+  const flameClass = reset ? " grayscale opacity-60" : "";
+  const message = reset ? t("streakCardRestart") : t("streakCardRemaining", { count: remaining });
   const extras = cards && (
     <>
       {seasonId && cards.unclaimed > 0 && (
@@ -47,7 +51,7 @@ export function StreakCard({
     return (
       <div className="flex flex-col gap-1.5 border-t border-border pt-3">
         <div className="flex items-center gap-1.5">
-          <span className="text-sm">🔥</span>
+          <span className={`text-sm${flameClass}`}>🔥</span>
           <div className="flex-1 font-display text-[11px] font-bold uppercase tracking-wider text-text-dim"><TermTip title={tGlossary("serie_t")} text={tGlossary("serie_d")}>
             {t("streakCardTitle")}
           </TermTip>
@@ -61,7 +65,7 @@ export function StreakCard({
             <div key={i} className={`h-1.5 flex-1 rounded-full ${i < current ? "bg-ice" : "bg-border"}`} />
           ))}
         </div>
-        <div className="text-[11px] text-text-dim">{t("streakCardRemaining", { count: remaining })}</div>
+        <div className="text-[11px] text-text-dim">{message}</div>
         {extras}
       </div>
     );
@@ -70,7 +74,7 @@ export function StreakCard({
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card px-4 py-4">
       <div className="flex items-center gap-2.5">
-        <span className="text-xl">🔥</span>
+        <span className={`text-xl${flameClass}`}>🔥</span>
         <div className="flex-1 font-display text-[15px] font-extrabold uppercase tracking-wide"><TermTip title={tGlossary("serie_t")} text={tGlossary("serie_d")}>
             {t("streakCardTitle")}
           </TermTip>
@@ -85,7 +89,7 @@ export function StreakCard({
         ))}
       </div>
       <div className="text-center font-display text-[12px] font-semibold uppercase tracking-wide text-text-dim">
-        {t("streakCardRemaining", { count: remaining })}
+        {message}
       </div>
       {extras}
     </div>
