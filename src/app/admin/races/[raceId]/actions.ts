@@ -181,9 +181,16 @@ async function importIbuStartList(admin: ReturnType<typeof createAdminClient>, r
       await saveStartNations(admin, raceId, matched.rows);
       revalidatePath("/", "layout");
       const note = await offStartNote(admin, raceId);
+      const withRelayers = matched.rows.filter((r) => r.relayers?.length).length;
+      const relayersNote =
+        withRelayers === 0
+          ? " L'IBU n'a pas encore annoncé les relayeurs : récupère la liste à nouveau plus tard pour les afficher."
+          : withRelayers < matched.rows.length
+            ? ` Relayeurs connus pour ${withRelayers} nation(s) sur ${matched.rows.length}.`
+            : "";
       return {
         ok: true,
-        message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} nation(s) sur ${ibu.nations.length} avec leur cote.${note}`,
+        message: `Liste de départ IBU enregistrée : ${ibu.description} (${ibu.raceId}), ${matched.rows.length} nation(s) sur ${ibu.nations.length} avec leur cote.${relayersNote}${note}`,
         unmatched: matched.unmatched,
       };
     } catch (err) {

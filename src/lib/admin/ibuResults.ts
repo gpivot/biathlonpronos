@@ -393,12 +393,47 @@ export async function fetchIbuStartList(params: IbuRaceLookup): Promise<{ raceId
   return { raceId, description, entries };
 }
 
-/** Relais : lignes d'équipe de la liste de départ IBU → nations, dans l'ordre de départ (dossard). */
-export function ibuRowsToStartNations(rows: IbuResultRow[]): { position: number; nation: string }[] {
+/** Relayeur d'une nation, tel que publié dans la liste de départ IBU. */
+export interface IbuRelayer {
+  first_name: string;
+  last_name: string;
+}
+
+export interface IbuStartNation {
+  position: number;
+  nation: string;
+  /** Relayeurs dans l'ordre des relais, sans doublon (relais mixte simple : 2 noms pour 4 relais). */
+  relayers: IbuRelayer[];
+}
+
+/**
+ * Relais : lignes d'équipe de la liste de départ IBU → nations, dans l'ordre de départ (dossard),
+ * avec leurs relayeurs (lignes `Leg` 1 à 4 de la même nation).
+ */
+export function ibuRowsToStartNations(rows: IbuResultRow[]): IbuStartNation[] {
   const toNumber = (v: string | number | null | undefined) => {
     const n = Number(v);
     return v == null || v === "" || !Number.isFinite(n) || n < 1 ? null : n;
   };
+  const relayersByNation = new Map<string, { leg: number; key: string; relayer: IbuRelayer }[]>();
+  for (const r of rows) {
+    const leg = Number(r.Leg);
+    if (r.IsTeam === true || !r.Nat || !Number.isFinite(leg) || leg < 1) continue;
+    const last = (r.FamilyName ?? r.Name ?? "").trim();
+    if (!last) continue;
+    const first = (r.GivenName ?? "").trim();
+    const list = relayersByNation.get(r.Nat) ?? [];
+    list.push({ leg, key: r.IBUId || `${first} ${last}`, relayer: { first_name: first, last_name: last } });
+    relayersByNation.set(r.Nat, list);
+  }
+  const relayersOf = (nation: string): IbuRelayer[] => {
+    const seen = new Set<string>();
+    return (relayersByNation.get(nation) ?? [])
+      .sort((a, b) => a.leg - b.leg)
+      .filter((x) => (seen.has(x.key) ? false : (seen.add(x.key), true)))
+      .map((x) => x.relayer);
+  };
+
   const teams = rows.filter((r) => r.IsTeam === true || (!r.Leg && !r.GivenName && !r.FamilyName));
   const seen = new Set<string>();
   return teams
@@ -406,11 +441,11 @@ export function ibuRowsToStartNations(rows: IbuResultRow[]): { position: number;
     .filter((t) => t.nation)
     .sort((a, b) => a.order - b.order)
     .filter((t) => (seen.has(t.nation) ? false : (seen.add(t.nation), true)))
-    .map((t, index) => ({ position: index + 1, nation: t.nation }));
+    .map((t, index) => ({ position: index + 1, nation: t.nation, relayers: relayersOf(t.nation) }));
 }
 
-/** Liste de départ officielle IBU d'un relais : les nations engagées. */
-export async function fetchIbuStartNations(params: IbuRaceLookup): Promise<{ raceId: string; description: string; nations: { position: number; nation: string }[] }> {
+/** Liste de départ officielle IBU d'un relais : les nations engagées et leurs relayeurs. */
+export async function fetchIbuStartNations(params: IbuRaceLookup): Promise<{ raceId: string; description: string; nations: IbuStartNation[] }> {
   const { raceId, description: foundDescription } = await findIbuRace(params);
   let description = foundDescription;
   const data = await getRacePage(raceId, "startlist");

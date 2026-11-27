@@ -6,6 +6,8 @@ import { ConfirmButton } from "../../_components/ConfirmButton";
 import { GENERAL_FIELD_FORMATS, type NationStartList, type StartList } from "@/lib/startList";
 import { RELAY_FORMATS } from "@/lib/raceFormats";
 import { AdminForm } from "../../_components/AdminForm";
+import { nationFlagEmoji } from "@/lib/nationFlags";
+import { fullAthleteName } from "@/lib/athleteName";
 
 /**
  * Liste de départ d'une course. Sprint, individuel, relais : liste provisoire placée toute seule à
@@ -85,6 +87,27 @@ export function StartListPanel({
       <div className="text-sm font-semibold">Liste de départ</div>
       <p className="text-xs text-text-dim">Ouverture des pronostics de l&apos;étape : {opening}.</p>
       <p className="text-xs text-text-dim">{status}</p>
+      {isRelay && nationList && nationList.nations.length > 0 && (
+        <ol className="flex flex-col gap-1 rounded-lg border border-border bg-bg px-3 py-2 text-xs">
+          {nationList.nations.map((code, index) => {
+            const relayers = nationList.relayers[code] ?? [];
+            return (
+              <li key={code} className="flex gap-2">
+                <span className="w-5 flex-shrink-0 text-right text-text-dim">{index + 1}.</span>
+                <span className="flex-shrink-0">{nationFlagEmoji(code)}</span>
+                <div className="flex flex-col">
+                  <span className="font-semibold">{code}</span>
+                  {relayers.length > 0 ? (
+                    <span className="text-text-dim">{relayers.map((r) => fullAthleteName(r)).join(" · ")}</span>
+                  ) : (
+                    nationList.source === "ibu" && <span className="text-text-dim italic">Relayeurs pas encore annoncés</span>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
