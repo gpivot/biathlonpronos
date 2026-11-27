@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import { PencilIcon } from "@/components/icons";
 import type { HiddenPepite } from "@/lib/seasonView";
+import { TermTip } from "./TermTip";
 
 /**
  * Encadré permanent « Pépite cachée » de Ma saison (entre les pronostics de saison et la série
@@ -20,13 +21,18 @@ export function HiddenPepiteCard({
   const t = useTranslations("Courses");
   const tGlobes = useTranslations("Globes");
   const tCompte = useTranslations("Compte");
+  const tGlossary = useTranslations("Glossary");
 
   return (
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card px-4 py-3.5">
       <div className="flex items-center gap-3.5">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-ice-soft text-lg">❄️</div>
         <div className="flex flex-1 flex-col gap-0.5">
-          <div className="text-sm font-semibold">{t("pepiteCardTitle")}</div>
+          <div className="text-sm font-semibold">
+            <TermTip title={tGlossary("pepite_t")} text={tGlossary("pepite_d")}>
+              {t("pepiteCardTitle")}
+            </TermTip>
+          </div>
           <div className="text-xs leading-snug text-text-dim">{t("pepiteCardHint")}</div>
         </div>
       </div>

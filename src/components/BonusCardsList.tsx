@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import type { BonusCardView } from "@/lib/bonusCards";
+import { TermTip } from "./TermTip";
 
 /**
  * Cartes bonus d'un joueur : disponibles (dorées), actives (jouées, course pas encore notée) et
@@ -33,7 +34,9 @@ export function BonusCardsList({ cards, compact = false }: { cards: BonusCardVie
           >
             <span className="text-[12px]">🃏</span>
             <span className={`font-display font-bold ${compact ? "text-[11px]" : "text-[12px]"} ${card.state === "used" ? "line-through" : ""}`}>
-              {t(`name_${card.type}`)}
+              <TermTip title={t(`name_${card.type}`)} text={t(`desc_${card.type}`)}>
+                {t(`name_${card.type}`)}
+              </TermTip>
             </span>
             <span className={`${compact ? "text-[10px]" : "text-[11px]"} font-semibold opacity-80`}>· {status}</span>
           </div>

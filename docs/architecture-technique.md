@@ -1855,3 +1855,24 @@ Pour rendre le jeu plus facile à comprendre (suite au comparatif des jeux concu
 
 Le contenu des règles n'a pas changé (mêmes textes et mêmes constantes du moteur de scoring) ;
 le sommaire en pastilles est supprimé, les en-têtes repliables le remplacent.
+
+## Aides à la compréhension du jeu (27/11/2026)
+
+Suite de la page Règles en deux niveaux, validée par Guillaume le 27/11 :
+
+- **Simulateur de points** (`PointsSimulator`, page Règles, après « L'essentiel ») : cote et place
+  de 3 biathlètes, calcul cote × multiplicateur et bonus de combinaison (meilleur palier seul),
+  avec les constantes du moteur. Le Prono parfait, les cartes et le ×2 ne sont pas simulés.
+- **Lexique** : chapitre « Lexique » (18 mots du jeu, namespace `Glossary`) en bas de « Pour aller
+  plus loin », et bulles cliquables (`TermTip`, mot souligné en pointillés) sur le nom des cartes
+  bonus, le titre « Pépite cachée » (Ma saison) et le titre de la série 10/10. La bulle renvoie
+  à `/regles#lexique`, qui ouvre le chapitre replié (`OpenChapterFromHash`).
+- **« Nouveau cette semaine »** (`WeekTips`, encart « L'étape de la semaine » de l'accueil) :
+  courte explication de ce qui entre en jeu sur l'étape (étape ×0, Mondiaux/JO, course spéciale,
+  poursuite, relais), au plus 2 à la fois, jusqu'à ce que le joueur appuie sur « Compris ».
+  Mémorisé sur l'appareil (localStorage `bp:tip:<clé>`), sans base de données : un joueur qui
+  change d'appareil revoit les astuces une fois.
+- **Message après un zéro** (`ResultBody`) : course comptant au général notée 0 point → rappel
+  qu'un outsider peut rapporter gros et que les jokers effacent les plus mauvais résultats ;
+  course non jouée → rappel qu'elle sera effacée en priorité par les jokers (pas dans la version
+  compacte de l'étape de la semaine, pour ne pas le répéter course par course).

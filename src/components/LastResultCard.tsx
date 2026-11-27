@@ -130,9 +130,17 @@ export async function ResultBody({
           ) : (
             <PredictionBreakdown picks={prediction.picks} extras={prediction.extras} showLegend={false} />
           )}
+
+          {/* Course à 0 point : message d'encouragement qui rappelle comment revenir (27/11/2026). */}
+          {prediction.points === 0 && result.countsInStandings !== false && (
+            <Encouragement text={t("zeroEncourage")} />
+          )}
         </>
       ) : (
-        <div className="text-center text-[13px] text-text-dim">{t("lastResultNoPrediction")}</div>
+        <>
+          <div className="text-center text-[13px] text-text-dim">{t("lastResultNoPrediction")}</div>
+          {!compact && result.countsInStandings !== false && <Encouragement text={t("missedEncourage")} />}
+        </>
       )}
 
       {!compact && result.podium.length > 0 && (
@@ -147,6 +155,16 @@ export async function ResultBody({
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+/** Petit encadré bienveillant après une course sans point ou non jouée. */
+function Encouragement({ text }: { text: string }) {
+  return (
+    <div className="flex gap-2 rounded-xl border border-ice/40 bg-ice-soft px-3 py-2 text-[12px] leading-snug">
+      <span aria-hidden>💪</span>
+      <span>{text}</span>
     </div>
   );
 }

@@ -10,6 +10,8 @@ import { displayedSex } from "@/lib/raceLabel";
 import type { WeekStage, WeekStageRace } from "@/lib/weekStage";
 import type { LastResult } from "@/lib/lastResult";
 import { SPECIAL_RULE_ICONS, isBonusRule } from "@/lib/specialRules";
+import { TES_COLLE_MALUS } from "@/lib/scoring/constants";
+import { WeekTips, type WeekTip } from "@/components/WeekTips";
 
 /**
  * Encart « L'étape de la semaine » de l'accueil : bandeau de l'étape (drapeau, lieu, dates), puis
@@ -30,12 +32,15 @@ export async function WeekStageCard({
   nowMs: number;
   locale: string;
 }) {
-  const [t, tFormat, tSex, tRace, tCourses] = await Promise.all([
+  const [t, tFormat, tSex, tRace, tCourses, tRegles, tCards, tGlossary] = await Promise.all([
     getTranslations("Home"),
     getTranslations("RaceFormat"),
     getTranslations("Sex"),
     getTranslations("Race"),
     getTranslations("Courses"),
+    getTranslations("Regles"),
+    getTranslations("BonusCards"),
+    getTranslations("Glossary"),
   ]);
   const day = (date: string) =>
     new Date(`${date.slice(0, 10)}T12:00:00Z`).toLocaleDateString(locale, { timeZone: DISPLAY_TIME_ZONE, day: "numeric", month: "short" });
@@ -44,6 +49,42 @@ export async function WeekStageCard({
   const isChampionship = stage.coefficient === 2 && stage.countsInStandings;
   // Étape « Autre (×0) », hors classement : bandeau grisé.
   const isOffStandings = !stage.countsInStandings;
+
+  // « Nouveau cette semaine » : les règles qui entrent en jeu sur l'étape, expliquées en clair
+  // jusqu'à ce que le joueur les ait vues (« Compris », mémorisé sur l'appareil).
+  const tips: WeekTip[] = [];
+  if (isOffStandings) {
+    tips.push({ key: "off-standings", icon: "🧪", title: tGlossary("horsClassement_t"), text: tGlossary("horsClassement_d") });
+  }
+  if (isChampionship) {
+    tips.push({ key: "worlds", icon: "🌍", title: tRegles("worldsTitle"), text: tRegles("worldsBody") });
+  }
+  const KNOWN_RULES = ["tour_de_pena", "brouillard", "tes_colle", "fete_nationale"];
+  const specialRules = Array.from(new Set(stage.races.map((r) => r.specialRule).filter((r): r is string => !!r && KNOWN_RULES.includes(r))));
+  for (const rule of specialRules) {
+    const detail =
+      rule === "tour_de_pena"
+        ? tRegles("penaDesc")
+        : rule === "brouillard"
+          ? tRegles("fogDesc")
+          : rule === "fete_nationale"
+            ? tRegles("feteDesc", { farte: tCards("name_ca_farte") })
+            : rule === "tes_colle"
+              ? `${tRegles("colleOne")} : ${TES_COLLE_MALUS.oneOutOfTop10} · ${tRegles("colleTwo")} : ${TES_COLLE_MALUS.twoOutOfTop10} · ${tRegles("colleThree")} : ${TES_COLLE_MALUS.threeOutOfTop10} · ${tRegles("colleNone")} : ${TES_COLLE_MALUS.noBetOrIncomplete}`
+              : "";
+    tips.push({
+      key: `special-${rule}`,
+      icon: SPECIAL_RULE_ICONS[rule] ?? "⚠️",
+      title: tFormat(`specialRule_${rule}`),
+      text: rule === "fete_nationale" ? `${detail} ${t("weekTipsNoX2")}` : `${tRace(`malusTagline_${rule}`)} ${detail} ${t("weekTipsNoX2")}`,
+    });
+  }
+  if (stage.races.some((r) => r.format === "poursuite")) {
+    tips.push({ key: "pursuit", icon: "⏱️", title: tRegles("pursuitTitle"), text: tRegles("pursuitBody") });
+  }
+  if (stage.races.some((r) => r.format.startsWith("relais"))) {
+    tips.push({ key: "relay", icon: "🤝", title: tRegles("relayTitle"), text: tRegles("relayBody") });
+  }
 
   return (
     <div className="flex flex-col gap-2">
@@ -71,6 +112,8 @@ export async function WeekStageCard({
             {stage.startsOn === stage.endsOn ? day(stage.startsOn) : `${day(stage.startsOn)} – ${day(stage.endsOn)}`}
           </span>
         </Link>
+
+        {tips.length > 0 && <WeekTips tips={tips} />}
 
         {stage.races.length === 0 && <div className="px-4 py-3 text-[13px] text-text-dim">{tCourses("noRacesInStage")}</div>}
 

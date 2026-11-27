@@ -3,6 +3,7 @@ import { STREAK_TARGET } from "@/lib/scoring/constants";
 import type { PlayerCards } from "@/lib/bonusCards";
 import { BonusCardsList } from "./BonusCardsList";
 import { ClaimCardPicker } from "./ClaimCardPicker";
+import { TermTip } from "./TermTip";
 import { StageCardPlayer } from "./StageCardPlayer";
 
 /**
@@ -24,6 +25,7 @@ export function StreakCard({
   autoOpenClaim?: boolean;
 }) {
   const t = useTranslations("Classement");
+  const tGlossary = useTranslations("Glossary");
   const remaining = STREAK_TARGET - current;
   const extras = cards && (
     <>
@@ -46,7 +48,10 @@ export function StreakCard({
       <div className="flex flex-col gap-1.5 border-t border-border pt-3">
         <div className="flex items-center gap-1.5">
           <span className="text-sm">🔥</span>
-          <div className="flex-1 font-display text-[11px] font-bold uppercase tracking-wider text-text-dim">{t("streakCardTitle")}</div>
+          <div className="flex-1 font-display text-[11px] font-bold uppercase tracking-wider text-text-dim"><TermTip title={tGlossary("serie_t")} text={tGlossary("serie_d")}>
+            {t("streakCardTitle")}
+          </TermTip>
+        </div>
           <div className="font-display text-[13px] font-extrabold tabular-nums text-ice">
             {current} / {STREAK_TARGET}
           </div>
@@ -66,7 +71,10 @@ export function StreakCard({
     <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card px-4 py-4">
       <div className="flex items-center gap-2.5">
         <span className="text-xl">🔥</span>
-        <div className="flex-1 font-display text-[15px] font-extrabold uppercase tracking-wide">{t("streakCardTitle")}</div>
+        <div className="flex-1 font-display text-[15px] font-extrabold uppercase tracking-wide"><TermTip title={tGlossary("serie_t")} text={tGlossary("serie_d")}>
+            {t("streakCardTitle")}
+          </TermTip>
+        </div>
         <div className="font-display text-xl font-extrabold tabular-nums text-ice">
           {current} / {STREAK_TARGET}
         </div>

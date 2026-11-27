@@ -4,6 +4,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { LeaderBib, StageLeaderBib, YoungBib } from "@/components/PlayerBadgesRow";
 import { CrystalGlobeIcon } from "@/components/SeasonCategoryIcon";
 import { ScoreMockup } from "@/components/landing/Mockups";
+import { PointsSimulator } from "@/components/PointsSimulator";
+import { OpenChapterFromHash } from "./OpenChapterFromHash";
 import {
   COMBINATION_BONUS,
   GROS_GLOBE_MULTIPLIERS,
@@ -22,7 +24,7 @@ import {
 // Deux niveaux (26/11/2026) : « L'essentiel » toujours visible (ce qu'il faut pour jouer sa
 // 1re course), puis « Pour aller plus loin » en chapitres repliés, chacun avec le moment où il
 // entre en jeu dans la saison. Objectif : ne pas noyer le nouveau joueur sous toutes les règles.
-const CHAPTERS = ["when", "odds", "boosts", "special", "season", "standings"] as const;
+const CHAPTERS = ["when", "odds", "boosts", "special", "season", "standings", "lexique"] as const;
 type Chapter = (typeof CHAPTERS)[number];
 const CHAPTER_EMOJI: Record<Chapter, string> = {
   when: "🗓️",
@@ -31,7 +33,30 @@ const CHAPTER_EMOJI: Record<Chapter, string> = {
   special: "⚠️",
   season: "🌐",
   standings: "🏆",
+  lexique: "📖",
 };
+
+/** Lexique (27/11/2026) : mêmes définitions que les bulles du lexique cliquable (composant TermTip). */
+const GLOSSARY_TERMS = [
+  "cote",
+  "top10",
+  "combo",
+  "parfait",
+  "x2",
+  "mondiaux",
+  "etape",
+  "horsClassement",
+  "speciale",
+  "serie",
+  "cartes",
+  "pepite",
+  "equipeFavorite",
+  "globes",
+  "jokers",
+  "dossardJaune",
+  "dossardRouge",
+  "ligue",
+] as const;
 
 const CARDS = [
   { type: "ca_farte", emoji: "🔥" },
@@ -44,12 +69,13 @@ const CARDS = [
 ] as const;
 
 export default async function ReglesPage() {
-  const [t, tLanding, tCards, tFormat, tBadges] = await Promise.all([
+  const [t, tLanding, tCards, tFormat, tBadges, tGlossary] = await Promise.all([
     getTranslations("Regles"),
     getTranslations("Landing"),
     getTranslations("BonusCards"),
     getTranslations("RaceFormat"),
     getTranslations("Badges"),
+    getTranslations("Glossary"),
   ]);
   const cardNames = {
     farte: tCards("name_ca_farte"),
@@ -61,6 +87,7 @@ export default async function ReglesPage() {
   return (
     <div className="flex min-h-dvh flex-col">
       <PageHeader backLabel={t("back")} emoji="📖" title={t("title")} subtitle={t("subtitle")} />
+      <OpenChapterFromHash />
 
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-10 px-4 pb-16 pt-6 sm:px-5">
         <p className="text-center text-[15px] leading-relaxed text-text-dim">{t("intro")}</p>
@@ -137,6 +164,8 @@ export default async function ReglesPage() {
             </EssentialStep>
             <EssentialStep n={5} emoji="🤝" title={t("essential5Title")} body={t("essential5Body")} />
           </ol>
+
+          <PointsSimulator />
 
           {/* Capture commentée reprise de l'accueil visiteur (mêmes pastilles et légendes). */}
           <div className="grid items-center gap-6 rounded-2xl border border-border bg-card/60 p-4 sm:grid-cols-2 sm:p-6">
@@ -405,6 +434,16 @@ export default async function ReglesPage() {
           </div>
         </ChapterBlock>
 
+        <ChapterBlock id="lexique" title={tGlossary("title")} teaser={tGlossary("teaser")} tag={tGlossary("tag")}>
+          <dl className="flex flex-col divide-y divide-border rounded-2xl border border-border bg-card">
+            {GLOSSARY_TERMS.map((term) => (
+              <div key={term} className="flex flex-col gap-0.5 px-4 py-2.5">
+                <dt className="font-display text-[13px] font-extrabold">{tGlossary(`${term}_t`)}</dt>
+                <dd className="text-[12px] leading-relaxed text-text-dim">{tGlossary(`${term}_d`)}</dd>
+              </div>
+            ))}
+          </dl>
+        </ChapterBlock>
         </section>
 
         <div className="flex flex-col items-center gap-3 pt-2 text-center">
