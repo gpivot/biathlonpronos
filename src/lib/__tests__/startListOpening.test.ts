@@ -79,8 +79,51 @@ describe("relais", () => {
         { IsTeam: true, Nat: "NOR", Bib: 1 },
       ])
     ).toEqual([
-      { position: 1, nation: "NOR" },
-      { position: 2, nation: "FRA" },
+      { position: 1, nation: "NOR", relayers: [] },
+      { position: 2, nation: "FRA", relayers: [{ first_name: "", last_name: "X" }] },
+    ]);
+  });
+
+  it("relais : relayeurs sous chaque nation, dans l'ordre des relais, sans doublon (mixte simple)", () => {
+    const leg = (nat: string, l: number, last: string, first: string, id: string) => ({
+      IsTeam: false, Leg: l, Nat: nat, FamilyName: last, GivenName: first, IBUId: id, StartOrder: 0,
+    });
+    expect(
+      ibuRowsToStartNations([
+        { IsTeam: true, Leg: 0, Nat: "NOR", FamilyName: "NORWAY", Name: "NORWAY", StartOrder: 1, Bib: "1" },
+        leg("NOR", 1, "KNOTTEN", "Karoline Offigstad", "K"),
+        leg("NOR", 2, "LAEGREID", "Sturla Holm", "L"),
+        leg("NOR", 3, "KNOTTEN", "Karoline Offigstad", "K"),
+        leg("NOR", 4, "LAEGREID", "Sturla Holm", "L"),
+        { IsTeam: true, Leg: 0, Nat: "FRA", FamilyName: "FRANCE", Name: "FRANCE", StartOrder: 6, Bib: "2" },
+        leg("FRA", 2, "MICHELON", "Oceane", "M"),
+        leg("FRA", 1, "SIMON", "Julia", "S"),
+      ])
+    ).toEqual([
+      {
+        position: 1,
+        nation: "NOR",
+        relayers: [
+          { first_name: "Karoline Offigstad", last_name: "KNOTTEN" },
+          { first_name: "Sturla Holm", last_name: "LAEGREID" },
+        ],
+      },
+      {
+        position: 2,
+        nation: "FRA",
+        relayers: [
+          { first_name: "Julia", last_name: "SIMON" },
+          { first_name: "Oceane", last_name: "MICHELON" },
+        ],
+      },
+    ]);
+  });
+
+  it("garde les relayeurs des nations cotées", () => {
+    const relayers = [{ first_name: "Julia", last_name: "SIMON" }];
+    expect(matchStartNations([{ nation: "FRA", relayers }, { nation: "NOR", relayers: [] }], ["FRA", "NOR"]).rows).toEqual([
+      { nation: "FRA", position: 1, relayers },
+      { nation: "NOR", position: 2 },
     ]);
   });
 

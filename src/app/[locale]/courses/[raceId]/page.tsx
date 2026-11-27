@@ -146,7 +146,12 @@ export default async function RacePage({
     // Avant le départ : seules les nations de la liste (général du relais, puis liste IBU), s'il y en a une.
     const nationStartList = displayStatus === "upcoming" ? await getNationStartList(supabase, race.id) : null;
     nationsWithOdds = (odds ?? [])
-      .map((o: any) => ({ nation_code: o.nation_code, name: o.nations?.name ?? o.nation_code, value: o.value }))
+      .map((o: any) => ({
+        nation_code: o.nation_code,
+        name: o.nations?.name ?? o.nation_code,
+        value: o.value,
+        relayers: nationStartList?.relayers[o.nation_code],
+      }))
       .filter((n: NationWithOdds) => !nationStartList || nationStartList.nations.includes(n.nation_code))
       .sort((a: NationWithOdds, b: NationWithOdds) => a.value - b.value);
 

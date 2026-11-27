@@ -13,11 +13,15 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { SearchField } from "@/components/SearchField";
 import { PickShareBar } from "@/components/PickShareBar";
 import { hasStaleGuestToken } from "@/lib/supabase/guestToken";
+import { shortAthleteName } from "@/lib/athleteName";
+import type { Relayer } from "@/lib/startList";
 
 export type NationWithOdds = {
   nation_code: string;
   name: string;
   value: number;
+  /** Relayeurs annoncés par la liste de départ IBU, dans l'ordre des relais. */
+  relayers?: Relayer[];
 };
 
 export function RelayPredictionForm({
@@ -99,8 +103,13 @@ export function RelayPredictionForm({
     return !error;
   }
 
-  // Filtre : nom du pays ou code à 3 lettres (FRA, NOR…).
-  const visibleNations = filterBySearch(nations, search, (n) => [n.name, n.nation_code], (n) => n.nation_code);
+  // Filtre : nom du pays, code à 3 lettres (FRA, NOR…) ou nom d'un relayeur annoncé.
+  const visibleNations = filterBySearch(
+    nations,
+    search,
+    (n) => [n.name, n.nation_code, ...(n.relayers ?? []).flatMap((r) => [r.first_name, r.last_name])],
+    (n) => n.nation_code
+  );
   const selectedNation = nations.find((n) => n.nation_code === selected);
   // Pronostic enregistré et inchangé : « Ton pronostic est validé ! » remplace le bouton.
   const unsaved = savedState.nation !== null && (savedState.nation !== selected || savedState.bonusX2 !== bonusX2);
@@ -174,7 +183,10 @@ export function RelayPredictionForm({
               <span className="w-6 flex-shrink-0 text-center text-xl leading-none">{nationFlagEmoji(n.nation_code)}</span>
               <div className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{n.name}</span>
-                <span className="text-[11px] text-text-dim">{n.nation_code}</span>
+                <span className="text-[11px] text-text-dim">
+                  {n.nation_code}
+                  {n.relayers && n.relayers.length > 0 && <> · {n.relayers.map((r) => shortAthleteName(r)).join(", ")}</>}
+                </span>
               </div>
               <div className={`font-display text-sm font-bold ${isSelected ? "text-ice" : "text-text-dim"}`}>
                 ×{n.value}

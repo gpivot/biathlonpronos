@@ -1620,6 +1620,15 @@ semaine » plus haut).
 - **Relais** : les **nations classées au général du relais** (même sexe), dans
   `race_start_nations` (migration 0043). Relais mixtes : général du relais mixte s'il existe à
   l'IBU, sinon nations classées à la fois au général relais femmes et hommes (à confirmer).
+- **Relayeurs (27/11/2026)** : la liste de départ IBU d'un relais (hommes, femmes, mixte, mixte
+  simple) donne sous chaque nation ses relayeurs (lignes `Leg` 1 à 4 de la page
+  `/startlist/<RaceId>` de biathlonworld.com, vérifié sur Östersund 2026-27). « Récupérer la liste
+  de départ définitive (IBU) » les enregistre dans `race_start_nations.relayers` (migration
+  **0052**, JSON `[{first_name, last_name}]`, dans l'ordre des relais, sans doublon : 2 noms pour le
+  mixte simple). Affichés sous la nation dans le panneau « Liste de départ » de l'admin et sur la
+  page de la course (« FRA · J. Simon, O. Michelon… »), et cherchables dans le filtre des nations.
+  Pas de rapprochement avec les biathlètes du jeu (simple texte). Si l'IBU publie la liste avant
+  les noms, il suffit de la récupérer à nouveau plus tard.
 - **Poursuite et mass start** : inchangées (60 premiers du sprint ; liste IBU des 30 partants).
 - **Automatisation** : la tâche planifiée existante (`/api/notifications/cron`, tous les quarts
   d'heure par pg_cron) appelle `runStartListOpening` (`src/lib/admin/startListOpening.ts`) : de

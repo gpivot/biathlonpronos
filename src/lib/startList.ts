@@ -111,18 +111,34 @@ export async function getStartList(
   return resolveStartList(race.format, stored ?? [], sprintResults);
 }
 
+/** Relayeur annoncé par la liste de départ IBU d'un relais. */
+export interface Relayer {
+  first_name: string;
+  last_name: string;
+}
+
 /** Relais : nations proposées (liste provisoire du général ou officielle IBU). null : aucune liste, toutes les nations cotées. */
 export interface NationStartList {
   source: StartListSource;
   nations: string[];
+  /** Nation → relayeurs dans l'ordre des relais (liste officielle IBU seulement). */
+  relayers: Record<string, Relayer[]>;
 }
 
 export async function getNationStartList(supabase: SupabaseClient, raceId: string): Promise<NationStartList | null> {
   const { data } = await supabase
     .from("race_start_nations")
-    .select("nation_code, start_position, source")
+    .select("nation_code, start_position, source, relayers")
     .eq("race_id", raceId)
     .order("start_position", { ascending: true });
   if (!data || data.length === 0) return null;
-  return { source: data.some((r) => r.source === "general") ? "general" : "ibu", nations: data.map((r) => r.nation_code as string) };
+  const relayers: Record<string, Relayer[]> = {};
+  for (const r of data) {
+    if (Array.isArray(r.relayers) && r.relayers.length > 0) relayers[r.nation_code as string] = r.relayers as Relayer[];
+  }
+  return {
+    source: data.some((r) => r.source === "general") ? "general" : "ibu",
+    nations: data.map((r) => r.nation_code as string),
+    relayers,
+  };
 }

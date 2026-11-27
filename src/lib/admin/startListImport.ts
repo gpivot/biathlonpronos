@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { nameVariants } from "./resultsCsv";
-import type { IbuStartEntry } from "./ibuResults";
+import type { IbuRelayer, IbuStartEntry } from "./ibuResults";
 
 export interface StartListCandidate {
   id: string;
@@ -62,11 +62,18 @@ export async function saveStartList(
   if (error) throw new Error(error.message);
 }
 
+export interface StartNationRow {
+  nation: string;
+  position: number;
+  /** Relayeurs annoncés par l'IBU (absents de la liste provisoire du général). */
+  relayers?: IbuRelayer[];
+}
+
 /** Relais : remplace les nations proposées de la course. */
 export async function saveStartNations(
   admin: SupabaseClient,
   raceId: string,
-  rows: { nation: string; position: number }[],
+  rows: StartNationRow[],
   source: "ibu" | "general" = "ibu"
 ): Promise<void> {
   const { error: deleteError } = await admin.from("race_start_nations").delete().eq("race_id", raceId);
@@ -74,7 +81,16 @@ export async function saveStartNations(
   if (rows.length === 0) return;
   const { error } = await admin
     .from("race_start_nations")
-    .insert(rows.map((r) => ({ race_id: raceId, nation_code: r.nation, start_position: r.position, source })));
+    .insert(
+      rows.map((r) => ({
+        race_id: raceId,
+        nation_code: r.nation,
+        start_position: r.position,
+        source,
+        // Colonne ajoutée par la migration 0052 : envoyée seulement quand l'IBU donne des noms.
+        ...(r.relayers && r.relayers.length > 0 ? { relayers: r.relayers } : {}),
+      }))
+    );
   if (error) throw new Error(error.message);
 }
 
@@ -83,17 +99,17 @@ export async function saveStartNations(
  * l'ordre de la liste (doublons retirés, positions renumérotées).
  */
 export function matchStartNations(
-  entries: { nation: string }[],
+  entries: { nation: string; relayers?: IbuRelayer[] }[],
   oddsNations: string[]
-): { rows: { nation: string; position: number }[]; unmatched: string[] } {
+): { rows: StartNationRow[]; unmatched: string[] } {
   const known = new Set(oddsNations);
   const seen = new Set<string>();
-  const rows: { nation: string; position: number }[] = [];
+  const rows: StartNationRow[] = [];
   const unmatched: string[] = [];
-  for (const { nation } of entries) {
+  for (const { nation, relayers } of entries) {
     if (!nation || seen.has(nation)) continue;
     seen.add(nation);
-    if (known.has(nation)) rows.push({ nation, position: rows.length + 1 });
+    if (known.has(nation)) rows.push({ nation, position: rows.length + 1, ...(relayers?.length ? { relayers } : {}) });
     else unmatched.push(nation);
   }
   return { rows, unmatched };
