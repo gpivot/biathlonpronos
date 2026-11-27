@@ -1324,6 +1324,11 @@ Décisions de Guillaume du 01/11/2026 (PR à fusionner, migrations 0029 à 0031)
   total, `bonusQuestionPoints` en donne la part. La place du joueur sur la course suit
   `getRacePlayers` (questions comprises). Aucune donnée ni migration modifiée : le classement
   général les comptait déjà.
+- **Série 10/10 (27/11/2026, décision de Guillaume)** : les points des questions bonus comptent pour
+  la série de leur course (`addBonusQuestionPointsToRaces` dans `recomputeSeasonStreaks`) : une bonne
+  réponse sauve une course à 0 pt. Un joueur sans prono mais avec une bonne réponse compte comme
+  ayant marqué sur la course (**à confirmer**). La série est recalculée quand l'admin saisit ou
+  corrige la bonne réponse d'une course déjà notée. Aucune migration.
 - **Questions live côté joueur** : encadré rouge en tête de l'accueil et pop-up sur les autres pages
   (`LiveQuestionPopup` dans le layout, relu à chaque page et toutes les minutes, « Plus tard » le
   masque pour cette question), avec le temps restant et un bouton vers la course.

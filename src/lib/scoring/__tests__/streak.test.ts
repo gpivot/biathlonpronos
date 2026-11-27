@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeSeasonStreaks, updateStreak } from "../streak";
+import { addBonusQuestionPointsToRaces, computeSeasonStreaks, updateStreak } from "../streak";
 
 describe("updateStreak", () => {
   it("incrémente la série quand la course rapporte des points", () => {
@@ -42,5 +42,25 @@ describe("computeSeasonStreaks", () => {
     );
     expect(before.get("u")?.currentStreak).toBe(3);
     expect(corrected.get("u")?.currentStreak).toBe(1);
+  });
+});
+
+describe("addBonusQuestionPointsToRaces", () => {
+  it("une bonne réponse à la question bonus sauve la série d'une course à 0 pt", () => {
+    const pointsByRace = new Map([
+      ["r1", new Map([["u1", 50]])],
+      ["r2", new Map([["u1", 0]])],
+    ]);
+    addBonusQuestionPointsToRaces(pointsByRace, [{ userId: "u1", raceId: "r2", points: 20 }]);
+    expect(computeSeasonStreaks(["r1", "r2"], pointsByRace).get("u1")).toEqual({ currentStreak: 2, cardsEarned: 0 });
+  });
+
+  it("compte aussi un joueur sans prono qui a bien répondu, et ignore une ligne sans course", () => {
+    const pointsByRace = new Map<string, Map<string, number>>();
+    addBonusQuestionPointsToRaces(pointsByRace, [
+      { userId: "u2", raceId: "r1", points: 20 },
+      { userId: "u2", raceId: null, points: 20 },
+    ]);
+    expect(computeSeasonStreaks(["r1"], pointsByRace).get("u2")).toEqual({ currentStreak: 1, cardsEarned: 0 });
   });
 });

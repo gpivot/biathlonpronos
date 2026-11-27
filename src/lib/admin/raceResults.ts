@@ -6,6 +6,7 @@ import {
   computePursuitOdds,
   computeRelayScore,
   computeSeasonStreaks,
+  addBonusQuestionPointsToRaces,
   fuseeGachetteEligibility,
   type AthleteRaceResult,
   type NationRaceResult,
@@ -364,7 +365,7 @@ async function applyTourDePenaAbsences(
 
 /**
  * §12 — recalcule les séries 10/10 de toute la saison en rejouant les courses notées dans l'ordre
- * (points des pronostics seuls, hors bonus Pépite). Appelé après chaque notation, correction ou
+ * (points des pronostics + questions bonus de la course, hors bonus Pépite). Appelé après chaque notation, correction ou
  * réinitialisation, pour qu'un résultat modifié (disqualification…) se répercute sur la suite.
  * Une carte déjà choisie par un joueur reste acquise même si le recalcul lui en retire le crédit.
  */
@@ -378,7 +379,7 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
   // Étapes hors classement (×0) : leurs courses ne font ni avancer ni casser la série.
   const raceIds = (races ?? []).filter((r: any) => r.stages?.counts_in_standings !== false).map((r) => r.id as string);
 
-  const [predictions, ledger, { data: counters }] = await Promise.all([
+  const [predictions, ledger, bonusLedger, { data: counters }] = await Promise.all([
     raceIds.length === 0
       ? Promise.resolve([] as Array<{ user_id: string; race_id: string }>)
       : fetchAll((from, to) =>
@@ -393,6 +394,19 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
         .order("id")
         .range(from, to)
     ),
+    // Questions bonus (20 pts) : leurs points comptent pour la série de leur course (décision de
+    // Guillaume, 27/11/2026) et peuvent donc la sauver.
+    raceIds.length === 0
+      ? Promise.resolve([] as Array<{ user_id: string; points: number; bonus_questions: any }>)
+      : fetchAll((from, to) =>
+          admin
+            .from("score_ledger")
+            .select("user_id, points, bonus_questions!inner(race_id)")
+            .eq("season_id", seasonId)
+            .in("bonus_questions.race_id", raceIds)
+            .order("id")
+            .range(from, to)
+        ),
     admin.from("streak_counters").select("user_id").eq("season_id", seasonId),
   ]);
 
@@ -408,6 +422,10 @@ export async function recomputeSeasonStreaks(admin: SupabaseClient, seasonId: st
     if (!pointsByRace.has(p.race_id)) pointsByRace.set(p.race_id, new Map());
     pointsByRace.get(p.race_id)!.set(p.user_id, points);
   }
+  addBonusQuestionPointsToRaces(
+    pointsByRace,
+    (bonusLedger as any[]).map((row) => ({ userId: row.user_id, raceId: row.bonus_questions?.race_id, points: Number(row.points) }))
+  );
 
   const streaks = computeSeasonStreaks(raceIds, pointsByRace);
   // Un joueur qui n'a plus aucune course notée repart de zéro.

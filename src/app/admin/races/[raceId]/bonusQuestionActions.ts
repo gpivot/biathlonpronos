@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createAdminClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin/requireAdmin";
+import { recomputeSeasonStreaks } from "@/lib/admin/raceResults";
 import { sendPush } from "@/lib/push/send";
 import {
   BONUS_QUESTION_POINTS,
@@ -192,6 +193,9 @@ export async function setBonusQuestionAnswer(questionId: string, correctOption: 
       }
       winners = rows.length;
     }
+    // Les points des questions bonus comptent pour la série 10/10 : recalcul si la course est notée.
+    const { data: raceStatus } = await admin.from("races").select("status").eq("id", question.race_id).single();
+    if (raceStatus?.status === "finished") await recomputeSeasonStreaks(admin, race.stages.season_id);
     revalidate(question.race_id);
     return {
       ok: true,
