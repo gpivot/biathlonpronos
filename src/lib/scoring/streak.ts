@@ -50,3 +50,20 @@ export function computeSeasonStreaks(
   }
   return streaks;
 }
+
+/**
+ * Ajoute aux points de chaque course ceux des questions bonus (20 pts par bonne réponse) : ils
+ * comptent pour la série et peuvent la sauver (décision de Guillaume, 27/11/2026). Un joueur sans
+ * prono mais avec une bonne réponse compte comme ayant marqué sur la course (à confirmer).
+ */
+export function addBonusQuestionPointsToRaces(
+  pointsByRace: Map<string, Map<string, number>>,
+  rows: Array<{ userId: string; raceId: string | null | undefined; points: number }>
+): void {
+  for (const row of rows) {
+    if (!row.raceId) continue;
+    if (!pointsByRace.has(row.raceId)) pointsByRace.set(row.raceId, new Map());
+    const byUser = pointsByRace.get(row.raceId)!;
+    byUser.set(row.userId, (byUser.get(row.userId) ?? 0) + row.points);
+  }
+}
