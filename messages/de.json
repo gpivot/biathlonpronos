@@ -612,7 +612,7 @@
     "playerNoPrediction": "Kein Tipp für dieses Rennen.",
     "resultsHelpTitle": "Symbole der Rangliste",
     "resultsHelpFusee": "Rakete: Top 3 der Laufzeit (die Zahl ist der Rang). Mit der Karte Rakete: +100 / +50 / +20 Pkt.",
-    "resultsHelpGachette": "Abzug: fehlerfreies Schießen. Mit der Karte Abzug: +100 Pkt. (+50 im Sprint).",
+    "resultsHelpShooting": "Schwarzer Kreis: Schießfehler insgesamt. 0 = fehlerfrei (Abzug); mit der Karte Abzug: +100 Pkt. (+50 im Sprint).",
     "resultsHelpPerfect": "Perfekter Tipp: die 3 Athleten mit den meisten Punkten. Alle drei zu finden bringt +200 Pkt.",
     "resultsHelpMine": "Deine Wahl, in der Rangliste hervorgehoben.",
     "malusLabel": "Malus-Rennen",

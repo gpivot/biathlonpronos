@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl";
 import { nationFlagEmoji } from "@/lib/nationFlags";
 import type { LastResultExtra, LastResultPick } from "@/lib/lastResult";
-import { ShootingDots } from "./ShootingDots";
+import { ShootingDots, hasShootings } from "./ShootingDots";
 
 const COMBINATION_KINDS: LastResultExtra["kind"][] = ["top3", "top5", "top10", "pronoParfait"];
 
@@ -93,7 +93,7 @@ export function PredictionBreakdown({
                 <span className="truncate">{pick.name}</span>
                 {pick.caFarte && <span className="text-[11px] text-ice">×3</span>}
                 {pick.nationalDay && <span className="rounded bg-gold-soft px-1 font-display text-[10px] font-bold text-gold">×2</span>}
-                <FuseeGachetteBadges skiRank={pick.skiRank} gachette={pick.gachette} />
+                <FuseeGachetteBadges skiRank={pick.skiRank} gachette={pick.gachette && !hasShootings(pick.shootings)} />
               </div>
               {showCalc && <CalcDetail odds={pick.odds} rankMultiplier={pick.rankMultiplier} cardBonus={pick.cardBonus} />}
               {pick.penalty && <PenaltyLine penalty={pick.penalty} />}

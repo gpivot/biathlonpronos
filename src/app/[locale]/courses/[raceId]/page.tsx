@@ -1,3 +1,4 @@
+import { ShootingTotalDot } from "@/components/ShootingDots";
 import { fullAthleteName } from "@/lib/athleteName";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -621,7 +622,7 @@ export default async function RacePage({
                   closeLabel={tClassement("close")}
                   items={[
                     { icon: "🚀", text: t("resultsHelpFusee") },
-                    { icon: "🎯", text: t("resultsHelpGachette") },
+                    { icon: <ShootingTotalDot misses={0} />, text: t("resultsHelpShooting") },
                     { icon: "⭐", text: t("resultsHelpPerfect") },
                     { icon: "✓", text: t("resultsHelpMine") },
                   ]}

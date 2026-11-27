@@ -612,7 +612,7 @@
     "playerNoPrediction": "Nessun pronostico su questa gara.",
     "resultsHelpTitle": "Le icone della classifica",
     "resultsHelpFusee": "Razzo: top 3 del tempo sugli sci (il numero è la posizione). Con la carta Razzo: +100 / +50 / +20 pt.",
-    "resultsHelpGachette": "Grilletto: tiro senza errori. Con la carta Grilletto: +100 pt (+50 nella sprint).",
+    "resultsHelpShooting": "Cerchio nero: totale degli errori al tiro. 0 = senza errori (Grilletto); con la carta Grilletto: +100 pt (+50 nella sprint).",
     "resultsHelpPerfect": "Pronostico perfetto: i 3 atleti che valgono di più. Trovarli tutti e tre vale +200 pti.",
     "resultsHelpMine": "Le tue scelte, evidenziate in classifica.",
     "malusLabel": "Gara malus",

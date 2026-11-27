@@ -612,7 +612,7 @@
     "playerNoPrediction": "No prediction on this race.",
     "resultsHelpTitle": "Ranking icons",
     "resultsHelpFusee": "Rocket: top 3 ski time (the number is the rank). With the Rocket card: +100 / +50 / +20 pts.",
-    "resultsHelpGachette": "Trigger: clean shooting. With the Trigger card: +100 pts (+50 in the sprint).",
+    "resultsHelpShooting": "Black dot: total shooting misses. 0 = clean shooting (Trigger); with the Trigger card: +100 pts (+50 in the sprint).",
     "resultsHelpPerfect": "Perfect pick: the 3 athletes worth the most points. Finding all three earns +200 pts.",
     "resultsHelpMine": "Your picks, highlighted in the ranking.",
     "malusLabel": "Penalty race",

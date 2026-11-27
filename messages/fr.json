@@ -612,7 +612,7 @@
     "playerNoPrediction": "Pas de pronostic sur cette course.",
     "resultsHelpTitle": "Les pictos du classement",
     "resultsHelpFusee": "Fusée : top 3 du temps de ski (le chiffre donne le rang). Avec la carte Fusée : +100 / +50 / +20 pts.",
-    "resultsHelpGachette": "Gâchette : sans-faute au tir. Avec la carte Gâchette : +100 pts (+50 au sprint).",
+    "resultsHelpShooting": "Rond noir : total des fautes au tir. 0 = sans-faute (Gâchette) ; avec la carte Gâchette : +100 pts (+50 au sprint).",
     "resultsHelpPerfect": "Prono parfait : les 3 biathlètes qui rapportent le plus. Les trouver tous les trois rapporte +200 pts.",
     "resultsHelpMine": "Tes choix, surlignés dans le classement.",
     "malusLabel": "Course malus",

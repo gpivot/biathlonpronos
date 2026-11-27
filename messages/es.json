@@ -612,7 +612,7 @@
     "playerNoPrediction": "Sin pronóstico en esta carrera.",
     "resultsHelpTitle": "Iconos de la clasificación",
     "resultsHelpFusee": "Cohete: top 3 del tiempo de esquí (la cifra es el puesto). Con la carta Cohete: +100 / +50 / +20 pts.",
-    "resultsHelpGachette": "Gatillo: tiro sin fallos. Con la carta Gatillo: +100 pts (+50 en el sprint).",
+    "resultsHelpShooting": "Círculo negro: total de fallos en el tiro. 0 = sin fallos (Gatillo); con la carta Gatillo: +100 pts (+50 en el sprint).",
     "resultsHelpPerfect": "Pronóstico perfecto: los 3 biatletas que más puntos dan. Acertar los tres da +200 pts.",
     "resultsHelpMine": "Tus elecciones, resaltadas en la clasificación.",
     "malusLabel": "Carrera con penalización",

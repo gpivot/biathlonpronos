@@ -3,7 +3,7 @@ import { nationFlagEmoji } from "@/lib/nationFlags";
 import { CalcDetail, FuseeGachetteBadges, formatPoints } from "@/components/PredictionBreakdown";
 import type { RaceResultRow } from "@/lib/lastResult";
 import type { OngoingBoardRow, RacePlayerRow } from "@/lib/racePlayers";
-import { ShootingDots } from "@/components/ShootingDots";
+import { ShootingDots, hasShootings } from "@/components/ShootingDots";
 import { PlayerRaceButton } from "./PlayerRaceButton";
 import { PickShareBar } from "@/components/PickShareBar";
 
@@ -28,7 +28,7 @@ export function ResultRow({ row, share }: { row: RaceResultRow; share?: { pct: n
         <div className="flex min-w-0 items-center gap-1 truncate text-sm font-semibold">
           <span className="truncate">{row.name}</span>
           {row.perfect && <span className="text-[13px]">⭐</span>}
-          <FuseeGachetteBadges skiRank={row.skiRank} gachette={row.gachette} />
+          <FuseeGachetteBadges skiRank={row.skiRank} gachette={row.gachette && !hasShootings(row.shootings)} />
         </div>
         {row.points != null && <CalcDetail odds={row.odds} rankMultiplier={row.rankMultiplier} />}
       </div>
