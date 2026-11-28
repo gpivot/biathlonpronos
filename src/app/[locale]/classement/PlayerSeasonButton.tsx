@@ -136,14 +136,28 @@ export function PlayerSeasonButton({
             className="flex max-h-[90dvh] w-full max-w-md flex-col gap-3 overflow-hidden rounded-t-2xl border border-border bg-bg p-4 sm:rounded-2xl"
           >
             <div className="flex items-center justify-between gap-3">
-              <div className="flex min-w-0 items-center gap-2">
-                <div className="truncate font-display text-base font-bold">{data?.pseudo ?? t("playerTitle")}</div>
-                {data &&
-                  (stage ? (
-                    stage.leader && <PlayerBadgesRow badges={undefined} stageLeader />
-                  ) : (
-                    <PlayerBadgesRow badges={data.badges} leader={data.leader} />
-                  ))}
+              <div className="flex min-w-0 flex-col gap-1">
+                <div className="flex min-w-0 items-center gap-2">
+                  <div className="truncate font-display text-base font-bold">{data?.pseudo ?? t("playerTitle")}</div>
+                  {data &&
+                    (stage ? (
+                      stage.leader && <PlayerBadgesRow badges={undefined} stageLeader />
+                    ) : (
+                      <PlayerBadgesRow badges={data.badges} leader={data.leader} />
+                    ))}
+                </div>
+                {/* Équipe favorite sous le pseudo, pour le côté fan (Guillaume, 28/11/2026). */}
+                {data?.favoriteTeam && (
+                  <div className="flex min-w-0 items-center gap-1.5 text-[12px]">
+                    <span className="shrink-0 text-text-dim">{t("playerFavoriteTeam")}</span>
+                    <span className="flex min-w-0 items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 font-semibold">
+                      <span aria-hidden>{nationFlagEmoji(data.favoriteTeam.nationCode)}</span>
+                      <span className="truncate">
+                        {data.favoriteTeam.name} {tSex(data.favoriteTeam.sex)}
+                      </span>
+                    </span>
+                  </div>
+                )}
               </div>
               <button
                 type="button"
