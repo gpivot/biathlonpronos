@@ -228,11 +228,7 @@ export function PlayerSeasonButton({
                       revealedPepites={(data.pepites ?? []).flatMap((p) =>
                         p.revealed && p.name ? [{ sex: p.sex, name: p.name, nationCode: p.nationCode }] : []
                       )}
-                      favoriteTeam={
-                        data.favoriteTeam
-                          ? { label: `${data.favoriteTeam.name} ${tSex(data.favoriteTeam.sex)}`, nationCode: data.favoriteTeam.nationCode }
-                          : undefined
-                      }
+                      // Équipe favorite : affichée sous le pseudo, plus dans les pronostics de saison (Guillaume, 28/11/2026).
                       hiddenNote={
                         data.seasonPicksHiddenUntil === undefined
                           ? null
