@@ -80,7 +80,7 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
   const userId = userResult.user?.id ?? null;
   const { now } = await getClock();
 
-  const [stages, leagueRows, leaderboard, jokers, badges] = await Promise.all([
+  const [stages, leagueRows, leaderboard, jokers, badges, favoriteRows] = await Promise.all([
     season ? getStandingsStages(supabase, season.id, now) : Promise.resolve([]),
     season && userId
       ? supabase.from("league_memberships").select("leagues!inner(id, name, season_id)").eq("user_id", userId).eq("leagues.season_id", season.id)
@@ -89,7 +89,19 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
     season ? getLeaderboard(supabase, season.id) : Promise.resolve([]),
     season && userId ? getPlayerJokers(supabase, season.id, userId) : Promise.resolve(null),
     season ? getPlayerBadges(supabase, season.id) : Promise.resolve(new Map<string, PlayerBadges>()),
+    // Équipe favorite de chaque joueur, en petit sous son pseudo (lisible par tous, migration 0019).
+    season
+      ? fetchAll<any>((from, to) =>
+          supabase.from("favorite_teams").select("user_id, nation_code, sex, nations(name)").eq("season_id", season.id).order("user_id").range(from, to)
+        ).catch(() => [] as any[])
+      : Promise.resolve([] as any[]),
   ]);
+  const favoriteTeams = new Map<string, { nationCode: string; label: string }>(
+    favoriteRows.map((f: any) => [
+      f.user_id as string,
+      { nationCode: f.nation_code as string, label: `${(f.nations as any)?.name ?? f.nation_code} ${tSex(f.sex)}` },
+    ])
+  );
   // « Mon classement » : même calcul que l'encadré de l'accueil (rang général de la saison).
   const myRankIndex = userId ? leaderboard.findIndex((row) => row.userId === userId) : -1;
   const myRank = myRankIndex >= 0 ? myRankIndex + 1 : null;
@@ -246,6 +258,11 @@ export default async function ClassementPage({ searchParams }: { searchParams: P
                       streak={period === "season" ? streaks.get(row.userId) ?? null : null}
                     />
                   </div>
+                  {favoriteTeams.has(row.userId) && (
+                    <div className="truncate text-[11px] text-text-dim">
+                      {nationFlagEmoji(favoriteTeams.get(row.userId)!.nationCode)} {favoriteTeams.get(row.userId)!.label}
+                    </div>
+                  )}
                 </div>
                 <div className="whitespace-nowrap font-display text-sm font-bold text-ice">{row.points} pts</div>
               </PlayerSeasonButton>
